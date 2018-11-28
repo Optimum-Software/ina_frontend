@@ -1,0 +1,3 @@
+rootProject.name = 'ina_frontend'
+
+include ':app'
