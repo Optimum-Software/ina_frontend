@@ -7,7 +7,7 @@ import {
   createAppContainer,
   withNavigation
 } from "react-navigation";
-import { Icon } from "react-native-elements";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import Home from "../screens/Home";
 import Projectoverview from "../screens/Projectoverview";
@@ -20,16 +20,16 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="open-book" type="entypo" size={28} color={tintColor} />
+        <Icon name="home" type="entypo" size={28} color={tintColor} />
       )
     }
   },
   Projectoverview: {
     screen: Projectoverview,
     navigationOptions: {
-      tabBarLabel: "Projectoverview",
+      tabBarLabel: "Projecten",
       tabBarIcon: ({ tintColor }) => (
-        <Icon name="ios-map" type="ionicon" size={28} color={tintColor} />
+        <Icon name="folder-open" type="ionicon" size={28} color={tintColor} />
       )
     }
   }
