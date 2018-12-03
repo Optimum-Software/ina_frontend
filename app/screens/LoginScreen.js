@@ -16,13 +16,12 @@ class LoginScreen extends Component {
     super();
     this.state = {
       email: "",
-      password: "",
-      succesfull: false
+      password: ""
     };
   }
 
   login() {
-    alert("Inloggen");
+    alert(this.state.email + " " + this.state.password);
   }
 
   render() {
@@ -33,22 +32,22 @@ class LoginScreen extends Component {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              autoCapitalize="none"
-              onSubmitEditing={() => this.passwordInput.focus()}
-              autoCorrect={false}
               keyboardType="email-address"
               returnKeyType="next"
+              onChangeText={text => this.setState({ email: text })}
               placeholder="E-mailadres"
               placeholderTextColor="rgba(225,225,225,0.7)"
             />
             <TextInput
               style={styles.input}
+              autoCapitalize="none"
+              onChangeText={text => this.setState({ password: text })}
+              secureTextEntry={true}
               returnKeyType="go"
-              ref={input => (this.passwordInput = input)}
               placeholder="Wachtwoord"
               placeholderTextColor="rgba(225,225,225,0.7)"
-              secureTextEntry
             />
+
             <TouchableOpacity
               style={styles.buttonContainer}
               onPress={() => this.login()}
