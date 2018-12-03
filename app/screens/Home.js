@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import React, { Component } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Header } from "react-navigation";
+import { Toolbar } from "react-native-material-ui";
 
 export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>
-          Home
-        </Text>
+        <View style={{ height: Header.HEIGH }}>
+          <Toolbar centerElement="Home page" />
+        </View>
+        <View>
+          <Text style={styles.title}>Home</Text>
+        </View>
       </View>
     );
   }
@@ -20,13 +21,11 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: "#F5FCFF"
   },
   title: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    textAlign: "center",
+    margin: 10
   }
 });

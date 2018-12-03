@@ -1,17 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Header } from "react-navigation";
 import {
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+  COLOR,
+  ThemeContext,
+  getTheme,
+  Toolbar,
+  Card,
+  Button
+} from "react-native-material-ui";
 
 export default class Projectoverview extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>
-          All projects are listed here
-        </Text>
+        <View style={{ height: Header.HEIGHT }}>
+          <Toolbar iconSet="MaterialCommunityIcons" centerElement="Projecten" />
+        </View>
+        <Text style={styles.title}>All projects are listed here</Text>
       </View>
     );
   }
@@ -20,13 +26,11 @@ export default class Projectoverview extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: "#F5FCFF"
   },
   title: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    textAlign: "center",
+    margin: 10
   }
 });
