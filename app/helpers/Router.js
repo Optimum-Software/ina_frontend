@@ -1,12 +1,12 @@
 import { NavigationActions } from "react-navigation";
-export default class Router {
-
-	static getInstance() {
-    	if (Router.instance == null) {
-    	  Router.instance = new Router();
-    	  }
+let instance = null;
+class Router {
+	constructor() {
+    	if (!instance) {
+	  		instance = this
+	  	}
 	
-    	return Router.instance;
+    	return instance;
   	}
 
 	goTo(dispatcher, stackName, screenName) {
@@ -19,4 +19,11 @@ export default class Router {
       		})
 		)      		
 	}
+
+	goBack(dispatcher) {
+		dispatcher.dispatch(NavigationActions.back())
+	}
 }
+
+const router = new Router();
+export default router;

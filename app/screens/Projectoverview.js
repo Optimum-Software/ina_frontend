@@ -2,19 +2,27 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  Button
 } from 'react-native';
+import router from '../helpers/Router';
 
 export default class Projectoverview extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          All projects are listed here
-        </Text>
-      </View>
-    );
-  }
+    constructor() {
+        super();
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>
+                    All projects are listed here
+                </Text>
+                <Button title="rout" onPress={() => {
+                    router.goBack(this.props.navigation)
+                }}/>
+            </View>
+      );
+    }
 }
 
 const styles = StyleSheet.create({

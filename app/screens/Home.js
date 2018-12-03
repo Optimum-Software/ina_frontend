@@ -5,14 +5,11 @@ import {
   View,
   Button
 } from 'react-native';
-import Router from '../helpers/Router';
+import router from '../helpers/Router';
 
 export default class Home extends Component {
     constructor() {
         super();
-        this.state = {
-            router: Router.getInstance()
-        }
     }
     render() {
         return (
@@ -21,7 +18,7 @@ export default class Home extends Component {
                     Home
                 </Text>
                 <Button title="rout" onPress={() => {
-                    this.state.router.goTo(this.props.navigation, "Tabs", "Projectoverview")
+                    router.goTo(this.props.navigation, "Tabs", "Projectoverview")
                 }}/>
             </View>
         );
