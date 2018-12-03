@@ -2,19 +2,30 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  Button
 } from 'react-native';
+import Router from '../helpers/Router';
 
 export default class Home extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          Home
-        </Text>
-      </View>
-    );
-  }
+    constructor() {
+        super();
+        this.state = {
+            router: Router.getInstance()
+        }
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>
+                    Home
+                </Text>
+                <Button title="rout" onPress={() => {
+                    this.state.router.goTo(this.props.navigation, "Tabs", "Projectoverview")
+                }}/>
+            </View>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
