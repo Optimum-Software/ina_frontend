@@ -1,40 +1,36 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Header } from "react-navigation";
 import {
-  StyleSheet,
-  Text,
-  View,
+  COLOR,
+  ThemeContext,
+  getTheme,
+  Toolbar,
+  Card,
   Button
-} from 'react-native';
-import router from '../helpers/Router';
+} from "react-native-material-ui";
 
 export default class Projectoverview extends Component {
-    constructor() {
-        super();
-    }
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>
-                    All projects are listed here
-                </Text>
-                <Button title="rout" onPress={() => {
-                    router.goBack(this.props.navigation)
-                }}/>
-            </View>
-      );
-    }
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={{ height: Header.HEIGHT }}>
+          <Toolbar iconSet="MaterialCommunityIcons" centerElement="Projecten" />
+        </View>
+        <Text style={styles.title}>All projects are listed here</Text>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: "#F5FCFF"
   },
   title: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    textAlign: "center",
+    margin: 10
   }
 });

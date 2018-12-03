@@ -1,40 +1,31 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button
-} from 'react-native';
-import router from '../helpers/Router';
+import React, { Component } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Header } from "react-navigation";
+import { Toolbar } from "react-native-material-ui";
 
 export default class Home extends Component {
-    constructor() {
-        super();
-    }
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>
-                    Home
-                </Text>
-                <Button title="rout" onPress={() => {
-                    router.goTo(this.props.navigation, "Tabs", "Projectoverview")
-                }}/>
-            </View>
-        );
-    }
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={{ height: Header.HEIGHT }}>
+          <Toolbar centerElement="Home page" />
+        </View>
+        <View>
+          <Text style={styles.title}>Home</Text>
+        </View>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: "#F5FCFF"
   },
   title: {
     fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    textAlign: "center",
+    margin: 10
   }
 });
