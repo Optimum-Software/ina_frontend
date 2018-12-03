@@ -11,6 +11,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import Home from "../screens/Home";
 import Projectoverview from "../screens/Projectoverview";
+import LoginScreen from "../screens/LoginScreen";
 
 let screen = Dimensions.get("window");
 
@@ -30,6 +31,15 @@ export const Tabs = createBottomTabNavigator({
       tabBarLabel: "Projecten",
       tabBarIcon: ({ tintColor }) => (
         <Icon name="folder-open" type="ionicon" size={28} color={tintColor} />
+      )
+    }
+  },
+  LoginScreen: {
+    screen: LoginScreen,
+    navigationOptions: {
+      tabBarLabel: "Inloggen",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="account" type="ionicon" size={28} color={tintColor} />
       )
     }
   }
