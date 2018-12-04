@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  ScrollView
+  ScrollView,
+  Animated,
+  Easing
 } from "react-native";
-
-import logo from "../assets/logo.png";
+import Api from "../config/Api";
 import { NavigationActions } from "react-navigation";
+import logo from "../assets/logo.png";
 
 class LoginScreen extends Component {
   constructor() {
@@ -20,20 +22,59 @@ class LoginScreen extends Component {
       email: "",
       password: ""
     };
+    this.spinValue = new Animated.Value(0);
   }
 
   static navigationOptions = ({ navigation }) => ({
     title: "Inloggen"
   });
 
+  componentDidMount() {
+    this.spin();
+  }
+
+  spin() {
+    this.spinValue.setValue(0);
+    Animated.timing(this.spinValue, {
+      toValue: 1,
+      duration: 4000,
+      easing: Easing.linear
+    }).start(() => this.spin());
+  }
+
   login() {
-    alert(this.state.email + " " + this.state.password);
+    if (this.state.email == "" || this.state.password == "") {
+      alert("Vul alstublieft alle velden in!");
+    } else if (/\S+@\S+\.\S+/.test(this.state.email) == false) {
+      alert("Het ingevoerde email adres is geen valide email!");
+    } else {
+      let api = Api.getInstance();
+      let userData = {
+        email: this.state.email,
+        password: this.state.password
+      };
+      api.callApiPost("login", "POST", userData, response => {});
+    }
   }
 
   render() {
+    const spin = this.spinValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ["0deg", "360deg"]
+    });
     return (
       <ScrollView style={styles.container}>
-        <Image resizeMode="contain" style={styles.logo} source={logo} />
+        <Animated.Image
+          resizeMode="contain"
+          style={{
+            width: 200,
+            height: 200,
+            marginTop: "5%",
+            alignSelf: "center",
+            transform: [{ rotate: spin }]
+          }}
+          source={logo}
+        />
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -83,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fafafa"
   },
   inputContainer: {
-    marginTop: "25%"
+    marginTop: "20%"
   },
   input: {
     height: 40,
@@ -99,12 +140,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontWeight: "700"
-  },
-  logo: {
-    marginTop: "10%",
-    alignSelf: "center",
-    height: 150,
-    width: 150
   }
 });
 export default LoginScreen;
