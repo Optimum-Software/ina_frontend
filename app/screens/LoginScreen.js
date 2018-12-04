@@ -21,6 +21,10 @@ class LoginScreen extends Component {
     };
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    title: "Inloggen"
+  });
+
   login() {
     alert(this.state.email + " " + this.state.password);
   }
