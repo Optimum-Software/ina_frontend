@@ -65,7 +65,9 @@ class LoginScreen extends Component {
                 this.props.navigation.navigate("RegistrationScreen")
               }
             >
-              <Text>Nog geen account? Meld je aan!</Text>
+              <Text style={{ color: "#fff" }}>
+                Nog geen account? Meld je aan!
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
