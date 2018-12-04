@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Animated, Easing } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import { Input, Button} from 'react-native-elements'
@@ -24,8 +24,46 @@ export default class RegistrationScreenStart extends Component {
             pwRepeat: '',
             pwRepeatError: '',
         }
+        super()
+        this.animatedValue = new Animated.Value(0)
     }
+
+    animate() {
+        this.animatedValue.setValue(0);
+        Animated.timing(
+            this.animatedValue,
+            {
+                toValue: 1,
+                duration: 1000,
+                easing: Easing.linear
+            }
+        ).start()
+    }
+
+    goToRegisterPhone() {
+        if(this.checkInputEmpty()) {
+            Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
+        }
+        
+    }
+
+    checkInputEmpty() {
+        msg = "Vul het veld alstublieft in"
+        returnBool = true
+        if(this.state.firstName == '') { this.setState({firstNameError: msg}); returnBool = false}
+        if(this.state.lastName == '') { this.setState({lastNameError: msg}); returnBool = false}
+        if(this.state.email == '') { this.setState({emailError: msg}); returnBool = false}
+        if(this.state.pw == '') { this.setState({pwError: msg}); returnBool = false}
+        if(this.state.pwRepeat == '') { this.setState({pwRepeatError: msg}); returnBool = false}
+        return returnBool
+    }
+
     render() {
+        const textSize = this.animatedValue.interpolate({
+            inputRange: [0, 0.5, 1],
+            outputRange: [18, 32, 18]
+        })
+        console.log(textSize)
         return (
           <View style={styles.container}>
             <View style={{ height: Header.HEIGHT }}>
@@ -36,7 +74,7 @@ export default class RegistrationScreenStart extends Component {
                     placeholder='Voornaam'
                     containerStyle={styles.inputContainer}
                     leftIcon={{ type: 'font-awesome', name: 'user' }}
-                    errorStyle={styles.errorStyle}
+                    errorStyle={{color: 'red',fontSize: textSize,}}
                     errorMessage={this.state.firstNameError}
                     onChangeText={firstName => this.setState({firstName})}
                     onEndEditing={() => console.log(this.state.firstName)}
@@ -83,11 +121,11 @@ export default class RegistrationScreenStart extends Component {
                     title="Registreer"
                     buttonStyle={styles.buttonStyle}
                     containerStyle={styles.buttonContainer}
-                    onPress={() => console.log("rout to registerscreen 2")}
+                    onPress={() => this.goToRegisterPhone()}
                 />
                 <TouchableOpacity 
                     style={styles.textContainer}    
-                    onPress={() => Router.goTo(this.props.navigation, 'LoginScreen', 'LoginScreen')}
+                    onPress={() => Router.goTo(this.props.navigation, 'LoginScreen', 'LoginScreen', {})}
                 >
                     <Text style={styles.goToLoginText}>
                         al account? Log dan hier in.
@@ -109,6 +147,10 @@ const styles = StyleSheet.create({
         textAlign: "center",
         margin: 10
     },
+    inputContainer: {
+        width: '75%',
+        alignSelf: 'center',
+    },
     inputFieldContainer: {
         marginTop: '5%',
         flex: 4,
@@ -117,7 +159,6 @@ const styles = StyleSheet.create({
     },
     errorStyle: {
         color: 'red',
-        fontSize: 18
     },
 
     actionContainer: {
@@ -126,10 +167,7 @@ const styles = StyleSheet.create({
         paddingTop: '10%',
         justifyContent: 'space-between'
     },
-    inputContainer: {
-        width: '75%',
-        alignSelf: 'center',
-    },
+    
 
     buttonContainer: {
         width: '75%',

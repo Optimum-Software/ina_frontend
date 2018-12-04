@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
+import Router from '../helpers/Router';
+import { Button} from 'react-native-elements';
+
 
 export default class Home extends Component {
   render() {
@@ -13,6 +16,12 @@ export default class Home extends Component {
         <View>
           <Text style={styles.title}>Home</Text>
         </View>
+        <Button
+                    title="Registreer"
+                    buttonStyle={styles.buttonStyle}
+                    containerStyle={styles.buttonContainer}
+                    onPress={() => Router.goTo(this.props.navigation, 'Register', 'RegisterStart', null)}
+                />
       </View>
     );
   }
