@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Home from "../screens/Home";
 import Projectoverview from "../screens/Projectoverview";
 import LoginScreen from "../screens/LoginScreen";
+import RegistrationScreen from "../screens/RegistrationScreen";
 
 let screen = Dimensions.get("window");
 
@@ -34,8 +35,8 @@ export const Tabs = createBottomTabNavigator({
       )
     }
   },
-  LoginScreen: {
-    screen: LoginScreen,
+  LoginStack: {
+    screen: LoginStack,
     navigationOptions: {
       tabBarLabel: "Inloggen",
       tabBarIcon: ({ tintColor }) => (
@@ -44,6 +45,26 @@ export const Tabs = createBottomTabNavigator({
     }
   }
 });
+
+const LoginStack = createStackNavigator(
+  {
+    LoginScreen: {
+      screen: LoginScreen,
+      navigationOptions: {
+        title: "Login"
+      }
+    },
+    Registration: {
+      screen: RegistrationScreen,
+      navigationOptions: {
+        title: "Registreren"
+      }
+    }
+  },
+  {
+    headerMode: "none"
+  }
+);
 
 const MainNavigator = createStackNavigator(
   {

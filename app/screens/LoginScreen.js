@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import logo from "../assets/logo.png";
+import { NavigationActions } from "react-navigation";
 
 class LoginScreen extends Component {
   constructor() {
@@ -53,6 +54,14 @@ class LoginScreen extends Component {
               onPress={() => this.login()}
             >
               <Text style={styles.buttonText}>Inloggen</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginBottom: 25, marginTop: 10 }}
+              onPress={() =>
+                this.props.navigation.navigate("RegistrationScreen")
+              }
+            >
+              <Text>Nog geen account? Meld je aan!</Text>
             </TouchableOpacity>
           </View>
         </View>

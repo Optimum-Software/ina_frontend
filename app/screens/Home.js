@@ -7,7 +7,7 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ height: Header.HEIGH }}>
+        <View style={{ height: Header.HEIGHT }}>
           <Toolbar centerElement="Home page" />
         </View>
         <View>
