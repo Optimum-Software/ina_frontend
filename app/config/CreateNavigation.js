@@ -12,12 +12,13 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Home from "../screens/Home";
 import Projectoverview from "../screens/Projectoverview";
 import LoginScreen from "../screens/LoginScreen";
+import RegistrationScreenStart from "../screens/RegistrationScreenStart";
 
 let screen = Dimensions.get("window");
 
 export const Tabs = createBottomTabNavigator({
   Home: {
-    screen: Home,
+    screen: RegistrationScreenStart,
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => (
