@@ -158,5 +158,20 @@ export default class Api {
         });
     }
 
+    getAllProjects() {
+        api.callApiGet("getAllProjects", "GET", response => {
+
+            if (response["bool"] == true) {
+                this.setUser(
+                    //return data = {"projects": response["projects"], "msg": response["msg"]}
+                );
+            } else {
+                //return data = {"msg": response["msg"]}
+            }
+        });
+    }
+
+
 
 }
+
