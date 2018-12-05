@@ -110,7 +110,7 @@ class LoginScreen extends Component {
                         Router.goTo(
                             this.props.navigation,
                             "Register",
-                            "RegisterStart",
+                            "RegistrationScreenStart",
                             null
                         )
                     }
