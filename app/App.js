@@ -7,12 +7,8 @@
  */
 import React, { Component } from "react";
 import { Text, View } from "react-native";
-<<<<<<< HEAD
-import { RootNavigator } from "./config/router";
-import firebaseApi from "./helpers/FirebaseApi";
-=======
 import { RootNavigator } from "./config/CreateNavigation";
->>>>>>> upstream/master
+import firebaseApi from "./helpers/FirebaseApi";
 
 export default class App extends React.Component {
     constructor() {
