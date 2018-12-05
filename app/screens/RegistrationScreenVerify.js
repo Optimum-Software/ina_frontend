@@ -28,10 +28,11 @@ export default class RegistrationScreenStart extends Component {
                   codeLength={6}
                   size={60}
                   className='border-circle'
-                  cellBorderWidth={'10%'}
+                  cellBorderWidth={3}
                   autoFocus={true}
                   activeColor='#212121'
-                  codeInputStyle={{borderColor: '#212121', color: '#212121'}}
+                  codeInputStyle={styles.codeInputStyle}
+                  containerStyle={styles.containerStyle}
                   onFulfill={(code) => this.checkCode(code)}
                 />
           </View>
@@ -41,12 +42,15 @@ export default class RegistrationScreenStart extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#6be1ff",
-        height: '100%'
+        backgroundColor: "#FFFFFF",
+        height: '100%',       
     },
-    title: {
-        fontSize: 20,
-        textAlign: "center",
-        margin: 10
+    containerStyle: {
+      backgroundColor: 'green',
+      flex: 1
     },
+    codeInputStyle: {
+      borderColor: '#212121',
+      color: '#212121'
+    }
 });
