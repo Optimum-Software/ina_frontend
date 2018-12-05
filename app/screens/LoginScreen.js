@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import Api from "../config/Api";
 import { NavigationActions } from "react-navigation";
-import logo from "../assets/logo.png";
+import logo from "../assets/images/logo.png";
 
 class LoginScreen extends Component {
     constructor() {
