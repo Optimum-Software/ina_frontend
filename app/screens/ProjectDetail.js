@@ -23,7 +23,7 @@ export default class ProjectDetail extends Component {
       const title = navigation.getParam("title", "");
       const url = navigation.getParam("url", "");
         return (
-            <View>
+            <View style={styles.container}>
               <View style={styles.image}>
                 <Image
                   source={{uri: url}}
@@ -32,7 +32,7 @@ export default class ProjectDetail extends Component {
                 />
               </View>
 
-                <Text>
+                <Text style={styles.title}>
                   {title}
                 </Text>
              </View>
@@ -45,11 +45,10 @@ export default class ProjectDetail extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
   },
   cardContainer: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     margin: 10,
   },
   card: {
@@ -67,8 +66,13 @@ const styles = StyleSheet.create({
   },
 
   image: {
-      height:'30%',
+      height:'40%',
       width:'100%'
+      },
+  title: {
+    margin: 5,
+    fontSize: 20,
+    fontWeight: "bold"
   }
 
 });
