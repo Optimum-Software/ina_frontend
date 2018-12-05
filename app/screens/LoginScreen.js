@@ -15,6 +15,7 @@ import Api from "../config/Api";
 import { NavigationActions } from "react-navigation";
 import logo from "../assets/images/logo.png";
 import firebaseApi from "../helpers/FirebaseApi";
+import Router from "../helpers/Router";
 
 class LoginScreen extends Component {
     constructor() {
@@ -106,7 +107,12 @@ class LoginScreen extends Component {
                 <TouchableOpacity
                     style={{ marginBottom: 25, marginTop: 10 }}
                     onPress={() =>
-                        this.props.navigation.navigate("RegistrationScreen")
+                        Router.goTo(
+                            this.props.navigation,
+                            "Register",
+                            "RegisterStart",
+                            null
+                        )
                     }
                 >
                     <Text style={{ color: "#37474f" }}>
