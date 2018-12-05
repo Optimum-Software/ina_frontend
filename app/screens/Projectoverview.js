@@ -12,6 +12,7 @@ import {
 import {Header} from "react-navigation";
 import {Toolbar} from "react-native-material-ui";
 import mountain from "../assets/images/firewatch_5.jpg"
+import line from "../assets/images/Line.png"
 
 export default class Projectoverview extends Component {
 
@@ -24,7 +25,7 @@ export default class Projectoverview extends Component {
                 url: 'https://thumbor.forbes.com/thumbor/711x458/https://specials-images.forbesimg.com/dam/imageserve/982432822/960x0.jpg?fit=scale'
                  },
                 {
-                    title: "Bye",
+                    title: "Dit is een langere titel dan de anderen",
                     url: 'http://www.findapsychologist.org/wp-content/uploads/2013/07/Learning-disabilities1.jpg'
                 },
                 {
@@ -87,14 +88,19 @@ export default class Projectoverview extends Component {
 
                                 <View style={styles.card}>
 
-                                        <View>
+                                        <View style={styles.cardImage}>
                                             <Image
                                                 source={{uri: item.url}}
                                                 resizeMode="cover"
-                                                style={{width: "100%", height: 200}}
-                                            />
+                                                style={{width: "100%",height:"100%"}}
+                                               />
                                         </View>
-                                        <Text>
+                                        <Image
+                                            source={line}
+                                            resizeMode="stretch"
+                                            style={{width: "100%",height:"2%"}}
+                                        />
+                                        <Text style={styles.cardTitle}>
                                             {item.title}
                                         </Text>
                                 </View>
@@ -113,19 +119,18 @@ export default class Projectoverview extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-     },
+      },
     cardContainer: {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        margin: 20,
-    },
-
+        margin: 10,
+        },
     card: {
-        color: "black",
         backgroundColor: '#F1F1F1',
         margin: 10,
         width: '100%',
+        height: 180,
         marginBottom: 10,
         elevation: 3,
     },
@@ -134,5 +139,16 @@ const styles = StyleSheet.create({
         width: Dimensions.get("window").width,
         height: Dimensions.get("window").height
     },
+
+    cardImage: {
+        height:'70%',
+        width:'100%'
+
+      },
+    cardTitle: {
+        margin: 5,
+        fontSize:15,
+        fontWeight: "bold"
+    }
 
 });
