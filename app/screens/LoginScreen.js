@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import Api from "../config/Api";
 import { NavigationActions } from "react-navigation";
-import logo from "../assets/logo.png";
+import logo from "../assets/images/logo.png";
 import firebaseApi from "../helpers/FirebaseApi";
 
 class LoginScreen extends Component {
@@ -38,7 +38,7 @@ class LoginScreen extends Component {
         this.spinValue.setValue(0);
         Animated.timing(this.spinValue, {
             toValue: 1,
-            duration: 4000,
+            duration: 99000,
             easing: Easing.linear
         }).start(() => this.spin());
     }
