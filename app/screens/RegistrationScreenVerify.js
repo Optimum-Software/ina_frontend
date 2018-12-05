@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
         height: '100%',       
     },
     containerStyle: {
-      backgroundColor: 'green',
-      flex: 1
+      flex: 1,
+      marginTop: '50%'
     },
     codeInputStyle: {
       borderColor: '#212121',

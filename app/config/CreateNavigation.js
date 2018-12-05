@@ -21,7 +21,7 @@ let screen = Dimensions.get("window");
 
 export const Tabs = createBottomTabNavigator({
   Home: {
-    screen: RegistrationScreenVerify,
+    screen: Home,
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => (
@@ -53,16 +53,25 @@ export const Register = createStackNavigator({
     RegisterStart: {
         screen: RegistrationScreenStart,
         navigationOptions: ({ navigation }) => ({
-            gesturesEnabled: false
+          gesturesEnabled: false
         })
     },
 
     RegisterPhone: {
         screen: RegistrationScreenPhone,
         navigationOptions: ({ navigation }) => ({
-            gesturesEnabled: false
+          gesturesEnabled: false
         })
-    }},
+    },
+
+    RegisterVerify: {
+      screen: RegistrationScreenVerify,
+      navigationOptions: ({ navigation }) => ({
+          gesturesEnabled: false
+      })
+    }
+
+  },
     {
         headerMode: "none",
     })
@@ -76,10 +85,10 @@ const MainNavigator = createStackNavigator(
       })
     },
     Register: {
-        screen: Register,
-        navigationOptions: ({ navigation }) => ({
-            gesturesEnabled: false
-        })
+      screen: Register,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
     }
   },
   {
