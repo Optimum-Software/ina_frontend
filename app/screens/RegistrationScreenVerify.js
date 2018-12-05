@@ -28,7 +28,6 @@ export default class RegistrationScreenStart extends Component {
                   codeLength={6}
                   size={60}
                   className='border-circle'
-                  cellBorderWidth={'10%'}
                   autoFocus={true}
                   activeColor='#212121'
                   codeInputStyle={{borderColor: '#212121', color: '#212121'}}
