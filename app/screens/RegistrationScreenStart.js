@@ -24,7 +24,6 @@ export default class RegistrationScreenStart extends Component {
             pwRepeat: 'a',
             pwRepeatError: '',
         }
-        super()
     }
 
     goToRegisterPhone() {
@@ -35,7 +34,7 @@ export default class RegistrationScreenStart extends Component {
     }
 
     checkInputEmpty() {
-        msg = "Vul het veld alstublieft in"
+        msg = "VVul alstublieft het veld in"
         returnBool = true
 
         if(this.state.firstName == '') { this.setState({firstNameError: msg}); returnBool = false;}

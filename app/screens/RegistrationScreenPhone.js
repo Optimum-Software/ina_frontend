@@ -4,6 +4,7 @@ import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import { Input, Button} from 'react-native-elements'
 import Router from '../helpers/Router';
+import CodeInput from 'react-native-confirmation-code-input';
 
 export default class RegistrationScreenPhone extends Component {
     constructor() {
@@ -19,10 +20,18 @@ export default class RegistrationScreenPhone extends Component {
         this.setState({registerInfo: this.props.navigation.state.params});
     }
 
-    goToRegisterVerify() {
+    verifyPhone() {
         if(this.checkInputEmpty() && this.checkInputType() && this.checkInputLength()) {
-            console.log("routing")
+            alert("code gestuurd naar")
         }
+    }
+
+    verifyCode(isValid) {
+      if(isValid) {
+        this.refs.codeInput.clear();
+      } else {
+        this.setState({codeError: 'Deze code is niet correct'})
+      }
     }
 
     checkInputEmpty() {
@@ -69,7 +78,7 @@ export default class RegistrationScreenPhone extends Component {
                         errorStyle={styles.errorStyle}
                         errorMessage={this.state.phoneNumberError}
                         onChangeText={phoneNumber => this.setState({phoneNumber})}
-                        onSubmitEditing={() => console.log(this.state.phoneNumber)}
+                        onSubmitEditing={() => this.verifyPhone()}
                         keyboardType='phone-pad'
                         maxLength={10}
                     />
@@ -79,7 +88,7 @@ export default class RegistrationScreenPhone extends Component {
                         title="Verificeer telefoonnummer"
                         buttonStyle={styles.buttonStyle}
                         containerStyle={styles.buttonContainer}
-                        onPress={() => this.goToRegisterVerify()}
+                        onPress={() => this.verifyPhone()}
                     />
                 </View>
             </View>
@@ -90,7 +99,7 @@ export default class RegistrationScreenPhone extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#F5FCFF",
+        backgroundColor: "#6be1ff",
         height: '100%'
     },
     title: {
@@ -103,24 +112,20 @@ const styles = StyleSheet.create({
         width: '75%',
         alignSelf: 'center',
     },
-    errorStyle: {
-        color: 'red',
-        fontSize: 18
-    },
     inputFieldContainer: {
         marginTop: '5%',
-        flex: 1,
+        flex: 2,
         flexDirection: 'column',
     },
     actionContainer: {
-        flex:1
+        flex:2
     },
 
     infoField: {
-        flex:1,
+        flex:2,
         width: '75%',
         alignSelf: 'center',
-        marginTop: '10%'
+        marginTop: '10%',
     },
     infoText: {
         fontSize: 20

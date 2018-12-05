@@ -14,13 +14,14 @@ import Projectoverview from "../screens/Projectoverview";
 import LoginScreen from "../screens/LoginScreen";
 import RegistrationScreenStart from "../screens/RegistrationScreenStart";
 import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
+import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
 import LoginStack from "./LoginStackNavigator";
 
 let screen = Dimensions.get("window");
 
 export const Tabs = createBottomTabNavigator({
   Home: {
-    screen: Home,
+    screen: RegistrationScreenVerify,
     navigationOptions: {
       tabBarLabel: "Home",
       tabBarIcon: ({ tintColor }) => (
