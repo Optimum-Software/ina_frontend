@@ -28,13 +28,13 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5FCFF"
-  },
-  title: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  }
+    container: {
+        flex: 1,
+        backgroundColor: "#F5FCFF"
+    },
+    title: {
+        fontSize: 20,
+        textAlign: "center",
+        margin: 10
+    }
 });

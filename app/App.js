@@ -8,9 +8,15 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
 import { RootNavigator } from "./config/CreateNavigation";
+import firebaseApi from "./helpers/FirebaseApi";
+
 
 export default class App extends React.Component {
-  render() {
-    return <RootNavigator />;
-  }
+    constructor() {
+        super();
+        firebaseApi.checkUser();
+    }
+    render() {
+        return <RootNavigator />;
+    }
 }

@@ -14,6 +14,7 @@ import Projectoverview from "../screens/Projectoverview";
 import LoginScreen from "../screens/LoginScreen";
 import RegistrationScreenStart from "../screens/RegistrationScreenStart";
 import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
+import LoginStack from "./LoginStackNavigator";
 
 let screen = Dimensions.get("window");
 
@@ -36,8 +37,8 @@ export const Tabs = createBottomTabNavigator({
       )
     }
   },
-  LoginScreen: {
-    screen: LoginScreen,
+  LoginStack: {
+    screen: LoginStack,
     navigationOptions: {
       tabBarLabel: "Inloggen",
       tabBarIcon: ({ tintColor }) => (
