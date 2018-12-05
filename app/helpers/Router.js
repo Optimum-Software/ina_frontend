@@ -5,16 +5,17 @@ class Router {
     	if (!instance) {
 	  		instance = this
 	  	}
-	
     	return instance;
   	}
 
-	goTo(dispatcher, stackName, screenName) {
+	goTo(dispatcher, stackName, screenName, parameters) {
 		dispatcher.dispatch(
       		NavigationActions.navigate({
   		  		routeName: stackName,
   		  		action: NavigationActions.navigate({
-  		  	  		routeName: screenName
+  		  	  		routeName: screenName,
+  		  	  		params: parameters
+
   		  		})
       		})
 		)      		
