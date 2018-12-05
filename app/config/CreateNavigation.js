@@ -16,6 +16,7 @@ import RegistrationScreenStart from "../screens/RegistrationScreenStart";
 import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
 import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
 import LoginStack from "./LoginStackNavigator";
+import ProjectStack from "./ProjectStackNavigator";
 
 let screen = Dimensions.get("window");
 
@@ -87,14 +88,9 @@ const MainNavigator = createStackNavigator(
             navigationOptions: ({ navigation }) => ({
                 gesturesEnabled: false
             })
-        },
-        Register: {
-            screen: Register,
-            navigationOptions: ({ navigation }) => ({
-                gesturesEnabled: false
-            })
         }
     },
+
     {
         headerMode: "none",
         mode: "modal"
