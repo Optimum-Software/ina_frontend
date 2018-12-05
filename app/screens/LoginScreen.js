@@ -14,6 +14,7 @@ import {
 import Api from "../config/Api";
 import { NavigationActions } from "react-navigation";
 import logo from "../assets/images/logo.png";
+import firebaseApi from "../helpers/FirebaseApi";
 
 class LoginScreen extends Component {
     constructor() {
@@ -40,7 +41,7 @@ class LoginScreen extends Component {
             duration: 99000,
             easing: Easing.linear
         }).start(() => this.spin());
-      }
+    }
 
     login() {
         if (this.state.email == "" || this.state.password == "") {
@@ -48,12 +49,13 @@ class LoginScreen extends Component {
         } else if (/\S+@\S+\.\S+/.test(this.state.email) == false) {
             alert("Het ingevoerde email adres is geen valide email!");
         } else {
-            let api = Api.getInstance();
-            let userData = {
-                email: this.state.email,
-                password: this.state.password
-            };
-            api.callApiPost("login", "POST", userData, response => {});
+            // let api = Api.getInstance();
+            // let userData = {
+            //     email: this.state.email,
+            //     password: this.state.password
+            // };
+            // api.callApiPost("login", "POST", userData, response => {});
+            firebaseApi.sendSms("+31611735849");
         }
     }
 
