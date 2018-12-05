@@ -37,10 +37,10 @@ class LoginScreen extends Component {
         this.spinValue.setValue(0);
         Animated.timing(this.spinValue, {
             toValue: 1,
-            duration: 4000,
+            duration: 99000,
             easing: Easing.linear
         }).start(() => this.spin());
-    }
+      }
 
     login() {
         if (this.state.email == "" || this.state.password == "") {
