@@ -24,7 +24,7 @@ export const Tabs = createBottomTabNavigator({
     navigationOptions: {
       tabBarLabel: "Projecten",
       tabBarIcon: ({tintColor}) => (
-        <Icon name="folder-open" type="ionicon" size={28} color={tintColor}/>
+        <Icon name="lightbulb-on" type="ionicon" size={28} color={tintColor}/>
       )
     }
   },

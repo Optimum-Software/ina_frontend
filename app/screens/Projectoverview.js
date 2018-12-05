@@ -14,9 +14,9 @@ export default class Projectoverview extends Component {
       data: [{
         title: 'Hello',
         url: 'https://thumbor.forbes.com/thumbor/711x458/https://specials-images.forbesimg.com/dam/imageserve/982432822/960x0.jpg?fit=scale'
-      },
+       },
         {
-          title: "Dit is een langere titel dan de anderen",
+          title: "Dit is een langere titel dan de anderen.",
           url: 'http://www.findapsychologist.org/wp-content/uploads/2013/07/Learning-disabilities1.jpg'
         },
         {
@@ -80,7 +80,10 @@ export default class Projectoverview extends Component {
               numColumns={2}
               renderItem={({item}) => (
                 <TouchableHighlight style={styles.cardContainer}
-                                    onPress={() => this.props.navigation.navigate("ProjectDetail")}>
+                                    onPress={() => this.props.navigation.navigate("ProjectDetail", {
+                                      title: item.title,
+                                      url: item.url
+                                    })}>
 
                   <View style={styles.card}>
 
@@ -95,8 +98,8 @@ export default class Projectoverview extends Component {
                       source={line}
                       resizeMode="stretch"
                       style={{width: "100%", height: "2%"}}
-                    />
-                    <Text style={styles.cardTitle}>
+                      />
+                    <Text numberOfLines={2} style={styles.cardTitle}>
                       {item.title}
                     </Text>
                   </View>
