@@ -1,19 +1,11 @@
-import React, { Component } from "react";
-import { Dimensions, Platform } from "react-native";
-import {
-  StackNavigator,
-  createStackNavigator,
-  createBottomTabNavigator,
-  createAppContainer,
-  withNavigation
-} from "react-navigation";
+import React from "react";
+import {Dimensions} from "react-native";
+import {createAppContainer, createBottomTabNavigator, createStackNavigator, StackNavigator} from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import Home from "../screens/Home";
-import Projectoverview from "../screens/Projectoverview";
-import LoginScreen from "../screens/LoginScreen";
-import RegistrationScreen from "../screens/RegistrationScreen";
 import LoginStack from "./LoginStackNavigator";
+import ProjectStack from "./ProjectStackNavigator"
 
 let screen = Dimensions.get("window");
 
@@ -22,17 +14,17 @@ export const Tabs = createBottomTabNavigator({
     screen: Home,
     navigationOptions: {
       tabBarLabel: "Home",
-      tabBarIcon: ({ tintColor }) => (
-        <Icon name="home" type="entypo" size={28} color={tintColor} />
+      tabBarIcon: ({tintColor}) => (
+        <Icon name="home" type="entypo" size={28} color={tintColor}/>
       )
     }
   },
-  Projectoverview: {
-    screen: Projectoverview,
+  ProjectStack: {
+    screen: ProjectStack,
     navigationOptions: {
       tabBarLabel: "Projecten",
-      tabBarIcon: ({ tintColor }) => (
-        <Icon name="folder-open" type="ionicon" size={28} color={tintColor} />
+      tabBarIcon: ({tintColor}) => (
+        <Icon name="folder-open" type="ionicon" size={28} color={tintColor}/>
       )
     }
   },
@@ -40,8 +32,8 @@ export const Tabs = createBottomTabNavigator({
     screen: LoginStack,
     navigationOptions: {
       tabBarLabel: "Inloggen",
-      tabBarIcon: ({ tintColor }) => (
-        <Icon name="account" type="ionicon" size={28} color={tintColor} />
+      tabBarIcon: ({tintColor}) => (
+        <Icon name="account" type="ionicon" size={28} color={tintColor}/>
       )
     }
   }
@@ -51,7 +43,7 @@ const MainNavigator = createStackNavigator(
   {
     Tabs: {
       screen: Tabs,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: ({navigation}) => ({
         gesturesEnabled: false
       })
     }
