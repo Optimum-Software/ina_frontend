@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Animated, Easing } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import { Input, Button} from 'react-native-elements'
@@ -9,35 +9,22 @@ export default class RegistrationScreenStart extends Component {
     constructor() {
         super();
         this.state = {
-            firstName: '',
+            firstName: 'a',
             firstNameError: '',
 
-            lastName: '',
+            lastName: 'a',
             lastNameError: '',
 
-            email: '',
+            email: 'a',
             emailError: '',
 
-            pw: '',
+            pw: 'a',
             pwError: '',
 
-            pwRepeat: '',
+            pwRepeat: 'a',
             pwRepeatError: '',
         }
         super()
-        this.animatedValue = new Animated.Value(0)
-    }
-
-    animate() {
-        this.animatedValue.setValue(0);
-        Animated.timing(
-            this.animatedValue,
-            {
-                toValue: 1,
-                duration: 1000,
-                easing: Easing.linear
-            }
-        ).start()
     }
 
     goToRegisterPhone() {
@@ -50,7 +37,8 @@ export default class RegistrationScreenStart extends Component {
     checkInputEmpty() {
         msg = "Vul het veld alstublieft in"
         returnBool = true
-        if(this.state.firstName == '') { this.setState({firstNameError: msg}); returnBool = false}
+
+        if(this.state.firstName == '') { this.setState({firstNameError: msg}); returnBool = false;}
         if(this.state.lastName == '') { this.setState({lastNameError: msg}); returnBool = false}
         if(this.state.email == '') { this.setState({emailError: msg}); returnBool = false}
         if(this.state.pw == '') { this.setState({pwError: msg}); returnBool = false}
@@ -59,11 +47,6 @@ export default class RegistrationScreenStart extends Component {
     }
 
     render() {
-        const textSize = this.animatedValue.interpolate({
-            inputRange: [0, 0.5, 1],
-            outputRange: [18, 32, 18]
-        })
-        console.log(textSize)
         return (
           <View style={styles.container}>
             <View style={{ height: Header.HEIGHT }}>
@@ -72,49 +55,62 @@ export default class RegistrationScreenStart extends Component {
             <View style={styles.inputFieldContainer}>
                 <Input
                     placeholder='Voornaam'
-                    containerStyle={styles.inputContainer}
+                    containerStyle={styles.containerStyle}
+                    value={this.state.firstName}
                     leftIcon={{ type: 'font-awesome', name: 'user' }}
-                    errorStyle={{color: 'red',fontSize: textSize,}}
-                    errorMessage={this.state.firstNameError}
                     onChangeText={firstName => this.setState({firstName})}
-                    onEndEditing={() => console.log(this.state.firstName)}
+                    onSubmitEditing={() => console.log(this.state.firstName)}
                 />
+                <Text style={styles.errorStyle}>
+                    {this.state.firstNameError}
+                </Text>
                 <Input
                     placeholder='Achternaam'
-                    containerStyle={styles.inputContainer}
+                    containerStyle={styles.containerStyle}
+                    value={this.state.lastName}
                     leftIcon={{ type: 'font-awesome', name: 'user' }}
-                    errorStyle={styles.errorStyle}
-                    errorMessage={this.state.lastNameError}
                     onChangeText={lastName => this.setState({lastName})}
-                    onEndEditing={() => console.log("end")}
+                    onSubmitEditing={() => console.log("end")}
                 />
+                <Text style={styles.errorStyle}>
+                    {this.state.lastNameError}
+                </Text>
                 <Input
                     placeholder='E-mail'
-                    containerStyle={styles.inputContainer}
+                    containerStyle={styles.containerStyle}
+                    value={this.state.email}
                     leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-                    errorStyle={styles.errorStyle}
-                    errorMessage={this.state.emailError}
+                    autoCapitalize="none"
                     onChangeText={email => this.setState({email})}
-                    onEndEditing={() => console.log("end")}
+                    onSubmitEditing={() => console.log("end")}
                 />
+                <Text style={styles.errorStyle}>
+                    {this.state.emailError}
+                </Text>
                 <Input
                     placeholder='Wachtwoord'
-                    containerStyle={styles.inputContainer}
+                    containerStyle={styles.containerStyle}
+                    value={this.state.pw}
                     leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                    errorStyle={styles.errorStyle}
-                    errorMessage={this.state.pwError}
                     onChangeText={pw => this.setState({pw})}
-                    onEndEditing={() => console.log("end")}
+                    onSubmitEditing={() => console.log("end")}
+                    secureTextEntry={true}
                 />
+                <Text style={styles.errorStyle}>
+                    {this.state.pwError}
+                </Text>
                 <Input
                     placeholder='Herhaal Wachtwoord'
-                    containerStyle={styles.inputContainer}
+                    containerStyle={styles.containerStyle}
+                    value={this.state.pwRepeat}
                     leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                    errorStyle={styles.errorStyle}
-                    errorMessage={this.state.pwRepeatError}
                     onChangeText={pwRepeat => this.setState({pwRepeat})}
-                    onEndEditing={() => console.log("end")}
+                    onSubmitEditing={() => console.log("end")}
+                    secureTextEntry={true}
                 />
+                <Text style={styles.errorStyle}>
+                    {this.state.pwRepeatError}
+                </Text>
             </View>
             <View style={styles.actionContainer}>
                 <Button
@@ -139,7 +135,7 @@ export default class RegistrationScreenStart extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#F5FCFF",
+        backgroundColor: "#FFFFFF",
         height: '100%'
     },
     title: {
@@ -147,18 +143,23 @@ const styles = StyleSheet.create({
         textAlign: "center",
         margin: 10
     },
-    inputContainer: {
+    containerStyle: {
         width: '75%',
         alignSelf: 'center',
+        backgroundColor: "#FFFFFF",
     },
     inputFieldContainer: {
-        marginTop: '5%',
         flex: 4,
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
+        paddingTop: '10%',
     },
+
     errorStyle: {
         color: 'red',
+        alignSelf: 'center',
+        marginTop: '2%',
+        marginBottom: '2%'
     },
 
     actionContainer: {

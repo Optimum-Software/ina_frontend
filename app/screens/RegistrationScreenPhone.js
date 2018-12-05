@@ -14,10 +14,36 @@ export default class RegistrationScreenPhone extends Component {
             phoneNumberError: '',
         }
     }
+
     componentDidMount() {
         this.setState({registerInfo: this.props.navigation.state.params});
-
     }
+
+    goToRegisterVerify() {
+        if(this.checkInputEmpty() && this.checkInputType() && this.checkInputLength()) {
+            console.log("routing")
+        }
+    }
+
+    checkInputEmpty() {
+        msg = "Vul alstublieft het veld in"
+        returnBool = true
+        if(this.state.phoneNumber == '') { this.setState({phoneNumberError: msg}); returnBool = false}
+        return returnBool
+    }
+
+    checkInputType() {
+        msg = "Vul alstublieft alleen nummers in"
+        if(!/^\d+$/.test(this.state.phoneNumber)) {this.setState({phoneNumberError: msg}); returnBool = false}
+        return returnBool
+    }
+
+    checkInputLength() {
+        msg = "Vul alstublieft een volledig telefoonnummer in"
+        if(this.state.phoneNumber.length < 10) {this.setState({phoneNumberError: msg}); returnBool = false}
+        return returnBool
+    }
+
     render() {
         return (
           <View style={styles.container}>
@@ -26,31 +52,36 @@ export default class RegistrationScreenPhone extends Component {
                             onLeftElementPress={() =>
                                 Router.goBack(this.props.navigation)
                             }
-                            centerElement="Registreren" />
+                            centerElement="Registreren"/>
             </View>
-            <View style={styles.infoField}>
-                <Text style={styles.infoText}>
-                    We willen je mobiel nummer om die te verkopen voor alle monnies
-                </Text>
-            </View>
-            <View style={styles.inputFieldContainer}>
-                <Input
-                    placeholder='Mobiel nummer'
-                    containerStyle={styles.inputContainer}
-                    leftIcon={{ type: 'font-awesome', name: 'phone' }}
-                    errorStyle={styles.errorStyle}
-                    errorMessage={this.state.phoneNumberError}
-                    onChangeText={phoneNumber => this.setState({phoneNumber})}
-                    onEndEditing={() => console.log(this.state.phoneNumber)}
-                />
-            </View>
-            <View style={styles.actionContainer}>
-                <Button
-                    title="Verificeer telefoonnummer"
-                    buttonStyle={styles.buttonStyle}
-                    containerStyle={styles.buttonContainer}
-                    onPress={() => console.log("rout to registerscreen 3")}
-                />
+            <View style={styles.container}>
+                <View style={styles.infoField}>
+                    <Text style={styles.infoText}>
+                        We willen je mobiel nummer om die te verkopen voor alle monnies
+                    </Text>
+                </View>
+                <View style={styles.inputFieldContainer}>
+                    <Input
+                        placeholder='Mobiel nummer'
+                        containerStyle={styles.inputContainer}
+                        value={this.state.phoneNumber}
+                        leftIcon={{ type: 'font-awesome', name: 'phone' }}
+                        errorStyle={styles.errorStyle}
+                        errorMessage={this.state.phoneNumberError}
+                        onChangeText={phoneNumber => this.setState({phoneNumber})}
+                        onSubmitEditing={() => console.log(this.state.phoneNumber)}
+                        keyboardType='phone-pad'
+                        maxLength={10}
+                    />
+                </View>
+                <View style={styles.actionContainer}>
+                    <Button
+                        title="Verificeer telefoonnummer"
+                        buttonStyle={styles.buttonStyle}
+                        containerStyle={styles.buttonContainer}
+                        onPress={() => this.goToRegisterVerify()}
+                    />
+                </View>
             </View>
           </View>
         );
@@ -78,16 +109,39 @@ const styles = StyleSheet.create({
     },
     inputFieldContainer: {
         marginTop: '5%',
-        flex: 4,
+        flex: 1,
         flexDirection: 'column',
-        justifyContent: 'space-between',
+    },
+    actionContainer: {
+        flex:1
     },
 
     infoField: {
+        flex:1,
         width: '75%',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginTop: '10%'
     },
     infoText: {
         fontSize: 20
-    }
+    },
+
+    buttonContainer: {
+        width: '75%',
+        alignSelf: 'center',
+        height: '30%',
+    },
+    buttonStyle: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 5
+    },
+
+    errorStyle: {
+        color: 'red',
+        alignSelf: 'center',
+        marginTop: '2%',
+        marginBottom: '2%',
+        fontSize: 15
+    },
 });
