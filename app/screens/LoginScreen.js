@@ -13,7 +13,9 @@ import {
 } from "react-native";
 import Api from "../config/Api";
 import { NavigationActions } from "react-navigation";
-import logo from "../assets/logo.png";
+import logo from "../assets/images/logo.png";
+import firebaseApi from "../helpers/FirebaseApi";
+import user from "../helpers/user";
 
 class LoginScreen extends Component {
   constructor() {
@@ -37,7 +39,7 @@ class LoginScreen extends Component {
     this.spinValue.setValue(0);
     Animated.timing(this.spinValue, {
       toValue: 1,
-      duration: 4000,
+      duration: 99000,
       easing: Easing.linear
     }).start(() => this.spin());
   }
@@ -52,6 +54,7 @@ class LoginScreen extends Component {
         username: this.state.email,
         password: this.state.password
       };
+      //firebaseApi.sendSms("+31637612691");
 
       let api = Api.getInstance();
       api.callApiPost("login", userData, response => {

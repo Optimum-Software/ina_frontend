@@ -14,7 +14,8 @@ export default class User {
     organisation,
     bio,
     profilePhotoPath,
-    createdAt
+    createdAt,
+    token
   ) {
     this.state = {
       userId: id,
@@ -24,20 +25,38 @@ export default class User {
       organisation: organisation,
       bio: bio,
       profilePhotoPath: profilePhotoPath,
-      createdAt: createdAt
+      createdAt: createdAt,
+      token: token
     };
     var localStorage = LocalStorage.getInstance();
   }
 
-  storeUser() {
-    localStorage.storeItem("userId", this.state.userId);
-    localStorage.storeItem("firstName", this.state.firstName);
-    localStorage.storeItem("lastName", this.state.lastName);
-    localStorage.storeItem("email", this.state.email);
-    localStorage.storeItem("organisation", this.state.organisation);
-    localStorage.storeItem("bio", this.state.bio);
-    localStorage.storeItem("profilePhotoPath", this.state.profilePhotoPath);
-    localStorage.storeItem("createdAt", this.state.createdAt);
+  storeUser(
+    userId,
+    firstName,
+    lastName,
+    email,
+    organisation,
+    bio,
+    profilePhotoPath,
+    createdAt,
+    token
+  ) {
+    localStorage.storeItem("userId", userId);
+    localStorage.storeItem("firstName", firstName);
+    localStorage.storeItem("lastName", lastName);
+    localStorage.storeItem("email", email);
+    localStorage.storeItem("organisation", organisation);
+    localStorage.storeItem("bio", bio);
+    localStorage.storeItem("profilePhotoPath", profilePhotoPath);
+    localStorage.storeItem("createdAt", createdAt);
+    localStorage.storeItem("token", createdAt);
+
+    this.storeSessionToken();
+  }
+
+  storeSessionToken(token) {
+    localStorage.storeItem("token", token);
   }
 
   getUserId() {

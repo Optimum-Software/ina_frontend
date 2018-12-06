@@ -4,7 +4,7 @@ import { NetInfo } from "react-native";
 export default class Api {
   static instance = null;
 
-  url = "http://145.37.154.12:8000/api/";
+  url = "http://145.37.153.108:8000/api/";
 
   static getInstance() {
     if (Api.instance == null) {
@@ -114,16 +114,16 @@ export default class Api {
     });
   }
 
-  login(username, password) {
-    userData = { username: username, password: password };
-    api.callApiPost("login", "POST", userData, response => {
-      if (response["bool"] == "true") {
-        return (data = { msg: response["msg"], user: response["user"] });
-      } else {
-        return (data = { msg: response["msg"] });
-      }
-    });
-  }
+  // login(username, password) {
+  //   userData = { username: username, password: password };
+  //   api.callApiPost("login", "POST", userData, response => {
+  //     if (response["bool"] == "true") {
+  //       return (data = { msg: response["msg"], user: response["user"] });
+  //     } else {
+  //       return (data = { msg: response["msg"] });
+  //     }
+  //   });
+  // }
 
   getDeviceById(id) {
     api.callApiGet("getDeviceById" + id, "GET", response => {
@@ -153,6 +153,19 @@ export default class Api {
         this.setUser((data = { msg: response["msg"] }));
       } else {
         return (data = { msg: response["msg"] });
+      }
+    });
+  }
+
+  getAllProjects() {
+    api.callApiGet("getAllProjects", "GET", response => {
+      if (response["bool"] == true) {
+        this
+          .setUser
+          //return data = {"projects": response["projects"], "msg": response["msg"]}
+          ();
+      } else {
+        //return data = {"msg": response["msg"]}
       }
     });
   }
