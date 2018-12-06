@@ -48,12 +48,25 @@ class LoginScreen extends Component {
     } else if (/\S+@\S+\.\S+/.test(this.state.email) == false) {
       alert("Het ingevoerde email adres is geen valide email!");
     } else {
-      let api = Api.getInstance();
       let userData = {
-        email: this.state.email,
+        username: this.state.email,
         password: this.state.password
       };
-      api.callApiPost("login", "POST", userData, response => {});
+
+      let api = Api.getInstance();
+      api.callApiPost("login", userData, response => {
+        if (response["bool"] == true) {
+          alert("Succesvol ingelogd");
+          this.props.navigation.navigate("RegistrationScreen");
+          //   {},
+          //   NavigationActions.navigate({ routeName: "screenB" })
+          // );
+        } else if (response["bool"] == false) {
+          alert("Inloggen geweigerd");
+        } else {
+          alert("Er is iets mis gegaan");
+        }
+      });
     }
   }
 
