@@ -95,7 +95,7 @@ const MainNavigator = createStackNavigator(
             navigationOptions: ({ navigation }) => ({
                 gesturesEnabled: false
             })
-        }
+        },
         Register: {
           screen: Register,
           navigationOptions: ({ navigation }) => ({
