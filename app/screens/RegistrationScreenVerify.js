@@ -9,11 +9,18 @@ import CodeInput from 'react-native-confirmation-code-input';
 
 export default class RegistrationScreenStart extends Component {
     constructor() {
-        super();
+      super();
+      this.state = {
+        registerInfo: {}
+      }
+    }
+
+    componentDidMount() {
+      this.setState({registerInfo: this.props.navigation.state.params});
     }
 
     checkCode(code) {
-      console.log(code)
+      console.log(state)
     }
 
     render() {

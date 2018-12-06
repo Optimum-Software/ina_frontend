@@ -11,7 +11,7 @@ import {
     Easing
 } from "react-native";
 import { Input, Button} from 'react-native-elements'
-import Api from "../config/Api";
+import Api from "../helpers/Api";
 import { NavigationActions } from "react-navigation";
 import logo from "../assets/images/logo.png";
 import firebaseApi from "../helpers/FirebaseApi";
@@ -61,7 +61,15 @@ class LoginScreen extends Component {
         //     // api.callApiPost("login", "POST", userData, response => {});
         //     //firebaseApi.sendSms("+31611735849");
         // }
-        this.checkInputEmpty()
+        if(this.checkInputEmpty() && this.checkPw()) {
+            console.log("login in")
+            // let userData = {
+            //     email: this.state.email,
+            //     password: this.state.password
+            // };
+            // Api.callApiPost("login", "POST", userData, response => {});
+            //firebaseApi.sendSms("+31611735849");
+        }
     }
 
     checkInputEmpty() {
@@ -70,6 +78,13 @@ class LoginScreen extends Component {
         if(this.state.email == '') { this.setState({emailError: msg}); returnBool = false}
         if(this.state.pw == '') { this.setState({pwError: msg}); returnBool = false}
         return returnBool
+    }
+
+    checkPw() {
+        msg = "Het wachtwoord moet minimaal 6 karakters lang zijn"
+        returnBool = true
+        if(this.state.pw.length < 6) {this.setState({pwError: msg}); returnBool = false}
+        return returnBool;
     }
 
     render() {
