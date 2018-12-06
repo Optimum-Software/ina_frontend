@@ -16,7 +16,6 @@ import { NavigationActions } from "react-navigation";
 import logo from "../assets/images/logo.png";
 import firebaseApi from "../helpers/FirebaseApi";
 import Router from "../helpers/Router";
-import user from "../helpers/user";
 
 class LoginScreen extends Component {
   constructor() {
@@ -62,7 +61,7 @@ class LoginScreen extends Component {
     //     // api.callApiPost("login", "POST", userData, response => {});
     //     //firebaseApi.sendSms("+31611735849");
     // }
-    if (this.checkInputEmpty() && this.checkPw()) {
+    if (this.checkInputEmpty() && this.checkEmail()) {
       console.log("login in");
       // let userData = {
       //     email: this.state.email,
@@ -87,11 +86,11 @@ class LoginScreen extends Component {
     return returnBool;
   }
 
-  checkPw() {
-    msg = "Het wachtwoord moet minimaal 6 karakters lang zijn";
+  checkEmail() {
+    msg = "Het ingevoerde email adres is geen valide email";
     returnBool = true;
-    if (this.state.pw.length < 6) {
-      this.setState({ pwError: msg });
+    if (!/\S+@\S+\.\S+/.test(this.state.email)) {
+      this.setState({ emailError: msg });
       returnBool = false;
     }
     return returnBool;

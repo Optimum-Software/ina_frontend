@@ -1,145 +1,31 @@
 import React from "react";
-<<<<<<< HEAD:app/config/Api.js
 import { NetInfo } from "react-native";
-
-export default class Api {
-  static instance = null;
-
-  url = "http://145.37.153.108:8000/api/";
-
-  static getInstance() {
-    if (Api.instance == null) {
-      Api.instance = new Api();
-=======
-import {NetInfo} from "react-native";
 let instance = null;
 class Api {
-    // url = "http://gaauwe.nl:5000/";
+  url = "http://145.37.145.158:8000/api/";
 
-    constructor() {
-        if (!instance) {
-            instance = this
-        }
-        return instance;
+  constructor() {
+    if (!instance) {
+      instance = this;
     }
-
-    callApiPost(action, method, data, callBack = response => console.log(response)) {
-        NetInfo.getConnectionInfo().then(connectionInfo => {
-                if (connectionInfo.type != "none") {
-                    if (method == "POST") {
-                        fetch(this.url + action, {
-                            method: method,
-                            headers: {
-                                Accept: "application/json",
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(data)
-                        })
-                            .then(response => response.json())
-                            .then(responseJson => callBack(responseJson))
-                            .catch(error => {
-                                callBack(error);
-                            });
-                    } else {
-                        console.log("Only applicable to POST reguests")
-                    }
-                }
-            }
-        );
-    }
-
-    callApiGet(action, method, callBack = response => console.log(response)) {
-        NetInfo.getConnectionInfo().then(connectionInfo => {
-            if (connectionInfo.type != "none") {
-                if (method == "GET") {
-                    fetch(this.url + action, {
-                        method: method,
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(responseJson => callBack(responseJson))
-                        .catch(error => {
-                            callBack(error);
-                        });
-                } else {
-                    console.log("Only applicable to GET reguests")
-                }
-            }
-        });
-    }
-
-    callApiDelete(action, method, data, callBack = response => console.log(response)) {
-        NetInfo.getConnectionInfo().then(connectionInfo => {
-            if (connectionInfo.type != "none") {
-                if (method == "DELETE") {
-                    fetch(this.url + action, {
-                        method: method,
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(responseJson => callBack(responseJson))
-                        .catch(error => {
-                            callBack(error);
-                        });
-                } else {
-                    console.log("Only applicable to DELETE reguests")
-                }
-            }
-        });
-    }
-
-    callApiPut(action, method, data, callBack = response => console.log(response)) {
-        NetInfo.getConnectionInfo().then(connectionInfo => {
-            if (connectionInfo.type != "none") {
-                if (method == "PUT") {
-                    fetch(this.url + action, {
-                        method: method,
-                        headers: {
-                            "Content-Type": "application/json"
-                        }
-                    })
-                        .then(response => response.json())
-                        .then(responseJson => callBack(responseJson))
-                        .catch(error => {
-                            callBack(error);
-                        });
-                } else {
-                    console.log("Only applicable to PUT reguests")
-                }
-            }
-        });
->>>>>>> upstream/master:app/helpers/Api.js
-    }
-
-    return Api.instance;
+    return instance;
   }
 
-  callApiPost(action, data, callBack = response => console.log(response)) {
-    NetInfo.getConnectionInfo().then(connectionInfo => {
-      if (connectionInfo.type != "none") {
-        fetch(this.url + action, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        })
-          .then(response => response.json())
-          .then(responseJson => {
-            callBack(responseJson);
-          })
-          .catch(error => {
-            callBack(error);
-          });
-      } else {
-        alert("Geen internet verbinding");
-      }
-    });
+  async callApiPost(action, data) {
+    try {
+      let response = await fetch(this.url + action, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   callApiGet(action, method, callBack = response => console.log(response)) {
@@ -205,7 +91,6 @@ class Api {
             headers: {
               "Content-Type": "application/json"
             }
-<<<<<<< HEAD:app/config/Api.js
           })
             .then(response => response.json())
             .then(responseJson => callBack(responseJson))
@@ -219,19 +104,19 @@ class Api {
     });
   }
 
-  // login(username, password) {
-  //   userData = { username: username, password: password };
-  //   api.callApiPost("login", "POST", userData, response => {
-  //     if (response["bool"] == "true") {
-  //       return (data = { msg: response["msg"], user: response["user"] });
-  //     } else {
-  //       return (data = { msg: response["msg"] });
-  //     }
-  //   });
-  // }
+  login(username, password) {
+    userData = { username: username, password: password };
+    this.callApiPost("login", "POST", userData, response => {
+      if (response["bool"] == "true") {
+        return (data = { msg: response["msg"], user: response["user"] });
+      } else {
+        return (data = { msg: response["msg"] });
+      }
+    });
+  }
 
   getDeviceById(id) {
-    api.callApiGet("getDeviceById" + id, "GET", response => {
+    this.callApiGet("getDeviceById" + id, "GET", response => {
       if (response["bool"] == true) {
         data = { msg: response["msg"], user: response["user"] };
       } else {
@@ -242,7 +127,7 @@ class Api {
 
   createDevice(id) {
     userData = { id: id };
-    api.callApiPost("createDevice", "POST", userData, response => {
+    this.callApiPost("createDevice", "POST", userData, response => {
       if (response["bool"] == true) {
         this.setUser((data = { msg: response["msg"], id: response["id"] }));
       } else {
@@ -253,7 +138,7 @@ class Api {
 
   deleteDeviceById(id) {
     userData = { id: id };
-    api.callApiDelete("deleteDeviceById", "DELETE", userData, response => {
+    this.callApiDelete("deleteDeviceById", "DELETE", userData, response => {
       if (response["bool"] == true) {
         this.setUser((data = { msg: response["msg"] }));
       } else {
@@ -263,7 +148,7 @@ class Api {
   }
 
   getAllProjects() {
-    api.callApiGet("getAllProjects", "GET", response => {
+    this.callApiGet("getAllProjects", "GET", response => {
       if (response["bool"] == true) {
         this
           .setUser
@@ -275,11 +160,6 @@ class Api {
     });
   }
 }
-=======
-        });
-    }
-}
 
 const api = new Api();
 export default api;
->>>>>>> upstream/master:app/helpers/Api.js
