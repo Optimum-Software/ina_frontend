@@ -2,7 +2,7 @@ import React from "react";
 import {NetInfo} from "react-native";
 let instance = null;
 class Api {
-    // url = "http://gaauwe.nl:5000/";
+    url = "http://145.37.145.158:8000/api/";
 
     constructor() {
         if (!instance) {
@@ -11,30 +11,37 @@ class Api {
         return instance;
     }
 
-    callApiPost(action, method, data, callBack = response => console.log(response)) {
-        NetInfo.getConnectionInfo().then(connectionInfo => {
-                if (connectionInfo.type != "none") {
-                    if (method == "POST") {
-                        fetch(this.url + action, {
-                            method: method,
-                            headers: {
-                                Accept: "application/json",
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(data)
-                        })
-                            .then(response => response.json())
-                            .then(responseJson => callBack(responseJson))
-                            .catch(error => {
-                                callBack(error);
-                            });
-                    } else {
-                        console.log("Only applicable to POST reguests")
-                    }
-                }
-            }
-        );
+    async callApiPost(action, data) {
+        try {
+            let response = await fetch(
+                this.url + action, {
+                    method: 'POST',
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+            });
+            let responseJson = await response.json();
+            return responseJson;
+        } catch(error) {
+            console.error(error);
+        }
+        
     }
+
+    async getMoviesFromApi() {
+      try {
+        let response = await fetch(
+          'https://facebook.github.io/react-native/movies.json',
+        );
+        let responseJson = await response.json();
+        return responseJson.movies;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
 
     callApiGet(action, method, callBack = response => console.log(response)) {
         NetInfo.getConnectionInfo().then(connectionInfo => {
@@ -105,7 +112,7 @@ class Api {
 
     login(username, password) {
         userData = {"username": username, "password": password}
-        api.callApiPost("login", "POST", userData, response => {
+        this.callApiPost("login", "POST", userData, response => {
 
             if (response["bool"] == "true") {
                 return data = {"msg": response["msg"], "user": response["user"]}
@@ -116,7 +123,7 @@ class Api {
     }
 
     getDeviceById(id) {
-        api.callApiGet("getDeviceById" + id, "GET", response => {
+        this.callApiGet("getDeviceById" + id, "GET", response => {
 
             if (response["bool"] == true) {
                 data = {"msg": response["msg"], "user": response["user"]}
@@ -128,7 +135,7 @@ class Api {
 
     createDevice(id) {
         userData = {"id": id}
-        api.callApiPost("createDevice", "POST", userData, response => {
+        this.callApiPost("createDevice", "POST", userData, response => {
 
             if (response["bool"] == true) {
                 this.setUser(
@@ -142,7 +149,7 @@ class Api {
 
     deleteDeviceById(id) {
         userData = {"id": id}
-        api.callApiDelete("deleteDeviceById", "DELETE", userData, response => {
+        this.callApiDelete("deleteDeviceById", "DELETE", userData, response => {
 
             if (response["bool"] == true) {
                 this.setUser(
@@ -155,7 +162,7 @@ class Api {
     }
 
     getAllProjects() {
-        api.callApiGet("getAllProjects", "GET", response => {
+        this.callApiGet("getAllProjects", "GET", response => {
 
             if (response["bool"] == true) {
                 this.setUser(
