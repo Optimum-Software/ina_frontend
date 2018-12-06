@@ -93,7 +93,7 @@ class LoginScreen extends Component {
             outputRange: ["0deg", "360deg"]
         });
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <Animated.Image
                     resizeMode="contain"
                     style={{transform: [{ rotate: spin }]}, styles.logo}
@@ -143,7 +143,7 @@ class LoginScreen extends Component {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+            </View>
         );
     }
 }

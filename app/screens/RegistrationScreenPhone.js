@@ -21,7 +21,7 @@ export default class RegistrationScreenPhone extends Component {
 
     verifyPhone() {
         if(this.checkInputEmpty() && this.checkInputType() && this.checkInputLength()) {
-            alert("code gestuurd naar")
+            Router.goTo(this.props.navigation, 'Register', 'RegisterVerify', this.state)
         }
     }
 
