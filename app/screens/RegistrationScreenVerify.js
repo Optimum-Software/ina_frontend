@@ -1,51 +1,62 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
-import { Input, Button} from 'react-native-elements'
-import Router from '../helpers/Router';
-import CodeInput from 'react-native-confirmation-code-input';
-
+import { Input, Button } from "react-native-elements";
+import Router from "../helpers/Router";
+import CodeInput from "react-native-confirmation-code-input";
 
 export default class RegistrationScreenStart extends Component {
     constructor() {
-        super();
+      super();
+      this.state = {
+        registerInfo: {}
+      }
+    }
+
+    componentDidMount() {
+      this.setState({registerInfo: this.props.navigation.state.params});
     }
 
     checkCode(code) {
-      console.log(code)
+      console.log(state)
     }
 
     render() {
         return (
-          <View style={styles.container}>
-            <View style={{ height: Header.HEIGHT }}>
-                <Toolbar centerElement="Registreren" />
-            </View>
+            <View style={styles.container}>
+                <View style={{ height: Header.HEIGHT }}>
+                    <Toolbar centerElement="Registreren" />
+                </View>
                 <CodeInput
                   ref="codeInput"
                   keyboardType="numeric"
                   codeLength={6}
                   size={60}
                   className='border-circle'
+                  cellBorderWidth={3}
                   autoFocus={true}
                   activeColor='#212121'
-                  codeInputStyle={{borderColor: '#212121', color: '#212121'}}
+                  codeInputStyle={styles.codeInputStyle}
+                  containerStyle={styles.containerStyle}
                   onFulfill={(code) => this.checkCode(code)}
                 />
-          </View>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#6be1ff",
-        height: '100%'
+      backgroundColor: "#FFFFFF",
+      height: '100%',       
     },
-    title: {
-        fontSize: 20,
-        textAlign: "center",
-        margin: 10
+    containerStyle: {
+      flex: 1,
+      marginTop: '50%'
     },
+    codeInputStyle: {
+      borderColor: '#212121',
+      color: '#212121'
+    }
 });

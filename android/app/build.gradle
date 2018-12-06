@@ -137,8 +137,11 @@ android {
 }
 
 dependencies {
+<<<<<<< HEAD
     compile project(':react-native-vector-icons')
     compile project(':react-native-gesture-handler')
+=======
+>>>>>>> upstream/master
     compile project(':react-native-firebase')
     implementation project(':react-native-firebase')
     implementation project(':react-native-vector-icons')
