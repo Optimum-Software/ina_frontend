@@ -63,7 +63,7 @@ class Api {
         }
     }
 
-    callApiPut(action, data) {
+    async callApiPut(action, data) {
         try {
             let response = await fetch(this.url + action, {
                 method: "PUT",
@@ -87,7 +87,7 @@ class Api {
     }
 
     getDeviceById(id) {
-        return(this.callApiGet("getDeviceById/" + id)
+        return(this.callApiGet("getDeviceById/" + id))
     }
 
     createDevice(id) {
