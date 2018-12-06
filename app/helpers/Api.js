@@ -114,7 +114,7 @@ class Api {
         userData = {"username": username, "password": password}
         this.callApiPost("login", "POST", userData, response => {
 
-            if (response["bool"] == "true") {
+            if (response["bool"]) {
                 return data = {"msg": response["msg"], "user": response["user"]}
             } else {
                 return data = {"msg": response["msg"]}
@@ -125,7 +125,7 @@ class Api {
     getDeviceById(id) {
         this.callApiGet("getDeviceById" + id, "GET", response => {
 
-            if (response["bool"] == true) {
+            if (response["bool"]) {
                 data = {"msg": response["msg"], "user": response["user"]}
             } else {
                 return data = {"msg": response["msg"]}
@@ -137,7 +137,7 @@ class Api {
         userData = {"id": id}
         this.callApiPost("createDevice", "POST", userData, response => {
 
-            if (response["bool"] == true) {
+            if (response["bool"]) {
                 this.setUser(
                     data = {"msg": response["msg"], "id": response["id"]}
                 );
@@ -151,7 +151,7 @@ class Api {
         userData = {"id": id}
         this.callApiDelete("deleteDeviceById", "DELETE", userData, response => {
 
-            if (response["bool"] == true) {
+            if (response["bool"]) {
                 this.setUser(
                     data = {"msg": response["msg"]}
                 );
@@ -164,7 +164,7 @@ class Api {
     getAllProjects() {
         this.callApiGet("getAllProjects", "GET", response => {
 
-            if (response["bool"] == true) {
+            if (response["bool"]) {
                 this.setUser(
                     //return data = {"projects": response["projects"], "msg": response["msg"]}
                 );

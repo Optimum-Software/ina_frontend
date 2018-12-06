@@ -4,6 +4,7 @@ import {Header} from "react-navigation";
 import {Toolbar} from "react-native-material-ui";
 import mountain from "../assets/images/firewatch_5.jpg"
 import line from "../assets/images/Line.png"
+import Router from "../helpers/Router";
 
 export default class Projectoverview extends Component {
 
@@ -80,10 +81,12 @@ export default class Projectoverview extends Component {
               numColumns={2}
               renderItem={({item}) => (
                 <TouchableHighlight style={styles.cardContainer}
-                                    onPress={() => this.props.navigation.navigate("ProjectDetail", {
-                                      title: item.title,
-                                      url: item.url
-                                    })}>
+                                    onPress={() =>Router.goTo(this.props.navigation, 'Project', 'ProjectDetailPage',
+                                       {
+                                        title: item.title,
+                                        url: item.url
+                                      })
+                                    }>
 
                   <View style={styles.card}>
 
