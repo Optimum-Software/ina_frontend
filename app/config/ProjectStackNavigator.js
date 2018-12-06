@@ -1,7 +1,8 @@
 import { createStackNavigator } from "react-navigation";
-import Projectoverview from "../screens/Projectoverview";
-//import RegistrationScreen from "../screens/RegistrationScreen";
+import ProjectOverview from "../screens/Projectoverview";
+import ProjectDetail from "../screens/ProjectDetail";
 
 export default createStackNavigator({
-    Projectoverview,
+    ProjectOverview,
+    ProjectDetail
 });
