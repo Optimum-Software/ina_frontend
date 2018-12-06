@@ -16,12 +16,6 @@ export default class Home extends Component {
         <View>
           <Text style={styles.title}>Home</Text>
         </View>
-        <Button
-                    title="Registreer"
-                    buttonStyle={styles.buttonStyle}
-                    containerStyle={styles.buttonContainer}
-                    onPress={() => Router.goTo(this.props.navigation, 'Register', 'RegisterStart', null)}
-                />
       </View>
     );
   }

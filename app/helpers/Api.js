@@ -1,18 +1,14 @@
 import React from "react";
 import {NetInfo} from "react-native";
-
-export default class Api {
-    static instance = null;
-
-
+let instance = null;
+class Api {
     // url = "http://gaauwe.nl:5000/";
 
-    static getInstance() {
-        if (Api.instance == null) {
-            Api.instance = new Api();
+    constructor() {
+        if (!instance) {
+            instance = this
         }
-
-        return Api.instance;
+        return instance;
     }
 
     callApiPost(action, method, data, callBack = response => console.log(response)) {
@@ -170,8 +166,7 @@ export default class Api {
             }
         });
     }
-
-
-
 }
 
+const api = new Api();
+export default api;

@@ -4,7 +4,6 @@ import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import { Input, Button} from 'react-native-elements'
 import Router from '../helpers/Router';
-import CodeInput from 'react-native-confirmation-code-input';
 
 export default class RegistrationScreenPhone extends Component {
     constructor() {
@@ -22,13 +21,14 @@ export default class RegistrationScreenPhone extends Component {
 
     verifyPhone() {
         if(this.checkInputEmpty() && this.checkInputType() && this.checkInputLength()) {
-            alert("code gestuurd naar")
+            Router.goTo(this.props.navigation, 'Register', 'RegisterVerify', this.state)
         }
     }
 
     verifyCode(isValid) {
       if(isValid) {
         this.refs.codeInput.clear();
+        Router.goTo(this.props.navigation, 'Register', 'RegisterVerify', this.state)
       } else {
         this.setState({codeError: 'Deze code is niet correct'})
       }

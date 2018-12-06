@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import {
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     StyleSheet,
     Image,
@@ -11,7 +10,8 @@ import {
     Animated,
     Easing
 } from "react-native";
-import Api from "../config/Api";
+import { Input, Button} from 'react-native-elements'
+import Api from "../helpers/Api";
 import { NavigationActions } from "react-navigation";
 import logo from "../assets/images/logo.png";
 import firebaseApi from "../helpers/FirebaseApi";
@@ -21,8 +21,11 @@ class LoginScreen extends Component {
     constructor() {
         super();
         this.state = {
-            email: "",
-            password: ""
+            email: '',
+            emailError: '',
+
+            pw: '',
+            pwError: '',
         };
         this.spinValue = new Animated.Value(0);
     }
@@ -45,19 +48,43 @@ class LoginScreen extends Component {
     }
 
     login() {
-        if (this.state.email == "" || this.state.password == "") {
-            alert("Vul alstublieft alle velden in!");
-        } else if (/\S+@\S+\.\S+/.test(this.state.email) == false) {
-            alert("Het ingevoerde email adres is geen valide email!");
-        } else {
-            // let api = Api.getInstance();
+        // if (this.state.email == "" || this.state.password == "") {
+        //     alert("Vul alstublieft alle velden in!");
+        // } else if (/\S+@\S+\.\S+/.test(this.state.email) == false) {
+        //     alert("Het ingevoerde email adres is geen valide email!");
+        // } else {
+        //     // let api = Api.getInstance();
+        //     // let userData = {
+        //     //     email: this.state.email,
+        //     //     password: this.state.password
+        //     // };
+        //     // api.callApiPost("login", "POST", userData, response => {});
+        //     //firebaseApi.sendSms("+31611735849");
+        // }
+        if(this.checkInputEmpty() && this.checkPw()) {
+            console.log("login in")
             // let userData = {
             //     email: this.state.email,
             //     password: this.state.password
             // };
-            // api.callApiPost("login", "POST", userData, response => {});
-            firebaseApi.sendSms("+31611735849");
+            // Api.callApiPost("login", "POST", userData, response => {});
+            //firebaseApi.sendSms("+31611735849");
         }
+    }
+
+    checkInputEmpty() {
+        msg = "Vul alstublieft het veld in"
+        returnBool = true
+        if(this.state.email == '') { this.setState({emailError: msg}); returnBool = false}
+        if(this.state.pw == '') { this.setState({pwError: msg}); returnBool = false}
+        return returnBool
+    }
+
+    checkPw() {
+        msg = "Het wachtwoord moet minimaal 6 karakters lang zijn"
+        returnBool = true
+        if(this.state.pw.length < 6) {this.setState({pwError: msg}); returnBool = false}
+        return returnBool;
     }
 
     render() {
@@ -66,60 +93,57 @@ class LoginScreen extends Component {
             outputRange: ["0deg", "360deg"]
         });
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <Animated.Image
                     resizeMode="contain"
-                    style={{
-                        width: 200,
-                        height: 200,
-                        marginTop: "5%",
-                        alignSelf: "center",
-                        transform: [{ rotate: spin }]
-                    }}
+                    style={{transform: [{ rotate: spin }]}, styles.logo}
                     source={logo}
                 />
                 <View style={styles.inputContainer}>
-                    <TextInput
-                        style={styles.input}
-                        keyboardType="email-address"
-                        returnKeyType="next"
-                        onChangeText={text => this.setState({ email: text })}
-                        placeholder="E-mailadres"
-                        placeholderTextColor="#37474f"
-                    />
-                    <TextInput
-                        style={styles.input}
+                    <Input
+                        placeholder='E-mail'
+                        containerStyle={styles.containerStyle}
+                        value={this.state.email}
+                        leftIcon={{ type: 'font-awesome', name: 'user' }}
                         autoCapitalize="none"
-                        onChangeText={text => this.setState({ password: text })}
-                        secureTextEntry={true}
-                        returnKeyType="go"
-                        placeholder="Wachtwoord"
-                        placeholderTextColor="#37474f"
+                        onChangeText={email => this.setState({email})}
+                        onSubmitEditing={() => console.log("end")}
                     />
-                </View>
-
-                <TouchableOpacity
-                    style={styles.buttonContainer}
-                    onPress={() => this.login()}
-                >
-                    <Text style={styles.buttonText}>Inloggen</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ marginBottom: 25, marginTop: 10 }}
-                    onPress={() =>
-                        Router.goTo(
-                            this.props.navigation,
-                            "Register",
-                            "RegistrationScreenStart",
-                            null
-                        )
-                    }
-                >
-                    <Text style={{ color: "#37474f" }}>
-                        Nog geen account? Meld je aan!
+                    <Text style={styles.errorStyle}>
+                        {this.state.emailError}
                     </Text>
-                </TouchableOpacity>
-            </ScrollView>
+                    <Input
+                        placeholder='Wachtwoord'
+                        containerStyle={styles.containerStyle}
+                        value={this.state.pw}
+                        leftIcon={{ type: 'font-awesome', name: 'lock' }}
+                        onChangeText={pw => this.setState({pw})}
+                        onSubmitEditing={() => console.log("end")}
+                        secureTextEntry={true}
+                    />
+                    <Text style={styles.errorStyle}>
+                        {this.state.pwError}
+                    </Text>
+                </View>
+                <View style={styles.actionContainer}>
+                    <Button
+                        title="Log in"
+                        buttonStyle={styles.buttonText}
+                        containerStyle={styles.buttonContainer}
+                        onPress={() => this.login()}
+                    />
+                    <TouchableOpacity
+                        style={{alignSelf: 'center'}}
+                        onPress={() =>
+                            Router.goTo(this.props.navigation, 'Register', 'RegisterStart', null)
+                        }
+                    >
+                        <Text style={{ color: "#37474f" }}>
+                            Nog geen account? Meld je aan!
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         );
     }
 }
@@ -130,26 +154,34 @@ const styles = StyleSheet.create({
         flex: 1,
         height: "100%",
         width: "100%",
-        padding: 20,
-        backgroundColor: "#fafafa"
+        justifyContent: 'space-between'
+    },
+    logo: {
+        flex: 1,
+        width: '50%',
+        height: '50%',
+        alignSelf: "center"
     },
     inputContainer: {
-        marginTop: "20%"
+        flex: 3,
+        marginTop: "20%",
     },
-    input: {
-        height: 40,
-        marginBottom: 10,
-        padding: 10,
-        backgroundColor: "#fff"
+    containerStyle: {
+        width: '75%',
+        alignSelf: 'center',
+        backgroundColor: "#FFFFFF",
     },
     buttonContainer: {
-        backgroundColor: "#2980b6",
-        paddingVertical: 15
+        width: '75%',
+        alignSelf: 'center',
     },
     buttonText: {
         color: "#fff",
         textAlign: "center",
         fontWeight: "700"
-    }
+    },
+    actionContainer: {
+        flex:1,
+    },
 });
 export default LoginScreen;

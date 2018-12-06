@@ -8,11 +8,18 @@ import CodeInput from "react-native-confirmation-code-input";
 
 export default class RegistrationScreenStart extends Component {
     constructor() {
-        super();
+      super();
+      this.state = {
+        registerInfo: {}
+      }
+    }
+
+    componentDidMount() {
+      this.setState({registerInfo: this.props.navigation.state.params});
     }
 
     checkCode(code) {
-        console.log(code);
+      console.log(state)
     }
 
     render() {
@@ -22,18 +29,17 @@ export default class RegistrationScreenStart extends Component {
                     <Toolbar centerElement="Registreren" />
                 </View>
                 <CodeInput
-                    ref="codeInput"
-                    keyboardType="numeric"
-                    codeLength={6}
-                    size={60}
-                    className="border-circle"
-                    autoFocus={true}
-                    activeColor="#212121"
-                    codeInputStyle={{
-                        borderColor: "#212121",
-                        color: "#212121"
-                    }}
-                    onFulfill={code => this.checkCode(code)}
+                  ref="codeInput"
+                  keyboardType="numeric"
+                  codeLength={6}
+                  size={60}
+                  className='border-circle'
+                  cellBorderWidth={3}
+                  autoFocus={true}
+                  activeColor='#212121'
+                  codeInputStyle={styles.codeInputStyle}
+                  containerStyle={styles.containerStyle}
+                  onFulfill={(code) => this.checkCode(code)}
                 />
             </View>
         );
@@ -42,12 +48,15 @@ export default class RegistrationScreenStart extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#6be1ff",
-        height: "100%"
+      backgroundColor: "#FFFFFF",
+      height: '100%',       
     },
-    title: {
-        fontSize: 20,
-        textAlign: "center",
-        margin: 10
+    containerStyle: {
+      flex: 1,
+      marginTop: '50%'
+    },
+    codeInputStyle: {
+      borderColor: '#212121',
+      color: '#212121'
     }
 });

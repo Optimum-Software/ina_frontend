@@ -60,22 +60,29 @@ export const Tabs = createBottomTabNavigator({
     }
 });
 
-export const Register = createStackNavigator(
-    {
-        RegisterStart: {
-            screen: RegistrationScreenStart,
-            navigationOptions: ({ navigation }) => ({
-                gesturesEnabled: false
-            })
-        },
-
-        RegisterPhone: {
-            screen: RegistrationScreenPhone,
-            navigationOptions: ({ navigation }) => ({
-                gesturesEnabled: false
-            })
-        }
+export const Register = createStackNavigator({
+    RegisterStart: {
+        screen: RegistrationScreenStart,
+        navigationOptions: ({ navigation }) => ({
+          gesturesEnabled: false
+        })
     },
+
+    RegisterPhone: {
+        screen: RegistrationScreenPhone,
+        navigationOptions: ({ navigation }) => ({
+          gesturesEnabled: false
+        })
+    },
+
+    RegisterVerify: {
+      screen: RegistrationScreenVerify,
+      navigationOptions: ({ navigation }) => ({
+          gesturesEnabled: false
+      })
+    }
+
+  },
     {
         headerMode: "none"
     }
@@ -88,12 +95,17 @@ const MainNavigator = createStackNavigator(
             navigationOptions: ({ navigation }) => ({
                 gesturesEnabled: false
             })
+        },
+        Register: {
+          screen: Register,
+          navigationOptions: ({ navigation }) => ({
+            gesturesEnabled: false
+          })
         }
     },
-
     {
-        headerMode: "none",
-        mode: "modal"
+      headerMode: "none",
+      mode: "modal"
     }
 );
 

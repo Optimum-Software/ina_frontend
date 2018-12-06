@@ -34,9 +34,8 @@ export default class RegistrationScreenStart extends Component {
     }
 
     checkInputEmpty() {
-        msg = "VVul alstublieft het veld in"
+        msg = "Vul alstublieft het veld in"
         returnBool = true
-
         if(this.state.firstName == '') { this.setState({firstNameError: msg}); returnBool = false;}
         if(this.state.lastName == '') { this.setState({lastNameError: msg}); returnBool = false}
         if(this.state.email == '') { this.setState({emailError: msg}); returnBool = false}
@@ -49,16 +48,22 @@ export default class RegistrationScreenStart extends Component {
         return (
           <View style={styles.container}>
             <View style={{ height: Header.HEIGHT }}>
-                <Toolbar centerElement="Registreren" />
+                <Toolbar  leftElement={"chevron-left"}
+                          onLeftElementPress={() =>
+                            Router.goBack(this.props.navigation)
+                          }
+                          centerElement="Registreren" />
             </View>
             <View style={styles.inputFieldContainer}>
                 <Input
+                    ref="f"
                     placeholder='Voornaam'
                     containerStyle={styles.containerStyle}
                     value={this.state.firstName}
                     leftIcon={{ type: 'font-awesome', name: 'user' }}
                     onChangeText={firstName => this.setState({firstName})}
                     onSubmitEditing={() => console.log(this.state.firstName)}
+                    shake={true}
                 />
                 <Text style={styles.errorStyle}>
                     {this.state.firstNameError}
