@@ -9,14 +9,14 @@ export default class RegistrationScreenPhone extends Component {
     constructor() {
         super();
         this.state = {
-            registerInfo: {},
-            phoneNumber: '',
+            registerStartInfo: {},
+            phoneNumber: '0647781634',
             phoneNumberError: '',
         }
     }
 
     componentDidMount() {
-        this.setState({registerInfo: this.props.navigation.state.params});
+        this.setState({registerStartInfo: this.props.navigation.state.params});
     }
 
     verifyPhone() {

@@ -10,19 +10,19 @@ export default class RegistrationScreenStart extends Component {
     constructor() {
         super();
         this.state = {
-            firstName: 'a',
+            firstName: 'ferry',
             firstNameError: '',
 
-            lastName: 'a',
+            lastName: 'doppel',
             lastNameError: '',
 
-            email: 'jelmer.haarman@xs4all.nl',
+            email: 'ferry.doppel@xs4all.nl',
             emailError: '',
 
-            pw: 'a',
+            pw: '123456',
             pwError: '',
 
-            pwRepeat: 'a',
+            pwRepeat: '123456',
             pwRepeatError: '',
         }
     }
@@ -35,7 +35,8 @@ export default class RegistrationScreenStart extends Component {
         let pwLength = this.checkPwLength()
         let email = this.checkEmail()
         let empty = this.checkInputEmpty()
-        if(empty && email && pwSame && pwLength && result['bool']) {
+        console.log(result['bool'])
+        if(empty && email && pwSame && pwLength && !result['bool']) {
             Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
         } 
       })       
