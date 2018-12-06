@@ -69,11 +69,11 @@ export default class Projectoverview extends Component {
         blurRadius={3}
         source={mountain}
         style={styles.imageBackground}
-      >
+        >
         <View style={styles.container}>
-          {/*<View style={{height: Header.HEIGHT}}>*/}
-            {/*<Toolbar iconSet="MaterialCommunityIcons" centerElement="Projecten"/>*/}
-          {/*</View>*/}
+          <View style={{ height: Header.HEIGHT }}>
+            <Toolbar centerElement="Projecten"/>
+          </View>
           <View>
             <FlatList
               data={this.state.data}
@@ -88,7 +88,7 @@ export default class Projectoverview extends Component {
                                       })
                                     }>
 
-                  <View style={styles.card}>
+                   <View style={styles.card}>
 
                     <View style={styles.cardImage}>
                       <Image
