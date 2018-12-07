@@ -24,22 +24,28 @@ export default class RegistrationScreenStart extends Component {
 
             pwRepeat: '123456',
             pwRepeatError: '',
+
+            loading: false
         }
     }
 
     goToRegisterPhone() {
       let emailExists = UserApi.checkEmail(this.state.email).then(result => {
         this.resetErrors()
-        if(result['bool']) {this.setState({emailError: "Het ingevulde e-mail adres bestaat al"})}
-        let pwSame = this.checkPwSame()
-        let pwLength = this.checkPwLength()
-        let email = this.checkEmail()
-        let empty = this.checkInputEmpty()
-        console.log(result['bool'])
-        if(empty && email && pwSame && pwLength && !result['bool']) {
+        if(result['ntwFail']) {
+          //network error
+          alert(result['msg'])
+        } else {
+          if(result['bool']) {this.setState({emailError: "Het ingevulde e-mail adres bestaat al"})}
+          let pwSame = this.checkPwSame()
+          let pwLength = this.checkPwLength()
+          let email = this.checkEmail()
+          let empty = this.checkInputEmpty()
+          if(empty && email && pwSame && pwLength && !result['bool']) {
             Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
-        } 
-      })       
+          }
+        }     
+      })
     }
 
     resetErrors() {
