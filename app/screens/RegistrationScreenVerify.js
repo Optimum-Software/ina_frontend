@@ -20,16 +20,27 @@ export default class RegistrationScreenStart extends Component {
     }
 
     checkCode(code) {
+      //if code is correct: 
       this.register()
     }
 
     register() {
-      console.log(this.state)
       UserApi.registerUser( this.state.registerPhoneInfo.registerStartInfo.firstName, 
                             this.state.registerPhoneInfo.registerStartInfo.lastName, 
                             this.state.registerPhoneInfo.registerStartInfo.email,
                             this.state.registerPhoneInfo.registerStartInfo.pw,
-                            this.state.registerPhoneInfo.phoneNumber).then(result => console.log(result))
+                            this.state.registerPhoneInfo.phoneNumber).then(
+                              result => {
+                                if(!result['bool']) {
+                                  //display error
+                                  alert(result['msg'])
+                                } else {
+                                  //display succes
+                                  alert(result['msg'])
+                                  userId = result['id']
+                                  //store userId
+                                }
+                            })
     }
 
     render() {
