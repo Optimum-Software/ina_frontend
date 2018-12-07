@@ -7,56 +7,56 @@ import Router from "../helpers/Router";
 import CodeInput from "react-native-confirmation-code-input";
 
 export default class RegistrationScreenStart extends Component {
-    constructor() {
-      super();
-      this.state = {
-        registerInfo: {}
-      }
-    }
+  constructor() {
+    super();
+    this.state = {
+      registerInfo: {}
+    };
+  }
 
-    componentDidMount() {
-      this.setState({registerInfo: this.props.navigation.state.params});
-    }
+  componentDidMount() {
+    this.setState({ registerInfo: this.props.navigation.state.params });
+  }
 
-    checkCode(code) {
-      console.log(state)
-    }
+  checkCode(code) {
+    console.log(state);
+  }
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={{ height: Header.HEIGHT }}>
-                    <Toolbar centerElement="Registreren" />
-                </View>
-                <CodeInput
-                  ref="codeInput"
-                  keyboardType="numeric"
-                  codeLength={6}
-                  size={60}
-                  className='border-circle'
-                  cellBorderWidth={3}
-                  autoFocus={true}
-                  activeColor='#212121'
-                  codeInputStyle={styles.codeInputStyle}
-                  containerStyle={styles.containerStyle}
-                  onFulfill={(code) => this.checkCode(code)}
-                />
-            </View>
-        );
-    }
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={{ height: Header.HEIGHT }}>
+          <Toolbar centerElement="Registreren" />
+        </View>
+        <CodeInput
+          ref="codeInput"
+          keyboardType="numeric"
+          codeLength={6}
+          size={60}
+          className="border-circle"
+          cellBorderWidth={3}
+          autoFocus={true}
+          activeColor="#212121"
+          codeInputStyle={styles.codeInputStyle}
+          containerStyle={styles.containerStyle}
+          onFulfill={code => this.checkCode(code)}
+        />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-      backgroundColor: "#FFFFFF",
-      height: '100%',       
-    },
-    containerStyle: {
-      flex: 1,
-      marginTop: '50%'
-    },
-    codeInputStyle: {
-      borderColor: '#212121',
-      color: '#212121'
-    }
+  container: {
+    backgroundColor: "#FFFFFF",
+    height: "100%"
+  },
+  containerStyle: {
+    flex: 1,
+    marginTop: "50%"
+  },
+  codeInputStyle: {
+    borderColor: "#212121",
+    color: "#212121"
+  }
 });
