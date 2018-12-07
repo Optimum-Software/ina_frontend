@@ -43,41 +43,41 @@ export default class RegistrationScreenStart extends Component {
                             })
     }
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <View style={{ height: Header.HEIGHT }}>
-                    <Toolbar centerElement="Registreren" />
-                </View>
-                <CodeInput
-                  ref="codeInput"
-                  keyboardType="numeric"
-                  codeLength={6}
-                  size={60}
-                  className='border-circle'
-                  cellBorderWidth={3}
-                  autoFocus={true}
-                  activeColor='#212121'
-                  codeInputStyle={styles.codeInputStyle}
-                  containerStyle={styles.containerStyle}
-                  onFulfill={(code) => this.checkCode(code)}
-                />
-            </View>
-        );
-    }
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={{ height: Header.HEIGHT }}>
+          <Toolbar centerElement="Registreren" />
+        </View>
+        <CodeInput
+          ref="codeInput"
+          keyboardType="numeric"
+          codeLength={6}
+          size={60}
+          className="border-circle"
+          cellBorderWidth={3}
+          autoFocus={true}
+          activeColor="#212121"
+          codeInputStyle={styles.codeInputStyle}
+          containerStyle={styles.containerStyle}
+          onFulfill={code => this.checkCode(code)}
+        />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-      backgroundColor: "#FFFFFF",
-      height: '100%',       
-    },
-    containerStyle: {
-      flex: 1,
-      marginTop: '50%'
-    },
-    codeInputStyle: {
-      borderColor: '#212121',
-      color: '#212121'
-    }
+  container: {
+    backgroundColor: "#FFFFFF",
+    height: "100%"
+  },
+  containerStyle: {
+    flex: 1,
+    marginTop: "50%"
+  },
+  codeInputStyle: {
+    borderColor: "#212121",
+    color: "#212121"
+  }
 });

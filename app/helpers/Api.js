@@ -1,15 +1,15 @@
 import React from "react";
-import {NetInfo} from "react-native";
+import { NetInfo } from "react-native";
 let instance = null;
 class Api {
     url = "http:/145.37.144.133:8000/api/";
 
-    constructor() {
-        if (!instance) {
-            instance = this
-        }
-        return instance;
+  constructor() {
+    if (!instance) {
+      instance = this;
     }
+    return instance;
+  }
 
     timeout(ms, promise) {
         return new Promise(function(resolve, reject) {
@@ -50,10 +50,9 @@ class Api {
             }))
             let responseJson = await response.json();
             return responseJson;
-        } catch(error) {
+        } catch (error) {
             return {'ntwFail': true, 'msg': "Kon geen verbinding met de server maken"}
         }
-        
     }
 
     async callApiDelete(action, data) {
@@ -92,29 +91,28 @@ class Api {
         }
     }
 
+  login(username, password) {
+    userData = { username: username, password: password };
+    return this.callApiPost("login", userData);
+  }
 
-    login(username, password) {
-        userData = {"username": username, "password": password}
-        return(this.callApiPost("login",userData))
-    }
+  getDeviceById(id) {
+    return this.callApiGet("getDeviceById/" + id);
+  }
 
-    getDeviceById(id) {
-        return(this.callApiGet("getDeviceById/" + id))
-    }
+  createDevice(id) {
+    userData = { id: id };
+    return this.callApiPost("createDevice", userData);
+  }
 
-    createDevice(id) {
-        userData = {"id": id}
-        return(this.callApiPost("createDevice", userData))
-    }
+  deleteDeviceById(id) {
+    userData = { id: id };
+    return this.callApiDelete("deleteDeviceById", userData);
+  }
 
-    deleteDeviceById(id) {
-        userData = {"id": id}
-        return(this.callApiDelete("deleteDeviceById",userData))
-    }
-
-    getAllProjects() {
-        return(this.callApiGet("getAllProjects"))
-    }
+  getAllProjects() {
+    return this.callApiGet("getAllProjects");
+  }
 }
 
 const api = new Api();
