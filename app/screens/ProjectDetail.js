@@ -9,6 +9,9 @@ import {
     ImageBackground,
     TouchableHighlight
 } from "react-native";
+import {Header} from "react-navigation";
+import Router from "../helpers/Router";
+import { Toolbar } from "react-native-material-ui";
 
 export default class ProjectDetail extends Component {
 
@@ -23,7 +26,15 @@ export default class ProjectDetail extends Component {
       const title = navigation.getParam("title", "");
       const url = navigation.getParam("url", "");
         return (
-            <View style={styles.container}>
+          <View>
+            <View style={{ height: Header.HEIGHT }}>
+              <Toolbar    leftElement={"chevron-left"}
+                          onLeftElementPress={() =>
+                            Router.goBack(this.props.navigation)
+                          }
+                          centerElement="Project"/>
+            </View>
+
               <View style={styles.image}>
                 <Image
                   source={{uri: url}}
@@ -31,11 +42,12 @@ export default class ProjectDetail extends Component {
                   style={{width: "100%", height: "100%"}}
                 />
               </View>
+              <Text style={styles.title}>
+                {title}
+              </Text>
+            </View>
 
-                <Text style={styles.title}>
-                  {title}
-                </Text>
-             </View>
+
           );
 
 
@@ -63,10 +75,10 @@ const styles = StyleSheet.create({
   imageBackground: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height
-  },
+     },
 
   image: {
-      height:'40%',
+      height:'50%',
       width:'100%'
       },
   title: {
