@@ -16,7 +16,7 @@ export default class RegistrationScreenStart extends Component {
             lastName: 'a',
             lastNameError: '',
 
-            email: 'a',
+            email: 'jelmer.haarman@xs4all.nl',
             emailError: '',
 
             pw: 'a',
@@ -28,15 +28,17 @@ export default class RegistrationScreenStart extends Component {
     }
 
     goToRegisterPhone() {
-      this.resetErrors()
-      let pwSame = this.checkPwSame()
-      let pwLength = this.checkPwLength()
-      this.checkEmailExists().then(result => console.log(result))
-      let email = this.checkEmail()
-      let empty = this.checkInputEmpty()
-      if(empty && email && pwSame && pwLength) {
-          Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
-      }        
+      let emailExists = UserApi.checkEmail(this.state.email).then(result => {
+        this.resetErrors()
+        if(result['bool']) {this.setState({emailError: "Het ingevulde e-mail adres bestaat al"})}
+        let pwSame = this.checkPwSame()
+        let pwLength = this.checkPwLength()
+        let email = this.checkEmail()
+        let empty = this.checkInputEmpty()
+        if(empty && email && pwSame && pwLength && result['bool']) {
+            Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
+        } 
+      })       
     }
 
     resetErrors() {
@@ -44,7 +46,8 @@ export default class RegistrationScreenStart extends Component {
                      firstNameError: '',
                      lastNameError: '',
                      pwError: '',
-                     pwRepeatError: ''})
+                     pwRepeatError: '',
+                     emailExists: false})
     }
 
     checkInputEmpty() {
@@ -63,11 +66,6 @@ export default class RegistrationScreenStart extends Component {
       returnBool = true
       if(!/\S+@\S+\.\S+/.test(this.state.email)) {this.setState({emailError: msg}); returnBool = false}
       return returnBool
-    }
-
-    checkEmailExists() {
-      msg = "Het ingevoerde e-mail adres"
-      return UserApi.checkEmail(this.state.email)
     }
 
     checkPwSame() {
