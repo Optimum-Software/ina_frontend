@@ -16,15 +16,16 @@ import { NavigationActions } from "react-navigation";
 import logo from "../assets/images/logo.png";
 import firebaseApi from "../helpers/FirebaseApi";
 import Router from "../helpers/Router";
+import User from "../helpers/User";
 
 class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "",
+      email: "bert@bert.nl",
       emailError: "",
 
-      pw: "",
+      pw: "Welkom123",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
@@ -48,27 +49,31 @@ class LoginScreen extends Component {
   }
 
   login() {
-    // if (this.state.email == "" || this.state.password == "") {
-    //     alert("Vul alstublieft alle velden in!");
-    // } else if (/\S+@\S+\.\S+/.test(this.state.email) == false) {
-    //     alert("Het ingevoerde email adres is geen valide email!");
-    // } else {
-    //     // let api = Api.getInstance();
-    //     // let userData = {
-    //     //     email: this.state.email,
-    //     //     password: this.state.password
-    //     // };
-    //     // api.callApiPost("login", "POST", userData, response => {});
-    //     //firebaseApi.sendSms("+31611735849");
-    // }
     if (this.checkInputEmpty() && this.checkEmail()) {
-      console.log("login in");
+      Api.login(this.state.email, this.state.pw).then(result => {
+        console.log(result);
+        if (result.bool) {
+          User.storeUserId(result.userId);
+          User.storeToken(result.token);
+          Router.goTo(this.props.navigation, "Register", "RegisterStart", null);
+        } else {
+          this.setState({ pwError: result.msg });
+        }
+        console.log("UserID");
+        User.getUserId().then(result => {
+          console.log(result);
+        });
+        console.log("Token");
+        User.getToken().then(result => {
+          console.log(result);
+        });
+      });
       // let userData = {
       //     email: this.state.email,
       //     password: this.state.password
       // };
       // Api.callApiPost("login", "POST", userData, response => {});
-      //firebaseApi.sendSms("+31611735849");
+      //firebaseApi.sendSms("+31637612691");
     }
   }
 
@@ -133,7 +138,6 @@ class LoginScreen extends Component {
         <View style={styles.actionContainer}>
           <Button
             title="Log in"
-            buttonStyle={styles.buttonText}
             containerStyle={styles.buttonContainer}
             onPress={() => this.login()}
           />
@@ -184,11 +188,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: "75%",
     alignSelf: "center"
-  },
-  buttonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "700"
   },
   actionContainer: {
     flex: 1

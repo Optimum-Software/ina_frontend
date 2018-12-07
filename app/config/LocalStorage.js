@@ -1,15 +1,14 @@
 import React from "react";
 import { AsyncStorage } from "react-native";
+let instance = null;
 
-export default class LocalStorage {
-  static getInstance() {
-    if (LocalStorage.instance == null) {
-      LocalStorage.instance = new LocalStorage();
+class LocalStorage {
+  constructor() {
+    if (!instance) {
+      instance = this;
     }
-
-    return LocalStorage.instance;
+    return instance;
   }
-
   // Store key-value pairs in async storage
   async storeItem(key, item) {
     try {
@@ -31,3 +30,5 @@ export default class LocalStorage {
     return;
   }
 }
+const localStorage = new LocalStorage();
+export default localStorage;
