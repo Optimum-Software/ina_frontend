@@ -16,7 +16,7 @@ export default class RegistrationScreenStart extends Component {
             lastName: 'doppel',
             lastNameError: '',
 
-            email: 'ferry.doppel@xs4all.nl',
+            email: 'ferry.doppel3@xs4all.nl',
             emailError: '',
 
             pw: '123456',
@@ -70,6 +70,7 @@ export default class RegistrationScreenStart extends Component {
       this.setState({ lastNameError: msg });
       returnBool = false;
     }
+    return returnBool
   }
 
   checkPwSame() {
@@ -83,9 +84,11 @@ export default class RegistrationScreenStart extends Component {
     return returnBool;
   }
 
-  checkEmailExists() {
-    msg = "Het ingevoerde e-mail adres";
-    return UserApi.checkEmail(this.state.email);
+  checkEmail() {
+      msg = "Het ingevoerde e-mail adres is geen valide email"
+      returnBool = true
+      if(!/\S+@\S+\.\S+/.test(this.state.email)) {this.setState({emailError: msg}); returnBool = false}
+      return returnBool
   }
 
   checkPwSame() {

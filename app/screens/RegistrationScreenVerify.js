@@ -33,11 +33,14 @@ export default class RegistrationScreenStart extends Component {
                               result => {
                                 if(!result['bool']) {
                                   //display error
+                                  console.log(result)
                                   alert(result['msg'])
+                                  console.log("error")
                                 } else {
                                   //display succes
                                   alert(result['msg'])
                                   userId = result['id']
+                                  Router.goTo(this.props.navigation, "LoginStack", "LoginScreen")
                                   //store userId
                                 }
                             })

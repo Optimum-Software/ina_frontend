@@ -20,7 +20,8 @@ class UserApi {
       "lastName": lastName,
       "email": email,
       "password": password,
-      "mobile": mobile
+      "mobile": mobile,
+      "username": email
     }
     return(Api.callApiPost("createUser", userData))
   }
