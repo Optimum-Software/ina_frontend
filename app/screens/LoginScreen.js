@@ -22,10 +22,10 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "bert@bert.nl",
+      email: "",
       emailError: "",
 
-      pw: "Welkom123",
+      pw: "",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
@@ -51,7 +51,6 @@ class LoginScreen extends Component {
   login() {
     if (this.checkInputEmpty() && this.checkEmail()) {
       Api.login(this.state.email, this.state.pw).then(result => {
-        console.log(result);
         if (result.bool) {
           User.storeUserId(result.userId);
           User.storeToken(result.token);
@@ -59,11 +58,9 @@ class LoginScreen extends Component {
         } else {
           this.setState({ pwError: result.msg });
         }
-        console.log("UserID");
         User.getUserId().then(result => {
           console.log(result);
         });
-        console.log("Token");
         User.getToken().then(result => {
           console.log(result);
         });
@@ -139,7 +136,7 @@ class LoginScreen extends Component {
           <Button
             title="Log in"
             containerStyle={styles.buttonContainer}
-            onPress={() => this.login()}
+            onPress={() => this.login(email, pw)}
           />
           <TouchableOpacity
             style={{ alignSelf: "center" }}

@@ -11,9 +11,19 @@ class UserApi {
 
   checkEmail(email) {
   	userData = {"email": email}
-  	//Api.callApiPost("getUserByEmail", userData).then(result => console.log(result))
   	return(Api.callApiPost("getUserByEmail", userData))
-    
+  }
+
+  registerUser(firstName, lastName, email, password, mobile) {
+    userData = {
+      "firstName": firstName,
+      "lastName": lastName,
+      "email": email,
+      "password": password,
+      "mobile": mobile,
+      "username": email
+    }
+    return(Api.callApiPost("createUser", userData))
   }
 }
 

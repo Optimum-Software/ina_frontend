@@ -5,22 +5,46 @@ import { Toolbar } from "react-native-material-ui";
 import { Input, Button } from "react-native-elements";
 import Router from "../helpers/Router";
 import CodeInput from "react-native-confirmation-code-input";
+import UserApi from '../helpers/UserApi';
 
 export default class RegistrationScreenStart extends Component {
-  constructor() {
-    super();
-    this.state = {
-      registerInfo: {}
-    };
-  }
+    constructor() {
+      super();
+      this.state = {
+        registerPhoneInfo: {}
+      }
+    }
 
-  componentDidMount() {
-    this.setState({ registerInfo: this.props.navigation.state.params });
-  }
+    componentDidMount() {
+      this.setState({registerPhoneInfo: this.props.navigation.state.params});
+    }
 
-  checkCode(code) {
-    console.log(state);
-  }
+    checkCode(code) {
+      //if code is correct: 
+      this.register()
+    }
+
+    register() {
+      UserApi.registerUser( this.state.registerPhoneInfo.registerStartInfo.firstName, 
+                            this.state.registerPhoneInfo.registerStartInfo.lastName, 
+                            this.state.registerPhoneInfo.registerStartInfo.email,
+                            this.state.registerPhoneInfo.registerStartInfo.pw,
+                            this.state.registerPhoneInfo.phoneNumber).then(
+                              result => {
+                                if(!result['bool']) {
+                                  //display error
+                                  console.log(result)
+                                  alert(result['msg'])
+                                  console.log("error")
+                                } else {
+                                  //display succes
+                                  alert(result['msg'])
+                                  userId = result['id']
+                                  Router.goTo(this.props.navigation, "LoginStack", "LoginScreen")
+                                  //store userId
+                                }
+                            })
+    }
 
   render() {
     return (

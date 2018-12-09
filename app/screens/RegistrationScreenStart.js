@@ -7,48 +7,46 @@ import Router from "../helpers/Router";
 import UserApi from "../helpers/UserApi";
 
 export default class RegistrationScreenStart extends Component {
-  constructor() {
-    super();
-    this.state = {
-      firstName: "a",
-      firstNameError: "",
+    constructor() {
+        super();
+        this.state = {
+            firstName: 'ferry',
+            firstNameError: '',
 
-      lastName: "a",
-      lastNameError: "",
+            lastName: 'doppel',
+            lastNameError: '',
 
-      email: "jelmer.haarman@xs4all.nl",
-      emailError: "",
+            email: 'ferry.doppel3@xs4all.nl',
+            emailError: '',
 
-      pw: "Welkom123",
-      pwError: "",
+            pw: '123456',
+            pwError: '',
 
-      pwRepeat: "Welkom123",
-      pwRepeatError: ""
-    };
-  }
+            pwRepeat: '123456',
+            pwRepeatError: '',
 
-  goToRegisterPhone() {
-    let emailExists = UserApi.checkEmail(this.state.email).then(result => {
-      this.resetErrors();
-      if (result["bool"]) {
-        this.setState({
-          emailError: "Het ingevulde e-mail adres bestaat al"
-        });
-      }
-      let pwSame = this.checkPwSame();
-      let pwLength = this.checkPwLength();
-      let email = this.checkEmail();
-      let empty = this.checkInputEmpty();
-      if (empty && email && pwSame && pwLength && result["bool"]) {
-        Router.goTo(
-          this.props.navigation,
-          "Register",
-          "RegisterPhone",
-          this.state
-        );
-      }
-    });
-  }
+            loading: false
+        }
+    }
+
+    goToRegisterPhone() {
+      let emailExists = UserApi.checkEmail(this.state.email).then(result => {
+        this.resetErrors()
+        if(result['ntwFail']) {
+          //network error
+          alert(result['msg'])
+        } else {
+          if(result['bool']) {this.setState({emailError: "Het ingevulde e-mail adres bestaat al"})}
+          let pwSame = this.checkPwSame()
+          let pwLength = this.checkPwLength()
+          let email = this.checkEmail()
+          let empty = this.checkInputEmpty()
+          if(empty && email && pwSame && pwLength && !result['bool']) {
+            Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
+          }
+        }     
+      })
+    }
 
   resetErrors() {
     this.setState({
@@ -72,6 +70,7 @@ export default class RegistrationScreenStart extends Component {
       this.setState({ lastNameError: msg });
       returnBool = false;
     }
+    return returnBool
   }
 
   checkPwSame() {
@@ -85,9 +84,11 @@ export default class RegistrationScreenStart extends Component {
     return returnBool;
   }
 
-  checkEmailExists() {
-    msg = "Het ingevoerde e-mail adres";
-    return UserApi.checkEmail(this.state.email);
+  checkEmail() {
+      msg = "Het ingevoerde e-mail adres is geen valide email"
+      returnBool = true
+      if(!/\S+@\S+\.\S+/.test(this.state.email)) {this.setState({emailError: msg}); returnBool = false}
+      return returnBool
   }
 
   checkPwSame() {
