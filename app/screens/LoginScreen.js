@@ -10,7 +10,7 @@ import {
     Animated,
     Easing
 } from "react-native";
-import { Input, Button} from 'react-native-elements'
+import { Input, Button } from "react-native-elements";
 import Api from "../helpers/Api";
 import { NavigationActions } from "react-navigation";
 import logo from "../assets/images/logo.png";
@@ -21,11 +21,11 @@ class LoginScreen extends Component {
     constructor() {
         super();
         this.state = {
-            email: '',
-            emailError: '',
+            email: "",
+            emailError: "",
 
-            pw: '',
-            pwError: '',
+            pw: "",
+            pwError: ""
         };
         this.spinValue = new Animated.Value(0);
     }
@@ -61,8 +61,8 @@ class LoginScreen extends Component {
         //     // api.callApiPost("login", "POST", userData, response => {});
         //     //firebaseApi.sendSms("+31611735849");
         // }
-        if(this.checkInputEmpty() && this.checkPw()) {
-            console.log("login in")
+        if (this.checkInputEmpty() && this.checkPw()) {
+            console.log("login in");
             // let userData = {
             //     email: this.state.email,
             //     password: this.state.password
@@ -73,17 +73,26 @@ class LoginScreen extends Component {
     }
 
     checkInputEmpty() {
-        msg = "Vul alstublieft het veld in"
-        returnBool = true
-        if(this.state.email == '') { this.setState({emailError: msg}); returnBool = false}
-        if(this.state.pw == '') { this.setState({pwError: msg}); returnBool = false}
-        return returnBool
+        msg = "Vul alstublieft het veld in";
+        returnBool = true;
+        if (this.state.email == "") {
+            this.setState({ emailError: msg });
+            returnBool = false;
+        }
+        if (this.state.pw == "") {
+            this.setState({ pwError: msg });
+            returnBool = false;
+        }
+        return returnBool;
     }
 
     checkPw() {
-        msg = "Het wachtwoord moet minimaal 6 karakters lang zijn"
-        returnBool = true
-        if(this.state.pw.length < 6) {this.setState({pwError: msg}); returnBool = false}
+        msg = "Het wachtwoord moet minimaal 6 karakters lang zijn";
+        returnBool = true;
+        if (this.state.pw.length < 6) {
+            this.setState({ pwError: msg });
+            returnBool = false;
+        }
         return returnBool;
     }
 
@@ -96,34 +105,32 @@ class LoginScreen extends Component {
             <View style={styles.container}>
                 <Animated.Image
                     resizeMode="contain"
-                    style={{transform: [{ rotate: spin }]}, styles.logo}
+                    style={({ transform: [{ rotate: spin }] }, styles.logo)}
                     source={logo}
                 />
                 <View style={styles.inputContainer}>
                     <Input
-                        placeholder='E-mail'
+                        placeholder="E-mail"
                         containerStyle={styles.containerStyle}
                         value={this.state.email}
-                        leftIcon={{ type: 'font-awesome', name: 'user' }}
+                        leftIcon={{ type: "font-awesome", name: "user" }}
                         autoCapitalize="none"
-                        onChangeText={email => this.setState({email})}
+                        onChangeText={email => this.setState({ email })}
                         onSubmitEditing={() => console.log("end")}
                     />
                     <Text style={styles.errorStyle}>
                         {this.state.emailError}
                     </Text>
                     <Input
-                        placeholder='Wachtwoord'
+                        placeholder="Wachtwoord"
                         containerStyle={styles.containerStyle}
                         value={this.state.pw}
-                        leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                        onChangeText={pw => this.setState({pw})}
+                        leftIcon={{ type: "font-awesome", name: "lock" }}
+                        onChangeText={pw => this.setState({ pw })}
                         onSubmitEditing={() => console.log("end")}
                         secureTextEntry={true}
                     />
-                    <Text style={styles.errorStyle}>
-                        {this.state.pwError}
-                    </Text>
+                    <Text style={styles.errorStyle}>{this.state.pwError}</Text>
                 </View>
                 <View style={styles.actionContainer}>
                     <Button
@@ -133,9 +140,14 @@ class LoginScreen extends Component {
                         onPress={() => this.login()}
                     />
                     <TouchableOpacity
-                        style={{alignSelf: 'center'}}
+                        style={{ alignSelf: "center" }}
                         onPress={() =>
-                            Router.goTo(this.props.navigation, 'Register', 'RegisterStart', null)
+                            Router.goTo(
+                                this.props.navigation,
+                                "Register",
+                                "RegisterStart",
+                                null
+                            )
                         }
                     >
                         <Text style={{ color: "#37474f" }}>
@@ -154,26 +166,26 @@ const styles = StyleSheet.create({
         flex: 1,
         height: "100%",
         width: "100%",
-        justifyContent: 'space-between'
+        justifyContent: "space-between"
     },
     logo: {
         flex: 1,
-        width: '50%',
-        height: '50%',
+        width: "50%",
+        height: "50%",
         alignSelf: "center"
     },
     inputContainer: {
         flex: 3,
-        marginTop: "20%",
+        marginTop: "20%"
     },
     containerStyle: {
-        width: '75%',
-        alignSelf: 'center',
-        backgroundColor: "#FFFFFF",
+        width: "75%",
+        alignSelf: "center",
+        backgroundColor: "#FFFFFF"
     },
     buttonContainer: {
-        width: '75%',
-        alignSelf: 'center',
+        width: "75%",
+        alignSelf: "center"
     },
     buttonText: {
         color: "#fff",
@@ -181,7 +193,7 @@ const styles = StyleSheet.create({
         fontWeight: "700"
     },
     actionContainer: {
-        flex:1,
-    },
+        flex: 1
+    }
 });
 export default LoginScreen;

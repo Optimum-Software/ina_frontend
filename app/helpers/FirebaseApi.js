@@ -21,31 +21,34 @@ class FirebaseService {
             });
     }
 
-    sendSms(phoneNumber) {
-        this.app
+    async sendSms(phoneNumber) {
+        return await this.app
             .auth()
             .signInWithPhoneNumber(phoneNumber)
-            .then(confirmResult => console.log(confirmResult))
             .catch(error => console.log(error));
     }
 
-    verifyPhoneNumber(codeInput) {
-        confirmCode = () => {
-            if (true && codeInput.length) {
-                confirmResult
-                    .confirm(codeInput)
-                    .then(user => {
-                        console.log(user.email);
-                    })
-                    .catch(error => console.log(error));
-            }
-        };
+    async verifyPhoneNumber(codeInput, confirmResult) {
+        if (true && codeInput.length) {
+            return await confirmResult
+                .confirm(codeInput)
+                .catch(error => console.log(error));
+        }
     }
 
-    register(email, password) {
-        this.app
+    async registerAccount(email, password) {
+        return await this.app
             .auth()
             .createUserWithEmailAndPassword(email, password)
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    async linkAccountWithPhone(credential, user) {
+        return await this.getCurrentUser()
+            .linkAndRetrieveDataWithCredential(user)
+            .then(result => console.log(result))
             .catch(error => {
                 console.log(error);
             });
