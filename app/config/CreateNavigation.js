@@ -16,6 +16,7 @@ import RegistrationScreenStart from "../screens/RegistrationScreenStart";
 import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
 import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
 import LoginStack from "./LoginStackNavigator";
+import ChatStack from "./ChatStackNavigator";
 import ProjectDetail from "../screens/ProjectDetail";
 import ProjectStack from "./ProjectStackNavigator";
 import ChatCollection from "../screens/ChatCollection";
@@ -24,7 +25,7 @@ let screen = Dimensions.get("window");
 
 export const Tabs = createBottomTabNavigator({
     Home: {
-        screen: ChatCollection,
+        screen: Home,
         navigationOptions: {
             tabBarLabel: "Home",
             tabBarIcon: ({ tintColor }) => (
@@ -53,6 +54,20 @@ export const Tabs = createBottomTabNavigator({
             tabBarIcon: ({ tintColor }) => (
                 <Icon
                     name="account"
+                    type="ionicon"
+                    size={28}
+                    color={tintColor}
+                />
+            )
+        }
+    },
+    ChatStack: {
+      screen: ChatStack,
+      navigationOptions: {
+            tabBarLabel: "Chats",
+            tabBarIcon: ({ tintColor }) => (
+                <Icon
+                    name="forum"
                     type="ionicon"
                     size={28}
                     color={tintColor}
