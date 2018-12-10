@@ -18,12 +18,13 @@ import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
 import LoginStack from "./LoginStackNavigator";
 import ProjectDetail from "../screens/ProjectDetail";
 import ProjectStack from "./ProjectStackNavigator";
+import ChatCollection from "../screens/ChatCollection";
 
 let screen = Dimensions.get("window");
 
 export const Tabs = createBottomTabNavigator({
     Home: {
-        screen: Home,
+        screen: ChatCollection,
         navigationOptions: {
             tabBarLabel: "Home",
             tabBarIcon: ({ tintColor }) => (

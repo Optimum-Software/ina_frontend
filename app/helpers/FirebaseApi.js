@@ -67,6 +67,34 @@ class FirebaseService {
     getCurrentUser() {
         return this.app.auth().currentUser;
     }
+
+    deleteUser(user) {
+        user.delete()
+            .then(function() {
+                // User deleted.
+            })
+            .catch(function(error) {
+                // An error happened.
+            });
+    }
+
+    async getChats() {
+        console.log("hallo");
+        const ref = this.app.database().ref("Chats");
+        console.log(ref);
+        ref.once("value").then(snapshot => {
+            console.log(snapshot);
+        });
+        ref.once("value").then(snapshot => {
+            // get children as an array
+            let items = [];
+            snapshot.forEach(child => {
+                items.push({
+                    title: child.key
+                });
+            });
+        });
+    }
 }
 
 const firebaseService = new FirebaseService();

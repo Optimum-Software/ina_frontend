@@ -6,6 +6,7 @@ import { Input, Button } from "react-native-elements";
 import Router from "../helpers/Router";
 import CodeInput from "react-native-confirmation-code-input";
 import UserApi from "../helpers/UserApi";
+import firebaseApi from "../helpers/FirebaseApi";
 
 export default class RegistrationScreenStart extends Component {
     constructor() {
@@ -23,39 +24,34 @@ export default class RegistrationScreenStart extends Component {
 
     checkCode(code) {
         console.log(code);
+        console.log(this.state.registerPhoneInfo.confirmResult);
         firebaseApi
-            .verifyPhoneNumber(code, this.state.registerInfo.confirmResult)
+            .verifyPhoneNumber(code, this.state.registerPhoneInfo.confirmResult)
             .then(result => {
+                console.log("Current user phone:");
+                firebaseApi.deleteUser(result);
                 console.log(result);
-                console.log(this.state.registerInfo.registerInfo.email);
-                console.log(this.state.registerInfo.registerInfo.pw);
-                this.setState({ phoneCredential: result });
+                console.log(this.state.registerPhoneInfo.registerInfo.email);
+                console.log(this.state.registerPhoneInfo.registerInfo.pw);
                 firebaseApi
                     .registerAccount(
-                        this.state.registerInfo.registerInfo.email,
-                        this.state.registerInfo.registerInfo.pw
+                        this.state.registerPhoneInfo.registerInfo.email,
+                        this.state.registerPhoneInfo.registerInfo.pw
                     )
                     .then(user => {
-                        console.log(
-                            "----------------REGISTERED USER--------------------"
-                        );
-                        console.log(user);
-                        console.log(this.state.phoneCredential);
-                        firebaseApi.linkAccountWithPhone(
-                            this.state.phoneCredential,
-                            user
-                        );
+                        console.log("REGISTERED USER STUFF");
+                        console.log(user.user);
+                        this.register(user.user);
                     });
             });
-        this.register();
     }
 
-    register() {
+    register(firebaseUser) {
         UserApi.registerUser(
-            this.state.registerPhoneInfo.registerStartInfo.firstName,
-            this.state.registerPhoneInfo.registerStartInfo.lastName,
-            this.state.registerPhoneInfo.registerStartInfo.email,
-            this.state.registerPhoneInfo.registerStartInfo.pw,
+            this.state.registerPhoneInfo.registerInfo.firstName,
+            this.state.registerPhoneInfo.registerInfo.lastName,
+            this.state.registerPhoneInfo.registerInfo.email,
+            this.state.registerPhoneInfo.registerInfo.pw,
             this.state.registerPhoneInfo.phoneNumber
         ).then(result => {
             if (!result["bool"]) {
@@ -63,6 +59,7 @@ export default class RegistrationScreenStart extends Component {
                 console.log(result);
                 alert(result["msg"]);
                 console.log("error");
+                firebaseApi.deleteUser(firebaseUser);
             } else {
                 //display succes
                 alert(result["msg"]);
