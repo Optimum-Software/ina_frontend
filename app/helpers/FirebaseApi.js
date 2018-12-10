@@ -22,7 +22,6 @@ class FirebaseService {
   }
 
   sendSms(phoneNumber) {
-    console.log(this.app);
     this.app
       .auth()
       .signInWithPhoneNumber(phoneNumber)
@@ -64,6 +63,24 @@ class FirebaseService {
 
   getCurrentUser() {
     return this.app.auth().currentUser;
+  }
+
+  async getChats() {
+    console.log("hallo")
+    const ref = this.app.database().ref("Chats");
+    console.log(ref)
+    ref.once('value').then(snapshot => {
+      console.log(snapshot)
+    })
+    ref.once("value").then(snapshot => {
+        // get children as an array
+        let items = [];
+        snapshot.forEach(child => {
+            items.push({
+                title: child.key
+            });
+        });
+    });
   }
 }
 
