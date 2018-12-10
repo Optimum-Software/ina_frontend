@@ -39,10 +39,7 @@ class FirebaseService {
     async registerAccount(email, password) {
         return await this.app
             .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .catch(error => {
-                console.log(error);
-            });
+            .createUserWithEmailAndPassword(email, password);
     }
 
     async linkAccountWithPhone(credential, user) {

@@ -42,6 +42,10 @@ export default class RegistrationScreenStart extends Component {
                         console.log("REGISTERED USER STUFF");
                         console.log(user.user);
                         this.register(user.user);
+                    })
+                    .catch(error => {
+                        console.log("OEPS");
+                        alert(error.message);
                     });
             });
     }

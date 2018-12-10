@@ -51,6 +51,7 @@ class LoginScreen extends Component {
     login() {
         if (this.checkInputEmpty() && this.checkEmail()) {
             Api.login(this.state.email, this.state.pw).then(result => {
+                console.log(result);
                 if (result.bool) {
                     User.storeUserId(result.userId);
                     User.storeToken(result.token);
@@ -143,7 +144,7 @@ class LoginScreen extends Component {
                     <Button
                         title="Log in"
                         containerStyle={styles.buttonContainer}
-                        onPress={() => this.login(email, pw)}
+                        onPress={() => this.login()}
                     />
                     <TouchableOpacity
                         style={{ alignSelf: "center" }}
