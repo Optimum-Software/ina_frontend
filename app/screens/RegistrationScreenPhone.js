@@ -88,8 +88,7 @@ export default class RegistrationScreenPhone extends Component {
                 <View style={styles.container}>
                     <View style={styles.infoField}>
                         <Text style={styles.infoText}>
-                            We willen je mobiel nummer om die te verkopen voor
-                            alle monnies
+                            Info over mobiel gebruik
                         </Text>
                     </View>
                     <View style={styles.inputFieldContainer}>

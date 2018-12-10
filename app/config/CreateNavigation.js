@@ -16,6 +16,7 @@ import RegistrationScreenStart from "../screens/RegistrationScreenStart";
 import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
 import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
 import LoginStack from "./LoginStackNavigator";
+import ProjectDetail from "../screens/ProjectDetail";
 import ProjectStack from "./ProjectStackNavigator";
 
 let screen = Dimensions.get("window");
@@ -88,6 +89,28 @@ export const Register = createStackNavigator({
     }
 );
 
+export const Project = createStackNavigator({
+    ProjectMain: {
+      screen: Projectoverview,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+
+    ProjectDetailPage: {
+      screen: ProjectDetail,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+
+
+  },
+  {
+    headerMode: "none"
+  }
+);
+
 const MainNavigator = createStackNavigator(
     {
         Tabs: {
@@ -101,7 +124,13 @@ const MainNavigator = createStackNavigator(
           navigationOptions: ({ navigation }) => ({
             gesturesEnabled: false
           })
-        }
+        },
+      Project: {
+        screen: Project,
+        navigationOptions: ({ navigation }) => ({
+          gesturesEnabled: false
+        })
+      }
     },
     {
       headerMode: "none",

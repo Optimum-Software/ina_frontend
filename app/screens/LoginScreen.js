@@ -16,6 +16,7 @@ import { NavigationActions } from "react-navigation";
 import logo from "../assets/images/logo.png";
 import firebaseApi from "../helpers/FirebaseApi";
 import Router from "../helpers/Router";
+import User from "../helpers/User";
 
 class LoginScreen extends Component {
     constructor() {
@@ -48,27 +49,33 @@ class LoginScreen extends Component {
     }
 
     login() {
-        // if (this.state.email == "" || this.state.password == "") {
-        //     alert("Vul alstublieft alle velden in!");
-        // } else if (/\S+@\S+\.\S+/.test(this.state.email) == false) {
-        //     alert("Het ingevoerde email adres is geen valide email!");
-        // } else {
-        //     // let api = Api.getInstance();
-        //     // let userData = {
-        //     //     email: this.state.email,
-        //     //     password: this.state.password
-        //     // };
-        //     // api.callApiPost("login", "POST", userData, response => {});
-        //     //firebaseApi.sendSms("+31611735849");
-        // }
-        if (this.checkInputEmpty() && this.checkPw()) {
-            console.log("login in");
+        if (this.checkInputEmpty() && this.checkEmail()) {
+            Api.login(this.state.email, this.state.pw).then(result => {
+                if (result.bool) {
+                    User.storeUserId(result.userId);
+                    User.storeToken(result.token);
+                    Router.goTo(
+                        this.props.navigation,
+                        "Register",
+                        "RegisterStart",
+                        null
+                    );
+                } else {
+                    this.setState({ pwError: result.msg });
+                }
+                User.getUserId().then(result => {
+                    console.log(result);
+                });
+                User.getToken().then(result => {
+                    console.log(result);
+                });
+            });
             // let userData = {
             //     email: this.state.email,
             //     password: this.state.password
             // };
             // Api.callApiPost("login", "POST", userData, response => {});
-            //firebaseApi.sendSms("+31611735849");
+            //firebaseApi.sendSms("+31637612691");
         }
     }
 
@@ -86,11 +93,11 @@ class LoginScreen extends Component {
         return returnBool;
     }
 
-    checkPw() {
-        msg = "Het wachtwoord moet minimaal 6 karakters lang zijn";
+    checkEmail() {
+        msg = "Het ingevoerde email adres is geen valide email";
         returnBool = true;
-        if (this.state.pw.length < 6) {
-            this.setState({ pwError: msg });
+        if (!/\S+@\S+\.\S+/.test(this.state.email)) {
+            this.setState({ emailError: msg });
             returnBool = false;
         }
         return returnBool;
@@ -135,9 +142,8 @@ class LoginScreen extends Component {
                 <View style={styles.actionContainer}>
                     <Button
                         title="Log in"
-                        buttonStyle={styles.buttonText}
                         containerStyle={styles.buttonContainer}
-                        onPress={() => this.login()}
+                        onPress={() => this.login(email, pw)}
                     />
                     <TouchableOpacity
                         style={{ alignSelf: "center" }}
@@ -186,11 +192,6 @@ const styles = StyleSheet.create({
     buttonContainer: {
         width: "75%",
         alignSelf: "center"
-    },
-    buttonText: {
-        color: "#fff",
-        textAlign: "center",
-        fontWeight: "700"
     },
     actionContainer: {
         flex: 1
