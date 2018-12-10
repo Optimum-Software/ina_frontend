@@ -13,6 +13,8 @@ import firebaseApi from "./helpers/FirebaseApi";
 export default class App extends React.Component {
     constructor() {
         super();
+        console.disableYellowBox = true;
+
         firebaseApi.checkUser();
     }
     render() {
