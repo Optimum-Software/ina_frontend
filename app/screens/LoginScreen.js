@@ -43,7 +43,7 @@ class LoginScreen extends Component {
     this.spinValue.setValue(0);
     Animated.timing(this.spinValue, {
       toValue: 1,
-      duration: 99000,
+      duration: 1000,
       easing: Easing.linear
     }).start(() => this.spin());
   }
@@ -51,8 +51,8 @@ class LoginScreen extends Component {
   login() {
     if (this.checkInputEmpty() && this.checkEmail()) {
       Api.login(this.state.email, this.state.pw).then(result => {
-        console.log(result);
         if (result.bool) {
+          alert("Login succesfull");
           User.storeUserId(result.userId);
           User.storeToken(result.token);
           Router.goTo(this.props.navigation, "Register", "RegisterStart", null);

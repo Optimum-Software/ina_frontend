@@ -1,90 +1,109 @@
-import React, {Component} from "react"
+import React, { Component } from "react";
 import {
-    FlatList,
-    Image,
-    StyleSheet,
-    Text,
-    View,
-    Dimensions,
-    ImageBackground,
-    TouchableHighlight
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ImageBackground,
+  TouchableHighlight,
+  ScrollView
 } from "react-native";
-import {Header} from "react-navigation";
+import { Header } from "react-navigation";
 import Router from "../helpers/Router";
 import { Toolbar } from "react-native-material-ui";
+import line from "../assets/images/Line.png";
 
 export default class ProjectDetail extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: "Project"
+  });
+  constructor() {
+    super();
+    this.state = { bookmarked: "bookmark" };
+  }
+  render() {
+    const { navigation } = this.props;
 
-    static navigationOptions = ({navigation}) => ({
-        title: "Project"
-    });
+    const name = navigation.getParam("name", "");
+    const url = navigation.getParam("url", "");
+    const desc = navigation.getParam("desc", "");
+    const start_date = navigation.getParam("start_date", "");
+    const end_date = navigation.getParam("end_date", "");
+    const created_at = navigation.getParam("created_at", "");
+    const like_count = navigation.getParam("like_count", "");
+    const follower_count = navigation.getParam("follower_count", "");
+    const location = navigation.getParam("location", "");
 
-    render() {
-
-      const { navigation } = this.props;
-
-      const title = navigation.getParam("title", "");
-      const url = navigation.getParam("url", "");
-        return (
+    return (
+      <ScrollView>
+        <View style={{ height: Header.HEIGHT }}>
+          <Toolbar
+            leftElement={"chevron-left"}
+            onLeftElementPress={() => Router.goBack(this.props.navigation)}
+            centerElement="Project informatie"
+            rightElement={this.state.bookmarked}
+            onRightElementPress={() => {
+              if (this.state.bookmarked == "bookmark") {
+                this.setState({ bookmarked: "markunread" });
+              } else {
+                this.setState({ bookmarked: "bookmark" });
+              }
+            }}
+          />
+        </View>
+        <View style={styles.container}>
+          <Image
+            source={{ uri: url }}
+            resizeMode="cover"
+            style={{ width: "100%", height: 200 }}
+          />
+          <Image
+            source={line}
+            resizeMode="stretch"
+            style={{ width: "100%", height: "2%" }}
+          />
           <View>
-            <View style={{ height: Header.HEIGHT }}>
-              <Toolbar    leftElement={"chevron-left"}
-                          onLeftElementPress={() =>
-                            Router.goBack(this.props.navigation)
-                          }
-                          centerElement="Project"/>
-            </View>
-
-              <View style={styles.image}>
-                <Image
-                  source={{uri: url}}
-                  resizeMode="cover"
-                  style={{width: "100%", height: "100%"}}
-                />
-              </View>
-              <Text style={styles.title}>
-                {title}
-              </Text>
-            </View>
-
-
-          );
-
-
-    }
+            <Text style={styles.title}>{name}</Text>
+            <Text>{desc}</Text>
+          </View>
+        </View>
+      </ScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "center"
   },
   cardContainer: {
     flex: 1,
-    margin: 10,
+    margin: 10
   },
   card: {
-    backgroundColor: '#F1F1F1',
+    backgroundColor: "#F1F1F1",
     margin: 10,
-    width: '100%',
+    width: "100%",
     height: 180,
     marginBottom: 10,
-    elevation: 3,
+    elevation: 3
   },
 
   imageBackground: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height
-     },
+  },
 
   image: {
-      height:'50%',
-      width:'100%'
-      },
+    height: "50%",
+    width: "100%"
+  },
   title: {
     margin: 5,
     fontSize: 20,
     fontWeight: "bold"
   }
-
 });
