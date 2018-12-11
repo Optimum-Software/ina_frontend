@@ -62,6 +62,10 @@ export default class Chat extends Component {
             });
     }
 
+    onSend(messages = []) {
+      FirebaseApi.sendMessage(this.state.currentUser, this.state.uid, messages)
+    }
+
     getColor(username) {
       let sumChars = 0;
       for (let i = 0; i < username.length; i++) {
@@ -78,10 +82,6 @@ export default class Chat extends Component {
           "#ffab91" // midnight blue
       ];
       return colors[sumChars % colors.length];
-    }
-
-    onSend(messages = []) {
-      console.log("hoi")
     }
 
     render() {
@@ -124,16 +124,4 @@ export default class Chat extends Component {
 }
 
 const styles = StyleSheet.create({
-    chatBoxContainer: {
-        flex: 1,
-        backgroundColor: "red",
-        borderRadius: 5,
-        margin: '3%',
-        alignChildren: 'center'
-    },
-
-    chatBoxItem: {
-      backgroundColor: 'yellow',
-      alignSelf: 'center'
-    }
 });

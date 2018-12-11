@@ -23,11 +23,6 @@ export default class ChatCollection extends Component {
       })
     }
 
-    //takes the index of the item in the array as key value for listitem
-    _keyExtractor(item, index){
-      return item.id;
-    }
-
     goToChat(uid) {
       Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid})
     }
@@ -38,9 +33,9 @@ export default class ChatCollection extends Component {
           {!this.state.loading && (
             <FlatList
               data={this.state.chats}
-              keyExtractor={() => this._keyExtractor}
               renderItem={({ item }) => (
                 <ListItem
+                  key={item.title}
                   title={item.title}
                   subtitle={"20 december 2019"}
                   leftAvatar={{ source: { uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' } }}
@@ -66,7 +61,6 @@ const styles = StyleSheet.create({
         backgroundColor: "red",
         borderRadius: 5,
         margin: '3%',
-        alignChildren: 'center'
     },
 
     chatBoxItem: {

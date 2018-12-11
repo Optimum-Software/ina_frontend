@@ -95,9 +95,11 @@ class FirebaseService {
   }
 
   sendMessage(sender, uid, messages = []) {
-    const ref = firebaseService.database().ref("Chats").child(uid);
+    const ref = this.app.database().ref("Chats").child(uid);
+
     let currentUser = this.app.auth().currentUser;
     let createdAt = new Date().getTime();
+
     var messageEncrypted = CryptoJS.AES.encrypt(
       messages[0].text,
       sha256(
@@ -114,6 +116,7 @@ class FirebaseService {
     };
     ref.push().set(chatMessage);
   }
+
 }
 const firebaseService = new FirebaseService();
 export default firebaseService;

@@ -5,18 +5,21 @@ import { Toolbar } from "react-native-material-ui";
 import { Input, Button } from "react-native-elements";
 import Router from "../helpers/Router";
 import UserApi from "../helpers/UserApi";
+import sha256 from "crypto-js/sha256";
+
+var SHA256 = require("crypto-js/sha256")
 
 export default class RegistrationScreenStart extends Component {
     constructor() {
         super();
         this.state = {
-            firstName: "ferry",
+            firstName: "Jelmer",
             firstNameError: "",
 
-            lastName: "doppel",
+            lastName: "Haarman",
             lastNameError: "",
 
-            email: "ferry.doppel3@xs4all.nl",
+            email: "jelmer.haarman@xs4all.nl",
             emailError: "",
 
             pw: "123456",
@@ -30,28 +33,23 @@ export default class RegistrationScreenStart extends Component {
     }
 
     goToRegisterPhone() {
-        Router.goTo(
-            this.props.navigation,
-            "Register",
-            "RegisterPhone",
-            this.state
-        );
-        // let emailExists = UserApi.checkEmail(this.state.email).then(result => {
-        //   this.resetErrors()
-        //   if(result['ntwFail']) {
-        //     //network error
-        //     alert(result['msg'])
-        //   } else {
-        //     if(result['bool']) {this.setState({emailError: "Het ingevulde e-mail adres bestaat al"})}
-        //     let pwSame = this.checkPwSame()
-        //     let pwLength = this.checkPwLength()
-        //     let email = this.checkEmail()
-        //     let empty = this.checkInputEmpty()
-        //     if(empty && email && pwSame && pwLength && !result['bool']) {
-        //       Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
-        //     }
-        //   }
-        // })
+        let emailExists = UserApi.checkEmail(this.state.email).then(result => {
+          this.resetErrors()
+          if(result['ntwFail']) {
+            //network error
+            alert(result['msg'])
+          } else {
+            if(result['bool']) {this.setState({emailError: "Het ingevulde e-mail adres bestaat al"})}
+            let pwSame = this.checkPwSame()
+            let pwLength = this.checkPwLength()
+            let email = this.checkEmail()
+            let empty = this.checkInputEmpty()
+            if(empty && email && pwSame && pwLength && !result['bool']) {
+                this.setState({pw: SHA256(this.state.pw).toString(), pwRepeat: SHA256(this.state.pwRepeat).toString()})
+                Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
+            }
+          }
+        })
     }
 
     resetErrors() {

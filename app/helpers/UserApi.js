@@ -25,6 +25,23 @@ class UserApi {
     }
     return(Api.callApiPost("createUser", userData))
   }
+
+  createDeviceId(userId, deviceId) {
+    userData = {
+      userId: userId,
+      deviceId: deviceId
+    }
+
+    return (Api.callApiPost("createDevice", userData))
+  }
+
+  notifyUser(userId) {
+    userData = {
+      userId: userId
+    }
+
+    return (Api.callApiPost("sendMessageToUserById", userData))
+  }
 }
 
 const userApi = new UserApi();
