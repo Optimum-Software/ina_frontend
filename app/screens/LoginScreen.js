@@ -22,7 +22,7 @@ import User from "../helpers/User";
 import UserApi from "../helpers/UserApi";
 import OneSignal from "react-native-onesignal";
 import sha256 from "crypto-js/sha256";
-var SHA256 = require("crypto-js/sha256")
+var SHA256 = require("crypto-js/sha256");
 import SvgUri from "react-native-svg-uri";
 
 class LoginScreen extends Component {
@@ -57,21 +57,23 @@ class LoginScreen extends Component {
 
     login() {
         if (this.checkInputEmpty() && this.checkEmail()) {
-            let hashedPw = SHA256(this.state.pw).toString()
+            let hashedPw = SHA256(this.state.pw).toString();
             Api.login(this.state.email, hashedPw).then(result => {
                 if (result.bool) {
                     User.getUserId().then(userId => {
-                      User.getDeviceId().then(deviceId => {
-                        UserApi.createDeviceId(userId, deviceId).then(result => {
-                            console.log(result)
-                        })
-                      })    
+                        User.getDeviceId().then(deviceId => {
+                            UserApi.createDeviceId(userId, deviceId).then(
+                                result => {
+                                    console.log(result);
+                                }
+                            );
+                        });
                     });
                     User.storeUserId(result.userId);
                     User.storeToken(result.token);
                     UserApi.notifyUser(result.userId).then(result => {
-                      console.log(result);
-                    })
+                        console.log(result);
+                    });
                 } else {
                     this.setState({ pwError: result.msg });
                 }
@@ -235,15 +237,15 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     top: {
-        height: "35%",
         width: "100%",
+        flex: 1,
         backgroundColor: "#ffffff",
         justifyContent: "center",
         alignItems: "center"
     },
     bottom: {
-        height: "66%",
         width: "100%",
+        flex: 2,
         backgroundColor: "#01A6FF",
         paddingLeft: "15%",
         paddingRight: "15%",
