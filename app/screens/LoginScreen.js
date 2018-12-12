@@ -8,12 +8,14 @@ import {
     Image,
     ScrollView,
     Animated,
-    Easing
+    Easing,
+    Button
 } from "react-native";
-import { Input, Button } from "react-native-elements";
+import { Input } from "react-native-elements";
 import Api from "../helpers/Api";
 import { NavigationActions } from "react-navigation";
-import logo from "../assets/images/logo.png";
+import logo from "../assets/images/logo_circle.png";
+import wave from "../assets/thewave.png";
 import firebaseApi from "../helpers/FirebaseApi";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
@@ -21,6 +23,7 @@ import UserApi from "../helpers/UserApi";
 import OneSignal from "react-native-onesignal";
 import sha256 from "crypto-js/sha256";
 var SHA256 = require("crypto-js/sha256")
+import SvgUri from "react-native-svg-uri";
 
 class LoginScreen extends Component {
     constructor() {
@@ -107,17 +110,34 @@ class LoginScreen extends Component {
         });
         return (
             <View style={styles.container}>
-                <Animated.Image
-                    resizeMode="contain"
-                    style={({ transform: [{ rotate: spin }] }, styles.logo)}
-                    source={logo}
+                <View style={styles.top}>
+                    <Image
+                        resizeMode="contain"
+                        style={({ transform: [{ rotate: spin }] }, styles.logo)}
+                        source={logo}
+                    />
+                    <Text style={styles.welcomeText}>Welkom bij INA!</Text>
+                </View>
+                <Image
+                    resizeMode="cover"
+                    source={wave}
+                    style={{ height: "5%", width: "100%" }}
                 />
-                <View style={styles.inputContainer}>
+                <View style={styles.bottom}>
+                    <Text style={styles.loginTitle}>Login</Text>
                     <Input
                         placeholder="E-mail"
-                        containerStyle={styles.containerStyle}
+                        placeholderTextColor="#ffffff"
+                        containerStyle={styles.inputContainer}
+                        inputContainerStyle={styles.containerStyle}
+                        inputStyle={{ color: "#ffffff", fontSize: 16 }}
+                        labelStyle={{ color: "#ffffff" }}
                         value={this.state.email}
-                        leftIcon={{ type: "font-awesome", name: "user" }}
+                        leftIcon={{
+                            type: "font-awesome",
+                            name: "user",
+                            color: "#ffffff"
+                        }}
                         autoCapitalize="none"
                         onChangeText={email => this.setState({ email })}
                         onSubmitEditing={() => console.log("end")}
@@ -127,21 +147,50 @@ class LoginScreen extends Component {
                     </Text>
                     <Input
                         placeholder="Wachtwoord"
-                        containerStyle={styles.containerStyle}
+                        placeholderTextColor="#ffffff"
+                        containerStyle={styles.inputContainer}
+                        inputContainerStyle={styles.containerStyle}
+                        inputStyle={{ color: "#ffffff", fontSize: 16 }}
+                        labelStyle={{ color: "#ffffff" }}
+                        shake={true}
                         value={this.state.pw}
-                        leftIcon={{ type: "font-awesome", name: "lock" }}
+                        leftIcon={{
+                            type: "font-awesome",
+                            name: "lock",
+                            color: "#ffffff"
+                        }}
                         onChangeText={pw => this.setState({ pw })}
                         onSubmitEditing={() => console.log("end")}
                         secureTextEntry={true}
                     />
                     <Text style={styles.errorStyle}>{this.state.pwError}</Text>
-                </View>
-                <View style={styles.actionContainer}>
-                    <Button
-                        title="Log in"
-                        containerStyle={styles.buttonContainer}
-                        onPress={() => this.login()}
-                    />
+                    <TouchableOpacity
+                        style={{ alignSelf: "flex-end" }}
+                        onPress={() =>
+                            Router.goTo(
+                                this.props.navigation,
+                                "Register",
+                                "RegisterStart",
+                                null
+                            )
+                        }
+                    >
+                        <Text
+                            style={{
+                                color: "#ffffff",
+                                paddingBottom: "20%",
+                                paddingTop: "5%"
+                            }}
+                        >
+                            Wachtwoord vergeten?
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.buttonStyle}
+                        onPress={() => onPress()}
+                    >
+                        <Text style={styles.textStyle}>Inloggen</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         style={{ alignSelf: "center" }}
                         onPress={() =>
@@ -153,8 +202,13 @@ class LoginScreen extends Component {
                             )
                         }
                     >
-                        <Text style={{ color: "#37474f" }}>
-                            Nog geen account? Meld je aan!
+                        <Text style={{ color: "#ffffff", padding: 5 }}>
+                            Nog geen account?{" "}
+                            <Text
+                                style={{ fontWeight: "bold", color: "#ffffff" }}
+                            >
+                                Registreer hier!
+                            </Text>
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -165,33 +219,66 @@ class LoginScreen extends Component {
 
 // define your styles
 const styles = StyleSheet.create({
+    textStyle: {
+        fontSize: 16,
+        color: "#01A6FF",
+        textAlign: "center"
+    },
+
+    buttonStyle: {
+        padding: "5%",
+        backgroundColor: "#ffffff",
+        borderRadius: 25
+    },
     container: {
-        flex: 1,
         height: "100%",
+        width: "100%"
+    },
+    top: {
+        height: "35%",
         width: "100%",
-        justifyContent: "space-between"
+        backgroundColor: "#ffffff",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    bottom: {
+        height: "66%",
+        width: "100%",
+        backgroundColor: "#01A6FF",
+        paddingLeft: "15%",
+        paddingRight: "15%",
+        paddingTop: "5%"
     },
     logo: {
-        flex: 1,
         width: "50%",
         height: "50%",
         alignSelf: "center"
     },
+    welcomeText: {
+        paddingTop: "10%",
+        fontSize: 16,
+        color: "#01A6FF"
+    },
+    loginTitle: {
+        marginBottom: "5%",
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#ffffff"
+    },
     inputContainer: {
-        flex: 3,
-        marginTop: "20%"
+        marginTop: "5%",
+        marginBottom: "5%"
     },
     containerStyle: {
-        width: "75%",
-        alignSelf: "center",
-        backgroundColor: "#FFFFFF"
+        width: "110%",
+        borderColor: "#ffffff"
     },
     buttonContainer: {
         width: "75%",
-        alignSelf: "center"
+        alignSelf: "center",
+        backgroundColor: "#ffffffff",
+        borderRadius: 25
     },
-    actionContainer: {
-        flex: 1
-    }
+    actionContainer: {}
 });
 export default LoginScreen;

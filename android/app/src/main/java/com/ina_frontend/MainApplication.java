@@ -3,6 +3,7 @@ package com.ina_frontend;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -28,14 +29,9 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new ReactNativeOneSignalPackage(),
-            new RNFirebasePackage(), 
-            new RNFirebaseAuthPackage(),
-            new RNFirebaseDatabasePackage(),
-            new VectorIconsPackage(), 
-            new RNGestureHandlerPackage());
+      return Arrays.<ReactPackage>asList(new MainReactPackage(), new SvgPackage(), new RNFirebasePackage(),
+          new RNFirebaseAuthPackage(), new RNFirebaseDatabasePackage(), new VectorIconsPackage(),
+          new RNGestureHandlerPackage());
     }
 
     @Override
