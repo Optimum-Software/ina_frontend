@@ -21,12 +21,20 @@ class User {
         LocalStorage.storeItem("token", token);
     }
 
+    storeDeviceId(device) {
+        LocalStorage.storeItem("deviceId", device)
+    }
+
     getUserId() {
         return LocalStorage.retrieveItem("userId");
     }
 
     getToken() {
         return LocalStorage.retrieveItem("token");
+    }
+
+    getDeviceId() {
+        return LocalStorage.retrieveItem("deviceId");
     }
 }
 

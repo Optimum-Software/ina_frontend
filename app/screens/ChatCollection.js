@@ -1,49 +1,70 @@
 import React, { Component } from "react";
-import { TouchableOpacity, Text, View, FlatList, List } from "react-native";
+import { Text, View, FlatList, StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
 
-import firebaseApi from "../helpers/FirebaseApi";
+import FirebaseApi from "../helpers/FirebaseApi";
+import Router from "../helpers/Router";
 
 export default class ChatCollection extends Component {
     constructor() {
         super();
         this.state = {
-            chats: [
-                {
-                    key: 0,
-                    title: "Gaauwe",
-                    chatUserId: 1
-                }
-            ]
+            loading: true,
+            chats: []
         };
     }
 
     componentDidMount() {
-        firebaseApi.login("mail@grombouts.nl", "123456");
-        firebaseApi.getChats();
+      // debug only, make sure logged in on firebase
+      FirebaseApi.login("mail@grombouts.nl", "123456")
+      //
+      FirebaseApi.getChats().then(chats => {
+        this.setState({chats: chats, loading: false})
+      })
     }
 
     goToChat(uid) {
-        console.log(uid);
+      Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid})
     }
 
     render() {
         return (
-            <View>
-                <FlatList
-                    data={this.state.chats}
-                    renderItem={({ item, key }) => (
-                        <View>
-                            <ListItem
-                                key={key}
-                                title={item.title}
-                                chevron
-                                onPress={() => this.goToChat(item.title)}
-                            />
-                        </View>
-                    )}
+          <View>
+          {!this.state.loading && (
+            <FlatList
+              data={this.state.chats}
+              renderItem={({ item }) => (
+                <ListItem
+                  key={item.title}
+                  title={item.title}
+                  subtitle={"20 december 2019"}
+                  leftAvatar={{ source: { uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' } }}
+                  chevron
+                  containerStyle={styles.chatBoxContainer}
+                  contentContainerStyle={styles.chatBoxItem}
+                  onPress={() => this.goToChat(item.title)}
                 />
-            </View>
+              )}
+            />
+          )}
+          {this.state.loading && (
+            <Text>Loading</Text>
+          )}
+          </View>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    chatBoxContainer: {
+        flex: 1,
+        backgroundColor: "red",
+        borderRadius: 5,
+        margin: '3%',
+    },
+
+    chatBoxItem: {
+      backgroundColor: 'yellow',
+      alignSelf: 'center'
+    }
+});
