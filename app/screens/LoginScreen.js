@@ -66,9 +66,6 @@ class LoginScreen extends Component {
                     });
                     User.storeUserId(result.userId);
                     User.storeToken(result.token);
-                    UserApi.notifyUser(result.userId).then(result => {
-                      console.log(result);
-                    })
                 } else {
                     this.setState({ pwError: result.msg });
                 }
