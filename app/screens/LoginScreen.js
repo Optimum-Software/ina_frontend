@@ -13,7 +13,8 @@ import {
 } from "react-native";
 import { Input } from "react-native-elements";
 import Api from "../helpers/Api";
-import { NavigationActions } from "react-navigation";
+import { NavigationActions, Header } from "react-navigation";
+import { Toolbar } from "react-native-material-ui";
 import logo from "../assets/images/logo_circle.png";
 import wave from "../assets/thewave.png";
 import firebaseApi from "../helpers/FirebaseApi";
@@ -22,8 +23,8 @@ import User from "../helpers/User";
 import UserApi from "../helpers/UserApi";
 import OneSignal from "react-native-onesignal";
 import sha256 from "crypto-js/sha256";
-var SHA256 = require("crypto-js/sha256");
 import SvgUri from "react-native-svg-uri";
+var SHA256 = require("crypto-js/sha256");
 
 class LoginScreen extends Component {
     constructor() {
@@ -112,6 +113,16 @@ class LoginScreen extends Component {
         });
         return (
             <View style={styles.container}>
+                <View style={{ height: Header.HEIGHT }}>
+                    <Toolbar
+                        centerElement="Inloggen"
+                        iconSet="MaterialCommunityIcons"
+                        leftElement={"menu"}
+                        onLeftElementPress={() => {
+                            this.props.navigation.openDrawer();
+                        }}
+                    />
+                </View>
                 <View style={styles.top}>
                     <Image
                         resizeMode="contain"
@@ -171,7 +182,7 @@ class LoginScreen extends Component {
                         onPress={() =>
                             Router.goTo(
                                 this.props.navigation,
-                                "Register",
+                                "LoginStack",
                                 "RegisterStart",
                                 null
                             )
@@ -189,7 +200,7 @@ class LoginScreen extends Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.buttonStyle}
-                        onPress={() => onPress()}
+                        onPress={() => this.login()}
                     >
                         <Text style={styles.textStyle}>Inloggen</Text>
                     </TouchableOpacity>
@@ -198,14 +209,14 @@ class LoginScreen extends Component {
                         onPress={() =>
                             Router.goTo(
                                 this.props.navigation,
-                                "Register",
+                                "LoginStack",
                                 "RegisterStart",
                                 null
                             )
                         }
                     >
                         <Text style={{ color: "#ffffff", padding: 5 }}>
-                            Nog geen account?{" "}
+                            Nog geen account?
                             <Text
                                 style={{ fontWeight: "bold", color: "#ffffff" }}
                             >
