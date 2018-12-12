@@ -149,7 +149,14 @@ export default class Projectoverview extends Component {
       >
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
-            <Toolbar centerElement="Projecten" />
+            <Toolbar
+              centerElement="Projecten"
+              iconSet="MaterialCommunityIcons"
+              leftElement={"menu"}
+              onLeftElementPress={() => {
+                this.props.navigation.openDrawer();
+              }}
+            />
           </View>
           <View>
             <FlatList

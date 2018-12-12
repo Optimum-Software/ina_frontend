@@ -11,11 +11,12 @@ import { RootNavigator } from "./config/CreateNavigation";
 import firebaseApi from "./helpers/FirebaseApi";
 
 export default class App extends React.Component {
-    constructor() {
-        super();
-        firebaseApi.checkUser();
-    }
-    render() {
-        return <RootNavigator />;
-    }
+  constructor() {
+    super();
+    firebaseApi.checkUser();
+    console.disableYellowBox = true;
+  }
+  render() {
+    return <RootNavigator />;
+  }
 }

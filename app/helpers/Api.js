@@ -11,69 +11,90 @@ class Api {
     return instance;
   }
 
+  timeout(ms, promise) {
+    return new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        reject(new Error("timeout"));
+      }, ms);
+      promise.then(resolve, reject);
+    });
+  }
+
   async callApiPost(action, data) {
     try {
-      let response = await fetch(this.url + action, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
+      let response = await this.timeout(
+        3000,
+        fetch(this.url + action, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        })
+      );
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      console.error(error);
+      return { ntwFail: true, msg: "Kon geen verbinding met de server maken" };
     }
   }
 
   async callApiGet(action) {
     try {
-      let response = await fetch(this.url + action, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
+      let response = await this.timeout(
+        3000,
+        fetch(this.url + action, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+      );
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      console.error(error);
+      return { ntwFail: true, msg: "Kon geen verbinding met de server maken" };
     }
   }
 
   async callApiDelete(action, data) {
     try {
-      let response = await fetch(this.url + action, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
+      let response = await this.timeout(
+        3000,
+        fetch(this.url + action, {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        })
+      );
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      console.log(error);
+      return { ntwFail: true, msg: "Kon geen verbinding met de server maken" };
     }
   }
 
   async callApiPut(action, data) {
     try {
-      let response = await fetch(this.url + action, {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
+      let response = await this.timeout(
+        3000,
+        fetch(this.url + action, {
+          method: "PUT",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        })
+      );
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      console.log(error);
+      return { ntwFail: true, msg: "Kon geen verbinding met de server maken" };
     }
   }
 

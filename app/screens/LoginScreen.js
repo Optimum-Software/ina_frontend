@@ -12,28 +12,25 @@ import {
 } from "react-native";
 import { Input, Button } from "react-native-elements";
 import Api from "../helpers/Api";
-import { NavigationActions } from "react-navigation";
+import { NavigationActions, Header } from "react-navigation";
 import logo from "../assets/images/logo.png";
 import firebaseApi from "../helpers/FirebaseApi";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
+import { Toolbar } from "react-native-material-ui";
 
 class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "bert@bert.nl",
+      email: "",
       emailError: "",
 
-      pw: "Welkom123",
+      pw: "",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
   }
-
-  static navigationOptions = ({ navigation }) => ({
-    title: "Inloggen"
-  });
 
   componentDidMount() {
     this.spin();
@@ -59,11 +56,9 @@ class LoginScreen extends Component {
         } else {
           this.setState({ pwError: result.msg });
         }
-        console.log("UserID");
         User.getUserId().then(result => {
           console.log(result);
         });
-        console.log("Token");
         User.getToken().then(result => {
           console.log(result);
         });
@@ -108,6 +103,16 @@ class LoginScreen extends Component {
     });
     return (
       <View style={styles.container}>
+        <View style={{ height: Header.HEIGHT }}>
+          <Toolbar
+            centerElement="Projecten"
+            iconSet="MaterialCommunityIcons"
+            leftElement={"menu"}
+            onLeftElementPress={() => {
+              this.props.navigation.openDrawer();
+            }}
+          />
+        </View>
         <Animated.Image
           resizeMode="contain"
           style={({ transform: [{ rotate: spin }] }, styles.logo)}
@@ -139,14 +144,14 @@ class LoginScreen extends Component {
           <Button
             title="Log in"
             containerStyle={styles.buttonContainer}
-            onPress={() => this.login()}
+            onPress={() => this.login(email, pw)}
           />
           <TouchableOpacity
             style={{ alignSelf: "center" }}
             onPress={() =>
               Router.goTo(
                 this.props.navigation,
-                "Register",
+                "LoginStack",
                 "RegisterStart",
                 null
               )
