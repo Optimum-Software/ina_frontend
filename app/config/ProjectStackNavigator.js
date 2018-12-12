@@ -1,8 +1,24 @@
 import { createStackNavigator } from "react-navigation";
-import ProjectOverview from "../screens/Projectoverview";
-import ProjectDetail from "../screens/ProjectDetail";
+import ProjectOverviewScreen from "../screens/ProjectOverviewScreen";
+import ProjectDetailScreen from "../screens/ProjectDetailScreen";
 
-export default createStackNavigator({
-    ProjectOverview,
-    ProjectDetail
-});
+export default createStackNavigator(
+  {
+    ProjectOverviewScreen: {
+      screen: ProjectOverviewScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+
+    ProjectDetailScreen: {
+      screen: ProjectDetailScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    }
+  },
+  {
+    headerMode: "none"
+  }
+);

@@ -7,27 +7,35 @@ import LocalStorage from "../config/LocalStorage";
 let instance = null;
 
 class User {
-  constructor() {
-    if (!instance) {
-      instance = this;
+    constructor() {
+        if (!instance) {
+            instance = this;
+        }
+        return instance;
     }
-    return instance;
-  }
-  storeUserId(userId) {
-    LocalStorage.storeItem("userId", userId);
-  }
+    storeUserId(userId) {
+        LocalStorage.storeItem("userId", userId);
+    }
 
-  storeToken(token) {
-    LocalStorage.storeItem("token", token);
-  }
+    storeToken(token) {
+        LocalStorage.storeItem("token", token);
+    }
 
-  getUserId() {
-    return LocalStorage.retrieveItem("userId");
-  }
+    storeDeviceId(device) {
+        LocalStorage.storeItem("deviceId", device)
+    }
 
-  getToken() {
-    return LocalStorage.retrieveItem("token");
-  }
+    getUserId() {
+        return LocalStorage.retrieveItem("userId");
+    }
+
+    getToken() {
+        return LocalStorage.retrieveItem("token");
+    }
+
+    getDeviceId() {
+        return LocalStorage.retrieveItem("deviceId");
+    }
 }
 
 const user = new User();

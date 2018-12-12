@@ -8,29 +8,40 @@ import {
   Image,
   ScrollView,
   Animated,
-  Easing
+  Easing,
+  Button
 } from "react-native";
-import { Input, Button } from "react-native-elements";
+import { Input } from "react-native-elements";
 import Api from "../helpers/Api";
 import { NavigationActions, Header } from "react-navigation";
-import logo from "../assets/images/logo.png";
+import { Toolbar } from "react-native-material-ui";
+import logo from "../assets/images/logo_circle.png";
+import wave from "../assets/thewave.png";
 import firebaseApi from "../helpers/FirebaseApi";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
-import { Toolbar } from "react-native-material-ui";
+import UserApi from "../helpers/UserApi";
+import OneSignal from "react-native-onesignal";
+import sha256 from "crypto-js/sha256";
+import SvgUri from "react-native-svg-uri";
+var SHA256 = require("crypto-js/sha256");
 
 class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "",
+      email: "jelmer.haarman@xs4all.nl",
       emailError: "",
 
-      pw: "",
+      pw: "123456",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
   }
+
+  static navigationOptions = ({ navigation }) => ({
+    title: "Inloggen"
+  });
 
   componentDidMount() {
     this.spin();
@@ -40,35 +51,32 @@ class LoginScreen extends Component {
     this.spinValue.setValue(0);
     Animated.timing(this.spinValue, {
       toValue: 1,
-      duration: 1000,
+      duration: 99000,
       easing: Easing.linear
     }).start(() => this.spin());
   }
 
   login() {
     if (this.checkInputEmpty() && this.checkEmail()) {
-      Api.login(this.state.email, this.state.pw).then(result => {
+      let hashedPw = SHA256(this.state.pw).toString();
+      Api.login(this.state.email, hashedPw).then(result => {
         if (result.bool) {
-          alert("Login succesfull");
+          User.getUserId().then(userId => {
+            User.getDeviceId().then(deviceId => {
+              UserApi.createDeviceId(userId, deviceId).then(result => {
+                console.log(result);
+              });
+            });
+          });
           User.storeUserId(result.userId);
           User.storeToken(result.token);
-          Router.goTo(this.props.navigation, "Register", "RegisterStart", null);
+          UserApi.notifyUser(result.userId).then(result => {
+            console.log(result);
+          });
         } else {
           this.setState({ pwError: result.msg });
         }
-        User.getUserId().then(result => {
-          console.log(result);
-        });
-        User.getToken().then(result => {
-          console.log(result);
-        });
       });
-      // let userData = {
-      //     email: this.state.email,
-      //     password: this.state.password
-      // };
-      // Api.callApiPost("login", "POST", userData, response => {});
-      //firebaseApi.sendSms("+31637612691");
     }
   }
 
@@ -105,7 +113,7 @@ class LoginScreen extends Component {
       <View style={styles.container}>
         <View style={{ height: Header.HEIGHT }}>
           <Toolbar
-            centerElement="Projecten"
+            centerElement="Inloggen"
             iconSet="MaterialCommunityIcons"
             leftElement={"menu"}
             onLeftElementPress={() => {
@@ -113,17 +121,34 @@ class LoginScreen extends Component {
             }}
           />
         </View>
-        <Animated.Image
-          resizeMode="contain"
-          style={({ transform: [{ rotate: spin }] }, styles.logo)}
-          source={logo}
+        <View style={styles.top}>
+          <Image
+            resizeMode="contain"
+            style={({ transform: [{ rotate: spin }] }, styles.logo)}
+            source={logo}
+          />
+          <Text style={styles.welcomeText}>Welkom bij INA!</Text>
+        </View>
+        <Image
+          resizeMode="cover"
+          source={wave}
+          style={{ height: "5%", width: "100%" }}
         />
-        <View style={styles.inputContainer}>
+        <View style={styles.bottom}>
+          <Text style={styles.loginTitle}>Login</Text>
           <Input
             placeholder="E-mail"
-            containerStyle={styles.containerStyle}
+            placeholderTextColor="#ffffff"
+            containerStyle={styles.inputContainer}
+            inputContainerStyle={styles.containerStyle}
+            inputStyle={{ color: "#ffffff", fontSize: 16 }}
+            labelStyle={{ color: "#ffffff" }}
             value={this.state.email}
-            leftIcon={{ type: "font-awesome", name: "user" }}
+            leftIcon={{
+              type: "font-awesome",
+              name: "user",
+              color: "#ffffff"
+            }}
             autoCapitalize="none"
             onChangeText={email => this.setState({ email })}
             onSubmitEditing={() => console.log("end")}
@@ -131,21 +156,50 @@ class LoginScreen extends Component {
           <Text style={styles.errorStyle}>{this.state.emailError}</Text>
           <Input
             placeholder="Wachtwoord"
-            containerStyle={styles.containerStyle}
+            placeholderTextColor="#ffffff"
+            containerStyle={styles.inputContainer}
+            inputContainerStyle={styles.containerStyle}
+            inputStyle={{ color: "#ffffff", fontSize: 16 }}
+            labelStyle={{ color: "#ffffff" }}
+            shake={true}
             value={this.state.pw}
-            leftIcon={{ type: "font-awesome", name: "lock" }}
+            leftIcon={{
+              type: "font-awesome",
+              name: "lock",
+              color: "#ffffff"
+            }}
             onChangeText={pw => this.setState({ pw })}
             onSubmitEditing={() => console.log("end")}
             secureTextEntry={true}
           />
           <Text style={styles.errorStyle}>{this.state.pwError}</Text>
-        </View>
-        <View style={styles.actionContainer}>
-          <Button
-            title="Log in"
-            containerStyle={styles.buttonContainer}
-            onPress={() => this.login(email, pw)}
-          />
+          <TouchableOpacity
+            style={{ alignSelf: "flex-end" }}
+            onPress={() =>
+              Router.goTo(
+                this.props.navigation,
+                "LoginStack",
+                "RegisterStart",
+                null
+              )
+            }
+          >
+            <Text
+              style={{
+                color: "#ffffff",
+                paddingBottom: "20%",
+                paddingTop: "5%"
+              }}
+            >
+              Wachtwoord vergeten?
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            onPress={() => this.login()}
+          >
+            <Text style={styles.textStyle}>Inloggen</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={{ alignSelf: "center" }}
             onPress={() =>
@@ -157,8 +211,11 @@ class LoginScreen extends Component {
               )
             }
           >
-            <Text style={{ color: "#37474f" }}>
-              Nog geen account? Meld je aan!
+            <Text style={{ color: "#ffffff", padding: 5 }}>
+              Nog geen account?
+              <Text style={{ fontWeight: "bold", color: "#ffffff" }}>
+                Registreer hier!
+              </Text>
             </Text>
           </TouchableOpacity>
         </View>
@@ -169,33 +226,66 @@ class LoginScreen extends Component {
 
 // define your styles
 const styles = StyleSheet.create({
+  textStyle: {
+    fontSize: 16,
+    color: "#01A6FF",
+    textAlign: "center"
+  },
+
+  buttonStyle: {
+    padding: "5%",
+    backgroundColor: "#ffffff",
+    borderRadius: 25
+  },
   container: {
-    flex: 1,
     height: "100%",
+    width: "100%"
+  },
+  top: {
+    height: "35%",
     width: "100%",
-    justifyContent: "space-between"
+    backgroundColor: "#ffffff",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  bottom: {
+    height: "66%",
+    width: "100%",
+    backgroundColor: "#01A6FF",
+    paddingLeft: "15%",
+    paddingRight: "15%",
+    paddingTop: "5%"
   },
   logo: {
-    flex: 1,
     width: "50%",
     height: "50%",
     alignSelf: "center"
   },
+  welcomeText: {
+    paddingTop: "10%",
+    fontSize: 16,
+    color: "#01A6FF"
+  },
+  loginTitle: {
+    marginBottom: "5%",
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#ffffff"
+  },
   inputContainer: {
-    flex: 3,
-    marginTop: "20%"
+    marginTop: "5%",
+    marginBottom: "5%"
   },
   containerStyle: {
-    width: "75%",
-    alignSelf: "center",
-    backgroundColor: "#FFFFFF"
+    width: "110%",
+    borderColor: "#ffffff"
   },
   buttonContainer: {
     width: "75%",
-    alignSelf: "center"
+    alignSelf: "center",
+    backgroundColor: "#ffffffff",
+    borderRadius: 25
   },
-  actionContainer: {
-    flex: 1
-  }
+  actionContainer: {}
 });
 export default LoginScreen;

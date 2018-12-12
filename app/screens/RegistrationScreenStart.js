@@ -5,18 +5,21 @@ import { Toolbar } from "react-native-material-ui";
 import { Input, Button } from "react-native-elements";
 import Router from "../helpers/Router";
 import UserApi from "../helpers/UserApi";
+import sha256 from "crypto-js/sha256";
+
+var SHA256 = require("crypto-js/sha256");
 
 export default class RegistrationScreenStart extends Component {
   constructor() {
     super();
     this.state = {
-      firstName: "ferry",
+      firstName: "Jelmer",
       firstNameError: "",
 
-      lastName: "doppel",
+      lastName: "Haarman",
       lastNameError: "",
 
-      email: "ferry.doppel3@xs4all.nl",
+      email: "jelmer.haarman@xs4all.nl",
       emailError: "",
 
       pw: "123456",
@@ -46,6 +49,10 @@ export default class RegistrationScreenStart extends Component {
         let email = this.checkEmail();
         let empty = this.checkInputEmpty();
         if (empty && email && pwSame && pwLength && !result["bool"]) {
+          this.setState({
+            pw: SHA256(this.state.pw).toString(),
+            pwRepeat: SHA256(this.state.pwRepeat).toString()
+          });
           Router.goTo(
             this.props.navigation,
             "LoginStack",
@@ -82,17 +89,6 @@ export default class RegistrationScreenStart extends Component {
     return returnBool;
   }
 
-  checkPwSame() {
-    msg =
-      "Het herhaalde wachtwoord moet hetzelfde zijn als het eerste wachtwoord";
-    returnBool = true;
-    if (this.state.pwRepeat != this.state.pw) {
-      this.setState({ pwRepeatError: msg });
-      returnBool = false;
-    }
-    return returnBool;
-  }
-
   checkEmail() {
     msg = "Het ingevoerde e-mail adres is geen valide email";
     returnBool = true;
@@ -102,7 +98,6 @@ export default class RegistrationScreenStart extends Component {
     }
     return returnBool;
   }
-
   checkPwSame() {
     msg =
       "Het herhaalde wachtwoord moet hetzelfde zijn als het eerste wachtwoord";

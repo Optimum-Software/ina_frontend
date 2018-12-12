@@ -5,18 +5,21 @@ import { Toolbar } from "react-native-material-ui";
 import { Input, Button } from "react-native-elements";
 import Router from "../helpers/Router";
 
+import firebaseApi from "../helpers/FirebaseApi";
+
 export default class RegistrationScreenPhone extends Component {
   constructor() {
     super();
     this.state = {
-      registerStartInfo: {},
-      phoneNumber: "0647781634",
-      phoneNumberError: ""
+      registerInfo: {},
+      phoneNumber: "+31",
+      phoneNumberError: "",
+      confirmResult: null
     };
   }
 
   componentDidMount() {
-    this.setState({ registerStartInfo: this.props.navigation.state.params });
+    this.setState({ registerInfo: this.props.navigation.state.params });
   }
 
   verifyPhone() {
@@ -25,26 +28,15 @@ export default class RegistrationScreenPhone extends Component {
       this.checkInputType() &&
       this.checkInputLength()
     ) {
-      Router.goTo(
-        this.props.navigation,
-        "LoginStack",
-        "RegisterVerify",
-        this.state
-      );
-    }
-  }
-
-  verifyCode(isValid) {
-    if (isValid) {
-      this.refs.codeInput.clear();
-      Router.goTo(
-        this.props.navigation,
-        "LoginStack",
-        "RegisterVerify",
-        this.state
-      );
-    } else {
-      this.setState({ codeError: "Deze code is niet correct" });
+      firebaseApi.sendSms(this.state.phoneNumber).then(result => {
+        this.setState({ confirmResult: result });
+        Router.goTo(
+          this.props.navigation,
+          "Register",
+          "RegisterVerify",
+          this.state
+        );
+      });
     }
   }
 
@@ -60,7 +52,11 @@ export default class RegistrationScreenPhone extends Component {
 
   checkInputType() {
     msg = "Vul alstublieft alleen nummers in";
-    if (!/^\d+$/.test(this.state.phoneNumber)) {
+    if (
+      !/^\d+$/.test(
+        this.state.phoneNumber.slice(1, this.state.phoneNumber.length)
+      )
+    ) {
       this.setState({ phoneNumberError: msg });
       returnBool = false;
     }
@@ -88,9 +84,7 @@ export default class RegistrationScreenPhone extends Component {
         </View>
         <View style={styles.container}>
           <View style={styles.infoField}>
-            <Text style={styles.infoText}>
-              [Info over waarom we een telefoonnummer willen hebben]
-            </Text>
+            <Text style={styles.infoText}>Info over mobiel gebruik</Text>
           </View>
           <View style={styles.inputFieldContainer}>
             <Input
@@ -103,7 +97,7 @@ export default class RegistrationScreenPhone extends Component {
               onChangeText={phoneNumber => this.setState({ phoneNumber })}
               onSubmitEditing={() => this.verifyPhone()}
               keyboardType="phone-pad"
-              maxLength={10}
+              maxLength={12}
             />
           </View>
           <View style={styles.actionContainer}>

@@ -13,15 +13,13 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import HomeScreen from "../screens/HomeScreen";
-import ProjectOverviewScreen from "../screens/ProjectOverviewScreen";
-import LoginScreen from "../screens/LoginScreen";
-import RegistrationScreenStart from "../screens/RegistrationScreenStart";
-import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
-import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
-import ProjectDetailScreen from "../screens/ProjectDetailScreen";
 import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import SettingsScreen from "../screens/SettingsScreen";
+
+import ChatStack from "./ChatStackNavigator";
+import LoginStack from "./LoginStackNavigator";
+import ProjectStack from "./ProjectStackNavigator";
 
 let screen = Dimensions.get("window");
 
@@ -63,8 +61,8 @@ export const Tabs = createBottomTabNavigator(
         )
       }
     },
-    ProjectOverviewScreen: {
-      screen: ProjectOverviewScreen,
+    ProjectStack: {
+      screen: ProjectStack,
       navigationOptions: {
         tabBarLabel: "Projecten",
         tabBarIcon: ({ tintColor }) => (
@@ -72,70 +70,14 @@ export const Tabs = createBottomTabNavigator(
         )
       }
     },
-    LoginScreen: {
-      screen: LoginScreen,
+    ChatStack: {
+      screen: ChatStack,
       navigationOptions: {
-        tabBarLabel: "Inloggen",
+        tabBarLabel: "Chats",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="account" type="ionicon" size={28} color={tintColor} />
+          <Icon name="forum" type="ionicon" size={28} color={tintColor} />
         )
       }
-    }
-  },
-  {
-    headerMode: "none"
-  }
-);
-
-export const LoginStack = createStackNavigator(
-  {
-    LoginScreen: {
-      screen: LoginScreen,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
-    RegisterStart: {
-      screen: RegistrationScreenStart,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
-
-    RegisterPhone: {
-      screen: RegistrationScreenPhone,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
-
-    RegisterVerify: {
-      screen: RegistrationScreenVerify,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    }
-  },
-  {
-    headerMode: "none",
-    initialRouteName: "LoginScreen"
-  }
-);
-
-export const ProjectStack = createStackNavigator(
-  {
-    ProjectOverviewScreen: {
-      screen: ProjectOverviewScreen,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
-
-    ProjectDetailScreen: {
-      screen: ProjectDetailScreen,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
     }
   },
   {

@@ -3,6 +3,7 @@ import { NetInfo } from "react-native";
 let instance = null;
 class Api {
   url = "http://145.37.153.108:8000/api/";
+  //url = "http:/145.37.144.228:8000/api/";
 
   constructor() {
     if (!instance) {
@@ -36,7 +37,10 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      return { ntwFail: true, msg: "Kon geen verbinding met de server maken" };
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
     }
   }
 
@@ -54,7 +58,10 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      return { ntwFail: true, msg: "Kon geen verbinding met de server maken" };
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
     }
   }
 
@@ -74,7 +81,10 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      return { ntwFail: true, msg: "Kon geen verbinding met de server maken" };
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
     }
   }
 
@@ -94,7 +104,10 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      return { ntwFail: true, msg: "Kon geen verbinding met de server maken" };
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
     }
   }
 

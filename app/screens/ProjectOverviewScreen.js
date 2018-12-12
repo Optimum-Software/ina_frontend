@@ -15,7 +15,7 @@ import mountain from "../assets/images/firewatch_5.jpg";
 import line from "../assets/images/Line.png";
 import Router from "../helpers/Router";
 
-export default class Projectoverview extends Component {
+export default class ProjectOverview extends Component {
   constructor() {
     super();
 
@@ -169,8 +169,8 @@ export default class Projectoverview extends Component {
                   onPress={() =>
                     Router.goTo(
                       this.props.navigation,
-                      "Project",
-                      "ProjectDetailPage",
+                      "ProjectStack",
+                      "ProjectDetailScreen",
                       {
                         name: item.name,
                         url: item.url,
