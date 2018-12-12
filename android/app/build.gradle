@@ -137,11 +137,8 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
     compile project(':react-native-svg')
-=======
     compile project(':react-native-onesignal')
->>>>>>> upstream/master
     compile project(':react-native-firebase')
     implementation project(':react-native-firebase')
     implementation project(':react-native-vector-icons')
