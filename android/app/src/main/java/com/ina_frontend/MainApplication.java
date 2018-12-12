@@ -3,7 +3,11 @@ package com.ina_frontend;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD
 import com.horcrux.svg.SvgPackage;
+=======
+import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
+>>>>>>> upstream/master
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import io.invertase.firebase.RNFirebasePackage;

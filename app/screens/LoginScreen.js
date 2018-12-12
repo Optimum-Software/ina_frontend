@@ -19,31 +19,20 @@ import wave from "../assets/thewave.png";
 import firebaseApi from "../helpers/FirebaseApi";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
+import UserApi from "../helpers/UserApi";
+import OneSignal from "react-native-onesignal";
+import sha256 from "crypto-js/sha256";
+var SHA256 = require("crypto-js/sha256")
 import SvgUri from "react-native-svg-uri";
-import Dimensions from "Dimensions";
-
-// Precalculate Device Dimensions for better performance
-const x = Dimensions.get("window").width;
-const y = Dimensions.get("window").height;
-
-// Calculating ratio from iPhone breakpoints
-const ratioX = x < 375 ? (x < 320 ? 0.75 : 0.875) : 1;
-const ratioY = y < 568 ? (y < 480 ? 0.75 : 0.875) : 1;
-
-// We set our base font size value
-const base_unit = 16;
-
-// We're simulating EM by changing font size according to Ratio
-const unit = base_unit * ratioX;
 
 class LoginScreen extends Component {
     constructor() {
         super();
         this.state = {
-            email: "",
+            email: "jelmer.haarman@xs4all.nl",
             emailError: "",
 
-            pw: "",
+            pw: "123456",
             pwError: ""
         };
         this.spinValue = new Animated.Value(0);
@@ -68,33 +57,25 @@ class LoginScreen extends Component {
 
     login() {
         if (this.checkInputEmpty() && this.checkEmail()) {
-            Api.login(this.state.email, this.state.pw).then(result => {
-                console.log(result);
+            let hashedPw = SHA256(this.state.pw).toString()
+            Api.login(this.state.email, hashedPw).then(result => {
                 if (result.bool) {
+                    User.getUserId().then(userId => {
+                      User.getDeviceId().then(deviceId => {
+                        UserApi.createDeviceId(userId, deviceId).then(result => {
+                            console.log(result)
+                        })
+                      })    
+                    });
                     User.storeUserId(result.userId);
                     User.storeToken(result.token);
-                    Router.goTo(
-                        this.props.navigation,
-                        "Register",
-                        "RegisterStart",
-                        null
-                    );
+                    UserApi.notifyUser(result.userId).then(result => {
+                      console.log(result);
+                    })
                 } else {
                     this.setState({ pwError: result.msg });
                 }
-                User.getUserId().then(result => {
-                    console.log(result);
-                });
-                User.getToken().then(result => {
-                    console.log(result);
-                });
             });
-            // let userData = {
-            //     email: this.state.email,
-            //     password: this.state.password
-            // };
-            // Api.callApiPost("login", "POST", userData, response => {});
-            //firebaseApi.sendSms("+31637612691");
         }
     }
 

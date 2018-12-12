@@ -27,10 +27,8 @@ export default class RegistrationScreenPhone extends Component {
             this.checkInputType() &&
             this.checkInputLength()
         ) {
-            console.log(this.state.phoneNumber);
             firebaseApi.sendSms(this.state.phoneNumber).then(result => {
                 this.setState({ confirmResult: result });
-                console.log(this.state.confirmResult);
                 Router.goTo(
                     this.props.navigation,
                     "Register",
