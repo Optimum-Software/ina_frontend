@@ -1,13 +1,40 @@
 import { createStackNavigator } from "react-navigation";
 import LoginScreen from "../screens/LoginScreen";
 import RegistrationScreenStart from "../screens/RegistrationScreenStart";
+import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
+import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
 
-export default createStackNavigator({
+export default createStackNavigator(
+  {
     LoginScreen: {
-        screen: LoginScreen,
-        navigationOptions: {
-            header: null
-        }
+      screen: LoginScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
     },
-    RegistrationScreenStart
-});
+    RegisterStart: {
+      screen: RegistrationScreenStart,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+
+    RegisterPhone: {
+      screen: RegistrationScreenPhone,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+
+    RegisterVerify: {
+      screen: RegistrationScreenVerify,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    }
+  },
+  {
+    headerMode: "none",
+    initialRouteName: "LoginScreen"
+  }
+);
