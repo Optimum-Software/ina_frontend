@@ -25,6 +25,7 @@ import OneSignal from "react-native-onesignal";
 import sha256 from "crypto-js/sha256";
 import SvgUri from "react-native-svg-uri";
 var SHA256 = require("crypto-js/sha256");
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 class LoginScreen extends Component {
     constructor() {
@@ -136,6 +137,7 @@ class LoginScreen extends Component {
                     source={wave}
                     style={{ height: "5%", width: "100%" }}
                 />
+
                 <View style={styles.bottom}>
                     <Text style={styles.loginTitle}>Login</Text>
                     <Input
@@ -218,7 +220,10 @@ class LoginScreen extends Component {
                         <Text style={{ color: "#ffffff", padding: 5 }}>
                             Nog geen account?
                             <Text
-                                style={{ fontWeight: "bold", color: "#ffffff" }}
+                                style={{
+                                    fontWeight: "bold",
+                                    color: "#ffffff"
+                                }}
                             >
                                 Registreer hier!
                             </Text>

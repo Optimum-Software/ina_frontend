@@ -5,36 +5,36 @@ import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
 import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
 
 export default createStackNavigator(
-  {
-    LoginScreen: {
-      screen: LoginScreen,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
-    RegisterStart: {
-      screen: RegistrationScreenStart,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
+    {
+        LoginScreen: {
+            screen: LoginScreen,
+            navigationOptions: ({ navigation }) => ({
+                gesturesEnabled: false
+            })
+        },
+        RegisterStart: {
+            screen: RegistrationScreenStart,
+            navigationOptions: ({ navigation }) => ({
+                gesturesEnabled: false
+            })
+        },
 
-    RegisterPhone: {
-      screen: RegistrationScreenPhone,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
+        RegisterPhone: {
+            screen: RegistrationScreenPhone,
+            navigationOptions: ({ navigation }) => ({
+                gesturesEnabled: false
+            })
+        },
 
-    RegisterVerify: {
-      screen: RegistrationScreenVerify,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
+        RegisterVerify: {
+            screen: RegistrationScreenVerify,
+            navigationOptions: ({ navigation }) => ({
+                gesturesEnabled: false
+            })
+        }
+    },
+    {
+        headerMode: "none",
+        initialRouteName: "LoginScreen"
     }
-  },
-  {
-    headerMode: "none",
-    initialRouteName: "LoginScreen"
-  }
 );

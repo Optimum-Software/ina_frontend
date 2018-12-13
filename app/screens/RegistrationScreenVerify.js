@@ -20,6 +20,32 @@ export default class RegistrationScreenStart extends Component {
         this.setState({
             registerPhoneInfo: this.props.navigation.state.params
         });
+        firebaseApi
+            .verifyPhoneNumber(
+                "123",
+                this.state.registerPhoneInfo.confirmResult
+            )
+            .then(result => {
+                console.log("Current user phone:");
+                //firebaseApi.deleteUser(result.user);
+                console.log(result);
+                console.log(this.state.registerPhoneInfo.registerInfo.email);
+                console.log(this.state.registerPhoneInfo.registerInfo.pw);
+                firebaseApi
+                    .registerAccount(
+                        this.state.registerPhoneInfo.registerInfo.email,
+                        this.state.registerPhoneInfo.registerInfo.pw
+                    )
+                    .then(user => {
+                        console.log("REGISTERED USER STUFF");
+                        console.log(user.user);
+                        this.register(user.user);
+                    })
+                    .catch(error => {
+                        console.log("OEPS");
+                        alert(error.message);
+                    });
+            });
     }
 
     checkCode(code) {

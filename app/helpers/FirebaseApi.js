@@ -23,6 +23,10 @@ class FirebaseService {
             });
     }
 
+    getFireBase() {
+        return this.app.auth();
+    }
+
     async sendSms(phoneNumber) {
         return await this.app
             .auth()
@@ -32,11 +36,12 @@ class FirebaseService {
 
     async verifyPhoneNumber(codeInput, confirmResult) {
         if (true && codeInput.length) {
-            console.log("VERIFY PHONE SHITZLE");
-            console.log(confirmResult);
-            return await confirmResult
-                .confirm(codeInput)
-                .catch(error => console.log(error));
+            // console.log("VERIFY PHONE SHITZLE");
+            // console.log(confirmResult);
+            // return await confirmResult
+            //     .confirm(codeInput)
+            //     .catch(error => console.log(error));
+            return await this.app.auth().verifyPhoneNumber("+31611993578");
         }
     }
 
