@@ -1,50 +1,49 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TouchableHighlight, ImageBackground, Platform } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
-import { Input, Button } from "react-native-elements";
+import { Input, Icon } from "react-native-elements";
 import Router from "../helpers/Router";
-import CodeInput from "react-native-confirmation-code-input";
 import UserApi from "../helpers/UserApi";
+import User from "../helpers/User";
 import firebaseApi from "../helpers/FirebaseApi";
 
 export default class RegistrationScreenStart extends Component {
     constructor() {
-        super();
-        this.state = {
-            registerPhoneInfo: {}
-        };
+      super();
+      this.state = {
+        registerPhoneInfo: {},
+        code: "",
+        codeError: "",
+        android: null
+      };
     }
 
     componentDidMount() {
+      this.setState({
+        registerPhoneInfo: this.props.navigation.state.params
+      });
+      if(Platform.OS == "android") {
         this.setState({
-            registerPhoneInfo: this.props.navigation.state.params
+          android: true
         });
+      }
     }
 
-    checkCode(code) {
-        console.log(code);
-        console.log(this.state.registerPhoneInfo.confirmResult);
+    checkCode() {
         firebaseApi
-            .verifyPhoneNumber(code, this.state.registerPhoneInfo.confirmResult)
+            .verifyPhoneNumber(this.state.code, this.state.registerPhoneInfo.confirmResult)
             .then(result => {
-                console.log("Current user phone:");
                 firebaseApi.deleteUser(result);
-                console.log(result);
-                console.log(this.state.registerPhoneInfo.registerInfo.email);
-                console.log(this.state.registerPhoneInfo.registerInfo.pw);
                 firebaseApi
                     .registerAccount(
                         this.state.registerPhoneInfo.registerInfo.email,
-                        this.state.registerPhoneInfo.registerInfo.pw
+                        this.state.registerPhoneInfo.registerInfo.hashedPw
                     )
                     .then(user => {
-                        console.log("REGISTERED USER STUFF");
-                        console.log(user.user);
                         this.register(user.user);
                     })
                     .catch(error => {
-                        console.log("OEPS");
                         alert(error.message);
                     });
             });
@@ -59,56 +58,179 @@ export default class RegistrationScreenStart extends Component {
             this.state.registerPhoneInfo.phoneNumber
         ).then(result => {
             if (!result["bool"]) {
-                //display error
-                console.log(result);
-                alert(result["msg"]);
-                console.log("error");
                 firebaseApi.deleteUser(firebaseUser);
             } else {
-                //display succes
-                alert(result["msg"]);
                 userId = result["id"];
-                Router.goTo(this.props.navigation, "LoginStack", "LoginScreen");
-                //store userId
+                User.storeUserId(result["id"]);
+                Router.goTo(this.props.navigation, "LoginStack", "LoginScreen"); //route to succesfeedback screen
+                
             }
         });
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                <View style={{ height: Header.HEIGHT }}>
-                    <Toolbar centerElement="Registreren" />
+            <ImageBackground 
+              style={styles.container}
+              source={require('../assets/images/bluewavebg.png')}
+              resizeMode='stretch'
+              >
+              {!this.state.android && (
+                <View>
+                  <Icon
+                    name="chevron-left"
+                    type="font-awesome"
+                    size={20}
+                    color="#00A6FF"
+                    underlayColor="#c1efff"
+                    containerStyle={{width: '10%'}}
+                    onPress={() => Router.goBack(this.props.navigation)}
+                  />
+                  <View style={styles.infoField}>
+                      <Text style={styles.infoTextTitle}>
+                          Verificatie
+                      </Text>
+                      <Text style={styles.infoText}>
+                          We hebben je een code gestuurd via SMS!
+                      </Text>
+                  </View>
+                  <View style={styles.inputFieldContainer}>
+                      <Input
+                          placeholder="verificatiecode"
+                          placeholderTextColor="#FFFFFF"
+                          containerStyle={styles.inputContainer}
+                          inputContainerStyle={styles.inputContainerStyle}
+                          inputStyle={styles.inputStyle}
+                          value={this.state.code}
+                          leftIcon={{ type: "font-awesome", name: "lock", color: '#FFFFFF'}}
+                          errorStyle={styles.errorStyle}
+                          errorMessage={this.state.phoneNumberError}
+                          onChangeText={code =>
+                              this.setState({ code })
+                          }
+                          onSubmitEditing={() => this.checkCode()}
+                          keyboardType="numeric"
+                          maxLength={6}
+                      />
+                  </View>
+                  <View style={styles.actionContainer}>
+                      <TouchableHighlight
+                        underlayColor="#c1efff"
+                        style={styles.buttonStyle}
+                        onPress={() => this.verifyPhone()}
+                    >
+                        <Text style={styles.goOnText}>Verder</Text>
+                    </TouchableHighlight>
+                    <TouchableOpacity
+                        style={styles.textContainer}
+                        onPress={() =>
+                            Router.goTo(
+                                this.props.navigation,
+                                "LoginScreen",
+                                "LoginScreen",
+                                {}
+                            )
+                        }
+                    >
+                      <Text style={styles.goToLoginText}>
+                          al account? Klik om in te loggen!
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <CodeInput
-                    ref="codeInput"
-                    keyboardType="numeric"
-                    codeLength={6}
-                    size={60}
-                    className="border-circle"
-                    cellBorderWidth={3}
-                    autoFocus={true}
-                    activeColor="#212121"
-                    codeInputStyle={styles.codeInputStyle}
-                    containerStyle={styles.containerStyle}
-                    onFulfill={code => this.checkCode(code)}
-                />
-            </View>
+            )}
+          </ImageBackground>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#FFFFFF",
-        height: "100%"
+      height: "100%",
+      width: "100%"
     },
+
     containerStyle: {
-        flex: 1,
-        marginTop: "50%"
+      flex: 1,
+      marginTop: "50%"
     },
-    codeInputStyle: {
-        borderColor: "#212121",
-        color: "#212121"
-    }
+
+    infoField: {
+      flex: 2,
+      width: "75%",
+      alignSelf: "center",
+    },
+
+    infoTextTitle: {
+      color: "#00A6FF",
+      alignSelf: "flex-start",
+      fontSize: 25,
+    },
+
+    infoText: {
+      color: "#FFFFFF",
+      alignSelf: "flex-start",
+      fontSize: 16,
+      marginTop: "20%"
+    },
+
+    inputFieldContainer: {
+      marginTop: "10%",
+      flex: 2,
+      flexDirection: "column"
+    },
+
+    inputContainer: {
+      width: "75%",
+      alignSelf: "center"
+    },
+
+    inputContainerStyle: {
+      borderBottomColor: '#FFFFFF'
+    },
+
+    inputStyle: {
+      color: "#FFFFFF"
+    },
+
+    errorStyle: {
+      color: "#FFFFFF",
+      alignSelf: "flex-start",
+      marginTop: "2%",
+      marginBottom: "2%",
+      fontSize: 13
+    },
+
+    actionContainer: {
+      flex: 2,
+    },
+
+    buttonStyle: {
+      alignSelf: 'center',
+      width: "75%",
+      height: "20%",
+      backgroundColor: '#FFFFFF',
+      borderRadius: 25,
+      marginBottom: '3%',
+      marginTop: "23%",
+      paddingTop: '2%',
+      paddingBottom: '2%'
+    },
+
+    goOnText: {
+      color: '#01A6FF',
+      alignSelf: 'center',
+      fontSize: 20
+    },
+
+    textContainer: {
+      width: "100%",
+      alignSelf: "center"
+    },
+
+    goToLoginText: {
+      alignSelf: 'center',
+      fontSize: 16,
+      color: '#FFFFFF'
+    },
 });

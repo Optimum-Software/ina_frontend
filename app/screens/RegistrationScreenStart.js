@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TouchableHighlight, StatusBar} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TouchableHighlight, StatusBar, ImageBackground} from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
-import { Input, Button } from "react-native-elements";
+import { Input, Button, Icon } from "react-native-elements";
 import Router from "../helpers/Router";
 import UserApi from "../helpers/UserApi";
 import sha256 from "crypto-js/sha256";
@@ -13,19 +13,19 @@ export default class RegistrationScreenStart extends Component {
     constructor() {
         super();
         this.state = {
-            firstName: "",
+            firstName: "test",
             firstNameError: "",
 
-            lastName: "",
+            lastName: "mctest",
             lastNameError: "",
 
-            email: "",
+            email: "test@tester.nl",
             emailError: "",
 
-            pw: "",
+            pw: "123456",
             pwError: "",
 
-            pwRepeat: "",
+            pwRepeat: "123456",
             pwRepeatError: "",
 
             loading: false
@@ -45,7 +45,7 @@ export default class RegistrationScreenStart extends Component {
             let email = this.checkEmail()
             let empty = this.checkInputEmpty()
             if(empty && email && pwSame && pwLength && !result['bool']) {
-                this.setState({pw: SHA256(this.state.pw).toString(), pwRepeat: SHA256(this.state.pwRepeat).toString()})
+                this.setState({hashedPw: SHA256(this.state.pw).toString()})
                 Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
             }
           }
@@ -125,11 +125,24 @@ export default class RegistrationScreenStart extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <ImageBackground 
+              style={styles.container}
+              source={require('../assets/images/bluewavebg.png')}
+              resizeMode='stretch'
+              >
               <StatusBar
                backgroundColor="#00A6FF"
               />
-                <View style = {{flex: 2, marginLeft: '10%', marginTop: '10%'}}> 
+              <Icon
+                name="chevron-left"
+                type="font-awesome"
+                size={20}
+                color="#00A6FF"
+                underlayColor="#c1efff"
+                containerStyle={{width: '10%'}}
+                onPress={() => Router.goBack(this.props.navigation)}
+              />
+                <View style = {{flex: 2, marginLeft: '10%'}}> 
                   <Text style={styles.infoTextTitle}>Registreren</Text>
                   <Text style={styles.infoText}>Vul alle velden in om je een account aan te maken.</Text>
                 </View>
@@ -139,6 +152,7 @@ export default class RegistrationScreenStart extends Component {
                       placeholderTextColor="#FFFFFF"
                       containerStyle={styles.containerStyle}
                       inputContainerStyle={styles.inputContainerStyle}
+                      inputStyle={styles.inputStyle}
                       value={this.state.firstName}
                       leftIcon={{ type: "font-awesome", name: "user", color: '#FFFFFF' }}
                       onChangeText={firstName => this.setState({ firstName })}
@@ -155,6 +169,7 @@ export default class RegistrationScreenStart extends Component {
                       placeholderTextColor="#FFFFFF"
                       containerStyle={styles.containerStyle}
                       inputContainerStyle={styles.inputContainerStyle}
+                      inputStyle={styles.inputStyle}
                       value={this.state.lastName}
                       leftIcon={{ type: "font-awesome", name: "user", color: '#FFFFFF' }}
                       onChangeText={lastName => this.setState({ lastName })}
@@ -168,6 +183,7 @@ export default class RegistrationScreenStart extends Component {
                       placeholderTextColor="#FFFFFF"
                       containerStyle={styles.containerStyle}
                       inputContainerStyle={styles.inputContainerStyle}
+                      inputStyle={styles.inputStyle}
                       value={this.state.email}
                       leftIcon={{ type: "font-awesome", name: "envelope", color: '#FFFFFF' }}
                       autoCapitalize="none"
@@ -182,6 +198,7 @@ export default class RegistrationScreenStart extends Component {
                       placeholderTextColor="#FFFFFF"
                       containerStyle={styles.containerStyle}
                       inputContainerStyle={styles.inputContainerStyle}
+                      inputStyle={styles.inputStyle}
                       value={this.state.pw}
                       leftIcon={{ type: "font-awesome", name: "lock", color: '#FFFFFF' }}
                       onChangeText={pw => this.setState({ pw })}
@@ -194,6 +211,7 @@ export default class RegistrationScreenStart extends Component {
                       placeholderTextColor="#FFFFFF"
                       containerStyle={styles.containerStyle}
                       inputContainerStyle={styles.inputContainerStyle}
+                      inputStyle={styles.inputStyle}
                       value={this.state.pwRepeat}
                       leftIcon={{ type: "font-awesome", name: "lock", color: '#FFFFFF' }}
                       onChangeText={pwRepeat => this.setState({ pwRepeat })}
@@ -206,6 +224,7 @@ export default class RegistrationScreenStart extends Component {
                 </View>
                 <View style={styles.actionContainer}>
                   <TouchableHighlight
+                      underlayColor="#c1efff"
                       style={styles.buttonStyle}
                       onPress={() => this.goToRegisterPhone()}
                   >
@@ -227,29 +246,25 @@ export default class RegistrationScreenStart extends Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
-            </View>
+            </ImageBackground>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#00A6FF",
-        height: "100%"
+        height: "100%",
+        width: "100%"
     },
-    title: {
-        fontSize: 20,
-        textAlign: "center",
-        margin: 10
-    },
-
     infoTextTitle: {
-      color: "#FFFFFF",
+      color: "#00A6FF",
       alignSelf: "flex-start",
       fontSize: 25,
+      marginBottom: "5%"
     },
 
     infoText: {
+      marginTop: "5%",
       color: "#FFFFFF",
       alignSelf: "flex-start",
       fontSize: 16,
@@ -263,7 +278,11 @@ const styles = StyleSheet.create({
     },
 
     inputContainerStyle: {
-      borderBottomColor: '#FFFFFF'
+      borderBottomColor: '#FFFFFF',
+    },
+
+    inputStyle: {
+      color: "#FFFFFF"
     },
 
     inputFieldContainer: {
@@ -290,7 +309,6 @@ const styles = StyleSheet.create({
 
     buttonStyle: {
         alignSelf: 'center',
-        alignChildren: 'center',
         width: "75%",
         height: "40%",
         backgroundColor: '#FFFFFF',
@@ -315,5 +333,5 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         fontSize: 16,
         color: '#FFFFFF'
-    }
+    },
 });
