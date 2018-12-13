@@ -59,10 +59,7 @@ export default class RegistrationScreenStart extends Component {
         let empty = this.checkInputEmpty();
         if (empty && email && pwSame && pwLength && !result["bool"]) {
           this.setState({ hashedPw: SHA256(this.state.pw).toString() });
-<<<<<<< HEAD
-=======
-          console.log("hoi");
->>>>>>> upstream/master
+
           Router.goTo(
             this.props.navigation,
             "LoginStack",
@@ -141,17 +138,17 @@ export default class RegistrationScreenStart extends Component {
         resizeMode="stretch"
       >
         <StatusBar backgroundColor="#00A6FF" />
-        <View style={{flexDirection: "row"}}>
+        <View style={{ flexDirection: "row" }}>
           <Icon
             name="chevron-left"
             type="font-awesome"
             size={20}
             color="#00A6FF"
             underlayColor="#c1efff"
-            containerStyle={{ width: "10%", marginTop: '7%'}}
+            containerStyle={{ width: "10%", marginTop: "7%" }}
             onPress={() => Router.goBack(this.props.navigation)}
           />
-          <View style={{ flex: 2, width: '90%', marginTop: '5%'}}>
+          <View style={{ flex: 2, width: "90%", marginTop: "5%" }}>
             <Text style={styles.infoTextTitle}>Registreren</Text>
             <Text style={styles.infoText}>
               Vul alle velden in om je een account aan te maken.
@@ -291,22 +288,12 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
 
-<<<<<<< HEAD
-    inputFieldContainer: {
-        flex: 4,
-        flexDirection: "column",
-        justifyContent: "center",
-        paddingTop: "40%",
-    },
-=======
   inputFieldContainer: {
     flex: 4,
     flexDirection: "column",
     justifyContent: "center",
-    paddingTop: "10%"
+    paddingTop: "40%"
   },
->>>>>>> upstream/master
-
   errorStyle: {
     color: "#FFFFFF",
     alignSelf: "flex-start",
@@ -323,17 +310,6 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-<<<<<<< HEAD
-    alignSelf: 'center',
-    width: "75%",
-    height: "40%",
-    backgroundColor: '#FFFFFF',
-    borderRadius: 25,
-    marginBottom: '3%',
-    marginTop: '10%',
-    paddingTop: '1.5%',
-    paddingBottom: '1.5%'
-=======
     alignSelf: "center",
     width: "75%",
     height: "40%",
@@ -343,7 +319,6 @@ const styles = StyleSheet.create({
     marginTop: "10%",
     paddingTop: "2%",
     paddingBottom: "2%"
->>>>>>> upstream/master
   },
 
   registerText: {
