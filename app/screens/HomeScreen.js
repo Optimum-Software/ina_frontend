@@ -87,6 +87,7 @@ export default class Home extends Component {
             horizontal={true}
             renderItem={({ item }) => (
               <TouchableHighlight
+                key={item.id}
                 style={styles.cardContainer}
                 onPress={() =>
                   Router.goTo(
@@ -126,7 +127,6 @@ export default class Home extends Component {
                 </View>
               </TouchableHighlight>
             )}
-            keyExtractor={item => item.id}
           />
         </View>
       </View>
