@@ -60,7 +60,12 @@ class RegistrationScreenVerifySuccessfull extends Component {
         <TouchableOpacity
           style={styles.buttonStyle}
           onPress={() =>
-            Router.goTo(this.props.navigation, "Tabs", "HomeScreen", null)
+            Router.goTo(
+              this.props.navigation,
+              "LoginStack",
+              "LoginScreen",
+              null
+            )
           }
         >
           <Text style={styles.textStyle}>Verder</Text>

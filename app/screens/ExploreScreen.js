@@ -8,7 +8,7 @@ export default class Explore extends Component {
     return (
       <View style={styles.container}>
         <Toolbar
-          centerElement="Home page"
+          centerElement="Ontdekken"
           iconSet="MaterialCommunityIcons"
           leftElement={"menu"}
           onLeftElementPress={() => {
