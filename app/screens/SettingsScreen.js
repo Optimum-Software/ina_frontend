@@ -8,7 +8,7 @@ export default class Settings extends Component {
     return (
       <View style={styles.container}>
         <Toolbar
-          centerElement="Home page"
+          centerElement="Instellingen"
           iconSet="MaterialCommunityIcons"
           leftElement={"menu"}
           onLeftElementPress={() => {
