@@ -3,6 +3,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegistrationScreenStart from "../screens/RegistrationScreenStart";
 import RegistrationScreenPhone from "../screens/RegistrationScreenPhone";
 import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
+import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVerifySuccessfull";
 
 export default createStackNavigator(
   {
@@ -28,6 +29,12 @@ export default createStackNavigator(
 
     RegisterVerify: {
       screen: RegistrationScreenVerify,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    RegisterVerifySuccessful: {
+      screen: RegistrationScreenVerifySuccessfull,
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })

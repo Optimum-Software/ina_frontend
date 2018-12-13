@@ -26,6 +26,7 @@ import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
+import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVerifySuccessfull";
 
 import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
@@ -170,7 +171,7 @@ export const Drawer = createDrawerNavigator(
     LoginStack: {
       screen: LoginStack,
       navigationOptions: {
-        drawerLabel: "Login",
+        drawerLabel: "Inloggen",
         drawerIcon: ({ tintColor }) => (
           <Icon name="account" size={25} color={tintColor} />
         )
@@ -179,7 +180,7 @@ export const Drawer = createDrawerNavigator(
     ExploreScreen: {
       screen: ExploreScreen,
       navigationOptions: {
-        drawerLabel: "Explore",
+        drawerLabel: "Ontdekken",
         drawerIcon: ({ tintColor }) => (
           <Icon name="compass" size={25} color={tintColor} />
         )
@@ -206,7 +207,7 @@ export const Drawer = createDrawerNavigator(
     SettingsScreen: {
       screen: SettingsScreen,
       navigationOptions: {
-        drawerLabel: "Settings",
+        drawerLabel: "Instellingen",
         drawerIcon: ({ tintColor }) => (
           <Icon name="settings" size={25} color={tintColor} />
         )
