@@ -10,7 +10,7 @@ export default class SavedProjects extends Component {
     return (
       <View style={styles.container}>
         <Toolbar
-          centerElement="Home page"
+          centerElement="Opgeslagen projecten"
           iconSet="MaterialCommunityIcons"
           leftElement={"menu"}
           onLeftElementPress={() => {
