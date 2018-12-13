@@ -6,42 +6,36 @@ import RegistrationScreenVerify from "../screens/RegistrationScreenVerify";
 import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVerifySuccessfull";
 
 export default createStackNavigator(
-  {
-    LoginScreen: {
-      screen: LoginScreen,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
-    RegisterStart: {
-      screen: RegistrationScreenStart,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
+    {
+        LoginScreen: {
+            screen: LoginScreen,
+            navigationOptions: ({ navigation }) => ({
+                gesturesEnabled: false
+            })
+        },
+        RegisterStart: {
+            screen: RegistrationScreenStart,
+            navigationOptions: ({ navigation }) => ({
+                gesturesEnabled: false
+            })
+        },
 
-    RegisterPhone: {
-      screen: RegistrationScreenPhone,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
+        RegisterPhone: {
+            screen: RegistrationScreenPhone,
+            navigationOptions: ({ navigation }) => ({
+                gesturesEnabled: false
+            })
+        },
 
-    RegisterVerify: {
-      screen: RegistrationScreenVerify,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
+        RegisterVerify: {
+            screen: RegistrationScreenVerify,
+            navigationOptions: ({ navigation }) => ({
+                gesturesEnabled: false
+            })
+        }
     },
-    RegisterVerifySuccessful: {
-      screen: RegistrationScreenVerifySuccessfull,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
+    {
+        headerMode: "none",
+        initialRouteName: "LoginScreen"
     }
-  },
-  {
-    headerMode: "none",
-    initialRouteName: "LoginScreen"
-  }
 );
