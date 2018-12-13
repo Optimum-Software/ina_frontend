@@ -34,15 +34,13 @@ class FirebaseService {
             .catch(error => console.log(error));
     }
 
-    async verifyPhoneNumber(codeInput, confirmResult) {
-        if (true && codeInput.length) {
-            // console.log("VERIFY PHONE SHITZLE");
-            // console.log(confirmResult);
-            // return await confirmResult
-            //     .confirm(codeInput)
-            //     .catch(error => console.log(error));
-            return await this.app.auth().verifyPhoneNumber("+31611993578");
-        }
+    async verifyPhoneNumber(phoneNumber) {
+        // console.log("VERIFY PHONE SHITZLE");
+        // console.log(confirmResult);
+        // return await confirmResult
+        //     .confirm(codeInput)
+        //     .catch(error => console.log(error));
+        return await this.app.auth().verifyPhoneNumber(phoneNumber);
     }
 
     async registerAccount(email, password) {

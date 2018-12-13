@@ -20,14 +20,12 @@ export default class RegistrationScreenStart extends Component {
         this.setState({
             registerPhoneInfo: this.props.navigation.state.params
         });
+        console.log(this.props.navigation.state.params.phoneNumber);
         firebaseApi
-            .verifyPhoneNumber(
-                "123",
-                this.state.registerPhoneInfo.confirmResult
-            )
+            .verifyPhoneNumber(this.props.navigation.state.params.phoneNumber)
             .then(result => {
                 console.log("Current user phone:");
-                //firebaseApi.deleteUser(result.user);
+                firebaseApi.deleteUser(firebaseApi.getCurrentUser());
                 console.log(result);
                 console.log(this.state.registerPhoneInfo.registerInfo.email);
                 console.log(this.state.registerPhoneInfo.registerInfo.pw);
