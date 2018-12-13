@@ -28,14 +28,9 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new ReactNativeOneSignalPackage(),
-            new RNFirebasePackage(), 
-            new RNFirebaseAuthPackage(),
-            new RNFirebaseDatabasePackage(),
-            new VectorIconsPackage(), 
-            new RNGestureHandlerPackage());
+      return Arrays.<ReactPackage>asList(new MainReactPackage(), new RNFirebasePackage(),
+          new RNFirebaseAuthPackage(), new RNFirebaseDatabasePackage(), new VectorIconsPackage(),
+          new RNGestureHandlerPackage());
     }
 
     @Override

@@ -4,6 +4,7 @@ import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import { Input, Icon } from "react-native-elements";
 import Router from "../helpers/Router";
+
 import firebaseApi from "../helpers/FirebaseApi";
 
 export default class RegistrationScreenPhone extends Component {
@@ -32,7 +33,7 @@ export default class RegistrationScreenPhone extends Component {
                 this.setState({ confirmResult: result });
                 Router.goTo(
                     this.props.navigation,
-                    "Register",
+                    "LoginStack",
                     "RegisterVerify",
                     this.state
                 );

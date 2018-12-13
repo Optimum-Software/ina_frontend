@@ -25,6 +25,10 @@ class FirebaseService {
             });
     }
 
+    getFireBase() {
+        return this.app.auth();
+    }
+
     async sendSms(phoneNumber) {
         return await this.app
             .auth()
@@ -32,12 +36,13 @@ class FirebaseService {
             .catch(error => console.log(error));
     }
 
-    async verifyPhoneNumber(codeInput, confirmResult) {
-        if (true && codeInput.length) {
-            return await confirmResult
-                .confirm(codeInput)
-                .catch(error => console.log(error));
-        }
+    async verifyPhoneNumber(phoneNumber) {
+        // console.log("VERIFY PHONE SHITZLE");
+        // console.log(confirmResult);
+        // return await confirmResult
+        //     .confirm(codeInput)
+        //     .catch(error => console.log(error));
+        return await this.app.auth().verifyPhoneNumber(phoneNumber);
     }
 
     async registerAccount(email, password) {
@@ -79,17 +84,17 @@ class FirebaseService {
             });
     }
 
- async getChats() {
-    var ref = this.app.database().ref("Chats");
-    var items = [];
-    await ref.once("value").then(snapshot => {
-        snapshot.forEach(child => {
-          items.push({
-            title: child.key
-          });
+    async getChats() {
+        var ref = this.app.database().ref("Chats");
+        var items = [];
+        await ref.once("value").then(snapshot => {
+            snapshot.forEach(child => {
+                items.push({
+                    title: child.key
+                });
+            });
         });
-    });
-    return items
+        return items
   }
 
   getMsgsRef(uid) {
@@ -142,6 +147,36 @@ class FirebaseService {
     ref.push().set(chatMessage);
   }
 
+    getMsgsRef(uid) {
+        return this.app
+            .database()
+            .ref("Chats")
+            .child(uid);
+    }
+
+    sendMessage(sender, uid, messages = []) {
+        const ref = this.app
+            .database()
+            .ref("Chats")
+            .child(uid);
+
+        let currentUser = this.app.auth().currentUser;
+        let createdAt = new Date().getTime();
+
+        var messageEncrypted = CryptoJS.AES.encrypt(
+            messages[0].text,
+            sha256(sender.uid + sender.email).toString()
+        );
+        let chatMessage = {
+            text: messageEncrypted.toString(),
+            createdAt: createdAt,
+            user: {
+                id: currentUser.uid,
+                email: currentUser.email
+            }
+        };
+        ref.push().set(chatMessage);
+    }
 }
 const firebaseService = new FirebaseService();
 export default firebaseService;

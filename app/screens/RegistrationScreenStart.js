@@ -7,29 +7,29 @@ import Router from "../helpers/Router";
 import UserApi from "../helpers/UserApi";
 import sha256 from "crypto-js/sha256";
 
-var SHA256 = require("crypto-js/sha256")
+var SHA256 = require("crypto-js/sha256");
 
 export default class RegistrationScreenStart extends Component {
     constructor() {
-        super();
-        this.state = {
-            firstName: "test",
-            firstNameError: "",
-
-            lastName: "mctest",
-            lastNameError: "",
-
-            email: "test@tester.nl",
-            emailError: "",
-
-            pw: "123456",
-            pwError: "",
-
-            pwRepeat: "123456",
-            pwRepeatError: "",
-
-            loading: false
-        };
+      super();
+      this.state = {
+        firstName: "test",
+        firstNameError: "",
+  
+        lastName: "mctest",
+        lastNameError: "",
+  
+        email: "test@tester.nl",
+        emailError: "",
+  
+        pw: "123456",
+        pwError: "",
+  
+        pwRepeat: "123456",
+        pwRepeatError: "",
+  
+        loading: false
+      };
     }
 
     goToRegisterPhone() {
@@ -63,65 +63,82 @@ export default class RegistrationScreenStart extends Component {
         });
     }
 
-    checkInputEmpty() {
-        msg = "Vul alstublieft het veld in";
-        returnBool = true;
-        if (this.state.firstName == "") {
-            this.setState({ firstNameError: msg });
-            returnBool = false;
+  goToRegisterPhone() {
+    let emailExists = UserApi.checkEmail(this.state.email).then(result => {
+      this.resetErrors();
+      if (result["ntwFail"]) {
+        //network error
+        alert(result["msg"]);
+      } else {
+        if (result["bool"]) {
+          this.setState({
+            emailError: "Het ingevulde e-mail adres bestaat al"
+          });
         }
-        if (this.state.lastName == "") {
-            this.setState({ lastNameError: msg });
-            returnBool = false;
+        let pwSame = this.checkPwSame();
+        let pwLength = this.checkPwLength();
+        let email = this.checkEmail();
+        let empty = this.checkInputEmpty();
+        if (empty && email && pwSame && pwLength && !result["bool"]) {
+          this.setState({
+            pw: SHA256(this.state.pw).toString(),
+            pwRepeat: SHA256(this.state.pwRepeat).toString()
+          });
+          Router.goTo(
+            this.props.navigation,
+            "LoginStack",
+            "RegisterPhone",
+            this.state
+          );
         }
-        return returnBool;
-    }
+      }
+    });
+  }
 
-    checkPwSame() {
-        msg =
-            "Het herhaalde wachtwoord moet hetzelfde zijn als het eerste wachtwoord";
-        returnBool = true;
-        if (this.state.pwRepeat != this.state.pw) {
-            this.setState({ pwRepeatError: msg });
-            returnBool = false;
-        }
-        return returnBool;
-    }
+  resetErrors() {
+    this.setState({
+      emailError: "",
+      firstNameError: "",
+      lastNameError: "",
+      pwError: "",
+      pwRepeatError: "",
+      emailExists: false
+    });
+  }
 
-    checkEmail() {
-        msg = "Het ingevoerde e-mail adres is geen valide email";
-        returnBool = true;
-        if (!/\S+@\S+\.\S+/.test(this.state.email)) {
-            this.setState({ emailError: msg });
-            returnBool = false;
-        }
-        return returnBool;
+  checkInputEmpty() {
+    msg = "Vul alstublieft het veld in";
+    returnBool = true;
+    if (this.state.firstName == "") {
+      this.setState({ firstNameError: msg });
+      returnBool = false;
     }
+    if (this.state.lastName == "") {
+      this.setState({ lastNameError: msg });
+      returnBool = false;
+    }
+    return returnBool;
+  }
 
-    checkPwSame() {
-        msg =
-            "Het herhaalde wachtwoord moet hetzelfde zijn als het eerste wachtwoord";
-        returnBool = true;
-        if (this.state.pwRepeat != this.state.pw) {
-            this.setState({ pwRepeatError: msg });
-            returnBool = false;
-        }
-        return returnBool;
+  checkEmail() {
+    msg = "Het ingevoerde e-mail adres is geen valide email";
+    returnBool = true;
+    if (!/\S+@\S+\.\S+/.test(this.state.email)) {
+      this.setState({ emailError: msg });
+      returnBool = false;
     }
-
-    checkPwLength() {
-        msg = "Het wachtwoord moet minimaal 6 karakters lang zijn";
-        returnBool = true;
-        if (this.state.pw.length < 6) {
-            this.setState({ pwError: msg });
-            returnBool = false;
-        }
-        if (this.state.pwRepeat.length < 6) {
-            this.setState({ pwRepeatError: msg });
-            returnBool = false;
-        }
-        return returnBool;
+    return returnBool;
+  }
+  checkPwSame() {
+    msg =
+      "Het herhaalde wachtwoord moet hetzelfde zijn als het eerste wachtwoord";
+    returnBool = true;
+    if (this.state.pwRepeat != this.state.pw) {
+      this.setState({ pwRepeatError: msg });
+      returnBool = false;
     }
+    return returnBool;
+  }
 
     render() {
         return (
