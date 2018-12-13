@@ -9,7 +9,8 @@ import {
     ScrollView,
     Animated,
     Easing,
-    Button
+    Button,
+    ImageBackground
 } from "react-native";
 import { Input } from "react-native-elements";
 import Api from "../helpers/Api";
@@ -132,104 +133,106 @@ class LoginScreen extends Component {
                     />
                     <Text style={styles.welcomeText}>Welkom bij INA!</Text>
                 </View>
-                <Image
-                    resizeMode="cover"
-                    source={wave}
-                    style={{ height: "5%", width: "100%" }}
-                />
-
-                <View style={styles.bottom}>
-                    <Text style={styles.loginTitle}>Login</Text>
-                    <Input
-                        placeholder="E-mail"
-                        placeholderTextColor="#ffffff"
-                        containerStyle={styles.inputContainer}
-                        inputContainerStyle={styles.containerStyle}
-                        inputStyle={{ color: "#ffffff", fontSize: 16 }}
-                        labelStyle={{ color: "#ffffff" }}
-                        value={this.state.email}
-                        leftIcon={{
-                            type: "font-awesome",
-                            name: "user",
-                            color: "#ffffff"
-                        }}
-                        autoCapitalize="none"
-                        onChangeText={email => this.setState({ email })}
-                        onSubmitEditing={() => console.log("end")}
-                    />
-                    <Text style={styles.errorStyle}>
-                        {this.state.emailError}
-                    </Text>
-                    <Input
-                        placeholder="Wachtwoord"
-                        placeholderTextColor="#ffffff"
-                        containerStyle={styles.inputContainer}
-                        inputContainerStyle={styles.containerStyle}
-                        inputStyle={{ color: "#ffffff", fontSize: 16 }}
-                        labelStyle={{ color: "#ffffff" }}
-                        shake={true}
-                        value={this.state.pw}
-                        leftIcon={{
-                            type: "font-awesome",
-                            name: "lock",
-                            color: "#ffffff"
-                        }}
-                        onChangeText={pw => this.setState({ pw })}
-                        onSubmitEditing={() => console.log("end")}
-                        secureTextEntry={true}
-                    />
-                    <Text style={styles.errorStyle}>{this.state.pwError}</Text>
-                    <TouchableOpacity
-                        style={{ alignSelf: "flex-end" }}
-                        onPress={() =>
-                            Router.goTo(
-                                this.props.navigation,
-                                "LoginStack",
-                                "RegisterStart",
-                                null
-                            )
-                        }
-                    >
-                        <Text
-                            style={{
-                                color: "#ffffff",
-                                paddingBottom: "20%",
-                                paddingTop: "5%"
+                <ImageBackground
+                    source={require("../assets/images/bluewavebg.png")}
+                    style={{ width: "100%", flex: 2 }}
+                    resizeMode="stretch"
+                >
+                    <View style={styles.bottom}>
+                        <Text style={styles.loginTitle}>Login</Text>
+                        <Input
+                            placeholder="E-mail"
+                            placeholderTextColor="#ffffff"
+                            containerStyle={styles.inputContainer}
+                            inputContainerStyle={styles.containerStyle}
+                            inputStyle={{ color: "#ffffff", fontSize: 16 }}
+                            labelStyle={{ color: "#ffffff" }}
+                            value={this.state.email}
+                            leftIcon={{
+                                type: "font-awesome",
+                                name: "user",
+                                color: "#ffffff"
                             }}
-                        >
-                            Wachtwoord vergeten?
+                            autoCapitalize="none"
+                            onChangeText={email => this.setState({ email })}
+                            onSubmitEditing={() => console.log("end")}
+                        />
+                        <Text style={styles.errorStyle}>
+                            {this.state.emailError}
                         </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.buttonStyle}
-                        onPress={() => this.login()}
-                    >
-                        <Text style={styles.textStyle}>Inloggen</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{ alignSelf: "center" }}
-                        onPress={() =>
-                            Router.goTo(
-                                this.props.navigation,
-                                "LoginStack",
-                                "RegisterStart",
-                                null
-                            )
-                        }
-                    >
-                        <Text style={{ color: "#ffffff", padding: 5 }}>
-                            Nog geen account?
+                        <Input
+                            placeholder="Wachtwoord"
+                            placeholderTextColor="#ffffff"
+                            containerStyle={styles.inputContainer}
+                            inputContainerStyle={styles.containerStyle}
+                            inputStyle={{ color: "#ffffff", fontSize: 16 }}
+                            labelStyle={{ color: "#ffffff" }}
+                            shake={true}
+                            value={this.state.pw}
+                            leftIcon={{
+                                type: "font-awesome",
+                                name: "lock",
+                                color: "#ffffff"
+                            }}
+                            onChangeText={pw => this.setState({ pw })}
+                            onSubmitEditing={() => console.log("end")}
+                            secureTextEntry={true}
+                        />
+                        <Text style={styles.errorStyle}>
+                            {this.state.pwError}
+                        </Text>
+                        <TouchableOpacity
+                            style={{ alignSelf: "flex-end" }}
+                            onPress={() =>
+                                Router.goTo(
+                                    this.props.navigation,
+                                    "LoginStack",
+                                    "RegisterStart",
+                                    null
+                                )
+                            }
+                        >
                             <Text
                                 style={{
-                                    fontWeight: "bold",
-                                    color: "#ffffff"
+                                    color: "#ffffff",
+                                    paddingBottom: "20%",
+                                    paddingTop: "5%"
                                 }}
                             >
-                                Registreer hier!
+                                Wachtwoord vergeten?
                             </Text>
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.buttonStyle}
+                            onPress={() => this.login()}
+                        >
+                            <Text style={styles.textStyle}>Inloggen</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ alignSelf: "center" }}
+                            onPress={() =>
+                                Router.goTo(
+                                    this.props.navigation,
+                                    "LoginStack",
+                                    "RegisterStart",
+                                    null
+                                )
+                            }
+                        >
+                            <Text style={{ color: "#ffffff", padding: 5 }}>
+                                Nog geen account?
+                                <Text
+                                    style={{
+                                        fontWeight: "bold",
+                                        color: "#ffffff"
+                                    }}
+                                >
+                                    Registreer hier!
+                                </Text>
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </ImageBackground>
             </View>
         );
     }
@@ -254,22 +257,23 @@ const styles = StyleSheet.create({
     },
     top: {
         width: "100%",
-        flex: 1,
+        flex: 0.7,
         backgroundColor: "#ffffff",
         justifyContent: "center",
         alignItems: "center"
     },
     bottom: {
         width: "100%",
-        flex: 2,
-        backgroundColor: "#01A6FF",
+        flex: 2.3,
+        backgroundColor: "transparent",
         paddingLeft: "15%",
         paddingRight: "15%",
-        paddingTop: "5%"
+        paddingTop: "15%"
     },
     logo: {
         width: "50%",
         height: "50%",
+        marginTop: "15%",
         alignSelf: "center"
     },
     welcomeText: {
@@ -279,7 +283,9 @@ const styles = StyleSheet.create({
     },
     loginTitle: {
         marginBottom: "5%",
+        marginTop: "5%",
         fontSize: 20,
+
         fontWeight: "bold",
         color: "#ffffff"
     },

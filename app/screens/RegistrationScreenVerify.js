@@ -92,7 +92,11 @@ export default class RegistrationScreenStart extends Component {
                 //display succes
                 alert(result["msg"]);
                 userId = result["id"];
-                Router.goTo(this.props.navigation, "LoginStack", "LoginScreen");
+                Router.goTo(
+                    this.props.navigation,
+                    "LoginStack",
+                    "RegisterVerifySuccessful"
+                );
                 //store userId
             }
         });
