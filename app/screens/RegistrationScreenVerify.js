@@ -187,6 +187,15 @@ const styles = StyleSheet.create({
     marginTop: "50%"
   },
 
+<<<<<<< HEAD
+=======
+  infoField: {
+    flex: 2,
+    width: "75%",
+    alignSelf: "center"
+  },
+
+>>>>>>> upstream/master
   infoTextTitle: {
     color: "#00A6FF",
     alignSelf: "flex-start",

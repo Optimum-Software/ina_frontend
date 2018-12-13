@@ -42,6 +42,7 @@ export default class RegistrationScreenStart extends Component {
 
   goToRegisterPhone() {
     let emailExists = UserApi.checkEmail(this.state.email).then(result => {
+      console.log("Hij doet het ");
       this.resetErrors();
       if (result["ntwFail"]) {
         //network error
@@ -58,6 +59,10 @@ export default class RegistrationScreenStart extends Component {
         let empty = this.checkInputEmpty();
         if (empty && email && pwSame && pwLength && !result["bool"]) {
           this.setState({ hashedPw: SHA256(this.state.pw).toString() });
+<<<<<<< HEAD
+=======
+          console.log("hoi");
+>>>>>>> upstream/master
           Router.goTo(
             this.props.navigation,
             "LoginStack",
@@ -286,12 +291,21 @@ const styles = StyleSheet.create({
     color: "#FFFFFF"
   },
 
+<<<<<<< HEAD
     inputFieldContainer: {
         flex: 4,
         flexDirection: "column",
         justifyContent: "center",
         paddingTop: "40%",
     },
+=======
+  inputFieldContainer: {
+    flex: 4,
+    flexDirection: "column",
+    justifyContent: "center",
+    paddingTop: "10%"
+  },
+>>>>>>> upstream/master
 
   errorStyle: {
     color: "#FFFFFF",
@@ -309,6 +323,7 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
+<<<<<<< HEAD
     alignSelf: 'center',
     width: "75%",
     height: "40%",
@@ -318,6 +333,17 @@ const styles = StyleSheet.create({
     marginTop: '10%',
     paddingTop: '1.5%',
     paddingBottom: '1.5%'
+=======
+    alignSelf: "center",
+    width: "75%",
+    height: "40%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 25,
+    marginBottom: "3%",
+    marginTop: "10%",
+    paddingTop: "2%",
+    paddingBottom: "2%"
+>>>>>>> upstream/master
   },
 
   registerText: {
