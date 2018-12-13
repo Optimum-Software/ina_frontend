@@ -107,23 +107,23 @@ export default class RegistrationScreenStart extends Component {
       >
         {!this.state.android && (
           <View>
-            <View style={{flexDirection: "row"}}>
-          <Icon
-            name="chevron-left"
-            type="font-awesome"
-            size={20}
-            color="#00A6FF"
-            underlayColor="#c1efff"
-            containerStyle={{ width: "10%", marginTop: '7%'}}
-            onPress={() => Router.goBack(this.props.navigation)}
-          />
-          <View style={{ flex: 2, width: '90%', marginTop: '5%'}}>
-            <Text style={styles.infoTextTitle}>Registreren</Text>
-            <Text style={styles.infoText}>
-              Vul alle velden in om je een account aan te maken.
-            </Text>
-          </View>
-        </View>
+            <View style={{ flexDirection: "row" }}>
+              <Icon
+                name="chevron-left"
+                type="font-awesome"
+                size={20}
+                color="#00A6FF"
+                underlayColor="#c1efff"
+                containerStyle={{ width: "10%", marginTop: "7%" }}
+                onPress={() => Router.goBack(this.props.navigation)}
+              />
+              <View style={{ flex: 2, width: "90%", marginTop: "5%" }}>
+                <Text style={styles.infoTextTitle}>Registreren</Text>
+                <Text style={styles.infoText}>
+                  Vul alle velden in om je een account aan te maken.
+                </Text>
+              </View>
+            </View>
             <View style={styles.inputFieldContainer}>
               <Input
                 placeholder="verificatiecode"
@@ -186,16 +186,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: "50%"
   },
-
-<<<<<<< HEAD
-=======
   infoField: {
     flex: 2,
     width: "75%",
     alignSelf: "center"
   },
 
->>>>>>> upstream/master
   infoTextTitle: {
     color: "#00A6FF",
     alignSelf: "flex-start",
