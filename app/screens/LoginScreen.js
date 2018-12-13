@@ -24,7 +24,6 @@ import User from "../helpers/User";
 import UserApi from "../helpers/UserApi";
 import OneSignal from "react-native-onesignal";
 import sha256 from "crypto-js/sha256";
-import SvgUri from "react-native-svg-uri";
 var SHA256 = require("crypto-js/sha256");
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -74,9 +73,6 @@ class LoginScreen extends Component {
                     });
                     User.storeUserId(result.userId);
                     User.storeToken(result.token);
-                    UserApi.notifyUser(result.userId).then(result => {
-                        console.log(result);
-                    });
                 } else {
                     this.setState({ pwError: result.msg });
                 }

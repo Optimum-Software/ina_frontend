@@ -1,5 +1,7 @@
 import firebase from "react-native-firebase";
 import { firebaseConfig } from "../config/Firebase";
+import UserApi from "./UserApi";
+import User from "./User";
 import sha256 from "crypto-js/sha256";
 var CryptoJS = require("crypto-js");
 
@@ -92,8 +94,58 @@ class FirebaseService {
                 });
             });
         });
-        return items;
-    }
+        return items
+  }
+
+  getMsgsRef(uid) {
+    return this.app.database().ref('Chats').child(uid);
+  }
+
+  notifyUser(uid) {
+    uid = '1:19'; //debug
+    ids = uid.split(":");
+    
+    //debug
+    User.getUserId().then(id => {
+        let resId = null;
+        if(ids[0] == id) {
+            resId = ids[1]
+        } else {
+            resId = ids[0]
+        }
+        UserApi.notifyUser(parseInt(resId));
+    });
+  }
+
+  createChat(uid) {
+    //uid must have following structure: lowId:highId
+    //example chat between user 6 and 9 = 6:9
+    //example chat between user 78 and user 34 = 34:78
+    this.database().ref("Chats").child(uid);
+  }
+
+  sendMessage(sender, uid, messages = []) {
+    const ref = this.app.database().ref("Chats").child(uid);
+    this.notifyUser(uid);
+    let currentUser = this.app.auth().currentUser;
+    let createdAt = new Date().getTime();
+
+    var messageEncrypted = CryptoJS.AES.encrypt(
+      messages[0].text,
+      sha256(
+          sender.uid + sender.email
+      ).toString()
+    );
+    let chatMessage = {
+      text: messageEncrypted.toString(),
+      createdAt: createdAt,
+      user: {
+          id: currentUser.uid,
+          email: currentUser.email
+      }
+    };
+    ref.push().set(chatMessage);
+  }
 
     getMsgsRef(uid) {
         return this.app
