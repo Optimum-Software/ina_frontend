@@ -32,7 +32,7 @@ export default class RegistrationScreenPhone extends Component {
         this.setState({ confirmResult: result });
         Router.goTo(
           this.props.navigation,
-          "Register",
+          "LoginStack",
           "RegisterVerify",
           this.state
         );
@@ -102,7 +102,7 @@ export default class RegistrationScreenPhone extends Component {
           </View>
           <View style={styles.actionContainer}>
             <Button
-              title="Verificeer telefoonnummer"
+              title="Verifieer telefoonnummer"
               buttonStyle={styles.buttonStyle}
               containerStyle={styles.buttonContainer}
               onPress={() => this.verifyPhone()}
