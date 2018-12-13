@@ -45,55 +45,14 @@ export default class RegistrationScreenStart extends Component {
             let email = this.checkEmail()
             let empty = this.checkInputEmpty()
             if(empty && email && pwSame && pwLength && !result['bool']) {
-                this.setState({hashedPw: SHA256(this.state.pw).toString()})
-                Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
+              this.setState({hashedPw: SHA256(this.state.pw).toString()})
+              Router.goTo(this.props.navigation, 'Register', 'RegisterPhone', this.state)
+            } else {
+              console.log(empty && email && pwSame && pwLength && !result['bool'])
             }
           }
         })
     }
-
-    resetErrors() {
-        this.setState({
-            emailError: "",
-            firstNameError: "",
-            lastNameError: "",
-            pwError: "",
-            pwRepeatError: "",
-            emailExists: false
-        });
-    }
-
-  goToRegisterPhone() {
-    let emailExists = UserApi.checkEmail(this.state.email).then(result => {
-      this.resetErrors();
-      if (result["ntwFail"]) {
-        //network error
-        alert(result["msg"]);
-      } else {
-        if (result["bool"]) {
-          this.setState({
-            emailError: "Het ingevulde e-mail adres bestaat al"
-          });
-        }
-        let pwSame = this.checkPwSame();
-        let pwLength = this.checkPwLength();
-        let email = this.checkEmail();
-        let empty = this.checkInputEmpty();
-        if (empty && email && pwSame && pwLength && !result["bool"]) {
-          this.setState({
-            pw: SHA256(this.state.pw).toString(),
-            pwRepeat: SHA256(this.state.pwRepeat).toString()
-          });
-          Router.goTo(
-            this.props.navigation,
-            "LoginStack",
-            "RegisterPhone",
-            this.state
-          );
-        }
-      }
-    });
-  }
 
   resetErrors() {
     this.setState({
@@ -140,6 +99,20 @@ export default class RegistrationScreenStart extends Component {
     return returnBool;
   }
 
+  checkPwLength() {
+      msg = "Het wachtwoord moet minimaal 6 karakters lang zijn";
+      returnBool = true;
+      if (this.state.pw.length < 6) {
+        this.setState({ pwError: msg });
+        returnBool = false;
+      }
+      if (this.state.pwRepeat.length < 6) {
+        this.setState({ pwRepeatError: msg });
+        returnBool = false;
+      }
+      return returnBool;
+  }
+
     render() {
         return (
             <ImageBackground 
@@ -150,19 +123,21 @@ export default class RegistrationScreenStart extends Component {
               <StatusBar
                backgroundColor="#00A6FF"
               />
-              <Icon
-                name="chevron-left"
-                type="font-awesome"
-                size={20}
-                color="#00A6FF"
-                underlayColor="#c1efff"
-                containerStyle={{width: '10%'}}
-                onPress={() => Router.goBack(this.props.navigation)}
-              />
-                <View style = {{flex: 2, marginLeft: '10%'}}> 
-                  <Text style={styles.infoTextTitle}>Registreren</Text>
-                  <Text style={styles.infoText}>Vul alle velden in om je een account aan te maken.</Text>
-                </View>
+              <View style={{flexDirection: 'row'}}>
+                <Icon
+                  name="chevron-left"
+                  type="font-awesome"
+                  size={20}
+                  color="#00A6FF"
+                  underlayColor="#c1efff"
+                  containerStyle={{width: '10%',paddingTop: '7%'}}
+                  onPress={() => Router.goBack(this.props.navigation)}
+                />
+                  <View style = {{flex: 2, alignSelf: 'flex-end', width: '90%', paddingTop: "5%"}}> 
+                    <Text style={styles.infoTextTitle}>Registreren</Text>
+                    <Text style={styles.infoText}>Vul alle velden in om je een account aan te maken.</Text>
+                  </View>
+              </View>
                 <View style={styles.inputFieldContainer}>
                   <Input
                       placeholder="Voornaam"
@@ -306,7 +281,7 @@ const styles = StyleSheet.create({
         flex: 4,
         flexDirection: "column",
         justifyContent: "center",
-        paddingTop: "10%"
+        paddingTop: "40%",
     },
 
     errorStyle: {
@@ -332,8 +307,8 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         marginBottom: '3%',
         marginTop: '10%',
-        paddingTop: '2%',
-        paddingBottom: '2%'
+        paddingTop: '1.5%',
+        paddingBottom: '1.5%'
     },
 
     registerText: {
