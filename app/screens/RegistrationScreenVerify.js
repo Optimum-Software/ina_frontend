@@ -77,6 +77,7 @@ export default class RegistrationScreenStart extends Component {
   }
 
   register(firebaseUser) {
+    console.log("hallo")
     UserApi.registerUser(
       this.state.registerPhoneInfo.registerInfo.firstName,
       this.state.registerPhoneInfo.registerInfo.lastName,
@@ -185,11 +186,6 @@ const styles = StyleSheet.create({
   containerStyle: {
     flex: 1,
     marginTop: "50%"
-  },
-  infoField: {
-    flex: 2,
-    width: "75%",
-    alignSelf: "center"
   },
 
   infoTextTitle: {
