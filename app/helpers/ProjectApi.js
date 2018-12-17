@@ -10,7 +10,6 @@ class ProjectApi {
   }
 
   getAllProjects() {
-    //Api.callApiPost("getUserByEmail", userData).then(result => console.log(result))
     return(Api.callApiGet("getAllProjects"))
 
   }
