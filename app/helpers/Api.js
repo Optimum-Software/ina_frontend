@@ -2,7 +2,7 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  url = "http:/145.37.145.65:8000/api/";
+  url = "http:/145.37.144.126:8000/api/";
 
   constructor() {
     if (!instance) {
@@ -98,6 +98,30 @@ class Api {
             "Content-Type": "application/json"
           },
           body: JSON.stringify(data)
+        })
+      );
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
+  }
+
+  async callApiUpload(project, name, file) {
+    const data = new FormData();
+    data.append(project + "_" + name, file)
+    try {
+      let response = await this.timeout(
+        3000,
+        fetch(this.url + "uploadFile", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          body: data
         })
       );
       let responseJson = await response.json();
