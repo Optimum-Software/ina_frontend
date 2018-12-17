@@ -136,17 +136,17 @@ export default class RegistrationScreenStart extends Component {
         resizeMode="stretch"
       >
         <StatusBar backgroundColor="#00A6FF" />
-        <View style={{flexDirection: "row"}}>
+        <View style={{ flexDirection: "row" }}>
           <Icon
             name="chevron-left"
             type="font-awesome"
             size={20}
             color="#00A6FF"
             underlayColor="#c1efff"
-            containerStyle={{ width: "10%", marginTop: '7%'}}
+            containerStyle={{ width: "10%", marginTop: "7%" }}
             onPress={() => Router.goBack(this.props.navigation)}
           />
-          <View style={{ flex: 2, width: '90%', marginTop: '5%'}}>
+          <View style={{ flex: 2, width: "90%", marginTop: "5%" }}>
             <Text style={styles.infoTextTitle}>Registreren</Text>
             <Text style={styles.infoText}>
               Vul alle velden in om je een account aan te maken.
@@ -285,13 +285,13 @@ const styles = StyleSheet.create({
   inputStyle: {
     color: "#FFFFFF"
   },
-    inputFieldContainer: {
-        flex: 4,
-        flexDirection: "column",
-        justifyContent: "center",
-        paddingTop: "40%",
-    },
 
+  inputFieldContainer: {
+    flex: 4,
+    flexDirection: "column",
+    justifyContent: "center",
+    paddingTop: "40%"
+  },
   errorStyle: {
     color: "#FFFFFF",
     alignSelf: "flex-start",
