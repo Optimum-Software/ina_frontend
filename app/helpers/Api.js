@@ -2,136 +2,136 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  url = "http:/145.37.145.65:8000/api/";
+    url = "http:/145.37.169.136:8000/api/";
 
-  constructor() {
-    if (!instance) {
-      instance = this;
+    constructor() {
+        if (!instance) {
+            instance = this;
+        }
+        return instance;
     }
-    return instance;
-  }
 
-  timeout(ms, promise) {
-    return new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        reject(new Error("timeout"));
-      }, ms);
-      promise.then(resolve, reject);
-    });
-  }
-
-  async callApiPost(action, data) {
-    try {
-      let response = await this.timeout(
-        3000,
-        fetch(this.url + action, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        })
-      );
-      let responseJson = await response.json();
-      return responseJson;
-    } catch (error) {
-      return {
-        ntwFail: true,
-        msg: "Kon geen verbinding met de server maken"
-      };
+    timeout(ms, promise) {
+        return new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                reject(new Error("timeout"));
+            }, ms);
+            promise.then(resolve, reject);
+        });
     }
-  }
 
-  async callApiGet(action) {
-    try {
-      let response = await this.timeout(
-        3000,
-        fetch(this.url + action, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-      );
-      let responseJson = await response.json();
-      return responseJson;
-    } catch (error) {
-      return {
-        ntwFail: true,
-        msg: "Kon geen verbinding met de server maken"
-      };
+    async callApiPost(action, data) {
+        try {
+            let response = await this.timeout(
+                3000,
+                fetch(this.url + action, {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+            );
+            let responseJson = await response.json();
+            return responseJson;
+        } catch (error) {
+            return {
+                ntwFail: true,
+                msg: "Kon geen verbinding met de server maken"
+            };
+        }
     }
-  }
 
-  async callApiDelete(action, data) {
-    try {
-      let response = await this.timeout(
-        3000,
-        fetch(this.url + action, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        })
-      );
-      let responseJson = await response.json();
-      return responseJson;
-    } catch (error) {
-      return {
-        ntwFail: true,
-        msg: "Kon geen verbinding met de server maken"
-      };
+    async callApiGet(action) {
+        try {
+            let response = await this.timeout(
+                3000,
+                fetch(this.url + action, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+            );
+            let responseJson = await response.json();
+            return responseJson;
+        } catch (error) {
+            return {
+                ntwFail: true,
+                msg: "Kon geen verbinding met de server maken"
+            };
+        }
     }
-  }
 
-  async callApiPut(action, data) {
-    try {
-      let response = await this.timeout(
-        3000,
-        fetch(this.url + action, {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        })
-      );
-      let responseJson = await response.json();
-      return responseJson;
-    } catch (error) {
-      return {
-        ntwFail: true,
-        msg: "Kon geen verbinding met de server maken"
-      };
+    async callApiDelete(action, data) {
+        try {
+            let response = await this.timeout(
+                3000,
+                fetch(this.url + action, {
+                    method: "DELETE",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+            );
+            let responseJson = await response.json();
+            return responseJson;
+        } catch (error) {
+            return {
+                ntwFail: true,
+                msg: "Kon geen verbinding met de server maken"
+            };
+        }
     }
-  }
 
-  login(username, password) {
-    userData = { username: username, password: password };
-    return this.callApiPost("login", userData);
-  }
+    async callApiPut(action, data) {
+        try {
+            let response = await this.timeout(
+                3000,
+                fetch(this.url + action, {
+                    method: "PUT",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+            );
+            let responseJson = await response.json();
+            return responseJson;
+        } catch (error) {
+            return {
+                ntwFail: true,
+                msg: "Kon geen verbinding met de server maken"
+            };
+        }
+    }
 
-  getDeviceById(id) {
-    return this.callApiGet("getDeviceById/" + id);
-  }
+    login(username, password) {
+        userData = { username: username, password: password };
+        return this.callApiPost("login", userData);
+    }
 
-  createDevice(id) {
-    userData = { id: id };
-    return this.callApiPost("createDevice", userData);
-  }
+    getDeviceById(id) {
+        return this.callApiGet("getDeviceById/" + id);
+    }
 
-  deleteDeviceById(id) {
-    userData = { id: id };
-    return this.callApiDelete("deleteDeviceById", userData);
-  }
+    createDevice(id) {
+        userData = { id: id };
+        return this.callApiPost("createDevice", userData);
+    }
 
-  getAllProjects() {
-    return this.callApiGet("getAllProjects");
-  }
+    deleteDeviceById(id) {
+        userData = { id: id };
+        return this.callApiDelete("deleteDeviceById", userData);
+    }
+
+    getAllProjects() {
+        return this.callApiGet("getAllProjects");
+    }
 }
 
 const api = new Api();
