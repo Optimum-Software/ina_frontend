@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Text, View, FlatList, StyleSheet } from "react-native";
+import { Text, View, FlatList, StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { ListItem } from "react-native-elements";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
 import sha256 from "crypto-js/sha256";
 var CryptoJS = require("crypto-js");
 import FirebaseApi from "../helpers/FirebaseApi";
+import { Toolbar } from "react-native-material-ui";
 
 export default class Chat extends Component {
     constructor() {
@@ -86,6 +87,21 @@ export default class Chat extends Component {
 
     render() {
         return (
+            <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+     backgroundColor="blue"
+     barStyle="light-content"
+   />
+   <Toolbar
+              centerElement={this.state.uid}
+              iconSet="MaterialCommunityIcons"
+
+              leftElement={"arrow-left"}
+              onLeftElementPress={() => {
+                this.props.navigation.openDrawer();
+              }}
+            />
+            <View style={styles.container}>
           <GiftedChat
             inverted={true}
             renderBubble={props => {
@@ -119,9 +135,19 @@ export default class Chat extends Component {
                 _id: this.state.currentUser.uid
             }}
             />
+            </View>
+            </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#00a6ff'
+      },
+      container: {
+        flex: 1,
+        backgroundColor: '#fff'
+      },
 });

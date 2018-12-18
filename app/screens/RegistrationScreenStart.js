@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TouchableHighlight,
-  ImageBackground
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    TouchableHighlight,
+    StatusBar,
+    ImageBackground,
+    SafeAreaView
+
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -131,8 +134,14 @@ export default class RegistrationScreenStart extends Component {
         return returnBool;
     }
 
+
   render() {
     return (
+      <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+     backgroundColor="blue"
+     barStyle="light-content"
+   />
       <ImageBackground
         style={styles.container}
         source={require("../assets/images/bluewavebg.png")}
@@ -253,14 +262,33 @@ export default class RegistrationScreenStart extends Component {
           </TouchableOpacity>
         </View>
       </ImageBackground>
+    </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        height: "100%",
-        width: "100%"
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#00a6ff'
+      },
+      container: {
+        flex: 1,
+        backgroundColor: '#fff'
+      },
+    textStyle: {
+        padding: 15,
+        fontSize: 16,
+        color: "#00a6ff",
+        textAlign: "center"
+    },
+
+    buttonStyle: {
+        marginRight: '10%',
+        marginLeft: '10%',
+
+        backgroundColor: "#ffffff",
+        borderRadius: 25
     },
     infoTextTitle: {
         color: "#00A6FF",
@@ -273,7 +301,7 @@ const styles = StyleSheet.create({
         width: "80%",
         color: "#FFFFFF",
         fontSize: 16,
-        marginTop: "5%",
+        marginTop: "10%",
         marginBottom: "5%"
     },
 
@@ -315,6 +343,7 @@ const styles = StyleSheet.create({
     marginBottom: "5%"
   },
 
+
   buttonStyle: {
     alignSelf: 'center',
     width: "75%",
@@ -330,7 +359,6 @@ const styles = StyleSheet.create({
     color: "#01A6FF",
     textAlign: "center"
   },
-
 
   registerText: {
     color: "#01A6FF",

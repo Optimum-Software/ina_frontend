@@ -10,7 +10,9 @@ import {
     Animated,
     Easing,
     Button,
-    ImageBackground
+    ImageBackground,
+    SafeAreaView,
+  StatusBar
 } from "react-native";
 import { Input } from "react-native-elements";
 import Api from "../helpers/Api";
@@ -111,12 +113,18 @@ class LoginScreen extends Component {
             outputRange: ["0deg", "360deg"]
         });
         return (
+            <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+     backgroundColor="blue"
+     barStyle="light-content"
+   />
             <View style={styles.container}>
                 <View style={{ height: Header.HEIGHT }}>
                     <Toolbar
                         centerElement="Inloggen"
                         iconSet="MaterialCommunityIcons"
                         leftElement={"menu"}
+                        color='#00a6ff'
                         onLeftElementPress={() => {
                             this.props.navigation.openDrawer();
                         }}
@@ -229,29 +237,33 @@ class LoginScreen extends Component {
                     </View>
                 </ImageBackground>
             </View>
+            </SafeAreaView>
         );
     }
 }
 
 // define your styles
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#00a6ff'
+      },
+      container: {
+        flex: 1,
+        backgroundColor: '#fff'
+      },
     textStyle: {
-      fontSize: 20,
-      color: "#01A6FF",
-      textAlign: "center"
+        padding: "5%",
+        fontSize: 16,
+        color: "#00a6ff",
+        textAlign: "center"
     },
 
     buttonStyle: {
-      padding: "2%",
-      height: "35%",
-      backgroundColor: "#ffffff",
-      borderRadius: 25,
-      marginBottom: "3%"
+        backgroundColor: "#ffffff",
+        borderRadius: 25
     },
-    container: {
-      height: "100%",
-      width: "100%"
-    },
+    
     top: {
       width: "100%",
       flex: 0.7,

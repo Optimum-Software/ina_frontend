@@ -8,7 +8,9 @@ import {
   Dimensions,
   ImageBackground,
   TouchableHighlight,
-  ScrollView
+  ScrollView,
+  SafeAreaView,
+  StatusBar
 } from "react-native";
 import { Header } from "react-navigation";
 import Router from "../helpers/Router";
@@ -37,8 +39,12 @@ export default class ProjectDetail extends Component {
     const location = navigation.getParam("location", "");
 
     return (
+      <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+     backgroundColor="blue"
+     barStyle="light-content"
+   />
       <ScrollView>
-        <View style={{ height: Header.HEIGHT }}>
           <Toolbar
             leftElement={"chevron-left"}
             onLeftElementPress={() => Router.goBack(this.props.navigation)}
@@ -52,7 +58,6 @@ export default class ProjectDetail extends Component {
               }
             }}
           />
-        </View>
         <View style={styles.container}>
           <Image
             source={{ uri: url }}
@@ -70,14 +75,23 @@ export default class ProjectDetail extends Component {
           </View>
         </View>
       </ScrollView>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#00a6ff'
+  },
   container: {
     flex: 1,
-    alignItems: "center"
+    backgroundColor: '#fff'
+  },
+  container: {
+    flex: 1,
+        backgroundColor: '#fff'
   },
   cardContainer: {
     flex: 1,
