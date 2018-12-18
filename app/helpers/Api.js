@@ -111,6 +111,30 @@ class Api {
     }
   }
 
+  async callApiUpload(project, name, file) {
+    const data = new FormData();
+    data.append(project + "_" + name, file);
+    try {
+      let response = await this.timeout(
+        3000,
+        fetch(this.url + "uploadFile", {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data"
+          },
+          body: data
+        })
+      );
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
+  }
+
   login(username, password) {
     userData = { username: username, password: password };
     return this.callApiPost("login", userData);

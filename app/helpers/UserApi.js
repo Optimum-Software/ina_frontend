@@ -49,6 +49,15 @@ class UserApi {
     };
     return Api.callApiPost("passwordForgotVerification", userData);
   }
+
+  changePassword(code, newPassword, email) {
+    userData = {
+      code: code,
+      newPassword: newPassword,
+      email: email
+    };
+    return Api.callApiPost("changePassword", userData);
+  }
 }
 
 const userApi = new UserApi();

@@ -11,13 +11,15 @@ import {
 } from "react-native";
 import { Input, Button, Icon } from "react-native-elements";
 import Router from "../helpers/Router";
+import UserApi from "../helpers/UserApi";
+var SHA256 = require("crypto-js/sha256");
 
 export default class ChangePasswordScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "test@tester.nl",
-      emailError: "",
+      code: "",
+      codeError: "",
 
       pw: "123456",
       pwError: "",
@@ -28,7 +30,60 @@ export default class ChangePasswordScreen extends Component {
     };
   }
 
+  changePassword(email) {
+    let pwSame = this.checkPwSame();
+    let pwLength = this.checkPwLength();
+    console.log(email);
+
+    if (pwSame && pwLength) {
+      let hashedPw = SHA256(this.state.pw).toString();
+      UserApi.changePassword(this.state.code, hashedPw, email).then(result => {
+        console.log(result);
+        this.resetErrors();
+        if (result["bool"]) {
+          alert(result["msg"]);
+          Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", null);
+        } else {
+          alert(result["msg"]);
+        }
+      });
+    }
+  }
+  resetErrors() {
+    this.setState({
+      pwError: "",
+      pwRepeatError: ""
+    });
+  }
+
+  checkPwSame() {
+    let msg =
+      "Het herhaalde wachtwoord moet hetzelfde zijn als het eerste wachtwoord";
+    let returnBool = true;
+    if (this.state.pwRepeat != this.state.pw) {
+      this.setState({ pwRepeatError: msg });
+      returnBool = false;
+    }
+    return returnBool;
+  }
+
+  checkPwLength() {
+    let msg = "Het wachtwoord moet minimaal 6 karakters lang zijn";
+    let returnBool = true;
+    if (this.state.pw.length < 6) {
+      this.setState({ pwError: msg });
+      returnBool = false;
+    }
+    if (this.state.pwRepeat.length < 6) {
+      this.setState({ pwRepeatError: msg });
+      returnBool = false;
+    }
+    return returnBool;
+  }
+
   render() {
+    const email = this.props.navigation.getParam("email");
+
     return (
       <ImageBackground
         source={require("../assets/images/bluewavebg.png")}
@@ -71,22 +126,22 @@ export default class ChangePasswordScreen extends Component {
           }}
         >
           <Input
-            placeholder="E-mail"
+            placeholder="Verificatiecode"
             placeholderTextColor="#FFFFFF"
             containerStyle={styles.containerStyle}
             inputContainerStyle={styles.inputContainerStyle}
             inputStyle={styles.inputStyle}
             value={this.state.email}
             leftIcon={{
-              type: "font-awesome",
-              name: "envelope",
+              type: "material-community",
+              name: "email-check",
               color: "#FFFFFF"
             }}
             autoCapitalize="none"
-            onChangeText={email => this.setState({ email })}
+            onChangeText={code => this.setState({ code })}
             onSubmitEditing={() => console.log("end")}
           />
-          <Text style={styles.errorStyle}>{this.state.emailError}</Text>
+          <Text style={styles.errorStyle}>{this.state.codeError}</Text>
 
           <Input
             placeholder="Wachtwoord"
@@ -118,14 +173,7 @@ export default class ChangePasswordScreen extends Component {
 
           <TouchableOpacity
             style={styles.buttonStyle}
-            onPress={() =>
-              Router.goTo(
-                this.props.navigation,
-                "LoginStack",
-                "LoginScreen",
-                null
-              )
-            }
+            onPress={() => this.changePassword(email)}
           >
             <Text style={styles.textStyle}>Verder</Text>
           </TouchableOpacity>

@@ -61,6 +61,7 @@ class LoginScreen extends Component {
     if (this.checkInputEmpty() && this.checkEmail()) {
       let hashedPw = SHA256(this.state.pw).toString();
       Api.login(this.state.email, hashedPw).then(result => {
+        console.log(result);
         if (result.bool) {
           User.getUserId().then(userId => {
             User.getDeviceId().then(deviceId => {

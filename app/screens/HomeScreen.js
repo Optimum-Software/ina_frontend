@@ -14,6 +14,7 @@ import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 import { Button } from "react-native-elements";
 import line from "../assets/images/Line.png";
+import Api from "../helpers/Api";
 
 export default class Home extends Component {
   constructor(props) {

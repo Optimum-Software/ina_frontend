@@ -26,7 +26,9 @@ export default class ForgotPasswordScreen extends Component {
   requestNewPassword() {
     if (this.checkEmail()) {
       UserApi.requestNewPassword(this.state.email);
-      Router.goTo(this.props.navigation, "LoginStack", "ChangePassword", null);
+      Router.goTo(this.props.navigation, "LoginStack", "ChangePassword", {
+        email: this.state.email
+      });
     }
   }
 
