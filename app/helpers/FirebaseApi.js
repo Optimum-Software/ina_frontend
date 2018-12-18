@@ -29,6 +29,10 @@ class FirebaseService {
         return this.app.auth();
     }
 
+    getFire() {
+        return this.app;
+    }
+
     async sendSms(phoneNumber) {
         return await this.app
             .auth()
@@ -36,13 +40,24 @@ class FirebaseService {
             .catch(error => console.log(error));
     }
 
-    async verifyPhoneNumber(phoneNumber) {
+    verifyPhoneNumber(phoneNumber) {
         // console.log("VERIFY PHONE SHITZLE");
         // console.log(confirmResult);
         // return await confirmResult
         //     .confirm(codeInput)
         //     .catch(error => console.log(error));
-        return await this.app.auth().verifyPhoneNumber(phoneNumber);
+        return this.app.auth().verifyPhoneNumber(phoneNumber, 100, false);
+    }
+
+    async createPhoneCredential(verifyId, codeInput) {
+        return await firebase.auth.PhoneAuthProvider.credential(
+            verifyId,
+            codeInput
+        );
+    }
+
+    loginPhone(credential) {
+        return this.app.auth().signInWithCredential(credential);
     }
 
     async registerAccount(email, password) {
@@ -94,58 +109,64 @@ class FirebaseService {
                 });
             });
         });
-        return items
-  }
+        return items;
+    }
 
-  getMsgsRef(uid) {
-    return this.app.database().ref('Chats').child(uid);
-  }
+    getMsgsRef(uid) {
+        return this.app
+            .database()
+            .ref("Chats")
+            .child(uid);
+    }
 
-  notifyUser(uid) {
-    uid = '1:19'; //debug
-    ids = uid.split(":");
-    
-    //debug
-    User.getUserId().then(id => {
-        let resId = null;
-        if(ids[0] == id) {
-            resId = ids[1]
-        } else {
-            resId = ids[0]
-        }
-        UserApi.notifyUser(parseInt(resId));
-    });
-  }
+    notifyUser(uid) {
+        uid = "1:19"; //debug
+        ids = uid.split(":");
 
-  createChat(uid) {
-    //uid must have following structure: lowId:highId
-    //example chat between user 6 and 9 = 6:9
-    //example chat between user 78 and user 34 = 34:78
-    this.database().ref("Chats").child(uid);
-  }
+        //debug
+        User.getUserId().then(id => {
+            let resId = null;
+            if (ids[0] == id) {
+                resId = ids[1];
+            } else {
+                resId = ids[0];
+            }
+            UserApi.notifyUser(parseInt(resId));
+        });
+    }
 
-  sendMessage(sender, uid, messages = []) {
-    const ref = this.app.database().ref("Chats").child(uid);
-    this.notifyUser(uid);
-    let currentUser = this.app.auth().currentUser;
-    let createdAt = new Date().getTime();
+    createChat(uid) {
+        //uid must have following structure: lowId:highId
+        //example chat between user 6 and 9 = 6:9
+        //example chat between user 78 and user 34 = 34:78
+        this.database()
+            .ref("Chats")
+            .child(uid);
+    }
 
-    var messageEncrypted = CryptoJS.AES.encrypt(
-      messages[0].text,
-      sha256(
-          sender.uid + sender.email
-      ).toString()
-    );
-    let chatMessage = {
-      text: messageEncrypted.toString(),
-      createdAt: createdAt,
-      user: {
-          id: currentUser.uid,
-          email: currentUser.email
-      }
-    };
-    ref.push().set(chatMessage);
-  }
+    sendMessage(sender, uid, messages = []) {
+        const ref = this.app
+            .database()
+            .ref("Chats")
+            .child(uid);
+        this.notifyUser(uid);
+        let currentUser = this.app.auth().currentUser;
+        let createdAt = new Date().getTime();
+
+        var messageEncrypted = CryptoJS.AES.encrypt(
+            messages[0].text,
+            sha256(sender.uid + sender.email).toString()
+        );
+        let chatMessage = {
+            text: messageEncrypted.toString(),
+            createdAt: createdAt,
+            user: {
+                id: currentUser.uid,
+                email: currentUser.email
+            }
+        };
+        ref.push().set(chatMessage);
+    }
 
     getMsgsRef(uid) {
         return this.app
