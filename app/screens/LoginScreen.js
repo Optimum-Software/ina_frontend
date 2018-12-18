@@ -192,7 +192,7 @@ class LoginScreen extends Component {
                             <Text
                                 style={{
                                     color: "#ffffff",
-                                    paddingBottom: "20%",
+                                    paddingBottom: "10%",
                                     paddingTop: "5%"
                                 }}
                             >
@@ -217,14 +217,10 @@ class LoginScreen extends Component {
                                   )
                               }
                           >
-                              <Text style={{ color: "#ffffff", padding: 5 }}>
+                              <Text style={{ color: "#ffffff", padding: 5, fontSize: 16 }}>
                                   Nog geen account? 
-                                  <Text
-                                      style={{
-                                          fontWeight: "bold",
-                                          color: "#ffffff"
-                                      }}
-                                  >
+                                  <Text> </Text>
+                                  <Text style={{fontWeight: "bold",color: "#ffffff", fontSize: 16 }}>
                                       Registreer hier!
                                   </Text>
                               </Text>
@@ -249,7 +245,8 @@ const styles = StyleSheet.create({
       padding: "2%",
       height: "35%",
       backgroundColor: "#ffffff",
-      borderRadius: 25
+      borderRadius: 25,
+      marginBottom: "3%"
     },
     container: {
       height: "100%",
