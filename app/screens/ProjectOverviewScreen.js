@@ -187,6 +187,7 @@ export default class ProjectOverview extends Component {
                       "ProjectStack",
                       "ProjectDetailScreen",
                       {
+                        id: item.id,
                         name: item.name,
                         url: item.url,
                         desc: item.desc,

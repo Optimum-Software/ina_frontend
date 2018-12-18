@@ -1,31 +1,48 @@
-import React, { Component } from "react";
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ImageBackground,
-  TouchableHighlight,
-  ScrollView
-} from "react-native";
-import { Header } from "react-navigation";
+import React, {Component} from "react";
+import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, View} from "react-native";
+import {Header} from "react-navigation";
 import Router from "../helpers/Router";
-import { Toolbar } from "react-native-material-ui";
+import {Toolbar} from "react-native-material-ui";
 import line from "../assets/images/Line.png";
+import ProjectApi from "../helpers/ProjectApi"
 
 export default class ProjectDetail extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({navigation}) => ({
     title: "Project"
   });
+
   constructor() {
     super();
-    this.state = { bookmarked: "bookmark" };
+    this.state = {
+      bookmarked: "bookmark",
+      id: '',
+      liked: false,
+    };
   }
-  render() {
-    const { navigation } = this.props;
 
+  likeProject(id) {
+    // alert(id)
+    let like = ProjectApi.likeProject().then(result => {
+      console.log("Hij doet het ");
+      this.resetErrors();
+      if (result["ntwFail"]) {
+        //network error
+        alert(result["msg"]);
+      } else {
+        if (result["bool"]) {
+          alert("liked")
+          this.setState({
+            liked: true
+          });
+        }
+      }
+    });
+  }
+
+  render() {
+    const {navigation} = this.props;
+
+    const id = navigation.getParam("id", "")
     const name = navigation.getParam("name", "");
     const url = navigation.getParam("url", "");
     const desc = navigation.getParam("desc", "");
@@ -38,7 +55,7 @@ export default class ProjectDetail extends Component {
 
     return (
       <ScrollView>
-        <View style={{ height: Header.HEIGHT }}>
+        <View style={{height: Header.HEIGHT}}>
           <Toolbar
             leftElement={"chevron-left"}
             onLeftElementPress={() => Router.goBack(this.props.navigation)}
@@ -46,28 +63,44 @@ export default class ProjectDetail extends Component {
             rightElement={this.state.bookmarked}
             onRightElementPress={() => {
               if (this.state.bookmarked == "bookmark") {
-                this.setState({ bookmarked: "markunread" });
+                this.setState({bookmarked: "markunread"});
               } else {
-                this.setState({ bookmarked: "bookmark" });
+                this.setState({bookmarked: "bookmark"});
               }
             }}
           />
         </View>
         <View style={styles.container}>
-          <Image
-            source={{ uri: url }}
-            resizeMode="cover"
-            style={{ width: "100%", height: 200 }}
-          />
-          <Image
-            source={line}
-            resizeMode="stretch"
-            style={{ width: "100%", height: "2%" }}
-          />
-          <View>
-            <Text style={styles.title}>{name}</Text>
-            <Text>{desc}</Text>
+          <View style={styles.card}>
+            <Image
+              source={{uri: url}}
+              resizeMode="cover"
+              style={{width: "100%", height: 200}}
+            />
+            <Image
+              source={line}
+              resizeMode="stretch"
+              style={{width: "100%", height: "2%"}}
+            />
+            <View>
+              <Text style={styles.title}>{name}</Text>
+              <Text>{desc}</Text>
+            </View>
+            <View>
+              <TouchableHighlight
+                onPress={() => {
+                  this.likeProject(id)
+                }
+                }
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>
+                  like
+                </Text>
+              </TouchableHighlight>
+            </View>
           </View>
+
         </View>
       </ScrollView>
     );
@@ -77,17 +110,18 @@ export default class ProjectDetail extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center"
+    alignItems: "center",
+    height: Dimensions.get("window").height - 105
   },
   cardContainer: {
     flex: 1,
-    margin: 10
+    margin: 10,
   },
   card: {
     backgroundColor: "#F1F1F1",
-    margin: 10,
+    // margin: 10,
     width: "100%",
-    height: 180,
+    height: '100%',
     marginBottom: 10,
     elevation: 3
   },
@@ -105,5 +139,17 @@ const styles = StyleSheet.create({
     margin: 5,
     fontSize: 20,
     fontWeight: "bold"
-  }
+  },
+  button: {
+    width: "50%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#93D500",
+    borderBottomRightRadius: 10
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold"
+  },
 });
