@@ -227,8 +227,10 @@ const styles = StyleSheet.create({
     },
 
     textContainer: {
-        width: "100%",
-        alignSelf: "center"
+      width: "100%",
+      justifyContent: "center",
+      alignSelf: "center",
+      flexDirection: "row",
     },
 
     goToLoginText: {

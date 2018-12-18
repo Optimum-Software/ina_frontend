@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  View,
+  StatusBar,
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -70,6 +71,7 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
+      <StatusBar backgroundColor="#00A6FF" />
         <View style={{ height: Header.HEIGHT }}>
           <Toolbar
             centerElement="Home page"
