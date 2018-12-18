@@ -13,28 +13,28 @@ import User from "./helpers/User";
 import OneSignal from "react-native-onesignal";
 
 export default class App extends React.Component {
-  constructor() {
-    super();
-    console.disableYellowBox = true;
+    constructor() {
+        super();
+        console.disableYellowBox = true;
 
-    firebaseApi.checkUser();
-  }
+        firebaseApi.checkUser();
+    }
 
-  componentDidMount() {
-    OneSignal.init("33abe35a-5325-45cc-bbee-074d6cc1d558");
-    OneSignal.configure();
-    OneSignal.addEventListener("ids", this.onIds);
-  }
+    componentDidMount() {
+        OneSignal.init("33abe35a-5325-45cc-bbee-074d6cc1d558");
+        OneSignal.configure();
+        OneSignal.addEventListener("ids", this.onIds);
+    }
 
-  componentWillUnmount() {
-    OneSignal.removeEventListener("ids", this.onIds);
-  }
+    componentWillUnmount() {
+        OneSignal.removeEventListener("ids", this.onIds);
+    }
 
-  onIds(device) {
-    User.storeDeviceId(device.userId);
-  }
+    onIds(device) {
+        User.storeDeviceId(device.userId);
+    }
 
-  render() {
-    return <RootNavigator />;
-  }
+    render() {
+        return <RootNavigator />;
+    }
 }

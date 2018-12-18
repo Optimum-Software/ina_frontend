@@ -5,7 +5,6 @@ import {
   View,
   TouchableOpacity,
   TouchableHighlight,
-
   ImageBackground
 } from "react-native";
 import { Header } from "react-navigation";
@@ -36,97 +35,101 @@ export default class RegistrationScreenStart extends Component {
       pwRepeat: "",
       pwRepeatError: "",
 
-      loading: false
-    };
-  }
+            loading: false
+        };
+    }
 
-  goToRegisterPhone() {
-    let emailExists = UserApi.checkEmail(this.state.email).then(result => {
-      this.resetErrors();
-      if (result["ntwFail"]) {
-        //network error
-        alert(result["msg"]);
-      } else {
-        if (result["bool"]) {
-          this.setState({
-            emailError: "Het ingevulde e-mail adres bestaat al"
-          });
+    goToRegisterPhone() {
+        let emailExists = UserApi.checkEmail(this.state.email).then(result => {
+            console.log("Hij doet het ");
+            this.resetErrors();
+            if (result["ntwFail"]) {
+                //network error
+                alert(result["msg"]);
+            } else {
+                if (result["bool"]) {
+                    this.setState({
+                        emailError: "Het ingevulde e-mail adres bestaat al"
+                    });
+                }
+                let pwSame = this.checkPwSame();
+                let pwLength = this.checkPwLength();
+                let email = this.checkEmail();
+                let empty = this.checkInputEmpty();
+                if (empty && email && pwSame && pwLength && !result["bool"]) {
+                    this.setState({
+                        hashedPw: SHA256(this.state.pw).toString()
+                    });
+                    console.log("hoi");
+                    Router.goTo(
+                        this.props.navigation,
+                        "LoginStack",
+                        "RegisterPhone",
+                        this.state
+                    );
+                }
+            }
+        });
+    }
+
+    resetErrors() {
+        this.setState({
+            emailError: "",
+            firstNameError: "",
+            lastNameError: "",
+            pwError: "",
+            pwRepeatError: "",
+            emailExists: false
+        });
+    }
+
+    checkInputEmpty() {
+        msg = "Vul alstublieft het veld in";
+        returnBool = true;
+        if (this.state.firstName == "") {
+            this.setState({ firstNameError: msg });
+            returnBool = false;
         }
-        let pwSame = this.checkPwSame();
-        let pwLength = this.checkPwLength();
-        let email = this.checkEmail();
-        let empty = this.checkInputEmpty();
-        if (empty && email && pwSame && pwLength && !result["bool"]) {
-          this.setState({ hashedPw: SHA256(this.state.pw).toString() });
-          Router.goTo(
-            this.props.navigation,
-            "LoginStack",
-            "RegisterPhone",
-            this.state
-          );
+        if (this.state.lastName == "") {
+            this.setState({ lastNameError: msg });
+            returnBool = false;
         }
-      }
-    });
-  }
+        return returnBool;
+    }
 
-  resetErrors() {
-    this.setState({
-      emailError: "",
-      firstNameError: "",
-      lastNameError: "",
-      pwError: "",
-      pwRepeatError: "",
-      emailExists: false
-    });
-  }
+    checkEmail() {
+        msg = "Het ingevoerde e-mail adres is geen valide email";
+        returnBool = true;
+        if (!/\S+@\S+\.\S+/.test(this.state.email)) {
+            this.setState({ emailError: msg });
+            returnBool = false;
+        }
+        return returnBool;
+    }
+    checkPwSame() {
+        msg =
+            "Het herhaalde wachtwoord moet hetzelfde zijn als het eerste wachtwoord";
+        returnBool = true;
+        if (this.state.pwRepeat != this.state.pw) {
+            this.setState({ pwRepeatError: msg });
+            returnBool = false;
+        }
+        return returnBool;
+    }
 
-  checkInputEmpty() {
-    msg = "Vul alstublieft het veld in";
-    returnBool = true;
-    if (this.state.firstName == "") {
-      this.setState({ firstNameError: msg });
-      returnBool = false;
+    checkPwLength() {
+        msg = "Het wachtwoord moet minimaal 6 karakters lang zijn";
+        returnBool = true;
+        if (this.state.pw.length < 6) {
+            this.setState({ pwError: msg });
+            returnBool = false;
+        }
+        if (this.state.pwRepeat.length < 6) {
+            this.setState({ pwRepeatError: msg });
+            returnBool = false;
+        }
+        return returnBool;
     }
-    if (this.state.lastName == "") {
-      this.setState({ lastNameError: msg });
-      returnBool = false;
-    }
-    return returnBool;
-  }
-
-  checkEmail() {
-    msg = "Het ingevoerde e-mail adres is geen valide email";
-    returnBool = true;
-    if (!/\S+@\S+\.\S+/.test(this.state.email)) {
-      this.setState({ emailError: msg });
-      returnBool = false;
-    }
-    return returnBool;
-  }
-  checkPwSame() {
-    msg =
-      "Het herhaalde wachtwoord moet hetzelfde zijn als het eerste wachtwoord";
-    returnBool = true;
-    if (this.state.pwRepeat != this.state.pw) {
-      this.setState({ pwRepeatError: msg });
-      returnBool = false;
-    }
-    return returnBool;
-  }
-
-  checkPwLength() {
-    msg = "Het wachtwoord moet minimaal 6 karakters lang zijn";
-    returnBool = true;
-    if (this.state.pw.length < 6) {
-      this.setState({ pwError: msg });
-      returnBool = false;
-    }
-    if (this.state.pwRepeat.length < 6) {
-      this.setState({ pwRepeatError: msg });
-      returnBool = false;
-    }
-    return returnBool;
-  }
 
   render() {
     return (
@@ -255,53 +258,55 @@ export default class RegistrationScreenStart extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: "100%",
-    width: "100%"
-  },
-  infoTextTitle: {
-    color: "#00A6FF",
-    alignSelf: "flex-start",
-    fontSize: 25,
-    marginBottom: "5%"
-  },
+    container: {
+        height: "100%",
+        width: "100%"
+    },
+    infoTextTitle: {
+        color: "#00A6FF",
+        alignSelf: "flex-start",
+        fontSize: 25,
+        marginBottom: "5%"
+    },
 
-  infoText: {
-    marginTop: "5%",
-    color: "#FFFFFF",
-    alignSelf: "flex-start",
-    fontSize: 16
-  },
+    infoText: {
+        width: "80%",
+        color: "#FFFFFF",
+        fontSize: 16,
+        marginTop: "5%",
+        marginBottom: "5%"
+    },
 
-  containerStyle: {
-    width: "75%",
-    alignSelf: "center",
-    backgroundColor: "transparent",
-    marginBottom: "3%"
-  },
+    containerStyle: {
+        width: "75%",
+        alignSelf: "center",
+        backgroundColor: "transparent",
+        marginBottom: "3%"
+    },
 
-  inputContainerStyle: {
-    borderBottomColor: "#FFFFFF"
-  },
+    inputContainerStyle: {
+        borderBottomColor: "#FFFFFF"
+    },
 
-  inputStyle: {
-    color: "#FFFFFF"
-  },
+    inputStyle: {
+        color: "#FFFFFF"
+    },
 
-  inputFieldContainer: {
-    flex: 4,
-    flexDirection: "column",
-    justifyContent: "center",
-    paddingTop: "40%"
-  },
-  errorStyle: {
-    color: "#FFFFFF",
-    alignSelf: "flex-start",
-    marginLeft: "12%",
-    marginTop: "2%",
-    marginBottom: "2%",
-    fontSize: 13
-  },
+    inputFieldContainer: {
+        flex: 4,
+        flexDirection: "column",
+        justifyContent: "center",
+        paddingTop: "40%"
+    },
+
+    errorStyle: {
+        color: "#FFFFFF",
+        alignSelf: "flex-start",
+        marginLeft: "12%",
+        marginTop: "2%",
+        marginBottom: "2%",
+        fontSize: 13
+    },
 
   actionContainer: {
     flex: 2,
@@ -318,9 +323,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: '3%',
     marginTop: '10%',
-    paddingTop: '1.5%',
-    paddingBottom: '1.5%'
   },
+
+  textStyle: {
+    fontSize: 16,
+    color: "#01A6FF",
+    textAlign: "center"
+  },
+
 
   registerText: {
     color: "#01A6FF",
@@ -334,6 +344,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     flexDirection: "row",
   },
+
   goToLoginText: {
     alignSelf: "center",
     fontSize: 16,

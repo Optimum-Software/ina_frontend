@@ -2,11 +2,11 @@
 
 import React, { Component } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity
+    StyleSheet,
+    View,
+    Text,
+    ImageBackground,
+    TouchableOpacity
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Router from "../helpers/Router";

@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TouchableHighlight,
-  ImageBackground,
-  Platform
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    TouchableHighlight,
+    ImageBackground,
+    Platform,
+    ActivityIndicator
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -15,243 +16,294 @@ import Router from "../helpers/Router";
 import UserApi from "../helpers/UserApi";
 import User from "../helpers/User";
 import firebaseApi from "../helpers/FirebaseApi";
+import firebase from "react-native-firebase";
 
 export default class RegistrationScreenStart extends Component {
-  constructor() {
-    super();
-    this.state = {
-      registerPhoneInfo: {},
-      code: "",
-      codeError: "",
-      android: null
-    };
-  }
+    constructor() {
+        super();
+        this.state = {
+            registerPhoneInfo: {},
+            code: "",
+            codeError: "",
+            android: null
+        };
+    }
 
-  componentDidMount() {
-    this.setState({
-      registerPhoneInfo: this.props.navigation.state.params
-    });
-    if (Platform.OS == "android") {
-      this.setState({
-        android: true
-      });
-      firebaseApi
-        .verifyPhoneNumber(this.props.navigation.state.params.phoneNumber)
-        .then(result => {
-          firebaseApi.deleteUser(firebaseApi.getCurrentUser());
-          firebaseApi
-            .registerAccount(
-              this.state.registerPhoneInfo.registerInfo.email,
-              this.state.registerPhoneInfo.registerInfo.pw
-            )
-            .then(user => {
-              this.register(user.user);
-            })
-            .catch(error => {
-              alert(error.message);
+    componentDidMount() {
+        this.setState({
+            registerPhoneInfo: this.props.navigation.state.params
+        });
+        if (Platform.OS == "android") {
+            this.setState({
+                android: true
             });
+            console.log(firebaseApi.getFire().PhoneAuthProvider);
+            firebaseApi
+                .verifyPhoneNumber(
+                    this.props.navigation.state.params.phoneNumber
+                )
+                .on(
+                    "state_changed",
+                    phoneAuthSnapshot => {
+                        console.log(phoneAuthSnapshot);
+                        // How you handle these state events is entirely up to your ui flow and whether
+                        // you need to support both ios and android. In short: not all of them need to
+                        // be handled - it's entirely up to you, your ui and supported platforms.
+
+                        // E.g you could handle android specific events only here, and let the rest fall back
+                        // to the optionalErrorCb or optionalCompleteCb functions
+                        switch (phoneAuthSnapshot.state) {
+                            // ------------------------
+                            //  IOS AND ANDROID EVENTS
+                            // ------------------------
+                            case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
+                                console.log("code sent");
+                                this.setState({
+                                    verifyId: phoneAuthSnapshot.verificationId
+                                });
+                                // on ios this is the final phone auth state event you'd receive
+                                // so you'd then ask for user input of the code and build a credential from it
+                                break;
+                            case firebase.auth.PhoneAuthState.ERROR: // or 'error'
+                                console.log("verification error");
+                                console.log(phoneAuthSnapshot.error);
+                                alert(
+                                    "Er ging iets mis, probeer het nog een keer"
+                                );
+                                Router.goBack(this.props.navigation);
+                                break;
+
+                            // ---------------------
+                            // ANDROID ONLY EVENTS
+                            // ---------------------
+                            case firebase.auth.PhoneAuthState
+                                .AUTO_VERIFY_TIMEOUT: // or 'timeout'
+                                console.log("auto verify on android timed out");
+                                const {
+                                    verificationId,
+                                    code
+                                } = phoneAuthSnapshot;
+
+                                this.setState({
+                                    android: false,
+                                    verificationId: verificationId,
+                                    code: code
+                                });
+                                // proceed with your manual code input flow, same as you would do in
+                                // CODE_SENT if you were on IOS
+                                break;
+                            case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
+                                // auto verified means the code has also been automatically confirmed as correct/received
+                                // phoneAuthSnapshot.code will contain the auto verified sms code - no need to ask the user for input.
+                                console.log("auto verified on android");
+                                console.log(phoneAuthSnapshot);
+                                this.register(firebaseApi.getCurrentUser());
+                                // Example usage if handling here and not in optionalCompleteCb:
+                                // const { verificationId, code } = phoneAuthSnapshot;
+                                // const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, code);
+
+                                // Do something with your new credential, e.g.:
+                                // firebase.auth().signInWithCredential(credential);
+                                // firebase.auth().linkWithCredential(credential);
+                                // etc ...
+                                break;
+                        }
+                    },
+                    error => {
+                        console.log(error);
+                        console.log(error.verificationId);
+                    },
+                    phoneAuthSnapshot => {
+                        console.log(phoneAuthSnapshot);
+                    }
+                );
+        }
+    }
+
+    checkCode() {
+        const credential = firebase.auth.PhoneAuthProvider.credential(
+            this.state.verificationId,
+            this.state.code
+        );
+        firebaseApi
+            .loginPhone(credential)
+            .then(result => this.register(result.user));
+    }
+
+    register(firebaseUser) {
+        UserApi.registerUser(
+            this.state.registerPhoneInfo.registerInfo.firstName,
+            this.state.registerPhoneInfo.registerInfo.lastName,
+            this.state.registerPhoneInfo.registerInfo.email,
+            this.state.registerPhoneInfo.registerInfo.pw,
+            this.state.registerPhoneInfo.phoneNumber
+        ).then(result => {
+            if (!result["bool"]) {
+                firebaseApi.deleteUser(firebaseUser);
+            } else {
+                userId = result["id"];
+                User.storeUserId(result["id"]);
+                Router.goTo(
+                    this.props.navigation,
+                    "LoginStack",
+                    "RegisterVerifySuccessfull"
+                ); //route to succesfeedback screen
+            }
         });
     }
-  }
 
-  checkCode() {
-    firebaseApi
-      .verifyPhoneNumber(
-        this.state.code,
-        this.state.registerPhoneInfo.confirmResult
-      )
-      .then(result => {
-        firebaseApi.deleteUser(result);
-        firebaseApi
-          .registerAccount(
-            this.state.registerPhoneInfo.registerInfo.email,
-            this.state.registerPhoneInfo.registerInfo.hashedPw
-          )
-          .then(user => {
-            this.register(user.user);
-          })
-          .catch(error => {
-            alert(error.message);
-          });
-      });
-  }
-
-  register(firebaseUser) {
-    console.log("hallo")
-    UserApi.registerUser(
-      this.state.registerPhoneInfo.registerInfo.firstName,
-      this.state.registerPhoneInfo.registerInfo.lastName,
-      this.state.registerPhoneInfo.registerInfo.email,
-      this.state.registerPhoneInfo.registerInfo.pw,
-      this.state.registerPhoneInfo.phoneNumber
-    ).then(result => {
-      if (!result["bool"]) {
-        firebaseApi.deleteUser(firebaseUser);
-      } else {
-        userId = result["id"];
-        User.storeUserId(result["id"]);
-        Router.goTo(
-          this.props.navigation,
-          "LoginStack",
-          "RegisterVerifySuccessfull"
-        ); //route to succesfeedback screen
-      }
-    });
-  }
-
-  render() {
-    return (
-      <ImageBackground
-        style={styles.container}
-        source={require("../assets/images/bluewavebg.png")}
-        resizeMode="stretch"
-      >
-        {!this.state.android && (
-          <View>
-            <View style={{ flexDirection: "row" }}>
-              <Icon
-                name="chevron-left"
-                type="font-awesome"
-                size={20}
-                color="#00A6FF"
-                underlayColor="#c1efff"
-                containerStyle={{ width: "10%", marginTop: "7%" }}
-                onPress={() => Router.goBack(this.props.navigation)}
-              />
-              <View style={{ flex: 2, width: "90%", marginTop: "5%" }}>
-                <Text style={styles.infoTextTitle}>Registreren</Text>
-                <Text style={styles.infoText}>
-                  Vul alle velden in om je een account aan te maken.
-                </Text>
-              </View>
-            </View>
-            <View style={styles.inputFieldContainer}>
-              <Input
-                placeholder="verificatiecode"
-                placeholderTextColor="#FFFFFF"
-                containerStyle={styles.inputContainer}
-                inputContainerStyle={styles.inputContainerStyle}
-                inputStyle={styles.inputStyle}
-                value={this.state.code}
-                leftIcon={{
-                  type: "font-awesome",
-                  name: "lock",
-                  color: "#FFFFFF"
-                }}
-                errorStyle={styles.errorStyle}
-                errorMessage={this.state.phoneNumberError}
-                onChangeText={code => this.setState({ code })}
-                onSubmitEditing={() => this.checkCode()}
-                keyboardType="numeric"
-                maxLength={6}
-              />
-            </View>
-            <View style={styles.actionContainer}>
-              <TouchableHighlight
-                underlayColor="#c1efff"
-                style={styles.buttonStyle}
-                onPress={() => this.verifyPhone()}
-              >
-                <Text style={styles.goOnText}>Verder</Text>
-              </TouchableHighlight>
-              <TouchableOpacity
-                    style={styles.textContainer}
-                    onPress={() =>
-                      Router.goTo(
-                        this.props.navigation,
-                        "LoginStack",
-                        "LoginScreen",
-                        {}
-                      )
-                    }
-                  >
-                    <Text style={{ color: "#fff", fontSize: 16 }}>Al een account? </Text>
-                    <Text
-                      style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
+    render() {
+        return (
+            <ImageBackground
+                style={styles.container}
+                source={require("../assets/images/bluewavebg.png")}
+                resizeMode="stretch"
+            >
+                <View style={{ flexDirection: "row" }}>
+                    <View
+                        style={{
+                            flex: 2,
+                            width: "90%",
+                            marginTop: "3%",
+                            marginLeft: "5%",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
                     >
-                      Klik hier om in te loggen!
-                    </Text>
-                  </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      </ImageBackground>
-    );
-  }
+                        <Text style={styles.infoTextTitle}>Verificatie</Text>
+                    </View>
+                </View>
+                {this.state.android && (
+                    <View
+                        style={{
+                            alignSelf: "center",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: "100%",
+                            width: "100%"
+                        }}
+                    >
+                        <ActivityIndicator size="large" color="#ffffff" />
+                    </View>
+                )}
+                {!this.state.android && (
+                    <View style={{ padding: "10%" }}>
+                        <View style={{ flexDirection: "row" }}>
+                            <View
+                                style={{
+                                    flex: 2,
+                                    width: "90%",
+                                    marginTop: "5%"
+                                }}
+                            >
+                                <Text style={styles.infoText}>
+                                    Vul alle velden in om je een account aan te
+                                    maken.
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={styles.inputFieldContainer}>
+                            <Input
+                                placeholder="verificatiecode"
+                                placeholderTextColor="#FFFFFF"
+                                containerStyle={styles.inputContainer}
+                                inputContainerStyle={styles.inputContainerStyle}
+                                inputStyle={styles.inputStyle}
+                                value={this.state.code}
+                                leftIcon={{
+                                    type: "font-awesome",
+                                    name: "lock",
+                                    color: "#FFFFFF"
+                                }}
+                                errorStyle={styles.errorStyle}
+                                errorMessage={this.state.phoneNumberError}
+                                onChangeText={code => this.setState({ code })}
+                                onSubmitEditing={() => this.checkCode()}
+                                keyboardType="numeric"
+                                maxLength={6}
+                            />
+                        </View>
+                        <TouchableOpacity
+                            style={styles.buttonStyle}
+                            onPress={() => this.checkCode()}
+                        >
+                            <Text style={styles.textStyle}>Verder</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </ImageBackground>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    height: "100%",
-    width: "100%"
-  },
+    container: {
+        height: "100%",
+        width: "100%"
+    },
 
-  containerStyle: {
-    flex: 1,
-    marginTop: "50%"
-  },
+    infoTextTitle: {
+        color: "#00A6FF",
+        alignSelf: "flex-start",
+        fontSize: 25,
+        marginBottom: "5%",
+        marginLeft: "5%"
+    },
 
-  infoTextTitle: {
-    color: "#00A6FF",
-    alignSelf: "flex-start",
-    fontSize: 25
-  },
+    containerStyle: {
+        flex: 1,
+        marginTop: "50%"
+    },
 
-  infoText: {
-    color: "#FFFFFF",
-    alignSelf: "flex-start",
-    fontSize: 16,
-    marginTop: "20%"
-  },
+    infoField: {
+        flex: 2,
+        width: "75%",
+        alignSelf: "center"
+    },
 
-  inputFieldContainer: {
-    marginTop: "10%",
-    flex: 2,
-    flexDirection: "column"
-  },
+    infoTextTitle: {
+        color: "#00A6FF",
+        alignSelf: "flex-start",
+        fontSize: 25
+    },
 
-  inputContainer: {
-    width: "75%",
-    alignSelf: "center"
-  },
+    infoText: {
+        color: "#FFFFFF",
+        alignSelf: "flex-start",
+        fontSize: 16,
+        marginTop: "20%"
+    },
 
-  inputContainerStyle: {
-    borderBottomColor: "#FFFFFF"
-  },
+    inputFieldContainer: {
+        marginTop: "10%",
+        marginBottom: "10%",
+        flexDirection: "column"
+    },
 
-  inputStyle: {
-    color: "#FFFFFF"
-  },
+    inputContainer: {
+        width: "100%",
+        alignSelf: "center"
+    },
 
-  errorStyle: {
-    color: "#FFFFFF",
-    alignSelf: "flex-start",
-    marginTop: "2%",
-    marginBottom: "2%",
-    fontSize: 13
-  },
+    inputContainerStyle: {
+        borderBottomColor: "#FFFFFF"
+    },
 
-  actionContainer: {
-    flex: 2
-  },
+    inputStyle: {
+        color: "#FFFFFF"
+    },
 
-  buttonStyle: {
-    alignSelf: "center",
-    width: "75%",
-    height: "20%",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 25,
-    marginBottom: "3%",
-    marginTop: "23%",
-    paddingTop: "2%",
-    paddingBottom: "2%"
-  },
+    errorStyle: {
+        color: "#FFFFFF",
+        alignSelf: "flex-start",
+        marginTop: "2%",
+        marginBottom: "2%",
+        fontSize: 13
+    },
 
-  goOnText: {
-    color: "#01A6FF",
-    alignSelf: "center",
-    fontSize: 20
-  },
+    actionContainer: {
+        flex: 1
+    },
 
   textContainer: {
     width: "100%",
@@ -260,9 +312,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  goToLoginText: {
-    alignSelf: "center",
-    fontSize: 16,
-    color: "#FFFFFF"
-  }
+    buttonStyle: {
+        padding: "5%",
+        backgroundColor: "#ffffff",
+        borderRadius: 25
+    },
+
+    goOnText: {
+        color: "#01A6FF",
+        alignSelf: "center",
+        fontSize: 20
+    },
+
+    textContainer: {
+        width: "100%",
+        alignSelf: "center"
+    },
+
+    goToLoginText: {
+        alignSelf: "center",
+        fontSize: 16,
+        color: "#FFFFFF"
+    }
 });
