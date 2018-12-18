@@ -125,7 +125,6 @@ export default class RegistrationScreenStart extends Component {
             this.state.verificationId,
             this.state.code
         );
-        console.log(credential);
         firebaseApi
             .loginPhone(credential)
             .then(result => this.register(result.user));
@@ -306,11 +305,12 @@ const styles = StyleSheet.create({
         flex: 1
     },
 
-    textStyle: {
-        fontSize: 16,
-        color: "#01A6FF",
-        textAlign: "center"
-    },
+  textContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignSelf: "center",
+    flexDirection: "row",
+  },
 
     buttonStyle: {
         padding: "5%",

@@ -10,6 +10,7 @@ import {
   View,
   SafeAreaView,
   StatusBar
+
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -77,6 +78,7 @@ export default class Home extends Component {
      barStyle="light-content"
    />
       <View style={styles.container}>
+      <StatusBar backgroundColor="#00A6FF" />
         <View style={{ height: Header.HEIGHT }}>
           <Toolbar
             centerElement="Home page"
