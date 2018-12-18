@@ -17,7 +17,7 @@ class ProjectApi {
 
   likeProject(id) {
     userData = {"id": id}
-    return (Api.callApiPost("likeProject", userData))
+    return (Api.callApiPost("likeProjectById", userData))
   }
 }
 

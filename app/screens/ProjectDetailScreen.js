@@ -20,9 +20,9 @@ export default class ProjectDetail extends Component {
     };
   }
 
-  likeProject(id) {
+  likedProject(id) {
     // alert(id)
-    let like = ProjectApi.likeProject().then(result => {
+    let like = ProjectApi.likeProject(id).then(result => {
       console.log("Hij doet het ");
       this.resetErrors();
       if (result["ntwFail"]) {
@@ -89,7 +89,7 @@ export default class ProjectDetail extends Component {
             <View>
               <TouchableHighlight
                 onPress={() => {
-                  this.likeProject(id)
+                  this.likedProject(id)
                 }
                 }
                 style={styles.button}
