@@ -31,10 +31,10 @@ class LoginScreen extends Component {
     constructor() {
         super();
         this.state = {
-            email: "jelmer.haarman@xs4all.nl",
+            email: "",
             emailError: "",
 
-            pw: "123456",
+            pw: "",
             pwError: ""
         };
         this.spinValue = new Animated.Value(0);
@@ -199,35 +199,37 @@ class LoginScreen extends Component {
                                 Wachtwoord vergeten?
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.buttonStyle}
-                            onPress={() => this.login()}
-                        >
-                            <Text style={styles.textStyle}>Inloggen</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{ alignSelf: "center" }}
-                            onPress={() =>
-                                Router.goTo(
-                                    this.props.navigation,
-                                    "LoginStack",
-                                    "RegisterStart",
-                                    null
-                                )
-                            }
-                        >
-                            <Text style={{ color: "#ffffff", padding: 5 }}>
-                                Nog geen account?
-                                <Text
-                                    style={{
-                                        fontWeight: "bold",
-                                        color: "#ffffff"
-                                    }}
-                                >
-                                    Registreer hier!
-                                </Text>
-                            </Text>
-                        </TouchableOpacity>
+                        <View style={{marginBottom: "25%"}}>
+                          <TouchableOpacity
+                              style={styles.buttonStyle}
+                              onPress={() => this.login()}
+                          >
+                              <Text style={styles.textStyle}>Inloggen</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                              style={{ alignSelf: "center"}}
+                              onPress={() =>
+                                  Router.goTo(
+                                      this.props.navigation,
+                                      "LoginStack",
+                                      "RegisterStart",
+                                      null
+                                  )
+                              }
+                          >
+                              <Text style={{ color: "#ffffff", padding: 5 }}>
+                                  Nog geen account? 
+                                  <Text
+                                      style={{
+                                          fontWeight: "bold",
+                                          color: "#ffffff"
+                                      }}
+                                  >
+                                      Registreer hier!
+                                  </Text>
+                              </Text>
+                          </TouchableOpacity>
+                        </View>
                     </View>
                 </ImageBackground>
             </View>
@@ -238,68 +240,76 @@ class LoginScreen extends Component {
 // define your styles
 const styles = StyleSheet.create({
     textStyle: {
-        fontSize: 16,
-        color: "#01A6FF",
-        textAlign: "center"
+      fontSize: 20,
+      color: "#01A6FF",
+      textAlign: "center"
     },
 
     buttonStyle: {
-        padding: "5%",
-        backgroundColor: "#ffffff",
-        borderRadius: 25
+      padding: "2%",
+      height: "35%",
+      backgroundColor: "#ffffff",
+      borderRadius: 25
     },
     container: {
-        height: "100%",
-        width: "100%"
+      height: "100%",
+      width: "100%"
     },
     top: {
-        width: "100%",
-        flex: 0.7,
-        backgroundColor: "#ffffff",
-        justifyContent: "center",
-        alignItems: "center"
+      width: "100%",
+      flex: 0.7,
+      backgroundColor: "#ffffff",
+      justifyContent: "center",
+      alignItems: "center"
     },
     bottom: {
-        width: "100%",
-        flex: 2.3,
-        backgroundColor: "transparent",
-        paddingLeft: "15%",
-        paddingRight: "15%",
-        paddingTop: "15%"
+      width: "100%",
+      flex: 2.3,
+      backgroundColor: "transparent",
+      paddingLeft: "15%",
+      paddingRight: "15%",
+      paddingTop: "15%"
     },
     logo: {
-        width: "50%",
-        height: "50%",
-        marginTop: "15%",
-        alignSelf: "center"
+      width: "50%",
+      height: "50%",
+      marginTop: "15%",
+      alignSelf: "center"
     },
     welcomeText: {
-        paddingTop: "10%",
-        fontSize: 16,
-        color: "#01A6FF"
+      paddingTop: "10%",
+      fontSize: 16,
+      color: "#01A6FF"
     },
     loginTitle: {
-        marginBottom: "5%",
-        marginTop: "5%",
-        fontSize: 20,
-
-        fontWeight: "bold",
-        color: "#ffffff"
+      marginBottom: "5%",
+      marginTop: "5%",
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#ffffff"
     },
     inputContainer: {
-        marginTop: "5%",
-        marginBottom: "5%"
+      marginTop: "5%",
+      marginBottom: "5%"
     },
     containerStyle: {
-        width: "110%",
-        borderColor: "#ffffff"
+      width: "110%",
+      borderColor: "#ffffff"
     },
     buttonContainer: {
-        width: "75%",
-        alignSelf: "center",
-        backgroundColor: "#ffffffff",
-        borderRadius: 25
+      width: "75%",
+      alignSelf: "center",
+      backgroundColor: "#ffffffff",
+      borderRadius: 25
     },
-    actionContainer: {}
+
+    errorStyle: {
+      color: "#FFFFFF",
+      alignSelf: "flex-start",
+      marginLeft: "12%",
+      marginTop: "2%",
+      marginBottom: "2%",
+      fontSize: 13
+    },
 });
 export default LoginScreen;

@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
   TouchableHighlight,
-  StatusBar,
+
   ImageBackground
 } from "react-native";
 import { Header } from "react-navigation";
@@ -135,7 +135,6 @@ export default class RegistrationScreenStart extends Component {
         source={require("../assets/images/bluewavebg.png")}
         resizeMode="stretch"
       >
-        <StatusBar backgroundColor="#00A6FF" />
         <View style={{ flexDirection: "row" }}>
           <Icon
             name="chevron-left"
@@ -149,7 +148,7 @@ export default class RegistrationScreenStart extends Component {
           <View style={{ flex: 2, width: "90%", marginTop: "5%" }}>
             <Text style={styles.infoTextTitle}>Registreren</Text>
             <Text style={styles.infoText}>
-              Vul alle velden in om je een account aan te maken.
+              Vul alle velden in om je account aan te maken.
             </Text>
           </View>
         </View>
@@ -242,8 +241,11 @@ export default class RegistrationScreenStart extends Component {
               )
             }
           >
-            <Text style={styles.goToLoginText}>
-              al account? Klik om in te loggen!
+            <Text style={{ color: "#fff", fontSize: 16 }}>Al een account? </Text>
+            <Text
+              style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
+            >
+              Klik hier om in te loggen!
             </Text>
           </TouchableOpacity>
         </View>
@@ -304,13 +306,14 @@ const styles = StyleSheet.create({
   actionContainer: {
     flex: 2,
     flexDirection: "column",
-    paddingTop: "10%"
+    paddingTop: "10%",
+    marginBottom: "5%"
   },
 
   buttonStyle: {
     alignSelf: 'center',
     width: "75%",
-    height: "40%",
+    height: "50%",
     backgroundColor: '#FFFFFF',
     borderRadius: 25,
     marginBottom: '3%',
@@ -327,7 +330,9 @@ const styles = StyleSheet.create({
 
   textContainer: {
     width: "100%",
-    alignSelf: "center"
+    justifyContent: "center",
+    alignSelf: "center",
+    flexDirection: "row",
   },
   goToLoginText: {
     alignSelf: "center",

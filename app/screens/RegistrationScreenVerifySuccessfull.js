@@ -1,7 +1,6 @@
 "use strict";
 
 import React, { Component } from "react";
-
 import {
   StyleSheet,
   View,
@@ -22,21 +21,22 @@ class RegistrationScreenVerifySuccessfull extends Component {
       >
         <View
           style={{
-            marginTop: "25%",
+            flex: 1,
+            paddingTop: "5%",
             marginLeft: "10%",
             flexDirection: "column"
           }}
         >
-          <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16 }}>
+          <Text style={{ color: "#01A6FF", fontWeight: "bold", fontSize: 25, marginBottom: "10%" }}>
             Verificatie
           </Text>
-          <Text style={{ color: "#fff", fontSize: 12 }}>
+          <Text style={{ color: "#FFFF", fontSize: 16 }}>
             Het verifiëren van je account is gelukt!
           </Text>
         </View>
         <View
           style={{
-            marginTop: "25%",
+            flex: 2,
             alignSelf: "center",
             alignItems: "center",
             justifyContent: "center"
@@ -57,23 +57,9 @@ class RegistrationScreenVerifySuccessfull extends Component {
             Ga verder om te beginnen.
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() =>
-            Router.goTo(
-              this.props.navigation,
-              "LoginStack",
-              "LoginScreen",
-              null
-            )
-          }
-        >
-          <Text style={styles.textStyle}>Verder</Text>
-        </TouchableOpacity>
-        <View style={{ flexDirection: "row", alignSelf: "center" }}>
-          <Text style={{ color: "#fff", fontSize: 12 }}>Al een account? </Text>
-          <Text
-            style={{ color: "#fff", fontSize: 12, fontWeight: "bold" }}
+        <View style={styles.actionContainer}>
+          <TouchableOpacity
+            style={styles.buttonStyle}
             onPress={() =>
               Router.goTo(
                 this.props.navigation,
@@ -83,8 +69,21 @@ class RegistrationScreenVerifySuccessfull extends Component {
               )
             }
           >
-            Klik hier om in te loggen!
-          </Text>
+            <Text style={styles.textStyle}>Verder</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={() =>
+                Router.goTo(
+                  this.props.navigation,
+                  "LoginStack",
+                  "RegisterOptional",
+                  null
+                )
+              }
+            >
+              <Text style={styles.textStyle}>Optionele informatie invullen</Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     );
@@ -94,18 +93,29 @@ class RegistrationScreenVerifySuccessfull extends Component {
 const styles = StyleSheet.create({
   buttonStyle: {
     padding: "3%",
-    marginTop: "30%",
     backgroundColor: "#fff",
     borderRadius: 25,
     width: "60%",
     alignSelf: "center",
-    marginBottom: "2%"
+    marginBottom: "5%"
   },
   textStyle: {
     fontSize: 16,
     color: "#01A6FF",
     textAlign: "center"
-  }
+  },
+
+  textContainer: {
+    flexDirection: "row",
+    alignSelf: "center" 
+  },
+
+  actionContainer: {
+    flex: 2,
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    marginBottom: "7%"
+  },
 });
 
 export default RegistrationScreenVerifySuccessfull;

@@ -136,18 +136,21 @@ export default class RegistrationScreenPhone extends Component {
                       <Text style={styles.goOnText}>Verder</Text>
                   </TouchableHighlight>
                   <TouchableOpacity
-                      style={styles.textContainer}
-                      onPress={() =>
-                          Router.goTo(
-                              this.props.navigation,
-                              "LoginScreen",
-                              "LoginScreen",
-                              {}
-                          )
-                      }
+                    style={styles.textContainer}
+                    onPress={() =>
+                      Router.goTo(
+                        this.props.navigation,
+                        "LoginStack",
+                        "LoginScreen",
+                        {}
+                      )
+                    }
                   >
-                    <Text style={styles.goToLoginText}>
-                        al account? Klik om in te loggen!
+                    <Text style={{ color: "#fff", fontSize: 16 }}>Al een account? </Text>
+                    <Text
+                      style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
+                    >
+                      Klik hier om in te loggen!
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -223,8 +226,10 @@ const styles = StyleSheet.create({
     },
 
     textContainer: {
-        width: "100%",
-        alignSelf: "center"
+      width: "100%",
+      justifyContent: "center",
+      alignSelf: "center",
+      flexDirection: "row",
     },
 
     goToLoginText: {
