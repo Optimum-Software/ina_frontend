@@ -6,7 +6,8 @@ import {
     TouchableOpacity,
     TouchableHighlight,
     StatusBar,
-    ImageBackground
+    ImageBackground,
+    SafeAreaView
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -134,6 +135,11 @@ export default class RegistrationScreenStart extends Component {
 
     render() {
         return (
+            <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+     backgroundColor="blue"
+     barStyle="light-content"
+   />
             <ImageBackground
                 style={styles.container}
                 source={require("../assets/images/bluewavebg.png")}
@@ -283,14 +289,33 @@ export default class RegistrationScreenStart extends Component {
                     </Text>
                 </TouchableOpacity>
             </ImageBackground>
+            </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        height: "100%",
-        width: "100%"
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#00a6ff'
+      },
+      container: {
+        flex: 1,
+        backgroundColor: '#fff'
+      },
+    textStyle: {
+        padding: 15,
+        fontSize: 16,
+        color: "#00a6ff",
+        textAlign: "center"
+    },
+
+    buttonStyle: {
+        marginRight: '10%',
+        marginLeft: '10%',
+
+        backgroundColor: "#ffffff",
+        borderRadius: 25
     },
     infoTextTitle: {
         color: "#00A6FF",
@@ -303,7 +328,7 @@ const styles = StyleSheet.create({
         width: "80%",
         color: "#FFFFFF",
         fontSize: 16,
-        marginTop: "5%",
+        marginTop: "10%",
         marginBottom: "5%"
     },
 
@@ -344,20 +369,7 @@ const styles = StyleSheet.create({
         paddingTop: "10%"
     },
 
-    textStyle: {
-        fontSize: 16,
-        color: "#01A6FF",
-        textAlign: "center"
-    },
-
-    buttonStyle: {
-        marginLeft: "10%",
-        marginRight: "10%",
-        padding: "4%",
-        backgroundColor: "#ffffff",
-        borderRadius: 25
-    },
-
+    
     registerText: {
         color: "#01A6FF",
         alignSelf: "center",

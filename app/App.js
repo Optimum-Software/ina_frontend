@@ -6,11 +6,19 @@
  * @flow
  */
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, SafeAreaView, StyleSheet } from "react-native";
 import { RootNavigator } from "./config/CreateNavigation";
 import firebaseApi from "./helpers/FirebaseApi";
 import User from "./helpers/User";
 import OneSignal from "react-native-onesignal";
+import { COLOR, ThemeContext, getTheme } from "react-native-material-ui";
+
+// you can set your style right here, it'll be propagated to application
+const uiTheme = {
+    palette: {
+      primaryColor: "#00a6ff"
+    },
+  };
 
 export default class App extends React.Component {
     constructor() {
@@ -35,6 +43,6 @@ export default class App extends React.Component {
     }
 
     render() {
-        return <RootNavigator />;
+        return <ThemeContext.Provider value={getTheme(uiTheme)}><RootNavigator /></ThemeContext.Provider>;
     }
 }

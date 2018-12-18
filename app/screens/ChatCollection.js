@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, FlatList, StyleSheet } from "react-native";
+import { Text, View, FlatList, StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { ListItem } from "react-native-elements";
 
 import FirebaseApi from "../helpers/FirebaseApi";
@@ -29,6 +29,11 @@ export default class ChatCollection extends Component {
 
     render() {
         return (
+          <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+     backgroundColor="blue"
+     barStyle="light-content"
+   />
           <View>
           {!this.state.loading && (
             <FlatList
@@ -51,11 +56,20 @@ export default class ChatCollection extends Component {
             <Text>Loading</Text>
           )}
           </View>
+          </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#00a6ff'
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
     chatBoxContainer: {
         flex: 1,
         backgroundColor: "red",
