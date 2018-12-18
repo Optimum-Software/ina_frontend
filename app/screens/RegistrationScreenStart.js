@@ -21,13 +21,13 @@ export default class RegistrationScreenStart extends Component {
   constructor() {
     super();
     this.state = {
-      firstName: "test",
+      firstName: "Bert",
       firstNameError: "",
 
-      lastName: "mctest",
+      lastName: "de Boer",
       lastNameError: "",
 
-      email: "test@tester.nl",
+      email: "bertde.boer@hotmail.com",
       emailError: "",
 
       pw: "123456",
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   infoTextTitle: {
     color: "#00A6FF",
     alignSelf: "flex-start",
-    fontSize: 25,
+    fontSize: 22,
     marginBottom: "5%"
   },
 

@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   infoTextTitle: {
     color: "#00A6FF",
     alignSelf: "flex-start",
-    fontSize: 25
+    fontSize: 22
   },
 
   infoText: {
