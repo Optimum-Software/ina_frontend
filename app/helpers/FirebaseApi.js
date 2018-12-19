@@ -78,6 +78,9 @@ class FirebaseService {
     checkUser() {
         return this.app.auth().onAuthStateChanged(user => {
             if (user) {
+                if (user.phoneNumber != null) {
+                    this.deleteUser(user);
+                }
                 console.log(user);
             } else {
                 console.log("Please login");

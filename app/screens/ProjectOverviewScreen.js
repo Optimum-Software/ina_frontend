@@ -9,7 +9,8 @@ import {
   TouchableHighlight,
   View,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -145,77 +146,77 @@ export default class ProjectOverview extends Component {
   render() {
     return (
       <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-     backgroundColor="blue"
-     barStyle="light-content"
-   />
-      <ImageBackground
-        blurRadius={3}
-        source={mountain}
-        style={styles.imageBackground}
-      >
-        <View style={styles.container}>
-          <View style={{ height: Header.HEIGHT }}>
-            <Toolbar
-              centerElement="Projecten"
-              iconSet="MaterialCommunityIcons"
-              leftElement={"menu"}
-              onLeftElementPress={() => {
-                this.props.navigation.openDrawer();
-              }}
-            />
-          </View>
-          <View>
-            <FlatList
-              data={this.state.data}
-              onEndReached={() => this.handelEnd()}
-              numColumns={2}
-              renderItem={({ item }) => (
-                <TouchableHighlight
-                  style={styles.cardContainer}
-                  onPress={() =>
-                    Router.goTo(
-                      this.props.navigation,
-                      "ProjectStack",
-                      "ProjectDetailScreen",
-                      {
-                        name: item.name,
-                        url: item.url,
-                        desc: item.desc,
-                        start_date: item.start_date,
-                        end_date: item.end_date,
-                        created_at: item.created_at,
-                        like_count: item.like_count,
-                        follower_count: item.follower_count,
-                        location: item.location
-                      }
-                    )
-                  }
-                >
-                  <View style={styles.card}>
-                    <View style={styles.cardImage}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
+        <ImageBackground
+          blurRadius={3}
+          source={mountain}
+          style={styles.imageBackground}
+        >
+          <View style={styles.container}>
+            <View style={{ height: Header.HEIGHT }}>
+              <Toolbar
+                centerElement="Projecten"
+                iconSet="MaterialCommunityIcons"
+                leftElement={"menu"}
+                onLeftElementPress={() => {
+                  this.props.navigation.openDrawer();
+                }}
+              />
+            </View>
+            <View>
+              <FlatList
+                data={this.state.data}
+                onEndReached={() => this.handelEnd()}
+                numColumns={2}
+                renderItem={({ item }) => (
+                  <TouchableHighlight
+                    style={styles.cardContainer}
+                    onPress={() =>
+                      Router.goTo(
+                        this.props.navigation,
+                        "ProjectStack",
+                        "ProjectDetailScreen",
+                        {
+                          name: item.name,
+                          url: item.url,
+                          desc: item.desc,
+                          start_date: item.start_date,
+                          end_date: item.end_date,
+                          created_at: item.created_at,
+                          like_count: item.like_count,
+                          follower_count: item.follower_count,
+                          location: item.location
+                        }
+                      )
+                    }
+                  >
+                    <View style={styles.card}>
+                      <View style={styles.cardImage}>
+                        <Image
+                          source={{ uri: item.url }}
+                          resizeMode="cover"
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      </View>
                       <Image
-                        source={{ uri: item.url }}
-                        resizeMode="cover"
-                        style={{ width: "100%", height: "100%" }}
+                        source={line}
+                        resizeMode="stretch"
+                        style={{ width: "100%", height: "2%" }}
                       />
+                      <Text numberOfLines={2} style={styles.cardTitle}>
+                        {item.name}
+                      </Text>
                     </View>
-                    <Image
-                      source={line}
-                      resizeMode="stretch"
-                      style={{ width: "100%", height: "2%" }}
-                    />
-                    <Text numberOfLines={2} style={styles.cardTitle}>
-                      {item.name}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              )}
-              keyExtractor={item => item.id}
-            />
+                  </TouchableHighlight>
+                )}
+                keyExtractor={item => item.id}
+              />
+            </View>
           </View>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
       </SafeAreaView>
     );
   }
@@ -224,11 +225,11 @@ export default class ProjectOverview extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#00a6ff'
+    backgroundColor: "#00a6ff"
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: "#fff"
   },
   cardContainer: {
     flex: 1,

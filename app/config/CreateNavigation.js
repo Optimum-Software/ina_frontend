@@ -47,7 +47,6 @@ const CustomDrawerContentComponent = props => (
         <View
           style={{
             flex: 1,
-            paddingTop: '15%',
             height: "15%",
             flexDirection: "row"
           }}

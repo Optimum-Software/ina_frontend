@@ -10,7 +10,8 @@ import {
   TouchableHighlight,
   ScrollView,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import { Header } from "react-navigation";
 import Router from "../helpers/Router";
@@ -40,11 +41,11 @@ export default class ProjectDetail extends Component {
 
     return (
       <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-     backgroundColor="blue"
-     barStyle="light-content"
-   />
-      <ScrollView>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
+        <ScrollView>
           <Toolbar
             leftElement={"chevron-left"}
             onLeftElementPress={() => Router.goBack(this.props.navigation)}
@@ -58,23 +59,23 @@ export default class ProjectDetail extends Component {
               }
             }}
           />
-        <View style={styles.container}>
-          <Image
-            source={{ uri: url }}
-            resizeMode="cover"
-            style={{ width: "100%", height: 200 }}
-          />
-          <Image
-            source={line}
-            resizeMode="stretch"
-            style={{ width: "100%", height: "2%" }}
-          />
-          <View>
-            <Text style={styles.title}>{name}</Text>
-            <Text>{desc}</Text>
+          <View style={styles.container}>
+            <Image
+              source={{ uri: url }}
+              resizeMode="cover"
+              style={{ width: "100%", height: 200 }}
+            />
+            <Image
+              source={line}
+              resizeMode="stretch"
+              style={{ width: "100%", height: "2%" }}
+            />
+            <View>
+              <Text style={styles.title}>{name}</Text>
+              <Text>{desc}</Text>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -83,15 +84,15 @@ export default class ProjectDetail extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#00a6ff'
+    backgroundColor: "#00a6ff"
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: "#fff"
   },
   container: {
     flex: 1,
-        backgroundColor: '#fff'
+    backgroundColor: "#fff"
   },
   cardContainer: {
     flex: 1,

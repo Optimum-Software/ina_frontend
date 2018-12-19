@@ -12,7 +12,8 @@ import {
   Button,
   ImageBackground,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import { Input } from "react-native-elements";
 import Api from "../helpers/Api";
@@ -112,7 +113,10 @@ class LoginScreen extends Component {
     });
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar backgroundColor="blue" barStyle="light-content" />
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
             <Toolbar
@@ -216,14 +220,14 @@ class LoginScreen extends Component {
                     )
                   }
                 >
-                  <Text style={{ color: "#ffffff", padding: 5, fontSize: 16 }}>
+                  <Text style={{ color: "#ffffff", padding: 5, fontSize: 14 }}>
                     Nog geen account?
                     <Text> </Text>
                     <Text
                       style={{
                         fontWeight: "bold",
                         color: "#ffffff",
-                        fontSize: 16
+                        fontSize: 14
                       }}
                     >
                       Registreer hier!
