@@ -3,7 +3,7 @@ import { NetInfo } from "react-native";
 let instance = null;
 class Api {
 
-  url = "http://192.168.42.206:8000/api/";
+  url = "http://192.168.42.53:8000/api/";
 
   constructor() {
     if (!instance) {
@@ -19,7 +19,7 @@ class Api {
       }, ms);
       promise.then(resolve, reject);
     });
-  }
+   }
 
   async callApiPost(action, data) {
     try {
