@@ -10,7 +10,9 @@ import {
   Animated,
   Easing,
   Button,
-  ImageBackground
+  ImageBackground,
+  SafeAreaView,
+  StatusBar
 } from "react-native";
 import { Input } from "react-native-elements";
 import Api from "../helpers/Api";
@@ -31,10 +33,10 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "jelmer.haarman@xs4all.nl",
+      email: "",
       emailError: "",
 
-      pw: "123456",
+      pw: "",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
@@ -109,143 +111,156 @@ class LoginScreen extends Component {
       outputRange: ["0deg", "360deg"]
     });
     return (
-      <View style={styles.container}>
-        <View style={{ height: Header.HEIGHT }}>
-          <Toolbar
-            centerElement="Inloggen"
-            iconSet="MaterialCommunityIcons"
-            leftElement={"menu"}
-            onLeftElementPress={() => {
-              this.props.navigation.openDrawer();
-            }}
-          />
-        </View>
-        <View style={styles.top}>
-          <Image
-            resizeMode="contain"
-            style={({ transform: [{ rotate: spin }] }, styles.logo)}
-            source={logo}
-          />
-          <Text style={styles.welcomeText}>Welkom bij INA!</Text>
-        </View>
-        <ImageBackground
-          source={require("../assets/images/bluewavebg.png")}
-          style={{ width: "100%", flex: 2 }}
-          resizeMode="stretch"
-        >
-          <View style={styles.bottom}>
-            <Text style={styles.loginTitle}>Login</Text>
-            <Input
-              placeholder="E-mail"
-              placeholderTextColor="#ffffff"
-              containerStyle={styles.inputContainer}
-              inputContainerStyle={styles.containerStyle}
-              inputStyle={{ color: "#ffffff", fontSize: 16 }}
-              labelStyle={{ color: "#ffffff" }}
-              value={this.state.email}
-              leftIcon={{
-                type: "font-awesome",
-                name: "user",
-                color: "#ffffff"
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar backgroundColor="blue" barStyle="light-content" />
+        <View style={styles.container}>
+          <View style={{ height: Header.HEIGHT }}>
+            <Toolbar
+              centerElement="Inloggen"
+              iconSet="MaterialCommunityIcons"
+              leftElement={"menu"}
+              color="#00a6ff"
+              onLeftElementPress={() => {
+                this.props.navigation.openDrawer();
               }}
-              autoCapitalize="none"
-              onChangeText={email => this.setState({ email })}
-              onSubmitEditing={() => console.log("end")}
             />
-            <Text style={styles.errorStyle}>{this.state.emailError}</Text>
-            <Input
-              placeholder="Wachtwoord"
-              placeholderTextColor="#ffffff"
-              containerStyle={styles.inputContainer}
-              inputContainerStyle={styles.containerStyle}
-              inputStyle={{ color: "#ffffff", fontSize: 16 }}
-              labelStyle={{ color: "#ffffff" }}
-              shake={true}
-              value={this.state.pw}
-              leftIcon={{
-                type: "font-awesome",
-                name: "lock",
-                color: "#ffffff"
-              }}
-              onChangeText={pw => this.setState({ pw })}
-              onSubmitEditing={() => console.log("end")}
-              secureTextEntry={true}
+          </View>
+          <View style={styles.top}>
+            <Image
+              resizeMode="contain"
+              style={({ transform: [{ rotate: spin }] }, styles.logo)}
+              source={logo}
             />
-            <Text style={styles.errorStyle}>{this.state.pwError}</Text>
-            <TouchableOpacity
-              style={{ alignSelf: "flex-end" }}
-              onPress={() =>
-                Router.goTo(
-                  this.props.navigation,
-                  "LoginStack",
-                  "ForgotPassword",
-                  null
-                )
-              }
-            >
-              <Text
-                style={{
-                  color: "#ffffff",
-                  paddingBottom: "20%",
-                  paddingTop: "5%"
+            <Text style={styles.welcomeText}>Welkom bij INA!</Text>
+          </View>
+          <ImageBackground
+            source={require("../assets/images/bluewavebg.png")}
+            style={{ width: "100%", flex: 2 }}
+            resizeMode="stretch"
+          >
+            <View style={styles.bottom}>
+              <Text style={styles.loginTitle}>Login</Text>
+              <Input
+                placeholder="E-mail"
+                placeholderTextColor="#ffffff"
+                containerStyle={styles.inputContainer}
+                inputContainerStyle={styles.containerStyle}
+                inputStyle={{ color: "#ffffff", fontSize: 16 }}
+                labelStyle={{ color: "#ffffff" }}
+                value={this.state.email}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "user",
+                  color: "#ffffff"
                 }}
+                autoCapitalize="none"
+                onChangeText={email => this.setState({ email })}
+                onSubmitEditing={() => console.log("end")}
+              />
+              <Text style={styles.errorStyle}>{this.state.emailError}</Text>
+              <Input
+                placeholder="Wachtwoord"
+                placeholderTextColor="#ffffff"
+                containerStyle={styles.inputContainer}
+                inputContainerStyle={styles.containerStyle}
+                inputStyle={{ color: "#ffffff", fontSize: 16 }}
+                labelStyle={{ color: "#ffffff" }}
+                shake={true}
+                value={this.state.pw}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "lock",
+                  color: "#ffffff"
+                }}
+                onChangeText={pw => this.setState({ pw })}
+                onSubmitEditing={() => console.log("end")}
+                secureTextEntry={true}
+              />
+              <Text style={styles.errorStyle}>{this.state.pwError}</Text>
+              <TouchableOpacity
+                style={{ alignSelf: "flex-end" }}
+                onPress={() =>
+                  Router.goTo(
+                    this.props.navigation,
+                    "LoginStack",
+                    "ForgotPassword",
+                    null
+                  )
+                }
               >
-                Wachtwoord vergeten?
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => this.login()}
-            >
-              <Text style={styles.textStyle}>Inloggen</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ alignSelf: "center" }}
-              onPress={() =>
-                Router.goTo(
-                  this.props.navigation,
-                  "LoginStack",
-                  "RegisterStart",
-                  null
-                )
-              }
-            >
-              <Text style={{ color: "#ffffff", padding: 5 }}>
-                Nog geen account?
                 <Text
                   style={{
-                    fontWeight: "bold",
-                    color: "#ffffff"
+                    color: "#ffffff",
+                    paddingBottom: "10%",
+                    paddingTop: "5%"
                   }}
                 >
-                  Registreer hier!
+                  Wachtwoord vergeten?
                 </Text>
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-      </View>
+              </TouchableOpacity>
+              <View style={{ marginBottom: "25%" }}>
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  onPress={() => this.login()}
+                >
+                  <Text style={styles.textStyle}>Inloggen</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ alignSelf: "center" }}
+                  onPress={() =>
+                    Router.goTo(
+                      this.props.navigation,
+                      "LoginStack",
+                      "RegisterStart",
+                      null
+                    )
+                  }
+                >
+                  <Text style={{ color: "#ffffff", padding: 5, fontSize: 16 }}>
+                    Nog geen account?
+                    <Text> </Text>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        color: "#ffffff",
+                        fontSize: 16
+                      }}
+                    >
+                      Registreer hier!
+                    </Text>
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ImageBackground>
+        </View>
+      </SafeAreaView>
     );
   }
 }
 
 // define your styles
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#00a6ff"
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  },
   textStyle: {
+    padding: "5%",
     fontSize: 16,
-    color: "#01A6FF",
+    color: "#00a6ff",
     textAlign: "center"
   },
 
   buttonStyle: {
-    padding: "5%",
     backgroundColor: "#ffffff",
     borderRadius: 25
   },
-  container: {
-    height: "100%",
-    width: "100%"
-  },
+
   top: {
     width: "100%",
     flex: 0.7,
@@ -276,7 +291,6 @@ const styles = StyleSheet.create({
     marginBottom: "5%",
     marginTop: "5%",
     fontSize: 20,
-
     fontWeight: "bold",
     color: "#ffffff"
   },
@@ -294,6 +308,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffffff",
     borderRadius: 25
   },
-  actionContainer: {}
+
+  errorStyle: {
+    color: "#FFFFFF",
+    alignSelf: "flex-start",
+    marginLeft: "12%",
+    marginTop: "2%",
+    marginBottom: "2%",
+    fontSize: 13
+  }
 });
 export default LoginScreen;

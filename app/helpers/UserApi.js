@@ -26,6 +26,20 @@ class UserApi {
     return Api.callApiPost("createUser", userData);
   }
 
+  uploadProfilePhoto(userId, file) {
+    return (Api.callApiUploadProfilePhoto(userId, "ProfilePhoto", file))
+  }
+
+  editOptionalInfo(userId, organisation, jobFunction, bio) {
+    userData = {
+      userId: userId,
+      organisation: organisation,
+      function: jobFunction,
+      bio: bio
+    }
+    return (Api.callApiPost("editOptionalInfo", userData))
+  }
+
   createDeviceId(userId, deviceId) {
     userData = {
       userId: userId,
