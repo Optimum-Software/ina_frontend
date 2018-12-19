@@ -1,6 +1,18 @@
-import React, {Component} from "react";
-import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableHighlight, View} from "react-native";
-import {Header} from "react-navigation";
+import React, { Component } from "react";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ImageBackground,
+  TouchableHighlight,
+  ScrollView,
+  SafeAreaView,
+  StatusBar
+} from "react-native";
+import { Header } from "react-navigation";
 import Router from "../helpers/Router";
 import {Toolbar} from "react-native-material-ui";
 import line from "../assets/images/Line.png";
@@ -54,8 +66,13 @@ export default class ProjectDetail extends Component {
     const location = navigation.getParam("location", "");
 
     return (
+      <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+     backgroundColor="blue"
+     barStyle="light-content"
+   />
       <ScrollView>
-        <View style={{height: Header.HEIGHT}}>
+        <View style={{ height: Header.HEIGHT }}>
           <Toolbar
             leftElement={"chevron-left"}
             onLeftElementPress={() => Router.goBack(this.props.navigation)}
@@ -63,9 +80,9 @@ export default class ProjectDetail extends Component {
             rightElement={this.state.bookmarked}
             onRightElementPress={() => {
               if (this.state.bookmarked == "bookmark") {
-                this.setState({bookmarked: "markunread"});
+                this.setState({ bookmarked: "markunread" });
               } else {
-                this.setState({bookmarked: "bookmark"});
+                this.setState({ bookmarked: "bookmark" });
               }
             }}
           />
@@ -103,16 +120,23 @@ export default class ProjectDetail extends Component {
 
         </View>
       </ScrollView>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#00a6ff'
+  },
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: "center",
     height: Dimensions.get("window").height - 105
   },
+
   cardContainer: {
     flex: 1,
     margin: 10,

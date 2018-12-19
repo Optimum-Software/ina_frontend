@@ -7,7 +7,10 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  View,
+  SafeAreaView,
+  StatusBar
+
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -69,7 +72,13 @@ export default class Home extends Component {
 
   render() {
     return (
+      <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+     backgroundColor="blue"
+     barStyle="light-content"
+   />
       <View style={styles.container}>
+      <StatusBar backgroundColor="#00A6FF" />
         <View style={{ height: Header.HEIGHT }}>
           <Toolbar
             centerElement="Home page"
@@ -131,13 +140,19 @@ export default class Home extends Component {
           />
         </View>
       </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#00a6ff'
+  },
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#fff'
   },
   cardContainer: {
     flex: 1,
