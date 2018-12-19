@@ -10,7 +10,7 @@ class Api {
             instance = this;
         }
         return instance;
-    }
+      }
 
     timeout(ms, promise) {
         return new Promise(function(resolve, reject) {
