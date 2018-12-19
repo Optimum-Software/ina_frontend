@@ -16,7 +16,8 @@ import { Header } from "react-navigation";
 import Router from "../helpers/Router";
 import {Toolbar} from "react-native-material-ui";
 import line from "../assets/images/Line.png";
-import ProjectApi from "../helpers/ProjectApi"
+import ProjectApi from "../helpers/ProjectApi";
+import User from "../helpers/User";
 
 export default class ProjectDetail extends Component {
   static navigationOptions = ({navigation}) => ({
@@ -32,9 +33,10 @@ export default class ProjectDetail extends Component {
     };
   }
 
-  likedProject(id) {
-    // alert(id)
-    let like = ProjectApi.likeProject(id).then(result => {
+
+  likedProject(projectId) {
+    User.getUserId().then(userId => {
+    let like = ProjectApi.likeProject(projectId,userId).then(result => {
       console.log("Hij doet het ");
       this.resetErrors();
       if (result["ntwFail"]) {
@@ -48,6 +50,7 @@ export default class ProjectDetail extends Component {
           });
         }
       }
+    });
     });
   }
 
