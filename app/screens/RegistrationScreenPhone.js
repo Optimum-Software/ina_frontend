@@ -226,7 +226,9 @@ const styles = StyleSheet.create({
 
   textContainer: {
     width: "100%",
-    alignSelf: "center"
+    justifyContent: "center",
+    alignSelf: "center",
+    flexDirection: "row"
   },
 
   goToLoginText: {
