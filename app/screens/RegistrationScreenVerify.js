@@ -37,7 +37,6 @@ export default class RegistrationScreenStart extends Component {
             this.setState({
                 android: true
             });
-            console.log(firebaseApi.getFire().PhoneAuthProvider);
             firebaseApi
                 .verifyPhoneNumber(
                     this.props.navigation.state.params.phoneNumber
@@ -57,7 +56,6 @@ export default class RegistrationScreenStart extends Component {
                             //  IOS AND ANDROID EVENTS
                             // ------------------------
                             case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
-                                console.log("code sent");
                                 this.setState({
                                     verifyId: phoneAuthSnapshot.verificationId
                                 });
@@ -65,8 +63,6 @@ export default class RegistrationScreenStart extends Component {
                                 // so you'd then ask for user input of the code and build a credential from it
                                 break;
                             case firebase.auth.PhoneAuthState.ERROR: // or 'error'
-                                console.log("verification error");
-                                console.log(phoneAuthSnapshot.error);
                                 alert(
                                     "Er ging iets mis, probeer het nog een keer"
                                 );
@@ -78,7 +74,6 @@ export default class RegistrationScreenStart extends Component {
                             // ---------------------
                             case firebase.auth.PhoneAuthState
                                 .AUTO_VERIFY_TIMEOUT: // or 'timeout'
-                                console.log("auto verify on android timed out");
                                 const {
                                     verificationId,
                                     code
@@ -95,8 +90,6 @@ export default class RegistrationScreenStart extends Component {
                             case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
                                 // auto verified means the code has also been automatically confirmed as correct/received
                                 // phoneAuthSnapshot.code will contain the auto verified sms code - no need to ask the user for input.
-                                console.log("auto verified on android");
-                                console.log(phoneAuthSnapshot);
                                 this.register(firebaseApi.getCurrentUser());
                                 // Example usage if handling here and not in optionalCompleteCb:
                                 // const { verificationId, code } = phoneAuthSnapshot;
