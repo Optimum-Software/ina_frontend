@@ -8,7 +8,10 @@ import {
   Dimensions,
   ImageBackground,
   TouchableHighlight,
-  ScrollView
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
+  Platform
 } from "react-native";
 import { Header } from "react-navigation";
 import Router from "../helpers/Router";
@@ -37,8 +40,12 @@ export default class ProjectDetail extends Component {
     const location = navigation.getParam("location", "");
 
     return (
-      <ScrollView>
-        <View style={{ height: Header.HEIGHT }}>
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
+        <ScrollView>
           <Toolbar
             leftElement={"chevron-left"}
             onLeftElementPress={() => Router.goBack(this.props.navigation)}
@@ -52,32 +59,40 @@ export default class ProjectDetail extends Component {
               }
             }}
           />
-        </View>
-        <View style={styles.container}>
-          <Image
-            source={{ uri: url }}
-            resizeMode="cover"
-            style={{ width: "100%", height: 200 }}
-          />
-          <Image
-            source={line}
-            resizeMode="stretch"
-            style={{ width: "100%", height: "2%" }}
-          />
-          <View>
-            <Text style={styles.title}>{name}</Text>
-            <Text>{desc}</Text>
+          <View style={styles.container}>
+            <Image
+              source={{ uri: url }}
+              resizeMode="cover"
+              style={{ width: "100%", height: 200 }}
+            />
+            <Image
+              source={line}
+              resizeMode="stretch"
+              style={{ width: "100%", height: "2%" }}
+            />
+            <View>
+              <Text style={styles.title}>{name}</Text>
+              <Text>{desc}</Text>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#00a6ff"
+  },
   container: {
     flex: 1,
-    alignItems: "center"
+    backgroundColor: "#fff"
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
   },
   cardContainer: {
     flex: 1,

@@ -1,5 +1,14 @@
 import React, { Component } from "react";
-import { Text, View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  Platform,
+  ActivityIndicator
+} from "react-native";
 import { ListItem } from "react-native-elements";
 
 import FirebaseApi from "../helpers/FirebaseApi";
@@ -39,9 +48,14 @@ export default class ChatCollection extends Component {
       Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid})
     }
 
-    render() {
-        return (
-          <View>
+  render() {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
+        <View>
           {!this.state.loading && (
             <FlatList
               data={this.state.chats}
@@ -75,30 +89,40 @@ export default class ChatCollection extends Component {
               <ActivityIndicator size="large" color="#00A6FF" />
             </View>
           )}
-          </View>
+        </View>
+        </SafeAreaView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    chatBoxContainer: {
-      backgroundColor: "#00A6FF",
-      borderRadius: 5,
-      margin: '3%',
-    },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#00a6ff"
+  },
 
-    chatBoxItem: {
-      backgroundColor: '#00A6FF',
-      alignSelf: 'center',
-      marginBottom: '3%'
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  },
+  chatBoxContainer: {
+    backgroundColor: "#00A6FF",
+    borderRadius: 5,
+    margin: '3%',
+  },
 
-    chatTitle: {
-      color: '#FFFFFF', 
-      fontWeight: 'bold'
-    },
+  chatBoxItem: {
+    backgroundColor: '#00A6FF',
+    alignSelf: 'center',
+    marginBottom: '3%'
+  },
 
-    chatSubTitle: {
-      color: '#FFFFFF' 
-    }
+  chatTitle: {
+    color: '#FFFFFF', 
+    fontWeight: 'bold'
+  },
+
+  chatSubTitle: {
+    color: '#FFFFFF' 
+  }
 });
