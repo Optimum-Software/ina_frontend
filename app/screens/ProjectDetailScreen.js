@@ -68,7 +68,7 @@ export default class ProjectDetail extends Component {
     return (
       <SafeAreaView style={styles.safeArea}>
       <StatusBar
-     backgroundColor="blue"
+     backgroundColor="#00a6ff"
      barStyle="light-content"
    />
       <ScrollView>
