@@ -10,7 +10,8 @@ import {
   TouchableHighlight,
   ScrollView,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  TouchableOpacity,
 } from "react-native";
 import { Header } from "react-navigation";
 import Router from "../helpers/Router";
@@ -30,12 +31,12 @@ export default class ProjectDetail extends Component {
       bookmarked: "bookmark",
       id: '',
       liked: false,
+      isModalVisible: false
     };
-  }
+    }
 
 
-  likedProject(projectId) {
-    User.getUserId().then(userId => {
+  likedProject(projectId,userId) {
     let like = ProjectApi.likeProject(projectId,userId).then(result => {
       console.log("Hij doet het ");
       this.resetErrors();
@@ -50,7 +51,6 @@ export default class ProjectDetail extends Component {
           });
         }
       }
-    });
     });
   }
 
@@ -87,29 +87,42 @@ export default class ProjectDetail extends Component {
               } else {
                 this.setState({ bookmarked: "bookmark" });
               }
-            }}
-          />
+              }}
+            />
         </View>
         <View style={styles.container}>
           <View style={styles.card}>
+
             <Image
               source={{uri: url}}
               resizeMode="cover"
               style={{width: "100%", height: 200}}
-            />
+             />
             <Image
               source={line}
               resizeMode="stretch"
               style={{width: "100%", height: "2%"}}
-            />
+             />
             <View>
               <Text style={styles.title}>{name}</Text>
               <Text>{desc}</Text>
             </View>
             <View>
+
               <TouchableHighlight
                 onPress={() => {
-                  this.likedProject(id)
+                  User.getUserId().then(userId => {
+                    if (userId != null) {
+                      this.likedProject(id, userId)
+                    }else {
+                      Router.goTo(
+                        this.props.navigation,
+                        "LoginStack",
+                        "LoginScreen",
+                        null
+                      )
+                    }
+                  });
                 }
                 }
                 style={styles.button}
@@ -178,5 +191,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontWeight: "bold"
+  },
+  modalContainer: {
+
   },
 });
