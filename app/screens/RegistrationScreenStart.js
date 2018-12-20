@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   StatusBar,
+  Platform,
   ImageBackground,
   SafeAreaView
 } from "react-native";
@@ -136,7 +137,10 @@ export default class RegistrationScreenStart extends Component {
   render() {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar backgroundColor="blue" barStyle="light-content" />
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
         <ImageBackground
           style={styles.container}
           source={require("../assets/images/bluewavebg.png")}

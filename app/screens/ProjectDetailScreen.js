@@ -1,14 +1,17 @@
 import React, {Component} from "react";
 import {
-  Dimensions,
+  FlatList,
   Image,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
+  Dimensions,
+  ImageBackground,
+  TouchableHighlight,
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
+  Platform,
 } from "react-native";
 import {Header} from "react-navigation";
 import Router from "../helpers/Router";
@@ -84,10 +87,10 @@ export default class ProjectDetail extends Component {
 
     return (
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar
-          backgroundColor="#00a6ff"
-          barStyle="light-content"
-        />
+      <StatusBar
+        backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+     barStyle="light-content"
+   />
         <ScrollView>
           <View style={{height: Header.HEIGHT}}>
             <Toolbar
@@ -102,7 +105,7 @@ export default class ProjectDetail extends Component {
                   this.setState({bookmarked: "bookmark"});
                 }
               }}
-            />
+             />
           </View>
           <View style={styles.container}>
             <View style={styles.card}>
@@ -181,7 +184,7 @@ export default class ProjectDetail extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#00a6ff'
+    backgroundColor: "#00a6ff"
   },
   container: {
     flex: 1,

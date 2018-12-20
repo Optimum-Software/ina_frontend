@@ -9,7 +9,8 @@ import {
   TouchableHighlight,
   View,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -161,7 +162,7 @@ export default class ProjectOverview extends Component {
     return (
       <SafeAreaView style={styles.safeArea}>
       <StatusBar
-     backgroundColor="#00a6ff"
+        backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
      barStyle="light-content"
    />
       <ImageBackground
@@ -240,11 +241,11 @@ export default class ProjectOverview extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#00a6ff'
+    backgroundColor: "#00a6ff"
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: "#fff"
   },
   cardContainer: {
     flex: 1,
