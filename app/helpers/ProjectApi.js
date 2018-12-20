@@ -19,6 +19,10 @@ class ProjectApi {
     userData = {"id": id,"userId": userId}
     return (Api.callApiPost("likeProjectById", userData))
   }
+
+  followProject() {
+    return (Api.callApiGet("followProject"))
+  }
 }
 
 const projectApi = new ProjectApi();

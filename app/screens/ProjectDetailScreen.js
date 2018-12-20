@@ -1,19 +1,16 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import {
-  FlatList,
+  Dimensions,
   Image,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
-  View,
-  Dimensions,
-  ImageBackground,
   TouchableHighlight,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
+  View,
 } from "react-native";
-import { Header } from "react-navigation";
+import {Header} from "react-navigation";
 import Router from "../helpers/Router";
 import {Toolbar} from "react-native-material-ui";
 import line from "../assets/images/Line.png";
@@ -33,11 +30,28 @@ export default class ProjectDetail extends Component {
       liked: false,
       isModalVisible: false
     };
-    }
+  }
 
+  followProject(projectId, userId) {
+    let like = ProjectApi.followProject(projectId, userId).then(result => {
+      console.log("Hij doet het ");
+      this.resetErrors();
+      if (result["ntwFail"]) {
+        //network error
+        alert(result["msg"]);
+      } else {
+        if (result["bool"]) {
+          alert("liked")
+          this.setState({
+            liked: true
+          });
+        }
+      }
+    });
+  }
 
-  likedProject(projectId,userId) {
-    let like = ProjectApi.likeProject(projectId,userId).then(result => {
+  likedProject(projectId, userId) {
+    let like = ProjectApi.likeProject(projectId, userId).then(result => {
       console.log("Hij doet het ");
       this.resetErrors();
       if (result["ntwFail"]) {
@@ -70,72 +84,95 @@ export default class ProjectDetail extends Component {
 
     return (
       <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-     backgroundColor="#00a6ff"
-     barStyle="light-content"
-   />
-      <ScrollView>
-        <View style={{ height: Header.HEIGHT }}>
-          <Toolbar
-            leftElement={"chevron-left"}
-            onLeftElementPress={() => Router.goBack(this.props.navigation)}
-            centerElement="Project informatie"
-            rightElement={this.state.bookmarked}
-            onRightElementPress={() => {
-              if (this.state.bookmarked == "bookmark") {
-                this.setState({ bookmarked: "markunread" });
-              } else {
-                this.setState({ bookmarked: "bookmark" });
-              }
+        <StatusBar
+          backgroundColor="#00a6ff"
+          barStyle="light-content"
+        />
+        <ScrollView>
+          <View style={{height: Header.HEIGHT}}>
+            <Toolbar
+              leftElement={"chevron-left"}
+              onLeftElementPress={() => Router.goBack(this.props.navigation)}
+              centerElement="Project informatie"
+              rightElement={this.state.bookmarked}
+              onRightElementPress={() => {
+                if (this.state.bookmarked == "bookmark") {
+                  this.setState({bookmarked: "markunread"});
+                } else {
+                  this.setState({bookmarked: "bookmark"});
+                }
               }}
             />
-        </View>
-        <View style={styles.container}>
-          <View style={styles.card}>
-
-            <Image
-              source={{uri: url}}
-              resizeMode="cover"
-              style={{width: "100%", height: 200}}
-             />
-            <Image
-              source={line}
-              resizeMode="stretch"
-              style={{width: "100%", height: "2%"}}
-             />
-            <View>
-              <Text style={styles.title}>{name}</Text>
-              <Text>{desc}</Text>
-            </View>
-            <View>
-
-              <TouchableHighlight
-                onPress={() => {
-                  User.getUserId().then(userId => {
-                    if (userId != null) {
-                      this.likedProject(id, userId)
-                    }else {
-                      Router.goTo(
-                        this.props.navigation,
-                        "LoginStack",
-                        "LoginScreen",
-                        null
-                      )
-                    }
-                  });
-                }
-                }
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>
-                  like
-                </Text>
-              </TouchableHighlight>
-            </View>
           </View>
+          <View style={styles.container}>
+            <View style={styles.card}>
 
-        </View>
-      </ScrollView>
+              <Image
+                source={{uri: url}}
+                resizeMode="cover"
+                style={{width: "100%", height: 200}}
+              />
+              <Image
+                source={line}
+                resizeMode="stretch"
+                style={{width: "100%", height: "2%"}}
+              />
+              <View>
+                <Text style={styles.title}>{name}</Text>
+                <Text>{desc}</Text>
+              </View>
+              <View>
+                <TouchableHighlight
+                  onPress={() => {
+                    User.getUserId().then(userId => {
+                      if (userId != null) {
+                        this.likedProject(id, userId)
+                      } else {
+                        Router.goTo(
+                          this.props.navigation,
+                          "LoginStack",
+                          "LoginScreen",
+                          null
+                        )
+                      }
+                    });
+                  }
+                  }
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>
+                    like
+                  </Text>
+                </TouchableHighlight>
+              </View>
+              <View>
+                <TouchableHighlight
+                  onPress={() => {
+                    User.getUserId().then(userId => {
+                      if (userId != null) {
+                        this.followProject(id, userId)
+                      } else {
+                        Router.goTo(
+                          this.props.navigation,
+                          "LoginStack",
+                          "LoginScreen",
+                          null
+                        )
+                      }
+                    });
+                  }
+                  }
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>
+                    follow
+                  </Text>
+                </TouchableHighlight>
+              </View>
+            </View>
+
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -192,7 +229,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold"
   },
-  modalContainer: {
-
-  },
+  modalContainer: {},
 });
