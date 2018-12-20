@@ -20,8 +20,9 @@ class ProjectApi {
     return (Api.callApiPost("likeProjectById", userData))
   }
 
-  followProject() {
-    return (Api.callApiGet("followProject"))
+  followProject(id,userId) {
+    userData = {"id": id,"userId": userId}
+    return (Api.callApiPost("followProjectById"))
   }
 }
 
