@@ -132,9 +132,10 @@ export default class RegistrationScreenStart extends Component {
       this.state.registerPhoneInfo.registerInfo.firstName,
       this.state.registerPhoneInfo.registerInfo.lastName,
       this.state.registerPhoneInfo.registerInfo.email,
-      this.state.registerPhoneInfo.registerInfo.pw,
+      this.state.registerPhoneInfo.registerInfo.hashedPw,
       this.state.registerPhoneInfo.phoneNumber
     ).then(result => {
+      console.log(result)
       if (!result["bool"]) {
         firebaseApi.deleteUser(firebaseUser);
         firebaseApi.deleteUser(emailAccount);

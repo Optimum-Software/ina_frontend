@@ -23,19 +23,19 @@ export default class RegistrationScreenStart extends Component {
   constructor() {
     super();
     this.state = {
-      firstName: "",
+      firstName: "test",
       firstNameError: "",
 
-      lastName: "",
+      lastName: "test",
       lastNameError: "",
 
-      email: "",
+      email: "test@test.com",
       emailError: "",
 
-      pw: "",
+      pw: "123456",
       pwError: "",
 
-      pwRepeat: "",
+      pwRepeat: "123456",
       pwRepeatError: "",
 
       loading: false

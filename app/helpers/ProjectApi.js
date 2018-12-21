@@ -22,7 +22,7 @@ class ProjectApi {
 
   followProject(id,userId) {
     userData = {"id": id,"userId": userId}
-    return (Api.callApiPost("followProjectById"))
+    return (Api.callApiPost("followProjectById",userData))
   }
 }
 
