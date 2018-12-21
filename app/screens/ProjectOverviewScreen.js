@@ -9,131 +9,147 @@ import {
   TouchableHighlight,
   View,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Platform
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import mountain from "../assets/images/firewatch_5.jpg";
 import line from "../assets/images/Line.png";
 import Router from "../helpers/Router";
+import ProjectApi from "../helpers/ProjectApi"
 
 export default class ProjectOverview extends Component {
   constructor() {
     super();
 
     this.state = {
-      data: [
-        {
-          name: "Hello",
-          url:
-            "https://thumbor.forbes.com/thumbor/711x458/https://specials-images.forbesimg.com/dam/imageserve/982432822/960x0.jpg?fit=scale",
-          desc:
-            "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-          start_date: "Friday, 7 December 2018",
-          end_date: "Friday, 8 December 2018",
-          created_at: "Friday, 7 December 2018",
-          like_count: 20,
-          follower_count: 18,
-          location: "Noorderplantsoen"
-        },
-        {
-          name: "Dit is een langere titel dan de anderen.",
-          url:
-            "http://www.findapsychologist.org/wp-content/uploads/2013/07/Learning-disabilities1.jpg",
-          desc:
-            "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-          start_date: "Friday, 7 December 2018",
-          end_date: "Friday, 8 December 2018",
-          created_at: "Friday, 7 December 2018",
-          like_count: 20,
-          follower_count: 18,
-          location: "Noorderplantsoen"
-        },
-        {
-          name: "What",
-          url:
-            "https://www.tnpvisualworkplace.com/static/upload/full/14600524-9db4-4a71-a017-5404131e0290/The+Scrum+board.jpg",
-          desc:
-            "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-          start_date: "Friday, 7 December 2018",
-          end_date: "Friday, 8 December 2018",
-          created_at: "Friday, 7 December 2018",
-          like_count: 20,
-          follower_count: 18,
-          location: "Noorderplantsoen"
-        },
-        {
-          name: "Dat",
-          url:
-            "http://www.ajournals.com/wp-content/uploads/2015/05/Biology.jpg",
-          desc:
-            "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-          start_date: "Friday, 7 December 2018",
-          end_date: "Friday, 8 December 2018",
-          created_at: "Friday, 7 December 2018",
-          like_count: 20,
-          follower_count: 18,
-          location: "Noorderplantsoen"
-        },
-        {
-          name: "Hello",
-          url:
-            "https://thumbor.forbes.com/thumbor/711x458/https://specials-images.forbesimg.com/dam/imageserve/982432822/960x0.jpg?fit=scale",
-          desc:
-            "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-          start_date: "Friday, 7 December 2018",
-          end_date: "Friday, 8 December 2018",
-          created_at: "Friday, 7 December 2018",
-          like_count: 20,
-          follower_count: 18,
-          location: "Noorderplantsoen"
-        },
-        {
-          name: "Bye",
-          url:
-            "http://www.findapsychologist.org/wp-content/uploads/2013/07/Learning-disabilities1.jpg",
-          desc:
-            "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-          start_date: "Friday, 7 December 2018",
-          end_date: "Friday, 8 December 2018",
-          created_at: "Friday, 7 December 2018",
-          like_count: 20,
-          follower_count: 18,
-          location: "Noorderplantsoen"
-        },
-        {
-          name: "What",
-          url:
-            "https://www.tnpvisualworkplace.com/static/upload/full/14600524-9db4-4a71-a017-5404131e0290/The+Scrum+board.jpg",
-          desc:
-            "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-          start_date: "Friday, 7 December 2018",
-          end_date: "Friday, 8 December 2018",
-          created_at: "Friday, 7 December 2018",
-          like_count: 20,
-          follower_count: 18,
-          location: "Noorderplantsoen"
-        },
-        {
-          name: "Dat",
-          url:
-            "http://www.ajournals.com/wp-content/uploads/2015/05/Biology.jpg",
-          desc:
-            "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-          start_date: "Friday, 7 December 2018",
-          end_date: "Friday, 8 December 2018",
-          created_at: "Friday, 7 December 2018",
-          like_count: 20,
-          follower_count: 18,
-          location: "Noorderplantsoen"
-        }
-      ]
+      data: []
     };
 
-    // let api = Api.getInstance();
-    // this.setState({
-    //     data: api.getAllProjects()
-    // })
+    // this.state = {
+    //   data: [
+    //     {
+    //       name: "Hello",
+    //       url:
+    //         "https://thumbor.forbes.com/thumbor/711x458/https://specials-images.forbesimg.com/dam/imageserve/982432822/960x0.jpg?fit=scale",
+    //       desc:
+    //         "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
+    //       start_date: "Friday, 7 December 2018",
+    //       end_date: "Friday, 8 December 2018",
+    //       created_at: "Friday, 7 December 2018",
+    //       like_count: 20,
+    //       follower_count: 18,
+    //       location: "Noorderplantsoen"
+    //     },
+    //     {
+    //       name: "Dit is een langere titel dan de anderen.",
+    //       url:
+    //         "http://www.findapsychologist.org/wp-content/uploads/2013/07/Learning-disabilities1.jpg",
+    //       desc:
+    //         "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
+    //       start_date: "Friday, 7 December 2018",
+    //       end_date: "Friday, 8 December 2018",
+    //       created_at: "Friday, 7 December 2018",
+    //       like_count: 20,
+    //       follower_count: 18,
+    //       location: "Noorderplantsoen"
+    //     },
+    //     {
+    //       name: "What",
+    //       url:
+    //         "https://www.tnpvisualworkplace.com/static/upload/full/14600524-9db4-4a71-a017-5404131e0290/The+Scrum+board.jpg",
+    //       desc:
+    //         "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
+    //       start_date: "Friday, 7 December 2018",
+    //       end_date: "Friday, 8 December 2018",
+    //       created_at: "Friday, 7 December 2018",
+    //       like_count: 20,
+    //       follower_count: 18,
+    //       location: "Noorderplantsoen"
+    //     },
+    //     {
+    //       name: "Dat",
+    //       url:
+    //         "http://www.ajournals.com/wp-content/uploads/2015/05/Biology.jpg",
+    //       desc:
+    //         "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
+    //       start_date: "Friday, 7 December 2018",
+    //       end_date: "Friday, 8 December 2018",
+    //       created_at: "Friday, 7 December 2018",
+    //       like_count: 20,
+    //       follower_count: 18,
+    //       location: "Noorderplantsoen"
+    //     },
+    //     {
+    //       name: "Hello",
+    //       url:
+    //         "https://thumbor.forbes.com/thumbor/711x458/https://specials-images.forbesimg.com/dam/imageserve/982432822/960x0.jpg?fit=scale",
+    //       desc:
+    //         "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
+    //       start_date: "Friday, 7 December 2018",
+    //       end_date: "Friday, 8 December 2018",
+    //       created_at: "Friday, 7 December 2018",
+    //       like_count: 20,
+    //       follower_count: 18,
+    //       location: "Noorderplantsoen"
+    //     },
+    //     {
+    //       name: "Bye",
+    //       url:
+    //         "http://www.findapsychologist.org/wp-content/uploads/2013/07/Learning-disabilities1.jpg",
+    //       desc:
+    //         "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
+    //       start_date: "Friday, 7 December 2018",
+    //       end_date: "Friday, 8 December 2018",
+    //       created_at: "Friday, 7 December 2018",
+    //       like_count: 20,
+    //       follower_count: 18,
+    //       location: "Noorderplantsoen"
+    //     },
+    //     {
+    //       name: "What",
+    //       url:
+    //         "https://www.tnpvisualworkplace.com/static/upload/full/14600524-9db4-4a71-a017-5404131e0290/The+Scrum+board.jpg",
+    //       desc:
+    //         "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
+    //       start_date: "Friday, 7 December 2018",
+    //       end_date: "Friday, 8 December 2018",
+    //       created_at: "Friday, 7 December 2018",
+    //       like_count: 20,
+    //       follower_count: 18,
+    //       location: "Noorderplantsoen"
+    //     },
+    //     {
+    //       name: "Dat",
+    //       url:
+    //         "http://www.ajournals.com/wp-content/uploads/2015/05/Biology.jpg",
+    //       desc:
+    //         "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
+    //       start_date: "Friday, 7 December 2018",
+    //       end_date: "Friday, 8 December 2018",
+    //       created_at: "Friday, 7 December 2018",
+    //       like_count: 20,
+    //       follower_count: 18,
+    //       location: "Noorderplantsoen"
+    //     }
+    //   ]
+    // };
+
+    let response = ProjectApi.getAllProjects().then(result => {
+    console.log("hallllloooooo")
+        if (result['bool']) {
+            this.setState({
+                data: result['projects']
+            })
+            console.log(this.state.data)
+        }else {
+          alert(result['msg'])
+        }
+    });
+
+
+
   }
 
   static navigationOptions = ({ navigation }) => ({
@@ -146,7 +162,7 @@ export default class ProjectOverview extends Component {
     return (
       <SafeAreaView style={styles.safeArea}>
       <StatusBar
-     backgroundColor="blue"
+        backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
      barStyle="light-content"
    />
       <ImageBackground
@@ -179,6 +195,7 @@ export default class ProjectOverview extends Component {
                       "ProjectStack",
                       "ProjectDetailScreen",
                       {
+                        id: item.id,
                         name: item.name,
                         url: item.url,
                         desc: item.desc,
@@ -224,11 +241,11 @@ export default class ProjectOverview extends Component {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#00a6ff'
+    backgroundColor: "#00a6ff"
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: "#fff"
   },
   cardContainer: {
     flex: 1,

@@ -89,7 +89,7 @@ export default class RegistrationScreenStart extends Component {
                 // phoneAuthSnapshot.code will contain the auto verified sms code - no need to ask the user for input.
                 console.log("auto verified on android");
                 console.log(phoneAuthSnapshot);
-                this.register(firebaseApi.getCurrentUser());
+                this.register();
                 // Example usage if handling here and not in optionalCompleteCb:
                 // const { verificationId, code } = phoneAuthSnapshot;
                 // const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, code);
@@ -109,10 +109,6 @@ export default class RegistrationScreenStart extends Component {
             console.log(phoneAuthSnapshot);
           }
         );
-
-      firebaseApi
-        .loginPhone(credential)
-        .then(result => this.register(result.user));
     }
   }
 
@@ -127,7 +123,11 @@ export default class RegistrationScreenStart extends Component {
       .then(result => this.register(result.user));
   }
 
-  register(firebaseUser) {
+  register() {
+    emailAccount = firebaseApi.registerAccount(
+      this.state.registerPhoneInfo.registerInfo.email,
+      this.state.registerPhoneInfo.registerInfo.pw
+    );
     UserApi.registerUser(
       this.state.registerPhoneInfo.registerInfo.firstName,
       this.state.registerPhoneInfo.registerInfo.lastName,
@@ -137,6 +137,7 @@ export default class RegistrationScreenStart extends Component {
     ).then(result => {
       if (!result["bool"]) {
         firebaseApi.deleteUser(firebaseUser);
+        firebaseApi.deleteUser(emailAccount);
       } else {
         userId = result["id"];
         User.storeUserId(result["id"]);
