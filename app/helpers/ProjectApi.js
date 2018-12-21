@@ -6,23 +6,23 @@ let instance = null;
 class ProjectApi {
   constructor() {
     if (!instance) {
-      instance = this
+      instance = this;
     }
     return instance;
   }
 
   getAllProjects() {
-    return (Api.callApiGet("getAllProjects"))
+    return Api.callApiGet("getAllProjects");
   }
 
-  likeProject(id,userId) {
-    userData = {"id": id,"userId": userId}
-    return (Api.callApiPost("likeProjectById", userData))
+  likeProject(id, userId) {
+    userData = { id: id, userId: userId };
+    return Api.callApiPost("likeProjectById", userData);
   }
 
-  followProject(id,userId) {
-    userData = {"id": id,"userId": userId}
-    return (Api.callApiPost("followProjectById"))
+  followProject(id, userId) {
+    userData = { id: id, userId: userId };
+    return Api.callApiPost("followProjectById");
   }
 }
 

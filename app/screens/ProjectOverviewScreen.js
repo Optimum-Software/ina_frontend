@@ -17,7 +17,7 @@ import { Toolbar } from "react-native-material-ui";
 import mountain from "../assets/images/firewatch_5.jpg";
 import line from "../assets/images/Line.png";
 import Router from "../helpers/Router";
-import ProjectApi from "../helpers/ProjectApi"
+import ProjectApi from "../helpers/ProjectApi";
 
 export default class ProjectOverview extends Component {
   constructor() {
@@ -137,19 +137,17 @@ export default class ProjectOverview extends Component {
     // };
 
     let response = ProjectApi.getAllProjects().then(result => {
-    console.log("hallllloooooo")
-        if (result['bool']) {
-            this.setState({
-                data: result['projects']
-            })
-            console.log(this.state.data)
-        }else {
-          alert(result['msg'])
-        }
+      console.log("hallllloooooo");
+      console.log(result);
+      if (result["bool"]) {
+        this.setState({
+          data: result["projects"]
+        });
+        console.log(this.state.data);
+      } else {
+        alert(result["msg"]);
+      }
     });
-
-
-
   }
 
   static navigationOptions = ({ navigation }) => ({
@@ -161,78 +159,78 @@ export default class ProjectOverview extends Component {
   render() {
     return (
       <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-     barStyle="light-content"
-   />
-      <ImageBackground
-        blurRadius={3}
-        source={mountain}
-        style={styles.imageBackground}
-      >
-        <View style={styles.container}>
-          <View style={{ height: Header.HEIGHT }}>
-            <Toolbar
-              centerElement="Projecten"
-              iconSet="MaterialCommunityIcons"
-              leftElement={"menu"}
-              onLeftElementPress={() => {
-                this.props.navigation.openDrawer();
-              }}
-            />
-          </View>
-          <View>
-            <FlatList
-              data={this.state.data}
-              onEndReached={() => this.handelEnd()}
-              numColumns={2}
-              renderItem={({ item }) => (
-                <TouchableHighlight
-                  style={styles.cardContainer}
-                  onPress={() =>
-                    Router.goTo(
-                      this.props.navigation,
-                      "ProjectStack",
-                      "ProjectDetailScreen",
-                      {
-                        id: item.id,
-                        name: item.name,
-                        url: item.url,
-                        desc: item.desc,
-                        start_date: item.start_date,
-                        end_date: item.end_date,
-                        created_at: item.created_at,
-                        like_count: item.like_count,
-                        follower_count: item.follower_count,
-                        location: item.location
-                      }
-                    )
-                  }
-                >
-                  <View style={styles.card}>
-                    <View style={styles.cardImage}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
+        <ImageBackground
+          blurRadius={3}
+          source={mountain}
+          style={styles.imageBackground}
+        >
+          <View style={styles.container}>
+            <View style={{ height: Header.HEIGHT }}>
+              <Toolbar
+                centerElement="Projecten"
+                iconSet="MaterialCommunityIcons"
+                leftElement={"menu"}
+                onLeftElementPress={() => {
+                  this.props.navigation.openDrawer();
+                }}
+              />
+            </View>
+            <View>
+              <FlatList
+                data={this.state.data}
+                onEndReached={() => this.handelEnd()}
+                numColumns={2}
+                renderItem={({ item }) => (
+                  <TouchableHighlight
+                    style={styles.cardContainer}
+                    onPress={() =>
+                      Router.goTo(
+                        this.props.navigation,
+                        "ProjectStack",
+                        "ProjectDetailScreen",
+                        {
+                          id: item.id,
+                          name: item.name,
+                          url: item.url,
+                          desc: item.desc,
+                          start_date: item.start_date,
+                          end_date: item.end_date,
+                          created_at: item.created_at,
+                          like_count: item.like_count,
+                          follower_count: item.follower_count,
+                          location: item.location
+                        }
+                      )
+                    }
+                  >
+                    <View style={styles.card}>
+                      <View style={styles.cardImage}>
+                        <Image
+                          source={{ uri: item.url }}
+                          resizeMode="cover"
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      </View>
                       <Image
-                        source={{ uri: item.url }}
-                        resizeMode="cover"
-                        style={{ width: "100%", height: "100%" }}
+                        source={line}
+                        resizeMode="stretch"
+                        style={{ width: "100%", height: "2%" }}
                       />
+                      <Text numberOfLines={2} style={styles.cardTitle}>
+                        {item.name}
+                      </Text>
                     </View>
-                    <Image
-                      source={line}
-                      resizeMode="stretch"
-                      style={{ width: "100%", height: "2%" }}
-                    />
-                    <Text numberOfLines={2} style={styles.cardTitle}>
-                      {item.name}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              )}
-              keyExtractor={item => item.id}
-            />
+                  </TouchableHighlight>
+                )}
+                keyExtractor={item => item.id}
+              />
+            </View>
           </View>
-        </View>
-      </ImageBackground>
+        </ImageBackground>
       </SafeAreaView>
     );
   }
