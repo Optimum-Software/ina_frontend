@@ -2,6 +2,7 @@ import firebase from "react-native-firebase";
 import { firebaseConfig } from "../config/Firebase";
 import UserApi from "./UserApi";
 import User from "./User";
+import Api from "./Api";
 import sha256 from "crypto-js/sha256";
 var CryptoJS = require("crypto-js");
 
@@ -93,33 +94,24 @@ class FirebaseService {
     }
 
     deleteUser(user) {
-        user.delete()
-            .then(function() {
-                // User deleted.
-            })
-            .catch(function(error) {
-                // An error happened.
-            });
+      user.delete()
+        .then(function() {
+            // User deleted.
+        })
+        .catch(function(error) {
+            // An error happened.
+        });
     }
 
-    async getChats() {
-        var ref = this.app.database().ref("Chats");
-        var items = [];
-        await ref.once("value").then(snapshot => {
-            snapshot.forEach(child => {
-                items.push({
-                    title: child.key
-                });
-            });
-        });
-        return items;
+    async getChats(userId) {
+      return(Api.callApiGet("getChatsForUser/" + userId))
     }
 
     getMsgsRef(uid) {
-        return this.app
-            .database()
-            .ref("Chats")
-            .child(uid);
+      return this.app
+        .database()
+        .ref("Chats")
+        .child(uid);
     }
 
     notifyUser(uid) {
@@ -139,12 +131,19 @@ class FirebaseService {
     }
 
     createChat(uid) {
-        //uid must have following structure: lowId:highId
-        //example chat between user 6 and 9 = 6:9
-        //example chat between user 78 and user 34 = 34:78
-        this.database()
-            .ref("Chats")
-            .child(uid);
+      //uid must have following structure: lowId:highId
+      //example chat between user 6 and 9 = 6:9
+      //example chat between user 78 and user 34 = 34:78
+      user1 = uid.split(":")[0]
+      user2 = uid.split(":")[1]
+      userData = {
+        user1Id: user1,
+        user2Id: user2,
+        chatUid: uid
+      }
+      Api.callApiPost("createChat", userData).then(res => {
+        console.log(res);
+      })
     }
 
     sendMessage(sender, uid, messages = []) {

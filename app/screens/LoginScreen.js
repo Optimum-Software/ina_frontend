@@ -123,7 +123,7 @@ class LoginScreen extends Component {
               centerElement="Inloggen"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
-              color="#00a6ff"
+              style={{container: {"backgroundColor": "#009EF2"}}}
               onLeftElementPress={() => {
                 this.props.navigation.openDrawer();
               }}

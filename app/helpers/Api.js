@@ -2,9 +2,9 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http:/145.37.145.167:8000"
+  ip = "http:/145.37.144.166:8000"
   url = this.ip + "/api/";
-  mediaUrl = this.ip + "/media/";
+  mediaUrl = this.ip + "/media";
 
   constructor() {
     if (!instance) {
@@ -45,11 +45,11 @@ class Api {
     }
   }
 
-  async callApiGet(action, parameter) {
+  async callApiGet(action) {
       try {
         let response = await this.timeout(
             3000,
-            fetch(this.url + action + "/" + parameter, {
+            fetch(this.url + action, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -161,7 +161,6 @@ class Api {
   }
 
   login(username, password) {
-<<<<<<< HEAD
       userData = { username: username, password: password };
       return this.callApiPost("login", userData);
   }
@@ -186,28 +185,6 @@ class Api {
 
   getFileUrl(path) {
     return this.mediaUrl + path
-=======
-    userData = { username: username, password: password };
-    return this.callApiPost("login", userData);
-  }
-
-  getDeviceById(id) {
-    return this.callApiGet("getDeviceById/" + id);
-  }
-
-  createDevice(id) {
-    userData = { id: id };
-    return this.callApiPost("createDevice", userData);
-  }
-
-  deleteDeviceById(id) {
-    userData = { id: id };
-    return this.callApiDelete("deleteDeviceById", userData);
-  }
-
-  getAllProjects() {
-    return this.callApiGet("getAllProjects");
->>>>>>> upstream/master
   }
 }
 

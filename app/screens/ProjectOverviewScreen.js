@@ -161,6 +161,7 @@ export default class ProjectOverview extends Component {
                 centerElement="Projecten"
                 iconSet="MaterialCommunityIcons"
                 leftElement={"menu"}
+                style={{container: {"backgroundColor": "#009EF2"}}}
                 onLeftElementPress={() => {
                   this.props.navigation.openDrawer();
                 }}
