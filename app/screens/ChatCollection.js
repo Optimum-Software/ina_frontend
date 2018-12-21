@@ -6,90 +6,185 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  ActivityIndicator
 } from "react-native";
-import { ListItem } from "react-native-elements";
-
+import { ListItem, Icon } from "react-native-elements";
+import { Header } from "react-navigation";
+import { Toolbar } from "react-native-material-ui";
 import FirebaseApi from "../helpers/FirebaseApi";
+import Api from "../helpers/Api";
 import Router from "../helpers/Router";
+import User from "../helpers/User";
 
 export default class ChatCollection extends Component {
-  constructor() {
-    super();
-    this.state = {
-      loading: true,
-      chats: []
-    };
+    constructor() {
+        super();
+        this.state = {
+            loading: true,
+            refreshing: false,
+            chats: []
+        };
+    }
+
+    componentDidMount() {
+      this.getChats()
+      //debug only, make sure logged in on firebase
+      //FirebaseApi.login("jelmer.haarman@xs4all.nl", "123456")
+      //
+      //FirebaseApi.createChat("19:20")
+    }
+
+    getChats() {
+      //debug to make sure there is a user
+      //User.storeUserId(20);
+      //
+      User.getUserId().then(id => {
+        FirebaseApi.getChats(id).then(res => {
+          chats = []
+          for(index in res.chatList) {
+            let chat = res.chatList[index]
+            let title = ""
+            let photo = ""
+            let uid = ""
+            if(!chat.group) {
+              uid = chat.chatUid
+              if(chat.user1.id == id) {
+                title = chat.user2.firstName + " " + chat.user2.lastName
+                photo = Api.getFileUrl(chat.user2.profilePhotoPath)
+              }else if(chat.user2.id == id) {
+                title = chat.user1.firstName + " " + chat.user1.lastName
+                photo = Api.getFileUrl(chat.user1.profilePhotoPath)
+              }
+            } else {
+              title = chat.name
+              photo = Api.getFileUrl(chat.photo_path)
+              uid = chat.name
+            }
+            
+            chatItem = {
+              title: title,
+              photo: photo,
+              uid: uid
+            }
+            console.log(chatItem)
+            chats.push(chatItem)
+          }
+          this.setState({chats: chats, loading: false})
+        })
+      })
+    }
+
+  refreshList() {
+    this.setState({"refreshing": true})
+    this.getChats()
+    this.setState({"refreshing": false})
   }
 
-  componentDidMount() {
-    // debug only, make sure logged in on firebase
-    FirebaseApi.login("mail@grombouts.nl", "123456");
-    //
-    FirebaseApi.getChats().then(chats => {
-      this.setState({ chats: chats, loading: false });
-    });
+  goToChat(uid, title) {
+    Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid, title: title})
   }
 
-  goToChat(uid) {
-    Router.goTo(this.props.navigation, "ChatStack", "Chat", { uid: uid });
+  renderItemSeparator() {
+    return (<View style={styles.separator}/>)
   }
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.container}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
         />
-        <View>
+        <View style={{ height: Header.HEIGHT}}>
+            <Toolbar
+              centerElement="Chat"
+              iconSet="MaterialCommunityIcons"
+              leftElement={"menu"}
+              style={{container: {"backgroundColor": "#009EF2"}}}
+              onLeftElementPress={() => {
+                this.props.navigation.openDrawer();
+              }}
+            />
+          </View>
+        <View style={styles.containerMargin}>
           {!this.state.loading && (
             <FlatList
               data={this.state.chats}
+              refreshing={this.state.refreshing}
+              onRefresh={() => this.refreshList()}
+              ItemSeparatorComponent={() => this.renderItemSeparator()}
               renderItem={({ item }) => (
                 <ListItem
-                  key={item.title}
+                  key={item.uid}
                   title={item.title}
-                  subtitle={"20 december 2019"}
-                  leftAvatar={{
-                    source: {
-                      uri:
-                        "https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg"
-                    }
-                  }}
-                  chevron
+                  underlayColor={"#00A6FF"}
+                  leftAvatar={{ rounded: true, source: { uri: item.photo } }}
+                  chevron={<Icon
+                    name="chevron-right"
+                    type="font-awesome"
+                    size={20}
+                    color="#FFFFFF"
+                  />}
                   containerStyle={styles.chatBoxContainer}
                   contentContainerStyle={styles.chatBoxItem}
-                  onPress={() => this.goToChat(item.title)}
+                  titleStyle={styles.chatTitle}
+                  subtitleStyle={styles.chatSubTitle}
+                  onPress={() => this.goToChat(item.uid, item.title)}
                 />
               )}
             />
           )}
-          {this.state.loading && <Text>Loading</Text>}
+          {this.state.loading && (
+            <View
+              style={{
+                  alignSelf: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
+                  width: "100%"
+              }}
+            >
+              <ActivityIndicator size="large" color="#00A6FF" />
+            </View>
+          )}
         </View>
-      </SafeAreaView>
-    );
-  }
+        </SafeAreaView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#00a6ff"
-  },
   container: {
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: "#FFFFFF"
   },
-  chatBoxContainer: {
+
+  containerMargin: {
     flex: 1,
-    backgroundColor: "red",
-    borderRadius: 5,
-    margin: "3%"
+    backgroundColor: "transparent",
+  },
+
+  chatBoxContainer: {
+    backgroundColor: "#00A6FF",
   },
 
   chatBoxItem: {
-    backgroundColor: "yellow",
-    alignSelf: "center"
+    backgroundColor: '#00A6FF',
+    alignSelf: 'center',
+  },
+
+  chatTitle: {
+    color: '#FFFFFF', 
+    fontWeight: 'bold'
+  },
+
+  chatSubTitle: {
+    color: '#FFFFFF'
+  },
+
+  separator: {
+    height: 2,
+    backgroundColor: '#1497DD'
   }
 });
