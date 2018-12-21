@@ -20,7 +20,7 @@ class Api {
       }, ms);
       promise.then(resolve, reject);
     });
-  }
+   }
 
   async callApiPost(action, data) {
     try {
