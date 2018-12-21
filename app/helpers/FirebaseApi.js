@@ -115,7 +115,6 @@ class FirebaseService {
     }
 
     notifyUser(uid) {
-        uid = "1:19"; //debug
         ids = uid.split(":");
 
         //debug

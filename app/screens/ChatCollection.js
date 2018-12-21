@@ -29,15 +29,15 @@ export default class ChatCollection extends Component {
 
     componentDidMount() {
       this.getChats()
-      // debug only, make sure logged in on firebase
-      FirebaseApi.login("j.j.haarman@st.hanze.nl", "123456")
+      //debug only, make sure logged in on firebase
+      //FirebaseApi.login("jelmer.haarman@xs4all.nl", "123456")
       //
       //FirebaseApi.createChat("19:20")
     }
 
     getChats() {
-       //debug to make sure there is a user
-      User.storeUserId(19);
+      //debug to make sure there is a user
+      //User.storeUserId(20);
       //
       User.getUserId().then(id => {
         FirebaseApi.getChats(id).then(res => {
@@ -46,7 +46,9 @@ export default class ChatCollection extends Component {
             let chat = res.chatList[index]
             let title = ""
             let photo = ""
+            let uid = ""
             if(!chat.group) {
+              uid = chat.chatUid
               if(chat.user1.id == id) {
                 title = chat.user2.firstName + " " + chat.user2.lastName
                 photo = Api.getFileUrl(chat.user2.profilePhotoPath)
@@ -57,13 +59,15 @@ export default class ChatCollection extends Component {
             } else {
               title = chat.name
               photo = Api.getFileUrl(chat.photo_path)
+              uid = chat.name
             }
             
             chatItem = {
               title: title,
               photo: photo,
-              uid: chat.uid
+              uid: uid
             }
+            console.log(chatItem)
             chats.push(chatItem)
           }
           this.setState({chats: chats, loading: false})
@@ -77,8 +81,8 @@ export default class ChatCollection extends Component {
     this.setState({"refreshing": false})
   }
 
-  goToChat(uid) {
-    Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid})
+  goToChat(uid, title) {
+    Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid, title: title})
   }
 
   renderItemSeparator() {
@@ -126,7 +130,7 @@ export default class ChatCollection extends Component {
                   contentContainerStyle={styles.chatBoxItem}
                   titleStyle={styles.chatTitle}
                   subtitleStyle={styles.chatSubTitle}
-                  onPress={() => this.goToChat(item.title)}
+                  onPress={() => this.goToChat(item.uid, item.title)}
                 />
               )}
             />

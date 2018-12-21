@@ -28,7 +28,8 @@ export default class Chat extends Component {
 
   componentDidMount() {
     this.setState({
-      uid: this.props.navigation.state.params.uid
+      uid: this.props.navigation.state.params.uid,
+      title: this.props.navigation.state.params.title
     });
     this.getMessages();
   }
@@ -103,7 +104,7 @@ export default class Chat extends Component {
           barStyle="light-content"
         />
         <Toolbar
-          centerElement={this.state.uid}
+          centerElement={this.state.title}
           iconSet="MaterialCommunityIcons"
           leftElement={"arrow-left"}
           onLeftElementPress={() => {
