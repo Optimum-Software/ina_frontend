@@ -31,7 +31,8 @@ export default class ProjectDetail extends Component {
       bookmarked: "bookmark",
       id: '',
       liked: false,
-      isModalVisible: false
+      isModalVisible: false,
+      tags: [],
     };
   }
 
@@ -69,6 +70,25 @@ export default class ProjectDetail extends Component {
         }
       }
     });
+  }
+
+  tags(id) {
+
+    let response = ProjectApi.getAllTags(id).then(result => {
+      console.log("hallllloooooo")
+      if (result['bool']) {
+        this.setState({
+          tags: result['tags']
+        })
+        console.log(this.state.tags)
+      }else {
+        alert(result['msg'])
+      }
+    });
+    const tagItems = this.state.tags.map((tag) =>
+      <Text>{tag}</Text>
+    );
+    return tagItems
   }
 
   render() {
@@ -172,6 +192,11 @@ export default class ProjectDetail extends Component {
                   </Text>
                 </TouchableHighlight>
               </View>
+
+              <View>
+                {this.tags(id)}
+              </View>
+
             </View>
 
           </View>
