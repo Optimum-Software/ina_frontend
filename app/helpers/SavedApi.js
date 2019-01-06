@@ -11,7 +11,7 @@ class SavedApi {
     return instance;
   }
 
-  getAllFollowedProjectsById(id) {
+  getAllFollows(id) {
     return (Api.callApiGet("getAllFollowedProjectsById/" + id))
   }
 

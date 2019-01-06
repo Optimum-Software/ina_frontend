@@ -26,12 +26,13 @@ export default class SavedProjects extends Component {
 
     this.state = {
       data: []
-    };
+     };
 
     User.getUserId().then(userId => {
       if (userId != null) {
-        let response = SavedApi.getAllFollowedProjectsById(id).then(result => {
+        let response = SavedApi.getAllFollows(userId).then(result => {
           if (result['bool']) {
+
             this.setState({
               data: result['projects']
             })
@@ -39,9 +40,9 @@ export default class SavedProjects extends Component {
           }else {
             alert(result['msg'])
           }
-        });
+          });
       } else {
-        alert('Je moet inloggen om uw gevolgde projecten te zien.')
+        alert('Je moet inloggen om je gevolgde projecten te zien.')
       }
     });
 
@@ -51,8 +52,8 @@ export default class SavedProjects extends Component {
   }
 
   static navigationOptions = ({ navigation }) => ({
-    title: "Projecten"
-  });
+    title: "Opgeslagen"
+   });
 
   handelEnd = () => {};
 
@@ -66,7 +67,7 @@ export default class SavedProjects extends Component {
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
             <Toolbar
-              centerElement="Projecten"
+              centerElement="Opgeslagen"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
               onLeftElementPress={() => {
