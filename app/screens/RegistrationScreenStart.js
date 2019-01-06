@@ -44,7 +44,6 @@ export default class RegistrationScreenStart extends Component {
 
   goToRegisterPhone() {
     let emailExists = UserApi.checkEmail(this.state.email).then(result => {
-      console.log("Hij doet het ");
       this.resetErrors();
       if (result["ntwFail"]) {
         //network error
@@ -63,7 +62,6 @@ export default class RegistrationScreenStart extends Component {
           this.setState({
             hashedPw: SHA256(this.state.pw).toString()
           });
-          console.log("hoi");
           Router.goTo(
             this.props.navigation,
             "LoginStack",
@@ -136,7 +134,7 @@ export default class RegistrationScreenStart extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.container}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
@@ -283,10 +281,6 @@ export default class RegistrationScreenStart extends Component {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#00a6ff"
-  },
   container: {
     flex: 1,
     backgroundColor: "#fff"

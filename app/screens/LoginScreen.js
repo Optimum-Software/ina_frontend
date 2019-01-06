@@ -64,8 +64,8 @@ class LoginScreen extends Component {
     if (this.checkInputEmpty() && this.checkEmail()) {
       let hashedPw = SHA256(this.state.pw).toString();
       Api.login(this.state.email, hashedPw).then(result => {
-        console.log(result);
         if (result.bool) {
+          FirebaseApi.login(this.state.email, hashedPw)
           User.getUserId().then(userId => {
             User.getDeviceId().then(deviceId => {
               UserApi.createDeviceId(userId, deviceId).then(result => {
@@ -123,7 +123,7 @@ class LoginScreen extends Component {
               centerElement="Inloggen"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
-              color="#00a6ff"
+              style={{container: {"backgroundColor": "#009EF2"}}}
               onLeftElementPress={() => {
                 this.props.navigation.openDrawer();
               }}

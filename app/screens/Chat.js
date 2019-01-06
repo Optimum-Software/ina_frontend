@@ -14,6 +14,7 @@ import sha256 from "crypto-js/sha256";
 var CryptoJS = require("crypto-js");
 import FirebaseApi from "../helpers/FirebaseApi";
 import { Toolbar } from "react-native-material-ui";
+import Router from "../helpers/Router";
 
 export default class Chat extends Component {
   constructor() {
@@ -27,7 +28,8 @@ export default class Chat extends Component {
 
   componentDidMount() {
     this.setState({
-      uid: this.props.navigation.state.params.uid
+      uid: this.props.navigation.state.params.uid,
+      title: this.props.navigation.state.params.title
     });
     this.getMessages();
   }
@@ -102,11 +104,11 @@ export default class Chat extends Component {
           barStyle="light-content"
         />
         <Toolbar
-          centerElement={this.state.uid}
+          centerElement={this.state.title}
           iconSet="MaterialCommunityIcons"
           leftElement={"arrow-left"}
           onLeftElementPress={() => {
-            this.props.navigation.openDrawer();
+            Router.goBack(this.props.navigation);
           }}
         />
         <View style={styles.container}>
