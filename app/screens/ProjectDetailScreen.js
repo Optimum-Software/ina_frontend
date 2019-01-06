@@ -86,7 +86,7 @@ export default class ProjectDetail extends Component {
       }
     });
     const tagItems = this.state.tags.map((tag) =>
-      <Text>{tag}</Text>
+      <Text>{tag.name}</Text>
     );
     return tagItems
   }
