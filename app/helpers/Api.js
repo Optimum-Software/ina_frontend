@@ -2,9 +2,8 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http:/145.37.144.166:8000"
-  url = this.ip + "/api/";
-  mediaUrl = this.ip + "/media";
+
+  url = "http://192.168.1.34:8000/api/";
 
   constructor() {
     if (!instance) {

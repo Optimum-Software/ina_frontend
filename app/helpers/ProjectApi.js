@@ -15,6 +15,10 @@ class ProjectApi {
     return (Api.callApiGet("getAllProjects"))
   }
 
+  getAllTags(id) {
+    return (Api.callApiGet("getAllProjectTagsById/" + id))
+  }
+
   likeProject(id,userId) {
     userData = {"id": id,"userId": userId}
     return (Api.callApiPost("likeProjectById", userData))
@@ -22,7 +26,7 @@ class ProjectApi {
 
   followProject(id,userId) {
     userData = {"id": id,"userId": userId}
-    return (Api.callApiPost("followProjectById"))
+    return (Api.callApiPost("followProjectById",userData))
   }
 }
 
