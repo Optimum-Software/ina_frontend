@@ -2,7 +2,9 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  url = "http://145.37.153.222:8000/api/";
+  ip = "http://145.37.153.15:8000";
+  url = this.ip + "/api/";
+  mediaUrl = this.ip + "/media";
 
   constructor() {
     if (!instance) {
@@ -46,7 +48,7 @@ class Api {
   async callApiGet(action) {
     try {
       let response = await this.timeout(
-        3000,
+        10000,
         fetch(this.url + action, {
           method: "GET",
           headers: {
@@ -179,6 +181,10 @@ class Api {
 
   getAllProjects() {
     return this.callApiGet("getAllProjects");
+  }
+
+  getFileUrl(path) {
+    return this.mediaUrl + path;
   }
 }
 
