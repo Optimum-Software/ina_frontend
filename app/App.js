@@ -30,8 +30,8 @@ export default class App extends React.Component {
 
     componentDidMount() {
         OneSignal.init("33abe35a-5325-45cc-bbee-074d6cc1d558");
-        OneSignal.configure();
         OneSignal.addEventListener("ids", this.onIds);
+        OneSignal.configure();
     }
 
     componentWillUnmount() {

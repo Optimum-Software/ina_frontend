@@ -21,7 +21,7 @@ import { NavigationActions, Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import logo from "../assets/images/logo_circle.png";
 import wave from "../assets/thewave.png";
-import firebaseApi from "../helpers/FirebaseApi";
+import FirebaseApi from "../helpers/FirebaseApi";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
 import UserApi from "../helpers/UserApi";
@@ -34,10 +34,10 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "",
+      email: "j.j.haarman@st.hanze.nl",
       emailError: "",
 
-      pw: "",
+      pw: "123456",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
@@ -60,17 +60,24 @@ class LoginScreen extends Component {
     }).start(() => this.spin());
   }
 
+  resetErrors() {
+    this.setState({
+      emailError: "",
+      pwError: ""
+    })
+  }
+
   login() {
+    this.resetErrors()
     if (this.checkInputEmpty() && this.checkEmail()) {
       let hashedPw = SHA256(this.state.pw).toString();
       Api.login(this.state.email, hashedPw).then(result => {
+        console.log(result)
         if (result.bool) {
           FirebaseApi.login(this.state.email, hashedPw)
-          User.getUserId().then(userId => {
-            User.getDeviceId().then(deviceId => {
-              UserApi.createDeviceId(userId, deviceId).then(result => {
-                console.log(result);
-              });
+          User.getDeviceId().then(deviceId => {
+            UserApi.createDeviceId(result.userId, deviceId).then(result => {
+              console.log(result);
             });
           });
           User.storeUserId(result.userId);

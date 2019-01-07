@@ -145,30 +145,6 @@ class FirebaseService {
       })
     }
 
-    sendMessage(sender, uid, messages = []) {
-        const ref = this.app
-            .database()
-            .ref("Chats")
-            .child(uid);
-        this.notifyUser(uid);
-        let currentUser = this.app.auth().currentUser;
-        let createdAt = new Date().getTime();
-
-        var messageEncrypted = CryptoJS.AES.encrypt(
-            messages[0].text,
-            sha256(sender.uid + sender.email).toString()
-        );
-        let chatMessage = {
-            text: messageEncrypted.toString(),
-            createdAt: createdAt,
-            user: {
-                id: currentUser.uid,
-                email: currentUser.email
-            }
-        };
-        ref.push().set(chatMessage);
-    }
-
     getMsgsRef(uid) {
         return this.app
             .database()
@@ -198,6 +174,7 @@ class FirebaseService {
             }
         };
         ref.push().set(chatMessage);
+        this.notifyUser(uid)
     }
 }
 const firebaseService = new FirebaseService();
