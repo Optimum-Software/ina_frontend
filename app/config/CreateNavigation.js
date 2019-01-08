@@ -8,7 +8,8 @@ import {
   ScrollView,
   Image,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight
 } from "react-native";
 import {
   StackNavigator,
@@ -31,6 +32,7 @@ import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVe
 import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
 import ProjectStack from "./ProjectStackNavigator";
+import UserApi from "../helpers/UserApi";
 
 let screen = Dimensions.get("window");
 
@@ -102,6 +104,17 @@ const CustomDrawerContentComponent = props => (
             }}
           />
           <DrawerItems {...props} />
+          <TouchableHighlight
+            style={{width: '50%', height: '13%', justifyContent: 'center'}}
+            underlayColor="transparent"
+            onPress={() => {
+              UserApi.logout()
+            }}>
+            <View style={{flexDirection: "row", marginLeft: '10%',width: '60%', justifyContent: 'space-between'}}>
+              <Icon name="logout" size={25} color={"white"}  />
+              <Text style={{color: 'white', textAlign: 'right',fontWeight: 'bold'}}>Uitloggen </Text>
+            </View>
+          </TouchableHighlight>
         </View>
       </ImageBackground>
     </View>
@@ -210,15 +223,6 @@ export const Drawer = createDrawerNavigator(
         drawerLabel: "Instellingen",
         drawerIcon: ({ tintColor }) => (
           <Icon name="settings" size={25} color={tintColor} />
-        )
-      }
-    },
-    Logout: {
-      screen: Tabs,
-      navigationOptions: {
-        drawerLabel: "Uitloggen",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="logout" size={25} color={tintColor} />
         )
       }
     }
