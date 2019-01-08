@@ -15,7 +15,10 @@ class ProjectApi {
     return Api.callApiGet("getAllProjects");
   }
 
-<<<<<<< HEAD
+  getAllTags(id) {
+    return Api.callApiGet("getAllProjectTagsById/" + id);
+  }
+
   likeProject(id, userId) {
     userData = { id: id, userId: userId };
     return Api.callApiPost("likeProjectById", userData);
@@ -23,21 +26,7 @@ class ProjectApi {
 
   followProject(id, userId) {
     userData = { id: id, userId: userId };
-    return Api.callApiPost("followProjectById");
-=======
-  getAllTags(id) {
-    return (Api.callApiGet("getAllProjectTagsById/" + id))
-  }
-
-  likeProject(id,userId) {
-    userData = {"id": id,"userId": userId}
-    return (Api.callApiPost("likeProjectById", userData))
-  }
-
-  followProject(id,userId) {
-    userData = {"id": id,"userId": userId}
-    return (Api.callApiPost("followProjectById",userData))
->>>>>>> upstream/master
+    return Api.callApiPost("followProjectById", userData);
   }
 }
 
