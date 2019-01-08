@@ -96,7 +96,7 @@ export default class ProjectOverview extends Component {
                       <Image
                         source={{ uri: item.url }}
                         resizeMode="cover"
-                        style={{ width: "100%", height: "100%" }}
+                        style={styles.image}
                       />
                     </View>
                     <Image
@@ -126,13 +126,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#ffffff"
-  },
+    backgroundColor: "#ffffff",
+   },
   cardContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    margin: 10
+    margin: 10,
   },
   card: {
     backgroundColor: "#F1F1F1",
@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 180,
     marginBottom: 10,
-    elevation: 3
+    elevation: 3,
+    borderRadius: 4,
   },
 
   imageBackground: {
@@ -150,11 +151,17 @@ const styles = StyleSheet.create({
 
   cardImage: {
     height: "70%",
-    width: "100%"
-  },
+    width: "100%",
+   },
   cardTitle: {
     margin: 5,
     fontSize: 15,
     fontWeight: "bold"
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderTopLeftRadius:4,
+    borderTopRightRadius:4,
   }
 });

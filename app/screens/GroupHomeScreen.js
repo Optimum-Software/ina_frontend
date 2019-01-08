@@ -430,6 +430,7 @@ const styles = StyleSheet.create({
   banner: {
     height: 200,
     width: "100%",
+    marginBottom: "2%",
     resizeMode: "stretch"
   },
   h1: {
@@ -457,9 +458,9 @@ const styles = StyleSheet.create({
   },
   personList: {
     width: "100%",
+    height: 50,
     justifyContent: "center",
-    alignItems: "center",
-    marginTop: "2%"
+    alignItems: "center"
   },
   personCard: {
     height: 50,
@@ -477,7 +478,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f39200",
     width: "100%",
     height: 30,
-    marginTop: "2%",
+    marginBottom: "2%",
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center"
