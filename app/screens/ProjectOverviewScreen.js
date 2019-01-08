@@ -17,7 +17,7 @@ import { Toolbar } from "react-native-material-ui";
 import mountain from "../assets/images/firewatch_5.jpg";
 import line from "../assets/images/Line.png";
 import Router from "../helpers/Router";
-import ProjectApi from "../helpers/ProjectApi"
+import ProjectApi from "../helpers/ProjectApi";
 
 export default class ProjectOverview extends Component {
   constructor() {
@@ -28,18 +28,15 @@ export default class ProjectOverview extends Component {
     };
 
     let response = ProjectApi.getAllProjects().then(result => {
-        if (result['bool']) {
-            this.setState({
-                data: result['projects']
-            })
-            console.log(this.state.data)
-        }else {
-          alert(result['msg'])
-        }
+      if (result["bool"]) {
+        this.setState({
+          data: result["projects"]
+        });
+        console.log(this.state.data);
+      } else {
+        alert(result["msg"]);
+      }
     });
-
-
-
   }
 
   static navigationOptions = ({ navigation }) => ({
@@ -51,10 +48,10 @@ export default class ProjectOverview extends Component {
   render() {
     return (
       <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-        barStyle="light-content"
-      />
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
             <Toolbar
