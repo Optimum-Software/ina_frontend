@@ -22,7 +22,6 @@ class UserApi {
 
   logout() {
     User.getToken().then(token => {
-      console.log(token)
       return Api.callApiGetSafe("logout", token)
     })
     

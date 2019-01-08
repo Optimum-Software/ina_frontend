@@ -69,7 +69,7 @@ class Api {
   async callApiGetSafe(action, token) {
     try {
         let response = await this.timeout(
-            3000,
+            5000,
             fetch(this.url + action, {
                 method: "GET",
                 headers: {

@@ -82,6 +82,7 @@ class LoginScreen extends Component {
           });
           User.storeUserId(result.userId);
           User.storeToken(result.token);
+          Router.switchLogin(this.props.navigation)
           Router.goTo(this.props.navigation, "Tabs", "HomeScreen")
         } else {
           this.setState({ pwError: result.msg });

@@ -33,9 +33,26 @@ import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
 import ProjectStack from "./ProjectStackNavigator";
 import UserApi from "../helpers/UserApi";
+import Router from "../helpers/Router";
+import User from "../helpers/User";
+import Api from "../helpers/Api";
 
 let screen = Dimensions.get("window");
-
+let firstName = "";
+let lastName = "";
+let profilePhoto = { uri: ""};
+let organisation = "";
+User.getUserId().then( id => {
+  if(id != null) {
+    Api.callApiGetSafe('getUserById/' + id).then(res => {
+      firstName = res['user'].firstName;
+      lastName = res['user'].lastName;
+      profilePhoto.uri = Api.getFileUrl(res['user'].profilePhotoPath);
+      organisation = res['user'].organisation;
+    })
+    console.log(profilePhoto)
+  }
+})
 const CustomDrawerContentComponent = props => (
   <View>
     <View style={{ height: "90%" }}>
@@ -64,35 +81,41 @@ const CustomDrawerContentComponent = props => (
               style={{
                 color: "#fff",
                 fontWeight: "bold",
+                fontSize: 20,
                 marginBottom: "1%"
               }}
             >
-              Hallo, Gerhard!
+              Hallo, {firstName}!
             </Text>
             <Text
               style={{
                 color: "#fff"
               }}
             >
-              Hanze Hogeschool Groningen
+              {organisation}
             </Text>
           </View>
 
           <ImageBackground
-            source={require("../assets/images/person-stock.png")}
-            resizeMode="contain"
+            source={profilePhoto}
+            resizeMode="cover"
             style={{
               marginLeft: "5%",
               marginTop: "3%",
-              width: 80,
-              height: 80,
+              width: 100,
+              height: 100,
               borderRadius: 100,
               backgroundColor: "white"
+            }}
+            imageStyle={{
+              width: '100%',
+              height: '100%',
+              borderRadius: 200,
             }}
           />
         </View>
 
-        <View style={{ marginBottom: "25%", marginLeft: "5%" }}>
+        <View style={{ marginBottom: "40%", marginLeft: "5%" }}>
           <View
             style={{
               backgroundColor: "#fff",
@@ -108,7 +131,11 @@ const CustomDrawerContentComponent = props => (
             style={{width: '50%', height: '13%', justifyContent: 'center'}}
             underlayColor="transparent"
             onPress={() => {
-              UserApi.logout()
+              UserApi.logout();
+              User.storeUserId(null)
+              User.storeToken(null)
+              props.navigation.closeDrawer()
+              Router.switchLogout(props.navigation)
             }}>
             <View style={{flexDirection: "row", marginLeft: '10%',width: '60%', justifyContent: 'space-between'}}>
               <Icon name="logout" size={25} color={"white"}  />
@@ -181,15 +208,6 @@ export const Drawer = createDrawerNavigator(
         )
       }
     },
-    LoginStack: {
-      screen: LoginStack,
-      navigationOptions: {
-        drawerLabel: "Inloggen",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="account" size={25} color={tintColor} />
-        )
-      }
-    },
     ExploreScreen: {
       screen: ExploreScreen,
       navigationOptions: {
@@ -251,4 +269,4 @@ export const Drawer = createDrawerNavigator(
   }
 );
 
-export const RootNavigator = createAppContainer(Drawer);
+export const RootNavigatorLoggedIn = createAppContainer(Drawer);
