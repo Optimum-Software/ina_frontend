@@ -19,15 +19,32 @@ class ProjectApi {
     return (Api.callApiGet("getAllProjectTagsById/" + id))
   }
 
-  likeProject(id,userId) {
-    userData = {"id": id,"userId": userId}
+  likeProject(id, userId) {
+    userData = {"id": id, "userId": userId}
     return (Api.callApiPost("likeProjectById", userData))
   }
 
-  followProject(id,userId) {
-    userData = {"id": id,"userId": userId}
-    return (Api.callApiPost("followProjectById",userData))
+  followProject(id, userId) {
+    userData = {"id": id, "userId": userId}
+    return (Api.callApiPost("followProjectById", userData))
   }
+
+  newestProjects() {
+    return (Api.callApiGet("getAllProjects"))
+  }
+
+  oldestProjects() {
+    return (Api.callApiGet("getAllProjects"))
+  }
+
+  mostLikedProjects() {
+    return (Api.callApiGet("getAllProjects"))
+  }
+
+  mostFollowedProjects() {
+    return (Api.callApiGet("getAllProjects"))
+  }
+
 }
 
 const projectApi = new ProjectApi();
