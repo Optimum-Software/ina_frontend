@@ -21,7 +21,6 @@ import {
   DrawerItems
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import DrawerContentComponent from "../components/DrawerContentComponent";
 import HomeScreen from "../screens/HomeScreen";
 import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
@@ -29,6 +28,7 @@ import SettingsScreen from "../screens/SettingsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVerifySuccessfull";
 
+import GroupStack from "./GroupStackNavigator";
 import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
 import ProjectStack from "./ProjectStackNavigator";

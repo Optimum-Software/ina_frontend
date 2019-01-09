@@ -20,7 +20,7 @@ class Api {
       }, ms);
       promise.then(resolve, reject);
     });
-   }
+  }
 
   async callApiPost(action, data) {
     try {
@@ -46,24 +46,24 @@ class Api {
   }
 
   async callApiGet(action) {
-      try {
-        let response = await this.timeout(
-            3000,
-            fetch(this.url + action, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-        );
-        let responseJson = await response.json();
-        return responseJson;
-      } catch (error) {
-        return {
-            ntwFail: true,
-            msg: "Kon geen verbinding met de server maken"
-        };
-      }
+    try {
+      let response = await this.timeout(
+        10000,
+        fetch(this.url + action, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+      );
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
   }
 
   async callApiGetSafe(action, token) {
@@ -182,27 +182,34 @@ class Api {
     }
   }
 
+<<<<<<< HEAD
+=======
+  login(username, password) {
+    userData = { username: username, password: password };
+    return this.callApiPost("login", userData);
+  }
+>>>>>>> upstream/master
 
   getDeviceById(id) {
-      return this.callApiGet("getDeviceById/" + id);
+    return this.callApiGet("getDeviceById/" + id);
   }
 
   createDevice(id) {
-      userData = { id: id };
-      return this.callApiPost("createDevice", userData);
+    userData = { id: id };
+    return this.callApiPost("createDevice", userData);
   }
 
   deleteDeviceById(id) {
-      userData = { id: id };
-      return this.callApiDelete("deleteDeviceById", userData);
+    userData = { id: id };
+    return this.callApiDelete("deleteDeviceById", userData);
   }
 
   getAllProjects() {
-      return this.callApiGet("getAllProjects");
+    return this.callApiGet("getAllProjects");
   }
 
   getFileUrl(path) {
-    return this.mediaUrl + path
+    return this.mediaUrl + path;
   }
 }
 
