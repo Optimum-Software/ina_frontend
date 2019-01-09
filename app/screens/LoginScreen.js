@@ -34,7 +34,7 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "j.j.haarman@st.hanze.nl",
+      email: "jelmer.haarman@xs4all.nl",
       emailError: "",
 
       pw: "123456",
@@ -71,17 +71,19 @@ class LoginScreen extends Component {
     this.resetErrors()
     if (this.checkInputEmpty() && this.checkEmail()) {
       let hashedPw = SHA256(this.state.pw).toString();
-      Api.login(this.state.email, hashedPw).then(result => {
+      UserApi.login(this.state.email, hashedPw).then(result => {
         console.log(result)
         if (result.bool) {
           FirebaseApi.login(this.state.email, hashedPw)
           User.getDeviceId().then(deviceId => {
             UserApi.createDeviceId(result.userId, deviceId).then(result => {
-              console.log(result);
+              
             });
           });
           User.storeUserId(result.userId);
           User.storeToken(result.token);
+          Router.switchLogin(this.props.navigation)
+          Router.goTo(this.props.navigation, "Tabs", "HomeScreen")
         } else {
           this.setState({ pwError: result.msg });
         }
