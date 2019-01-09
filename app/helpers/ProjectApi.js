@@ -27,23 +27,23 @@ class ProjectApi {
   followProject(id, userId) {
     userData = {"id": id, "userId": userId}
     return (Api.callApiPost("followProjectById", userData))
-  }
+     }
 
   newestProjects() {
-    return (Api.callApiGet("getAllProjects"))
+    return (Api.callApiGet("getAllProjectsNewestFirst"))
   }
 
   oldestProjects() {
-    return (Api.callApiGet("getAllProjects"))
+    return (Api.callApiGet("getAllProjectsOldestFirst"))
   }
 
   mostLikedProjects() {
-    return (Api.callApiGet("getAllProjects"))
+    return (Api.callApiGet("getAllProjectsMostLikedFirst"))
   }
 
   mostFollowedProjects() {
-    return (Api.callApiGet("getAllProjects"))
-  }
+    return (Api.callApiGet("getAllProjectsMostFollowsFirst"))
+   }
 
 }
 

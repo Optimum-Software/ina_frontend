@@ -128,9 +128,12 @@ export default class ProjectOverview extends Component {
           <View style={{alignItems: 'center'}}>
             <ModalDropdown options={['Nieuwste', 'Oudste','Meeste likes', 'Meeste follows']}
                            defaultValue={'Filter'}
+                           renderSeparator={false}
                            style={styles.dropdown}
                            textStyle={styles.dropdownText}
                            dropdownStyle={styles.dropdownMenu}
+                           dropdownTextStyle={styles.dropdownOptionsList}
+                           dropdownTextHighlightStyle={styles.dropdownOptionsHighlight}
                            onSelect={(idx, value) => this.filter(idx, value)}
               />
           </View>
@@ -249,5 +252,12 @@ const styles = StyleSheet.create({
   dropdownMenu: {
     width: '93%',
     alignItems: 'center',
+  },
+  dropdownOptionsHighlight: {
+    fontWeight: 'bold',
+    width: '93%',
+   },
+  dropdownOptionsList: {
+    width: '93%',
   }
 });
