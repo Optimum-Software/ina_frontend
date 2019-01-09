@@ -127,7 +127,7 @@ export default class ProjectOverview extends Component {
           </View>
           <View style={{alignItems: 'center'}}>
             <ModalDropdown options={['Nieuwste', 'Oudste','Meeste likes', 'Meeste follows']}
-                           defaultValue={'Filter'}
+                           defaultValue={'Sorteer'}
                            renderSeparator={false}
                            style={styles.dropdown}
                            textStyle={styles.dropdownText}
