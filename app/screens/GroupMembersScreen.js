@@ -37,7 +37,6 @@ export default class GroupMembersScreen extends Component {
   render() {
     const { navigation } = this.props;
     const personList = navigation.getParam("persons", "");
-    console.log(personList);
     return (
       <View style={styles.container}>
         <Toolbar
@@ -53,14 +52,16 @@ export default class GroupMembersScreen extends Component {
               ItemSeparatorComponent={this.renderSeparator}
               renderItem={({ item }) => (
                 <ListItem
-                  title={item.name}
-                  subtitle={"Hanze Hogeschool Groningen"}
+                  title={item.firstName + " " + item.lastName}
+                  subtitle={item.organisation}
                   leftAvatar={{
-                    source: require("../assets/images/person-stock.png")
+                    source: { uri: item.profilePhotoPath }
                   }}
                   chevronColor="white"
                   chevron
-                  onPress={() => alert("Ga naar " + item.name + "'s profiel")}
+                  onPress={() =>
+                    alert("Ga naar " + item.firstName + "'s profiel")
+                  }
                 />
               )}
             />

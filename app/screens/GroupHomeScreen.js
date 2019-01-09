@@ -28,107 +28,6 @@ import {
 } from "react-native-elements";
 import ViewMoreText from "react-native-view-more-text";
 
-const admins = [
-  {
-    id: 1,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 2,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 3,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  }
-];
-
-const persons = [
-  {
-    id: 1,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 2,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 3,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 4,
-    name: "Gaauwe",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 5,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 6,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 7,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 8,
-    name: "Gaauwe",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 9,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 10,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 11,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 12,
-    name: "Gaauwe",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 13,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 14,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 15,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 16,
-    name: "Gaauwe",
-    photo_path: "../assets/images/person-stock.png"
-  }
-];
-
 const projects = [
   {
     name: "Hello",
@@ -171,52 +70,55 @@ const projects = [
   }
 ];
 
-const group = {
-  id: 1,
-  name: "React Native Grunn",
-  desc:
-    "Spicy jalapeno pork belly short loin venison jerky buffalo beef short ribs. Salami pork loin turducken pastrami pork chop chicken sausage hamburger chuck ribeye. Pig ground round pancetta, sausage bresaola sirloin rump meatloaf boudin pastrami ham hock. Filet mignon bresaola doner ground round cupim short ribs tenderloin pork loin, ball tip brisket turducken swine pork chop sirloin short loin. Andouille shank pastrami salami sirloin.",
-  photo_path: "../assets/images/banner.jpeg",
-  created_at: "2018-12-19 00:00:00.000000",
-  member_count: 0,
-  public: 1
-};
 export default class GroupHomeScreen extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       showDesc: false,
-      group: {}
+      groupAdmin: {},
+      groupMembers: [],
+      showAdminBio: false,
+      groupId: this.props.navigation.getParam("id", ""),
+      groupAdminBio: ""
     };
   }
   handelEnd = () => {};
 
   componentDidMount() {
-    GroupApi.getGroupById(1).then(result => {
-      this.setState({
-        group: result["group"]
-      });
-      console.log(this.state.group);
+    GroupApi.getGroupMembersById(this.state.groupId).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          groupMembers: result["members"]
+        });
+        console.log(this.state.groupMembers);
+      } else {
+        alert("Er zijn geen deelnemers");
+      }
+    });
+    GroupApi.getGroupAdminById(this.state.groupId).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          groupAdmin: result["user"],
+          groupAdminBio: result["user"].bio
+        });
+        console.log(this.state.groupAdmin);
+      } else {
+        alert("Kan groep admin niet vinden");
+      }
     });
   }
 
-  showDesc() {
-    this.setState({
-      showDesc: this.state.showDesc ? false : true
-    });
-  }
   renderViewMore(onPress) {
     return (
       <Text style={styles.viewMoreText} onPress={onPress}>
-        View more
+        Lees meer
       </Text>
     );
   }
   renderViewLess(onPress) {
     return (
       <Text style={styles.viewMoreText} onPress={onPress}>
-        View less
+        Lees minder
       </Text>
     );
   }
@@ -268,20 +170,22 @@ export default class GroupHomeScreen extends Component {
                   this.props.navigation,
                   "GroupStack",
                   "GroupMembersScreen",
-                  { persons: persons }
+                  { persons: this.state.groupMembers }
                 )
               }
             >
               <FlatList
-                data={persons}
+                data={this.state.groupMembers}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
                   <View style={styles.personCard}>
                     <Image
-                      source={require("../assets/images/person-stock.png")}
-                      resizeMode="contain"
-                      style={{ width: "100%", height: "100%" }}
+                      source={{
+                        uri: item.profilePhotoPath
+                      }}
+                      resizeMode="cover"
+                      style={{ width: 50, height: 50, borderRadius: 100 }}
                     />
                   </View>
                 )}
@@ -289,10 +193,9 @@ export default class GroupHomeScreen extends Component {
             </TouchableOpacity>
 
             <View style={{ marginTop: "5%", marginBottom: "8%" }}>
-              {
-                // TODO: maak leden dynamisch
-              }
-              <Text style={styles.h2}>{persons.length} Leden</Text>
+              <Text style={styles.h2}>
+                {this.state.groupMembers.length} Leden
+              </Text>
               {
                 // TODO: voeg locatie toe aan groep
               }
@@ -319,11 +222,9 @@ export default class GroupHomeScreen extends Component {
             <Divider style={{ backgroundColor: "#a8a8a8" }} />
 
             <View style={{ marginBottom: "8%" }}>
-              <Text style={styles.h1}>Organisatoren</Text>
+              <Text style={styles.h1}>Administrator</Text>
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
                   marginTop: "3%"
                 }}
               >
@@ -331,26 +232,23 @@ export default class GroupHomeScreen extends Component {
                   size="medium"
                   rounded
                   source={{
-                    uri:
-                      "https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg"
+                    uri: this.state.groupAdmin.profilePhotoPath
                   }}
                 />
-                <Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                    uri:
-                      "https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg"
-                  }}
-                />
-                <Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                    uri:
-                      "https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg"
-                  }}
-                />
+                <Text>
+                  {this.state.groupAdmin.firstName +
+                    " " +
+                    this.state.groupAdmin.lastName}
+                </Text>
+                <Text>Over admin</Text>
+                <ViewMoreText
+                  numberOfLines={3}
+                  renderViewMore={this.renderViewMore}
+                  renderViewLess={this.renderViewLess}
+                  textStyle={styles.text}
+                >
+                  <Text>{this.state.groupAdminBio}</Text>
+                </ViewMoreText>
               </View>
             </View>
 
@@ -460,7 +358,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   personCard: {
     height: 50,

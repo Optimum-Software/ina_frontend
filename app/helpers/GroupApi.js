@@ -12,6 +12,14 @@ class GroupApi {
   getGroupById(id) {
     return Api.callApiGet("getGroupById/" + id);
   }
+
+  getGroupAdminById(id) {
+    return Api.callApiGet("getGroupAdminById/" + id);
+  }
+
+  getGroupMembersById(id) {
+    return Api.callApiGet("getMembersByGroupId/" + id);
+  }
 }
 
 const groupApi = new GroupApi();

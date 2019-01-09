@@ -179,6 +179,7 @@ export default class Home extends Component {
                       "GroupStack",
                       "GroupHomeScreen",
                       {
+                        id: item.id,
                         name: item.name,
                         desc: item.desc,
                         photo_path: item.photo_path,
