@@ -6,17 +6,17 @@ let instance = null;
 class ProjectApi {
   constructor() {
     if (!instance) {
-      instance = this
+      instance = this;
     }
     return instance;
   }
 
   getAllProjects() {
-    return (Api.callApiGet("getAllProjects"))
+    return Api.callApiGet("getAllProjects");
   }
 
   getAllTags(id) {
-    return (Api.callApiGet("getAllProjectTagsById/" + id))
+    return Api.callApiGet("getAllProjectTagsById/" + id);
   }
 
   likeProject(id, userId) {

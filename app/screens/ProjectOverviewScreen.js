@@ -1,22 +1,25 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import {
   Dimensions,
   FlatList,
   Image,
-  Platform,
-  SafeAreaView,
-  StatusBar,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  View,
+  SafeAreaView,
+  StatusBar,
+  Platform
 } from "react-native";
-import {Header} from "react-navigation";
-import {Toolbar} from "react-native-material-ui";
+import { Header } from "react-navigation";
+import { Toolbar } from "react-native-material-ui";
+import mountain from "../assets/images/firewatch_5.jpg";
 import line from "../assets/images/Line.png";
 import Router from "../helpers/Router";
-import ProjectApi from "../helpers/ProjectApi";
+import ProjectApi from "../helpers/ProjectApi"
 import ModalDropdown from 'react-native-modal-dropdown';
+
 
 export default class ProjectOverview extends Component {
   constructor() {
@@ -36,8 +39,6 @@ export default class ProjectOverview extends Component {
         alert(result['msg'])
       }
     });
-
-
   }
 
   static navigationOptions = ({navigation}) => ({
