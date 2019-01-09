@@ -48,7 +48,7 @@ class Api {
   async callApiGet(action) {
     try {
       let response = await this.timeout(
-        10000,
+        30000,
         fetch(this.url + action, {
           method: "GET",
           headers: {
