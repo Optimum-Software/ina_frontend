@@ -24,6 +24,14 @@ class Router {
 	goBack(dispatcher) {
 		dispatcher.dispatch(NavigationActions.back())
 	}
+
+	switchLogin(dispatcher) {
+		dispatcher.navigate("LoggedIn")
+	}
+
+	switchLogout(dispatcher) {
+		dispatcher.navigate("LoggedOut")
+	}
 }
 
 const router = new Router();
