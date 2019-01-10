@@ -67,6 +67,10 @@ export default class ExploreScreen extends React.Component {
     })
   }
 
+  addLike() {
+    console.log("like")
+  }
+
   like() {
     this.swiper.swipeRight()
   }
@@ -105,7 +109,11 @@ export default class ExploreScreen extends React.Component {
 
   onSwiped = (type) => {
     this.setState({cardIndex: this.state.cardIndex + 1})
-    console.log(`on swiper ${type}`)
+    switch(type) {
+      case "right":
+        this.addLike()
+        break
+    }
   }
 
   tapCard() {
