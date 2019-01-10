@@ -2,8 +2,9 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-
-  url = "http://145.37.145.192:8000/api/";
+  ip = "http:/145.37.145.192:8000"
+  url = this.ip + "/api/";
+  mediaUrl = this.ip + "/media";
 
   constructor() {
     if (!instance) {
@@ -19,12 +20,12 @@ class Api {
       }, ms);
       promise.then(resolve, reject);
     });
-   }
+  }
 
   async callApiPost(action, data) {
     try {
       let response = await this.timeout(
-        3000,
+        5000,
         fetch(this.url + action, {
           method: "POST",
           headers: {
@@ -45,13 +46,35 @@ class Api {
   }
 
   async callApiGet(action) {
-      try {
+    try {
+      let response = await this.timeout(
+        30000,
+        fetch(this.url + action, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+      );
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
+  }
+
+  async callApiGetSafe(action, token) {
+    try {
         let response = await this.timeout(
-            3000,
+            5000,
             fetch(this.url + action, {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Token " + token
                 }
             })
         );
@@ -160,30 +183,30 @@ class Api {
   }
 
   login(username, password) {
-      userData = { username: username, password: password };
-      return this.callApiPost("login", userData);
+    userData = { username: username, password: password };
+    return this.callApiPost("login", userData);
   }
 
   getDeviceById(id) {
-      return this.callApiGet("getDeviceById/" + id);
+    return this.callApiGet("getDeviceById/" + id);
   }
 
   createDevice(id) {
-      userData = { id: id };
-      return this.callApiPost("createDevice", userData);
+    userData = { id: id };
+    return this.callApiPost("createDevice", userData);
   }
 
   deleteDeviceById(id) {
-      userData = { id: id };
-      return this.callApiDelete("deleteDeviceById", userData);
+    userData = { id: id };
+    return this.callApiDelete("deleteDeviceById", userData);
   }
 
   getAllProjects() {
-      return this.callApiGet("getAllProjects");
+    return this.callApiGet("getAllProjects");
   }
 
   getFileUrl(path) {
-    return this.mediaUrl + path
+    return this.mediaUrl + path;
   }
 }
 

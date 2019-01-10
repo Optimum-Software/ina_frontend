@@ -1,5 +1,6 @@
 import React from "react";
 import Api from "./Api";
+import User from "./User";
 let instance = null;
 class UserApi {
   constructor() {
@@ -12,6 +13,18 @@ class UserApi {
   checkEmail(email) {
     userData = { email: email };
     return Api.callApiPost("getUserByEmail", userData);
+  }
+
+  login(username, password) {
+    userData = { username: username, password: password };
+    return Api.callApiPost("login", userData);
+  }
+
+  logout() {
+    User.getToken().then(token => {
+      return Api.callApiGetSafe("logout", token)
+    })
+    
   }
 
   registerUser(firstName, lastName, email, password, mobile) {
