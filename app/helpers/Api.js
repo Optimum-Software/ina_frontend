@@ -2,7 +2,7 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http:/145.37.145.192:8000"
+  ip = "http:/145.37.145.146:8000"
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -181,14 +181,6 @@ class Api {
       };
     }
   }
-
-<<<<<<< HEAD
-=======
-  login(username, password) {
-    userData = { username: username, password: password };
-    return this.callApiPost("login", userData);
-  }
->>>>>>> upstream/master
 
   getDeviceById(id) {
     return this.callApiGet("getDeviceById/" + id);
