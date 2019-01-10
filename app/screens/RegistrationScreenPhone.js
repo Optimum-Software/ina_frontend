@@ -5,12 +5,16 @@ import {
   View,
   TouchableHighlight,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+  SafeAreaView,
+  StatusBar,
+  Platform
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import { Input, Icon } from "react-native-elements";
 import Router from "../helpers/Router";
+import { Fragment } from "react";
 
 import firebaseApi from "../helpers/FirebaseApi";
 
@@ -19,7 +23,7 @@ export default class RegistrationScreenPhone extends Component {
     super();
     this.state = {
       registerInfo: {},
-      phoneNumber: "+31612345678",
+      phoneNumber: "+31611735849",
       phoneNumberError: "",
       confirmResult: null
     };
@@ -93,28 +97,24 @@ export default class RegistrationScreenPhone extends Component {
 
   render() {
     return (
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="dark-content"
+        />
       <ImageBackground
         style={styles.container}
         source={require("../assets/images/bluewavebg.png")}
         resizeMode="stretch"
       >
-        <View style={{ flexDirection: "row" }}>
-          <Icon
-            name="chevron-left"
-            type="font-awesome"
-            size={20}
-            color="#00A6FF"
-            underlayColor="#c1efff"
-            containerStyle={{ width: "10%", marginTop: "7%" }}
-            onPress={() => Router.goBack(this.props.navigation)}
-          />
-          <View style={{ width: "100%", marginTop: "5%" }}>
-            <Text style={styles.infoTextTitle}>Registreren</Text>
-            <Text style={styles.infoText}>
-              Vul alle velden in om je een account aan te maken.
-            </Text>
-          </View>
-        </View>
+      <Toolbar
+      leftElement="arrow-back"
+                    onLeftElementPress={() => this.props.navigation.goBack()}
+    centerElement="Registreren"
+    style={{container: {backgroundColor: '#fff'}, titleText:{color: '#00a6ff'}, leftElement:{color: '#00a6ff'}}}
+  />
         <View>
           <View style={styles.inputFieldContainer}>
             <Input
@@ -153,6 +153,8 @@ export default class RegistrationScreenPhone extends Component {
           </View>
         </View>
       </ImageBackground>
+      </SafeAreaView>
+      </Fragment>
     );
   }
 }
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    padding: "5%",
+    padding: "4%",
     backgroundColor: "#ffffff",
     borderRadius: 25
   },

@@ -3,7 +3,7 @@ import { NetInfo } from "react-native";
 let instance = null;
 class Api {
 
-  url = "http://192.168.1.34:8000/api/";
+  url = "http://145.37.145.192:8000/api/";
 
   constructor() {
     if (!instance) {
