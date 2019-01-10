@@ -14,6 +14,7 @@ import { Icon } from "react-native-elements";
 import ProjectApi from "../helpers/ProjectApi.js";
 import Api from "../helpers/Api.js";
 import Router from "../helpers/Router.js";
+import User from "../helpers/User.js";
 import Swiper from "react-native-deck-swiper";
 import LinearGradient from "react-native-linear-gradient";
 import { Toolbar } from "react-native-material-ui";
@@ -38,13 +39,13 @@ export default class ExploreScreen extends React.Component {
   }
 
   updateStack = () => {
-    console.log("updating")
     ProjectApi.getAllProjects().then(response => {
       this.setState({cards: response['projects']})
     })
   }
 
   undoSwipe() {
+    this.setState({cardIndex: this.state.cardIndex - 1})
     this.swiper.swipeBottom()
   }
 
@@ -53,7 +54,17 @@ export default class ExploreScreen extends React.Component {
   }
 
   startChat() {
-    console.log("start chat")
+    User.getUserId().then( id => {
+      let creatorId = this.state.cards[this.state.cardIndex].creator.id
+      let uid = ""
+      if(creatorId > id) {
+        uid = id + ":" + creatorId
+      } else {
+        uid = creatorId + ":" + id
+      }
+      let title = this.state.cards[this.state.cardIndex].creator.firstName + " " + this.state.cards[this.state.cardIndex].creator.lastName
+      Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid, title: title})
+    })
   }
 
   like() {
@@ -93,6 +104,7 @@ export default class ExploreScreen extends React.Component {
   }
 
   onSwiped = (type) => {
+    this.setState({cardIndex: this.state.cardIndex + 1})
     console.log(`on swiper ${type}`)
   }
 
@@ -126,7 +138,6 @@ export default class ExploreScreen extends React.Component {
           marginBottom={70}
           containerStyle={{height: "100%"}}
           ref={swiper => {this.swiper = swiper}}
-          onSwiped={() => this.onSwiped('general')}
           //onSwipedAll={this.updateStack}
           onSwipedLeft={() => this.onSwiped('left')}
           onSwipedRight={() => this.onSwiped('right')}
