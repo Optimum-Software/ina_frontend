@@ -10,7 +10,9 @@ import {
   View,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  ScrollView,
+  TouchableHighlight
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -19,6 +21,7 @@ import { Button } from "react-native-elements";
 import line from "../assets/images/Line.png";
 import Api from "../helpers/Api";
 import GroupApi from "../helpers/GroupApi";
+import ProjectApi from "../helpers/ProjectApi";
 import LinearGradient from "react-native-linear-gradient";
 
 export default class Home extends Component {
@@ -27,19 +30,27 @@ export default class Home extends Component {
     this.state = {
       groups: [],
       topics: [],
-      
+      projects: []
     };
   }
 
   componentDidMount() {
     this.getTags()
+    this.getTrendingProjects()
   }
 
   getTags() {
     Api.callApiGet("getAllTags").then( response => {
-      console.log(response)
       if(response['bool']) {        
         this.setState({topics: response['tags']})
+      }
+    })
+  }
+
+  getTrendingProjects() {
+    ProjectApi.mostLikedProjects().then(response => {
+      if(response['bool']) {        
+        this.setState({projects: response['projects']})
       }
     })
   }
@@ -69,6 +80,7 @@ export default class Home extends Component {
               }}
             />
           </View>
+          <ScrollView>
           <View>
             <Text style={styles.title}>Onderwerpen</Text>
             <FlatList
@@ -76,12 +88,12 @@ export default class Home extends Component {
               onEndReached={() => this.handelEnd()}
               horizontal={true}
               renderItem={({ item }) => {
-                console.log(item.thumbnail)
                 return (
                   <ImageBackground
                     style={styles.topicContainer}
                     imageStyle={{borderRadius: 2}}
                     source={{uri: Api.getFileUrl(item.thumbnail)}}
+                    key={item.id}
                   >
                     <TouchableOpacity
                       key={item.id}
@@ -111,52 +123,57 @@ export default class Home extends Component {
           </View>
           <View style={styles.separator}/>
           <View>
-            <Text style={styles.title}>Mijn groepen</Text>
+            <Text style={styles.title}>Top trending</Text>
             <FlatList
-              data={this.state.groups}
+              data={this.state.projects}
               onEndReached={() => this.handelEnd()}
-              horizontal={true}
-              renderItem={({ item }) => (
-                <TouchableHighlight
-                  key={item.id}
-                  style={styles.cardContainer}
-                  onPress={() =>
-                    Router.goTo(
-                      this.props.navigation,
-                      "GroupStack",
-                      "GroupHomeScreen",
-                      {
-                        name: item.name,
-                        desc: item.desc,
-                        photo_path: item.photo_path,
-                        created_at: item.created_at,
-                        member_count: item.member_count,
-                        public: item.public
+              numColumns={2}
+              renderItem={({ item }) => {
+                return (
+                  <TouchableOpacity
+                      style={styles.cardContainer}
+                      onPress={() =>
+                        Router.goTo(
+                          this.props.navigation,
+                          "ProjectStack",
+                          "ProjectDetailScreen",
+                          {
+                            id: item.id,
+                            name: item.name,
+                            url: item.thumbnail,
+                            desc: item.desc,
+                            start_date: item.start_date,
+                            end_date: item.end_date,
+                            created_at: item.created_at,
+                            like_count: item.like_count,
+                            follower_count: item.follower_count,
+                            location: item.location
+                          }
+                        )
                       }
-                    )
-                  }
-                >
-                  <View style={styles.card}>
-                    <View style={styles.cardImage}>
-                      <Image
-                        source={{ uri: item.photo_path }}
-                        resizeMode="cover"
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    </View>
-                    <Image
-                      source={line}
-                      resizeMode="stretch"
-                      style={{ width: "100%", height: "2%" }}
-                    />
-                    <Text numberOfLines={2} style={styles.cardTitle}>
-                      {item.name}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              )}
+                    >
+                      <View style={styles.card}>
+                        <View style={styles.cardImage}>
+                          <Image
+                            source={{uri: Api.getFileUrl(item.thumbnail)}}
+                            resizeMode="cover"
+                            style={styles.image}
+                          />
+                        </View>
+                        <Image
+                          source={line}
+                          resizeMode="stretch"
+                          style={{width: "100%", height: "2%"}}
+                        />
+                        <Text numberOfLines={2} style={styles.cardTitle}>
+                          {item.name}
+                        </Text>
+                      </View>
+                  </TouchableOpacity>
+              )}}
             />
           </View>
+          </ScrollView>
         </View>
       </SafeAreaView>
     );
@@ -190,7 +207,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "#F1F1F1",
+    backgroundColor: "#FFFFFF",
     margin: 10,
     width: "100%",
     height: 180,
@@ -224,5 +241,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     width: '80%',
     alignSelf: 'center'
-  }
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+  },
 });
