@@ -6,7 +6,7 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   View,
   SafeAreaView,
   StatusBar,
@@ -19,75 +19,33 @@ import { Button } from "react-native-elements";
 import line from "../assets/images/Line.png";
 import Api from "../helpers/Api";
 import GroupApi from "../helpers/GroupApi";
+import LinearGradient from "react-native-linear-gradient";
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
-
-    // GroupApi.getGroupById(1).then(result => {
-    //   if (result["bool"]) {
-    //     this.setState({
-    //       groups: [result["group"]]
-    //     });
-    //   } else {
-    //     alert(result["msg"]);
-    //   }
-    // });
-
     this.state = {
-      groups: [
-        // {
-        //   id: 1,
-        //   name: "React Native Grunn",
-        //   desc: "hoi",
-        //   photo_path: "../assets/images/banner.jpeg",
-        //   created_at: "2018-12-19 00:00:00.000000",
-        //   member_count: 0,
-        //   public: 1
-        // }
-      ],
-      data: [
-        // {
-        //   name: "Hello",
-        //   url:
-        //     "https://thumbor.forbes.com/thumbor/711x458/https://specials-images.forbesimg.com/dam/imageserve/982432822/960x0.jpg?fit=scale",
-        //   desc:
-        //     "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-        //   start_date: "Friday, 7 December 2018",
-        //   end_date: "Friday, 8 December 2018",
-        //   created_at: "Friday, 7 December 2018",
-        //   like_count: 20,
-        //   follower_count: 18,
-        //   location: "Noorderplantsoen"
-        // },
-        // {
-        //   name: "Dit is een langere titel dan de anderen.",
-        //   url:
-        //     "http://www.findapsychologist.org/wp-content/uploads/2013/07/Learning-disabilities1.jpg",
-        //   desc:
-        //     "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-        //   start_date: "Friday, 7 December 2018",
-        //   end_date: "Friday, 8 December 2018",
-        //   created_at: "Friday, 7 December 2018",
-        //   like_count: 20,
-        //   follower_count: 18,
-        //   location: "Noorderplantsoen"
-        // },
-        // {
-        //   name: "What",
-        //   url:
-        //     "https://www.tnpvisualworkplace.com/static/upload/full/14600524-9db4-4a71-a017-5404131e0290/The+Scrum+board.jpg",
-        //   desc:
-        //     "Spicy jalapeno bacon ipsum dolor amet pig strip steak meatball, beef ribs leberkas alcatra filet mignon boudin turkey chuck brisket turducken ground round. Bacon brisket ham, tail shankle ball tip burgdoggen flank capicola shank beef ribs andouille. Swine pork ham hock sausage. Brisket kielbasa corned beef leberkas andouille jerky bacon. Salami buffalo corned beef, pig beef ribs t-bone brisket frankfurter tongue pancetta prosciutto. Burgdoggen corned beef beef bresaola shank doner ball tip rump biltong meatloaf.",
-        //   start_date: "Friday, 7 December 2018",
-        //   end_date: "Friday, 8 December 2018",
-        //   created_at: "Friday, 7 December 2018",
-        //   like_count: 20,
-        //   follower_count: 18,
-        //   location: "Noorderplantsoen"
-        // }
-      ]
+      groups: [],
+      topics: [],
+      
     };
+  }
+
+  componentDidMount() {
+    this.getTags()
+  }
+
+  getTags() {
+    Api.callApiGet("getAllTags").then( response => {
+      console.log(response)
+      if(response['bool']) {        
+        this.setState({topics: response['tags']})
+      }
+    })
+  }
+
+  goToProjectFilterByTag(tag) {
+    Router.goTo(this.props.navigation, "ProjectStack", "ProjectOverviewScreen", {tag: tag})
   }
 
   handelEnd = () => {};
@@ -102,7 +60,7 @@ export default class Home extends Component {
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
             <Toolbar
-              centerElement="Home page"
+              centerElement="Home"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
               style={{ container: { backgroundColor: "#009EF2" } }}
@@ -112,56 +70,46 @@ export default class Home extends Component {
             />
           </View>
           <View>
-            <Text style={styles.title}>Gevolgde projecten</Text>
+            <Text style={styles.title}>Onderwerpen</Text>
             <FlatList
-              data={this.state.data}
+              data={this.state.topics}
               onEndReached={() => this.handelEnd()}
               horizontal={true}
-              renderItem={({ item }) => (
-                <TouchableHighlight
-                  key={item.id}
-                  style={styles.cardContainer}
-                  onPress={() =>
-                    Router.goTo(
-                      this.props.navigation,
-                      "Project",
-                      "ProjectDetailPage",
-                      {
-                        name: item.name,
-                        url: item.url,
-                        desc: item.desc,
-                        start_date: item.start_date,
-                        end_date: item.end_date,
-                        created_at: item.created_at,
-                        like_count: item.like_count,
-                        follower_count: item.follower_count,
-                        location: item.location
+              renderItem={({ item }) => {
+                console.log(item.thumbnail)
+                return (
+                  <ImageBackground
+                    style={styles.topicContainer}
+                    imageStyle={{borderRadius: 2}}
+                    source={{uri: Api.getFileUrl(item.thumbnail)}}
+                  >
+                    <TouchableOpacity
+                      key={item.id}
+                      style={styles.topicContainer}
+                      activeOpacity={0.8}
+                      onPress={() =>
+                        this.goToProjectFilterByTag(item.name)
                       }
-                    )
-                  }
-                >
-                  <View style={styles.card}>
-                    <View style={styles.cardImage}>
-                      <Image
-                        source={{ uri: item.url }}
-                        resizeMode="cover"
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    </View>
-                    <Image
-                      source={line}
-                      resizeMode="stretch"
-                      style={{ width: "100%", height: "2%" }}
-                    />
-                    <Text numberOfLines={2} style={styles.cardTitle}>
-                      {item.name}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              )}
+                    >
+                      <LinearGradient
+                        colors={["#00000000", "#000000cc"]}
+                        style={styles.topicContainer}
+                      >
+                        <Text
+                          style={{
+                                  fontWeight: 'bold',
+                                  textAlignVertical: "bottom",
+                                  textAlign: "center",
+                                  color: 'white'}}>
+                          {item.name}
+                        </Text>
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </ImageBackground>
+              )}}
             />
           </View>
-
+          <View style={styles.separator}/>
           <View>
             <Text style={styles.title}>Mijn groepen</Text>
             <FlatList
@@ -224,12 +172,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff"
   },
+
   cardContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     margin: 10
   },
+
+  topicContainer: {
+    height: 150,
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+    borderRadius: 2
+  },
+
   card: {
     backgroundColor: "#F1F1F1",
     margin: 10,
@@ -257,5 +216,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     margin: 10
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#b5babf',
+    marginTop: 15,
+    marginBottom: 15,
+    width: '80%',
+    alignSelf: 'center'
   }
 });
