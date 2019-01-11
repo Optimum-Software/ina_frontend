@@ -3,6 +3,7 @@ package com.ina_frontend;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
@@ -28,7 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(new MainReactPackage(), new ImagePickerPackage(), new RNFirebasePackage(),
+      return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new LinearGradientPackage(), new ImagePickerPackage(), new RNFirebasePackage(),
           new RNFirebaseAuthPackage(), new RNFirebaseDatabasePackage(), new VectorIconsPackage(),
           new RNGestureHandlerPackage(), new ReactNativeOneSignalPackage());
     }

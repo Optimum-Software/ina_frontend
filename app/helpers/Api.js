@@ -182,11 +182,14 @@ class Api {
     }
   }
 
+<<<<<<< HEAD
   login(username, password) {
     userData = { username: username, password: password };
     return this.callApiPost("login", userData);
   }
 
+=======
+>>>>>>> upstream/master
   getDeviceById(id) {
     return this.callApiGet("getDeviceById/" + id);
   }

@@ -24,16 +24,15 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    GroupApi.getGroupById(1).then(result => {
-      console.log(result);
-      if (result["bool"]) {
-        this.setState({
-          groups: [result["group"]]
-        });
-      } else {
-        alert(result["msg"]);
-      }
-    });
+    // GroupApi.getGroupById(1).then(result => {
+    //   if (result["bool"]) {
+    //     this.setState({
+    //       groups: [result["group"]]
+    //     });
+    //   } else {
+    //     alert(result["msg"]);
+    //   }
+    // });
 
     this.state = {
       groups: [

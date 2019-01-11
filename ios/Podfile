@@ -35,6 +35,8 @@ target 'ina_frontend' do
   target 'ina_frontend-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   end
 
   target 'ina_frontendTests' do
