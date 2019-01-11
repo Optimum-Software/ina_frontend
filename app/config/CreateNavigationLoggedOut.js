@@ -20,7 +20,6 @@ import {
   DrawerItems
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import DrawerContentComponent from "../components/DrawerContentComponent";
 import HomeScreen from "../screens/HomeScreen";
 import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
@@ -69,7 +68,7 @@ const CustomDrawerContentComponent = props => (
           </View>
         </View>
 
-        <View style={{ marginBottom: "80%", marginLeft: "5%" }}>
+        <View style={{ marginBottom: "60%", marginLeft: "5%" }}>
           <View
             style={{
               backgroundColor: "#fff",
