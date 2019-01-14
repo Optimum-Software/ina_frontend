@@ -101,11 +101,15 @@ export default class RegistrationScreenPhone extends Component {
         <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
         <StatusBar
-          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          backgroundColor={Platform.OS == "android" ? "white" : "#00a6ff"}
           barStyle="dark-content"
         />
       <ImageBackground
-        style={styles.container}
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        justifyContent: "flex-start"
+      }}
         source={require("../assets/images/bluewavebg.png")}
         resizeMode="stretch"
       >
@@ -113,7 +117,7 @@ export default class RegistrationScreenPhone extends Component {
       leftElement="arrow-back"
                     onLeftElementPress={() => this.props.navigation.goBack()}
     centerElement="Registreren"
-    style={{container: {backgroundColor: '#fff'}, titleText:{color: '#00a6ff'}, leftElement:{color: '#00a6ff'}}}
+    style={{container: {backgroundColor: 'transparent'}, titleText:{color: '#00a6ff'}, leftElement:{color: '#00a6ff'}}}
   />
         <View>
           <View style={styles.inputFieldContainer}>
@@ -136,21 +140,22 @@ export default class RegistrationScreenPhone extends Component {
               keyboardType="phone-pad"
               maxLength={12}
             />
-          </View>
-          <View
-            style={{
-              paddingLeft: "10%",
-              paddingRight: "10%",
-              justifyContent: "center"
-            }}
-          >
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => this.verifyPhone()}
+            <View
+              style={{
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                justifyContent: "center"
+              }}
             >
-              <Text style={styles.textStyle}>Verder</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => this.verifyPhone()}
+              >
+                <Text style={styles.textStyle}>Verder</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+
         </View>
       </ImageBackground>
       </SafeAreaView>
@@ -178,13 +183,11 @@ const styles = StyleSheet.create({
   },
 
   inputFieldContainer: {
-    marginTop: "10%",
-    marginBottom: "10%",
-    flexDirection: "column"
+    height: '100%',
+    flexDirection: "column",
+    justifyContent: "center",
   },
-  actionContainer: {
-    flex: 2
-  },
+
 
   infoTextTitle: {
     color: "#00A6FF",
@@ -207,6 +210,7 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
+    marginTop: '10%',
     padding: "4%",
     backgroundColor: "#ffffff",
     borderRadius: 25

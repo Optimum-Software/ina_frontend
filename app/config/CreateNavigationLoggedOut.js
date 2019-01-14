@@ -8,15 +8,18 @@ import {
   ScrollView,
   Image,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
 } from "react-native";
+import { Fragment } from "react";
+
 import {
   StackNavigator,
   createStackNavigator,
   createBottomTabNavigator,
   createDrawerNavigator,
   createAppContainer,
-  SafeAreaView,
   DrawerItems
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -34,6 +37,9 @@ import ProjectStack from "./ProjectStackNavigator";
 let screen = Dimensions.get("window");
 
 const CustomDrawerContentComponent = props => (
+  <Fragment>
+    <SafeAreaView style={{ flex: 0, backgroundColor: "00a6ff" }} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
   <View>
     <View style={{ height: "90%" }}>
       <ImageBackground
@@ -46,39 +52,40 @@ const CustomDrawerContentComponent = props => (
         <View
           style={{
             flex: 1,
-            height: "15%",
+            width: '100%',
             flexDirection: "row"
           }}
         >
           <View
             style={{
               flexDirection: "column",
-              marginLeft: "25%",
-              marginTop: "10%"
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
             }}
           >
             <Text
               style={{
                 color: "#fff",
-                fontWeight: "bold"
+                fontWeight: "bold",
+                alignSelf: 'center'
               }}
             >
               Log in voor meer opties
             </Text>
           </View>
         </View>
+        <View
+          style={{
+            backgroundColor: "#fff",
+            width: "90%",
+            height: 1,
+            alignSelf: "center",
 
-        <View style={{ marginBottom: "60%", marginLeft: "5%" }}>
-          <View
-            style={{
-              backgroundColor: "#fff",
-              width: "90%",
-              height: 1,
-              alignSelf: "center",
-              marginBottom: "3%",
-              marginTop: "3%"
-            }}
-          />
+          }}
+        />
+        <View style={{ flex: 3, paddingLeft: "5%", paddingTop: '5%' }}>
+
           <DrawerItems {...props} />
         </View>
       </ImageBackground>
@@ -89,15 +96,18 @@ const CustomDrawerContentComponent = props => (
         alignSelf: "center",
         alignItems: "center",
         justifyContent: "center",
+
         width: 50,
         height: 50,
         backgroundColor: "#01a6ff",
         borderRadius: 100
       }}
     >
-      <Icon name={"close"} size={30} color="#fff" />
+      <Icon name={"close"} size={25} color="#fff" />
     </TouchableOpacity>
   </View>
+  </SafeAreaView>
+  </Fragment>
 );
 
 export const Tabs = createBottomTabNavigator(

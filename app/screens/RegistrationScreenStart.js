@@ -139,7 +139,7 @@ export default class RegistrationScreenStart extends Component {
         <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
           <StatusBar
-            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            backgroundColor={Platform.OS == "android" ? "white" : "#00a6ff"}
             barStyle="dark-content"
           />
           <ImageBackground
@@ -156,7 +156,7 @@ export default class RegistrationScreenStart extends Component {
               onLeftElementPress={() => this.props.navigation.goBack()}
               centerElement="Registreren"
               style={{
-                container: { backgroundColor: "#fff" },
+                container: { backgroundColor: "transparent" },
                 titleText: { color: "#00a6ff" },
                 leftElement: { color: "#00a6ff" }
               }}
@@ -246,8 +246,6 @@ export default class RegistrationScreenStart extends Component {
                 secureTextEntry={true}
               />
               <Text style={styles.errorStyle}>{this.state.pwRepeatError}</Text>
-            </View>
-            <View style={styles.actionContainer}>
               <View
                 style={{
                   paddingLeft: "10%",
@@ -296,6 +294,7 @@ export default class RegistrationScreenStart extends Component {
                 </Text>
               </TouchableOpacity>
             </View>
+
           </ImageBackground>
         </SafeAreaView>
       </Fragment>
@@ -368,7 +367,7 @@ const styles = StyleSheet.create({
   },
 
   actionContainer: {
-    flex: 3,
+    flex: 1,
     flexDirection: "column",
     marginBottom: "5%"
   },
