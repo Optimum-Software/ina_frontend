@@ -12,17 +12,20 @@ import {
   StatusBar,
   Platform,
   ScrollView,
-  TouchableHighlight
+  TouchableHighlight,
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
-import { Button } from "react-native-elements";
+import { Input, Icon } from "react-native-elements";
 import line from "../assets/images/Line.png";
+import homeBackground from "../assets/images/homeBackground.jpg";
 import Api from "../helpers/Api";
 import GroupApi from "../helpers/GroupApi";
 import ProjectApi from "../helpers/ProjectApi";
+import User from "../helpers/User";
 import LinearGradient from "react-native-linear-gradient";
+import HomepageApi from "../helpers/HomepageApi";
 
 export default class Home extends Component {
   constructor(props) {
@@ -30,13 +33,18 @@ export default class Home extends Component {
     this.state = {
       groups: [],
       topics: [],
-      projects: []
+      projects: [],
+      searchTerm: '',
+      user: null,
+      loggedIn: false,
+      dateNow: null
     };
   }
 
   componentDidMount() {
     this.getTags()
     this.getTrendingProjects()
+    this.getUserIfLoggedIn()
   }
 
   getTags() {
@@ -55,8 +63,37 @@ export default class Home extends Component {
     })
   }
 
+  getUserIfLoggedIn() {
+    User.getUserId().then(id => {
+      if(id != null) {
+        dateNow = new Date().toLocaleDateString("nl-NL", {weekday: 'long', day: 'numeric', month: 'long'})
+        Api.callApiGet('getUserById/' + id).then(res => {
+          if(res['bool']) {
+            this.setState({user: res['user'], loggedIn: true, dateNow: dateNow})
+          }
+        })
+      } else {
+        this.setState({loggedIn: false, user: null, dateNow: null})
+      }
+    })
+  }
+
   goToProjectFilterByTag(tag) {
     Router.goTo(this.props.navigation, "ProjectStack", "ProjectOverviewScreen", {tag: tag})
+  }
+
+  search(term) {
+    HomepageApi.searchTags(term).then( res => {
+      if(res['bool']){
+        this.setState({topics: res['tags']})
+      }
+    });
+
+    HomepageApi.searchProjects(term).then( res => {
+      if(res['bool']){
+        this.setState({projects: res['projects']})
+      }
+    })
   }
 
   handelEnd = () => {};
@@ -82,6 +119,62 @@ export default class Home extends Component {
           </View>
           <ScrollView>
           <View>
+            {this.state.loggedIn && (
+              <View style={styles.welcomeContainer}>
+              <ImageBackground 
+                style={styles.welcomeBackground}
+                source={homeBackground}
+                resizeMode="cover"
+                >
+                <View style={styles.welcomeBox}>
+                  <Image
+                    source={{uri: Api.getFileUrl(this.state.user.profilePhotoPath)}}
+                    resizeMode="cover"
+                    style={{
+                      width: 85,
+                      height: 85,
+                      borderRadius: 100,
+                      backgroundColor: "white"
+                    }}
+                    imageStyle={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: 200,
+                    }}
+                  />
+                  <View style={{marginLeft: 20}}>
+                    <Text style={styles.textTitle}>Welkom {this.state.user.firstName},</Text>
+                    <Text style={styles.textSubTitle}>Het is vandaag {this.state.dateNow}.</Text>
+                  </View>
+                </View>
+              </ImageBackground>
+              <Image
+                source={line}
+                resizeMode="stretch"
+                style={{width: "100%", height: "2%"}}
+              />
+              </View>
+
+            )}
+            <View style={styles.searchBar}>
+              <Input
+                placeholder="Begin met zoeken.."
+                placeholderTextColor="#000000"
+                containerStyle={styles.searchBarContainerStyle}
+                inputContainerStyle={styles.inputContainerStyle}
+                inputStyle={styles.inputStyle}
+                value={this.state.searchTerm}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "search",
+                  color: "#000000"
+                }}
+                onChangeText={searchTerm => this.setState({ searchTerm })}
+                onSubmitEditing={() => this.search(this.state.searchTerm)}
+                shake={true}
+              />
+            </View>
+            <View style={styles.separator}/>
             <Text style={styles.title}>Onderwerpen</Text>
             <FlatList
               data={this.state.topics}
@@ -132,6 +225,7 @@ export default class Home extends Component {
                 return (
                   <TouchableOpacity
                       style={styles.cardContainer}
+                      key={item.id}
                       onPress={() =>
                         Router.goTo(
                           this.props.navigation,
@@ -224,16 +318,19 @@ const styles = StyleSheet.create({
     height: "70%",
     width: "100%"
   },
+
   cardTitle: {
     margin: 5,
     fontSize: 15,
     fontWeight: "bold"
   },
+
   title: {
     fontSize: 20,
     fontWeight: "bold",
     margin: 10
   },
+
   separator: {
     height: 1,
     backgroundColor: '#b5babf',
@@ -242,10 +339,60 @@ const styles = StyleSheet.create({
     width: '80%',
     alignSelf: 'center'
   },
+
   image: {
     width: "100%",
     height: "100%",
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
   },
+
+  searchBar: {
+    marginTop: 10
+  },
+
+  searchBarContainerStyle: {
+    width: "75%",
+    alignSelf: "center",
+    backgroundColor: "transparent",
+    borderColor: 'black',
+    borderWidth: 2
+  },
+
+  inputContainerStyle: {
+    borderBottomColor: "#FFFFFF",
+    alignSelf: 'center'
+  },
+
+  inputStyle: {
+    color: "#000000"
+  },
+
+  welcomeBox: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  welcomeBackground: {
+    height: 125,
+  },
+
+  welcomeContainer: {
+    width: '100%',
+    marginBottom: 5,
+  },
+
+  textTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'black'
+  },
+
+  textSubTitle: {
+    fontSize: 15,
+    color: 'black'
+  }
 });

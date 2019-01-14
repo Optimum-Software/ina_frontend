@@ -82,7 +82,6 @@ class FirebaseService {
                 if (user.phoneNumber != null) {
                     this.deleteUser(user);
                 }
-                console.log(user);
             } else {
                 console.log("Please login");
             }

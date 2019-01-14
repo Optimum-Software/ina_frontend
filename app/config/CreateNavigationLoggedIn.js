@@ -50,7 +50,6 @@ User.getUserId().then( id => {
       profilePhoto.uri = Api.getFileUrl(res['user'].profilePhotoPath);
       organisation = res['user'].organisation;
     })
-    console.log(profilePhoto)
   }
 })
 const CustomDrawerContentComponent = props => (
