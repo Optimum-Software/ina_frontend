@@ -182,11 +182,6 @@ class Api {
     }
   }
 
-  login(username, password) {
-    userData = { username: username, password: password };
-    return this.callApiPost("login", userData);
-  }
-
   getDeviceById(id) {
     return this.callApiGet("getDeviceById/" + id);
   }
