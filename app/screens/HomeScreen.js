@@ -13,6 +13,7 @@ import {
   Platform,
   ScrollView,
   TouchableHighlight,
+  RefreshControl
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -37,7 +38,8 @@ export default class Home extends Component {
       searchTerm: '',
       user: null,
       loggedIn: false,
-      dateNow: null
+      dateNow: null,
+      refreshing: false,
     };
   }
 
@@ -93,10 +95,19 @@ export default class Home extends Component {
       if(res['bool']){
         this.setState({projects: res['projects']})
       }
-    })
+    });
+    this.setState({searchTerm: ''})
   }
 
   handelEnd = () => {};
+
+  onRefresh = () => {
+    this.setState({ refreshing: true, searchTerm: '' })
+    this.getTags()
+    this.getTrendingProjects()
+    this.getUserIfLoggedIn()
+    this.setState({ refreshing: false })
+  };
 
   render() {
     return (
@@ -117,7 +128,15 @@ export default class Home extends Component {
               }}
             />
           </View>
-          <ScrollView>
+          <ScrollView
+            refreshControl={
+                <RefreshControl
+                  colors={["#94D600"]}
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh}
+                />
+              }
+          >
           <View>
             {this.state.loggedIn && (
               <View style={styles.welcomeContainer}>
