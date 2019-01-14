@@ -83,6 +83,7 @@ export default class Home extends Component {
               centerElement="Home page"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
+              style={{container: {"backgroundColor": "#009EF2"}}}
               onLeftElementPress={() => {
                 this.props.navigation.openDrawer();
               }}

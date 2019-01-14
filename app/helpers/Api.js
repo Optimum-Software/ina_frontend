@@ -180,6 +180,10 @@ class Api {
   getAllProjects() {
     return this.callApiGet("getAllProjects");
   }
+
+  getFileUrl(path) {
+    return this.mediaUrl + path;
+  }
 }
 
 const api = new Api();
