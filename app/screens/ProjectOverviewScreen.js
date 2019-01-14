@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   dropdown: {
     width: '93%',
     marginTop: '5%',
-    backgroundColor: 'f0f0f0',
+    backgroundColor: '#f0f0f0',
     borderBottomWidth: 1,
     borderBottomColor: 'black'
     },

@@ -12,6 +12,9 @@ target 'ina_frontend' do
 
   react_native_path = "../node_modules/react-native"
   pod "yoga", :path => "#{react_native_path}/ReactCommon/yoga"
+  pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
+  pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod "React", :path => react_native_path, :subspecs => [
     'Core',
     'RCTActionSheet',
@@ -23,7 +26,9 @@ target 'ina_frontend' do
     'RCTSettings',
     'RCTText',
     'RCTVibration',
-    'RCTWebSocket'
+    'RCTWebSocket',
+    'CxxBridge',
+    'DevSupport'
   ]
 
 
@@ -48,4 +53,12 @@ target 'ina_frontend-tvOS' do
   # Pods for ina_frontend-tvOS
 
  
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == "React"
+      target.remove_from_project
+    end
+  end
 end
