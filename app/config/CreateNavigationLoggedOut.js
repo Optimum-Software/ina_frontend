@@ -20,7 +20,6 @@ import {
   DrawerItems
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import DrawerContentComponent from "../components/DrawerContentComponent";
 import HomeScreen from "../screens/HomeScreen";
 import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
@@ -31,6 +30,7 @@ import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVe
 import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
 import ProjectStack from "./ProjectStackNavigator";
+import GroupStack from "./GroupStackNavigator";
 
 let screen = Dimensions.get("window");
 
@@ -164,7 +164,7 @@ export const Drawer = createDrawerNavigator(
           <Icon name="settings" size={25} color={tintColor} />
         )
       }
-    },
+    }
   },
   {
     drawerPosition: "left",

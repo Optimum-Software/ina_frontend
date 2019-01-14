@@ -2,7 +2,7 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http://145.37.153.25:8000";
+  ip = "http://145.37.153.141:8000";
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -68,30 +68,30 @@ class Api {
 
   async callApiGetSafe(action, token) {
     try {
-        let response = await this.timeout(
-            5000,
-            fetch(this.url + action, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Token " + token
-                }
-            })
-        );
-        let responseJson = await response.json();
-        return responseJson;
-      } catch (error) {
-        return {
-            ntwFail: true,
-            msg: "Kon geen verbinding met de server maken"
-        };
-      }
+      let response = await this.timeout(
+        5000,
+        fetch(this.url + action, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Token " + token
+          }
+        })
+      );
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
   }
 
   async callApiDelete(action, data) {
     try {
       let response = await this.timeout(
-        3000,
+        10000,
         fetch(this.url + action, {
           method: "DELETE",
           headers: {
@@ -182,13 +182,10 @@ class Api {
     }
   }
 
-<<<<<<< HEAD
-=======
   login(username, password) {
     userData = { username: username, password: password };
     return this.callApiPost("login", userData);
   }
->>>>>>> upstream/master
 
   getDeviceById(id) {
     return this.callApiGet("getDeviceById/" + id);

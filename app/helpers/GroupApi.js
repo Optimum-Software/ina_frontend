@@ -20,6 +20,37 @@ class GroupApi {
   getGroupMembersById(id) {
     return Api.callApiGet("getMembersByGroupId/" + id);
   }
+  getAllGroups() {
+    return Api.callApiGet("getAllGroups");
+  }
+  getMyGroups(userId) {
+    userData = { userId: userId };
+    return Api.callApiPost("getMyGroups", userData);
+  }
+
+  joinGroup(userId, groupId) {
+    userData = {
+      userId: userId,
+      groupId: groupId
+    };
+    return Api.callApiPost("createMember", userData);
+  }
+
+  leaveGroup(userId, groupId) {
+    userData = {
+      userId: userId,
+      groupId: groupId
+    };
+    return Api.callApiDelete("deleteMember", userData);
+  }
+
+  getMember(userId, groupId) {
+    userData = {
+      userId: userId,
+      groupId: groupId
+    };
+    return Api.callApiPost("getMember", userData);
+  }
 }
 
 const groupApi = new GroupApi();

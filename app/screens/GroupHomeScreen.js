@@ -17,6 +17,7 @@ import Router from "../helpers/Router";
 import { Toolbar } from "react-native-material-ui";
 import Api from "../helpers/Api";
 import GroupApi from "../helpers/GroupApi";
+import User from "../helpers/User";
 
 import {
   Card,
@@ -78,34 +79,23 @@ export default class GroupHomeScreen extends Component {
       groupAdmin: {},
       groupMembers: [],
       showAdminBio: false,
-      groupId: this.props.navigation.getParam("id", ""),
-      groupAdminBio: ""
+      group: {
+        id: this.props.navigation.getParam("id", ""),
+        name: this.props.navigation.getParam("name", ""),
+        desc: this.props.navigation.getParam("desc", ""),
+        photo_path: this.props.navigation.getParam("photo_path", ""),
+        created_at: this.props.navigation.getParam("created_at", ""),
+        member_count: this.props.navigation.getParam("member_count", ""),
+        public_bool: this.props.navigation.getParam("public_bool", "")
+      },
+      groupAdminBio: "",
+      member: this.props.navigation.getParam("member", "")
     };
   }
   handelEnd = () => {};
 
   componentDidMount() {
-    GroupApi.getGroupMembersById(this.state.groupId).then(result => {
-      if (result["bool"]) {
-        this.setState({
-          groupMembers: result["members"]
-        });
-        console.log(this.state.groupMembers);
-      } else {
-        alert("Er zijn geen deelnemers");
-      }
-    });
-    GroupApi.getGroupAdminById(this.state.groupId).then(result => {
-      if (result["bool"]) {
-        this.setState({
-          groupAdmin: result["user"],
-          groupAdminBio: result["user"].bio
-        });
-        console.log(this.state.groupAdmin);
-      } else {
-        alert("Kan groep admin niet vinden");
-      }
-    });
+    this.updateGroupInfo();
   }
 
   renderViewMore(onPress) {
@@ -122,6 +112,68 @@ export default class GroupHomeScreen extends Component {
       </Text>
     );
   }
+
+  joinGroup() {
+    User.getUserId().then(id => {
+      GroupApi.joinGroup(id, this.state.group.id).then(result => {
+        if (result["bool"]) {
+          this.setState({ member: true });
+          this.updateGroupInfo();
+          alert("Je bent nu lid");
+        } else {
+          alert(result["msg"]);
+        }
+      });
+    });
+  }
+
+  leaveGroup() {
+    User.getUserId().then(id => {
+      GroupApi.leaveGroup(id, this.state.group.id).then(result => {
+        if (result["bool"]) {
+          alert("Je hebt de groep verlaten");
+          this.setState({ member: false });
+          this.updateGroupInfo();
+        } else {
+          alert(result["msg"]);
+        }
+      });
+    });
+  }
+
+  updateGroupInfo() {
+    GroupApi.getGroupById(this.state.group.id).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          group: result["group"]
+        });
+      } else {
+        alert("Kon groep niet updaten");
+      }
+    });
+    GroupApi.getGroupMembersById(this.state.group.id).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          groupMembers: result["members"]
+        });
+        console.log(this.state.groupMembers);
+      } else {
+        alert("Er zijn geen deelnemers");
+      }
+    });
+    GroupApi.getGroupAdminById(this.state.group.id).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          groupAdmin: result["user"],
+          groupAdminBio: result["user"].bio
+        });
+        console.log(this.state.groupAdmin);
+      } else {
+        alert("Kan groep admin niet vinden");
+      }
+    });
+  }
+
   render() {
     const { navigation } = this.props;
 
@@ -136,14 +188,12 @@ export default class GroupHomeScreen extends Component {
     return (
       <View style={styles.container}>
         <Toolbar
-          centerElement={name}
-          iconSet="MaterialCommunityIcons"
-          leftElement={"menu"}
-          rightElement={"share-variant"}
           color="#00a6ff"
-          onLeftElementPress={() => {
-            this.props.navigation.openDrawer();
-          }}
+          iconSet="MaterialCommunityIcons"
+          centerElement={this.state.group.name}
+          leftElement={"chevron-left"}
+          onLeftElementPress={() => Router.goBack(this.props.navigation)}
+          rightElement={"share-variant"}
           onRightElementPress={() => {
             alert("share");
           }}
@@ -154,15 +204,29 @@ export default class GroupHomeScreen extends Component {
             marginBottom: "5%"
           }}
         >
-          <Image source={{ uri: photo_path }} style={styles.banner} />
+          <Image
+            source={{ uri: this.state.group.photo_path }}
+            style={styles.banner}
+          />
           <View style={styles.containerMargin}>
-            <TouchableHighlight
-              style={styles.joinButton}
-              onPress={() => alert("Je bent nu lid")}
-            >
-              <Text style={{ fontSize: 18, color: "#fff" }}>Word lid</Text>
-            </TouchableHighlight>
-
+            {this.state.member == false && (
+              <TouchableHighlight
+                style={styles.joinButton}
+                onPress={() => this.joinGroup()}
+              >
+                <Text style={{ fontSize: 18, color: "#fff" }}>Word lid</Text>
+              </TouchableHighlight>
+            )}
+            {this.state.member == true && (
+              <TouchableHighlight
+                style={styles.leaveButton}
+                onPress={() => this.leaveGroup()}
+              >
+                <Text style={{ fontSize: 18, color: "#fff" }}>
+                  Verlaat groep
+                </Text>
+              </TouchableHighlight>
+            )}
             <TouchableOpacity
               style={styles.personList}
               onPress={() =>
@@ -200,10 +264,10 @@ export default class GroupHomeScreen extends Component {
                 // TODO: voeg locatie toe aan groep
               }
               <Text style={styles.text}>Groningen, Netherlands</Text>
-              {public_bool == 1 && (
+              {this.state.group.public_bool == 1 && (
                 <Text style={styles.text}>Publieke groep</Text>
               )}
-              {public_bool == 0 && (
+              {this.state.group.public_bool == 0 && (
                 <Text style={styles.text}>Besloten groep</Text>
               )}
               <ViewMoreText
@@ -212,12 +276,9 @@ export default class GroupHomeScreen extends Component {
                 renderViewLess={this.renderViewLess}
                 textStyle={(styles.text, { marginTop: "2%" })}
               >
-                <Text>{desc}</Text>
+                <Text>{this.state.group.desc}</Text>
               </ViewMoreText>
             </View>
-            {this.state.showDesc && (
-              <Text style={{ marginTop: "1%" }}>{desc}</Text>
-            )}
 
             <Divider style={{ backgroundColor: "#a8a8a8" }} />
 
@@ -228,19 +289,28 @@ export default class GroupHomeScreen extends Component {
                   marginTop: "3%"
                 }}
               >
-                <Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                    uri: this.state.groupAdmin.profilePhotoPath
-                  }}
-                />
-                <Text>
-                  {this.state.groupAdmin.firstName +
-                    " " +
-                    this.state.groupAdmin.lastName}
-                </Text>
-                <Text>Over admin</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Avatar
+                    size="medium"
+                    rounded
+                    source={{
+                      uri: this.state.groupAdmin.profilePhotoPath
+                    }}
+                  />
+                  <View style={{ marginLeft: "1%" }}>
+                    <Text>
+                      {this.state.groupAdmin.firstName +
+                        " " +
+                        this.state.groupAdmin.lastName}
+                    </Text>
+                    <Text>
+                      {this.state.groupAdmin.function +
+                        " bij " +
+                        this.state.groupAdmin.organisation}
+                    </Text>
+                  </View>
+                </View>
+                <Text>{"Over " + this.state.groupAdmin.firstName}</Text>
                 <ViewMoreText
                   numberOfLines={3}
                   renderViewMore={this.renderViewMore}
@@ -374,6 +444,15 @@ const styles = StyleSheet.create({
 
   joinButton: {
     backgroundColor: "#f39200",
+    width: "100%",
+    height: 30,
+    marginBottom: "2%",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  leaveButton: {
+    backgroundColor: "#ef5350",
     width: "100%",
     height: 30,
     marginBottom: "2%",

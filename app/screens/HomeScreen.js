@@ -19,24 +19,14 @@ import { Button } from "react-native-elements";
 import line from "../assets/images/Line.png";
 import Api from "../helpers/Api";
 import GroupApi from "../helpers/GroupApi";
+import User from "../helpers/User";
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
 
-    GroupApi.getGroupById(1).then(result => {
-      console.log(result);
-      if (result["bool"]) {
-        this.setState({
-          groups: [result["group"]]
-        });
-      } else {
-        alert(result["msg"]);
-      }
-    });
-
     this.state = {
-      groups: [
+      myGroups: [
         // {
         //   id: 1,
         //   name: "React Native Grunn",
@@ -145,55 +135,6 @@ export default class Home extends Component {
                     <View style={styles.cardImage}>
                       <Image
                         source={{ uri: item.url }}
-                        resizeMode="cover"
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    </View>
-                    <Image
-                      source={line}
-                      resizeMode="stretch"
-                      style={{ width: "100%", height: "2%" }}
-                    />
-                    <Text numberOfLines={2} style={styles.cardTitle}>
-                      {item.name}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              )}
-            />
-          </View>
-
-          <View>
-            <Text style={styles.title}>Mijn groepen</Text>
-            <FlatList
-              data={this.state.groups}
-              onEndReached={() => this.handelEnd()}
-              horizontal={true}
-              renderItem={({ item }) => (
-                <TouchableHighlight
-                  key={item.id}
-                  style={styles.cardContainer}
-                  onPress={() =>
-                    Router.goTo(
-                      this.props.navigation,
-                      "GroupStack",
-                      "GroupHomeScreen",
-                      {
-                        id: item.id,
-                        name: item.name,
-                        desc: item.desc,
-                        photo_path: item.photo_path,
-                        created_at: item.created_at,
-                        member_count: item.member_count,
-                        public: item.public
-                      }
-                    )
-                  }
-                >
-                  <View style={styles.card}>
-                    <View style={styles.cardImage}>
-                      <Image
-                        source={{ uri: item.photo_path }}
                         resizeMode="cover"
                         style={{ width: "100%", height: "100%" }}
                       />

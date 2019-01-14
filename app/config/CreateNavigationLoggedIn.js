@@ -40,19 +40,19 @@ import Api from "../helpers/Api";
 let screen = Dimensions.get("window");
 let firstName = "";
 let lastName = "";
-let profilePhoto = { uri: ""};
+let profilePhoto = { uri: "" };
 let organisation = "";
-User.getUserId().then( id => {
-  if(id != null) {
-    Api.callApiGetSafe('getUserById/' + id).then(res => {
-      firstName = res['user'].firstName;
-      lastName = res['user'].lastName;
-      profilePhoto.uri = Api.getFileUrl(res['user'].profilePhotoPath);
-      organisation = res['user'].organisation;
-    })
-    console.log(profilePhoto)
+User.getUserId().then(id => {
+  if (id != null) {
+    Api.callApiGetSafe("getUserById/" + id).then(res => {
+      firstName = res["user"].firstName;
+      lastName = res["user"].lastName;
+      profilePhoto.uri = Api.getFileUrl(res["user"].profilePhotoPath);
+      organisation = res["user"].organisation;
+    });
+    console.log(profilePhoto);
   }
-})
+});
 const CustomDrawerContentComponent = props => (
   <View>
     <View style={{ height: "90%" }}>
@@ -108,9 +108,9 @@ const CustomDrawerContentComponent = props => (
               backgroundColor: "white"
             }}
             imageStyle={{
-              width: '100%',
-              height: '100%',
-              borderRadius: 200,
+              width: "100%",
+              height: "100%",
+              borderRadius: 200
             }}
           />
         </View>
@@ -128,18 +128,34 @@ const CustomDrawerContentComponent = props => (
           />
           <DrawerItems {...props} />
           <TouchableHighlight
-            style={{width: '50%', height: '13%', justifyContent: 'center'}}
+            style={{ width: "50%", height: "13%", justifyContent: "center" }}
             underlayColor="transparent"
             onPress={() => {
               UserApi.logout();
-              User.storeUserId(null)
-              User.storeToken(null)
-              props.navigation.closeDrawer()
-              Router.switchLogout(props.navigation)
-            }}>
-            <View style={{flexDirection: "row", marginLeft: '10%',width: '60%', justifyContent: 'space-between'}}>
-              <Icon name="logout" size={25} color={"white"}  />
-              <Text style={{color: 'white', textAlign: 'right',fontWeight: 'bold'}}>Uitloggen </Text>
+              User.storeUserId(null);
+              User.storeToken(null);
+              props.navigation.closeDrawer();
+              Router.switchLogout(props.navigation);
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                marginLeft: "10%",
+                width: "60%",
+                justifyContent: "space-between"
+              }}
+            >
+              <Icon name="logout" size={25} color={"white"} />
+              <Text
+                style={{
+                  color: "white",
+                  textAlign: "right",
+                  fontWeight: "bold"
+                }}
+              >
+                Uitloggen{" "}
+              </Text>
             </View>
           </TouchableHighlight>
         </View>
@@ -214,6 +230,15 @@ export const Drawer = createDrawerNavigator(
         drawerLabel: "Ontdekken",
         drawerIcon: ({ tintColor }) => (
           <Icon name="compass" size={25} color={tintColor} />
+        )
+      }
+    },
+    GroupStack: {
+      screen: GroupStack,
+      navigationOptions: {
+        drawerLabel: "Groepen",
+        drawerIcon: ({ tintColor }) => (
+          <Icon name="account-group" size={25} color={tintColor} />
         )
       }
     },
