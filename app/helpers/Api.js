@@ -68,24 +68,24 @@ class Api {
 
   async callApiGetSafe(action, token) {
     try {
-        let response = await this.timeout(
-            5000,
-            fetch(this.url + action, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Token " + token
-                }
-            })
-        );
-        let responseJson = await response.json();
-        return responseJson;
-      } catch (error) {
-        return {
-            ntwFail: true,
-            msg: "Kon geen verbinding met de server maken"
-        };
-      }
+      let response = await this.timeout(
+        5000,
+        fetch(this.url + action, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Token " + token
+          }
+        })
+      );
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
   }
 
   async callApiDelete(action, data) {
@@ -204,6 +204,11 @@ class Api {
     }
   }
 
+  login(username, password) {
+    userData = { username: username, password: password };
+    return this.callApiPost("login", userData);
+  }
+
   getDeviceById(id) {
     return this.callApiGet("getDeviceById/" + id);
   }
@@ -223,6 +228,7 @@ class Api {
   }
 
   getFileUrl(path) {
+    console.log(this.mediaUrl + path);
     return this.mediaUrl + path;
   }
 }
