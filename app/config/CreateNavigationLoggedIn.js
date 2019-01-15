@@ -53,7 +53,6 @@ User.getUserId().then( id => {
       profilePhoto.uri = Api.getFileUrl(res['user'].profilePhotoPath);
       organisation = res['user'].organisation;
     })
-    console.log(profilePhoto)
   }
 })
 
@@ -79,6 +78,9 @@ const CustomDrawerContentComponent = props => (
             alignItems: 'center',
           }}
         >
+        <TouchableOpacity
+          onPress={() => {Router.goTo(props.navigation, 'Profile', 'ProfileScreen')}}
+        >
           <ImageBackground
             source={profilePhoto}
             resizeMode="cover"
@@ -95,6 +97,7 @@ const CustomDrawerContentComponent = props => (
               borderRadius: 200,
             }}
           />
+        </TouchableOpacity>
           <View
             style={{
               flexDirection: "column",
@@ -118,10 +121,8 @@ const CustomDrawerContentComponent = props => (
                 color: "#fff"
               }}
             >
-              Scheikunde docent
             </Text>
           </View>
-
         </View>
         <View
           style={{
