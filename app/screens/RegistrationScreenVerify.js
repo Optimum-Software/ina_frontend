@@ -7,7 +7,9 @@ import {
   TouchableHighlight,
   ImageBackground,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
+  SafeAreaView,
+  StatusBar,
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -17,6 +19,7 @@ import UserApi from "../helpers/UserApi";
 import User from "../helpers/User";
 import firebaseApi from "../helpers/FirebaseApi";
 import firebase from "react-native-firebase";
+import { Fragment } from "react";
 
 export default class RegistrationScreenStart extends Component {
   constructor() {
@@ -37,50 +40,51 @@ export default class RegistrationScreenStart extends Component {
       this.setState({
         android: true
       });
-      firebaseApi
-        .verifyPhoneNumber(this.props.navigation.state.params.phoneNumber)
-        .on(
-          "state_changed",
-          phoneAuthSnapshot => {
-            switch (phoneAuthSnapshot.state) {
-              case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
-                this.setState({
-                  verifyId: phoneAuthSnapshot.verificationId
-                });
-                break;
-              case firebase.auth.PhoneAuthState.ERROR: // or 'error'
-                alert("Er ging iets mis, probeer het nog een keer");
-                Router.goBack(this.props.navigation);
-                break;
-              case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT: // or 'timeout'
-                const { verificationId, code } = phoneAuthSnapshot;
-                this.setState({
-                  android: false,
-                  verificationId: verificationId,
-                  code: code
-                });
-                break;
-              case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
-                this.register();
-                break;
-            }
-          },
-          error => {
-            console.log(error);
-            console.log(error.verificationId);
-          },
-          phoneAuthSnapshot => {
-            console.log(phoneAuthSnapshot);
-          }
-        );
     }
+    firebaseApi
+      .verifyPhoneNumber(this.props.navigation.state.params.phoneNumber)
+      .on(
+        "state_changed",
+        phoneAuthSnapshot => {
+          switch (phoneAuthSnapshot.state) {
+            case firebase.auth.PhoneAuthState.CODE_SENT: // or 'sent'
+              this.setState({
+                verifyId: phoneAuthSnapshot.verificationId
+              });
+              break;
+            case firebase.auth.PhoneAuthState.ERROR: // or 'error'
+              alert("Er ging iets mis, probeer het nog een keer");
+              Router.goBack(this.props.navigation);
+              break;
+            case firebase.auth.PhoneAuthState.AUTO_VERIFY_TIMEOUT: // or 'timeout'
+              const { verificationId, code } = phoneAuthSnapshot;
+              this.setState({
+                android: false,
+                verificationId: verificationId,
+                code: code
+              });
+              break;
+            case firebase.auth.PhoneAuthState.AUTO_VERIFIED: // or 'verified'
+              this.register();
+              break;
+          }
+        },
+        error => {
+          console.log(error);
+          console.log(error.verificationId);
+        },
+        phoneAuthSnapshot => {
+          console.log(phoneAuthSnapshot);
+        }
+      );
   }
 
   checkCode() {
     const credential = firebase.auth.PhoneAuthProvider.credential(
-      this.state.verificationId,
+      this.state.verifyId,
       this.state.code
     );
+    console.log(credential);
     firebaseApi
       .loginPhone(credential)
       .then(result => this.register(result.user));
@@ -98,9 +102,8 @@ export default class RegistrationScreenStart extends Component {
       this.state.registerPhoneInfo.registerInfo.hashedPw,
       this.state.registerPhoneInfo.phoneNumber
     ).then(result => {
-      console.log(result)
+      console.log(result);
       if (!result["bool"]) {
-        firebaseApi.deleteUser(firebaseUser);
         firebaseApi.deleteUser(emailAccount);
       } else {
         userId = result["id"];
@@ -116,83 +119,84 @@ export default class RegistrationScreenStart extends Component {
 
   render() {
     return (
-      <ImageBackground
-        style={styles.container}
-        source={require("../assets/images/bluewavebg.png")}
-        resizeMode="stretch"
-      >
-        <View style={{ flexDirection: "row" }}>
-          <View
-            style={{
-              flex: 2,
-              width: "90%",
-              marginTop: "3%",
-              marginLeft: "5%",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <Text style={styles.infoTextTitle}>Verificatie</Text>
-          </View>
-        </View>
-        {this.state.android && (
-          <View
-            style={{
-              alignSelf: "center",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-              width: "100%"
-            }}
-          >
-            <ActivityIndicator size="large" color="#ffffff" />
-          </View>
-        )}
-        {!this.state.android && (
-          <View style={{ padding: "10%" }}>
-            <View style={{ flexDirection: "row" }}>
-              <View
-                style={{
-                  flex: 2,
-                  width: "90%",
-                  marginTop: "5%"
-                }}
-              >
-                <Text style={styles.infoText}>
-                  Vul alle velden in om je een account aan te maken.
-                </Text>
-              </View>
-            </View>
-            <View style={styles.inputFieldContainer}>
-              <Input
-                placeholder="verificatiecode"
-                placeholderTextColor="#FFFFFF"
-                containerStyle={styles.inputContainer}
-                inputContainerStyle={styles.inputContainerStyle}
-                inputStyle={styles.inputStyle}
-                value={this.state.code}
-                leftIcon={{
-                  type: "font-awesome",
-                  name: "lock",
-                  color: "#FFFFFF"
-                }}
-                errorStyle={styles.errorStyle}
-                errorMessage={this.state.phoneNumberError}
-                onChangeText={code => this.setState({ code })}
-                onSubmitEditing={() => this.checkCode()}
-                keyboardType="numeric"
-                maxLength={6}
-              />
-            </View>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => this.checkCode()}
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="dark-content"
+        />
+        <ImageBackground
+          style={styles.container}
+          source={require("../assets/images/bluewavebg.png")}
+          resizeMode="stretch"
+        >
+        <Toolbar
+        leftElement="arrow-back"
+                      onLeftElementPress={() => this.props.navigation.goBack()}
+      centerElement="Verificatie"
+      style={{container: {backgroundColor: '#fff'}, titleText:{color: '#00a6ff'}, leftElement:{color: '#00a6ff'}}}
+    />
+          {this.state.android && (
+            <View
+              style={{
+                alignSelf: "center",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                width: "100%"
+              }}
             >
-              <Text style={styles.textStyle}>Verder</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </ImageBackground>
+              <ActivityIndicator size="large" color="#ffffff" />
+            </View>
+          )}
+          {!this.state.android && (
+            <View style={{ padding: "10%" }}>
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={{
+                    flex: 2,
+                    width: "90%",
+                    marginTop: "5%"
+                  }}
+                >
+                  <Text style={styles.infoText}>
+                    Vul alle velden in om je een account aan te maken.
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.inputFieldContainer}>
+                <Input
+                  placeholder="verificatiecode"
+                  placeholderTextColor="#FFFFFF"
+                  containerStyle={styles.inputContainer}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  inputStyle={styles.inputStyle}
+                  value={this.state.code}
+                  leftIcon={{
+                    type: "font-awesome",
+                    name: "lock",
+                    color: "#FFFFFF"
+                  }}
+                  errorStyle={styles.errorStyle}
+                  errorMessage={this.state.phoneNumberError}
+                  onChangeText={code => this.setState({ code })}
+                  onSubmitEditing={() => this.checkCode()}
+                  keyboardType="numeric"
+                  maxLength={6}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => this.checkCode()}
+              >
+                <Text style={styles.textStyle}>Verder</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </ImageBackground>
+      </SafeAreaView>
+      </Fragment>
     );
   }
 }
@@ -201,6 +205,12 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%"
+  },
+  textStyle: {
+    padding: "4%",
+    fontSize: 16,
+    color: "#00a6ff",
+    textAlign: "center"
   },
 
   infoTextTitle: {
@@ -274,7 +284,6 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    padding: "5%",
     backgroundColor: "#ffffff",
     borderRadius: 25
   },
