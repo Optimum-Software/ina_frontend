@@ -121,6 +121,15 @@ export default class ProjectOverview extends Component {
               onLeftElementPress={() => {
                 this.props.navigation.openDrawer();
               }}
+              rightElement={"plus"}
+              onRightElementPress={() => {
+                Router.goTo(
+                  this.props.navigation,
+                  "ProjectStack",
+                  "ProjectCreateFirstScreen",
+                  {}
+                );
+              }}
             />
           </View>
           <View style={{ alignItems: "center" }}>

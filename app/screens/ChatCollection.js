@@ -16,6 +16,7 @@ import FirebaseApi from "../helpers/FirebaseApi";
 import Api from "../helpers/Api";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
+import { Fragment } from "react";
 
 export default class ChatCollection extends Component {
     constructor() {
@@ -67,7 +68,7 @@ export default class ChatCollection extends Component {
               photo = Api.getFileUrl(chat.photo_path)
               uid = chat.name
             }
-            
+
             chatItem = {
               title: title,
               photo: photo,
@@ -96,7 +97,9 @@ export default class ChatCollection extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
@@ -106,7 +109,7 @@ export default class ChatCollection extends Component {
               centerElement="Chat"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
-              style={{container: {"backgroundColor": "#009EF2"}}}
+              style={{container: {"backgroundColor": "#00A6FF"}}}
               onLeftElementPress={() => {
                 this.props.navigation.openDrawer();
               }}
@@ -155,6 +158,7 @@ export default class ChatCollection extends Component {
           )}
         </View>
         </SafeAreaView>
+        </Fragment>
         );
     }
 }
@@ -180,7 +184,7 @@ const styles = StyleSheet.create({
   },
 
   chatTitle: {
-    color: '#FFFFFF', 
+    color: '#FFFFFF',
     fontWeight: 'bold'
   },
 

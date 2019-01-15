@@ -130,7 +130,7 @@ class LoginScreen extends Component {
               centerElement="Inloggen"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
-              style={{ container: { backgroundColor: "#009EF2" } }}
+              style={{ container: { backgroundColor: "#01A6FF" } }}
               onLeftElementPress={() => {
                 this.props.navigation.openDrawer();
               }}
@@ -150,7 +150,6 @@ class LoginScreen extends Component {
             resizeMode="stretch"
           >
             <View style={styles.bottom}>
-              <Text style={styles.loginTitle}>Login</Text>
               <Input
                 placeholder="E-mail"
                 placeholderTextColor="#ffffff"
@@ -202,14 +201,13 @@ class LoginScreen extends Component {
                 <Text
                   style={{
                     color: "#ffffff",
-                    paddingBottom: "10%",
-                    paddingTop: "5%"
+                    paddingBottom: "15%"
                   }}
                 >
                   Wachtwoord vergeten?
                 </Text>
               </TouchableOpacity>
-              <View style={{ marginBottom: "25%" }}>
+              <View style={{ marginBottom: "0%" }}>
                 <TouchableOpacity
                   style={styles.buttonStyle}
                   onPress={() => this.login()}
@@ -227,7 +225,14 @@ class LoginScreen extends Component {
                     )
                   }
                 >
-                  <Text style={{ color: "#ffffff", padding: 5, fontSize: 14 }}>
+                  <Text
+                    style={{
+                      color: "#ffffff",
+                      paddingTop: 5,
+                      paddingBottom: 5,
+                      fontSize: 14
+                    }}
+                  >
                     Nog geen account?
                     <Text> </Text>
                     <Text
@@ -282,6 +287,7 @@ const styles = StyleSheet.create({
   bottom: {
     width: "100%",
     flex: 2.3,
+    justifyContent: "center",
     backgroundColor: "transparent",
     paddingLeft: "15%",
     paddingRight: "15%",
