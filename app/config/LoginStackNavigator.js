@@ -7,6 +7,7 @@ import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVe
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import ChangePasswordScreen from "../screens/ChangePasswordScreen";
 
+
 import RegistrationScreenOptional from "../screens/RegistrationScreenOptional";
 export default createStackNavigator(
   {
@@ -59,7 +60,9 @@ export default createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })
-    }
+    },
+    
+
   },
 
   {

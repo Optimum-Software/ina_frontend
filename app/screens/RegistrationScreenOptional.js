@@ -168,8 +168,8 @@ export default class RegistrationScreenOptional extends Component {
           <Input
             placeholder="Bio"
             placeholderTextColor="#FFFFFF"
-            containerStyle={styles.containerStyle}
-            inputContainerStyle={styles.inputContainerStyle}
+            containerStyle={[styles.containerStyle]}
+            inputContainerStyle={[styles.inputContainerStyle]}
             inputStyle={{color: "#FFFFFF", height: null}}
             value={this.state.bio}
             leftIcon={{ type: "material-community", name: "text-subject", color: "#FFFFFF"}}

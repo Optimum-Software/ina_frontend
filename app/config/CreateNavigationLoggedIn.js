@@ -94,24 +94,27 @@ const CustomDrawerContentComponent = props => (
               {organisation}
             </Text>
           </View>
-
-          <ImageBackground
-            source={profilePhoto}
-            resizeMode="cover"
-            style={{
-              marginLeft: "5%",
-              marginTop: "3%",
-              width: 100,
-              height: 100,
-              borderRadius: 100,
-              backgroundColor: "white"
-            }}
-            imageStyle={{
-              width: '100%',
-              height: '100%',
-              borderRadius: 200,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => {Router.goTo(props.navigation, 'Profile', 'ProfileScreen')}}
+          >
+            <ImageBackground
+              source={profilePhoto}
+              resizeMode="cover"
+              style={{
+                marginLeft: "5%",
+                marginTop: "3%",
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                backgroundColor: "white"
+              }}
+              imageStyle={{
+                width: '100%',
+                height: '100%',
+                borderRadius: 200,
+              }}
+            />
+          </TouchableOpacity>
         </View>
 
         <View style={{ marginBottom: "40%", marginLeft: "5%" }}>
