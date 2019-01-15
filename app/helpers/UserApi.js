@@ -85,6 +85,24 @@ class UserApi {
     };
     return Api.callApiPost("changePassword", userData);
   }
+
+  updateUser(id, firstName, lastName, bio, organisation, _function, thumbnail) {
+    const data = new FormData()
+    data.append('id', id)
+    data.append('firstName', firstName)
+    data.append('lastName', lastName)
+    data.append('bio', bio)
+    data.append('organisation', organisation)
+    data.append('function', _function)
+
+    photoFile = {
+      uri: thumbnail,
+      name: id + "_thumbnail",
+      type: "multipart/form-data"
+    }
+    data.append('thumbnail', photoFile)
+    return Api.callApiPostForm('updateUser', data)
+  }
 }
 
 const userApi = new UserApi();

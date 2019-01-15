@@ -15,7 +15,15 @@ class HomepageApi {
   getAllLikedProjects() {
     return (Api.callApiGet("getAllLikedProjectsById"))
   }
+
+  searchTags(term) {
+  	return (Api.callApiPost("searchForTags", {searchTerm: term}))
+  }
+
+  searchProjects(term) {
+  	return (Api.callApiPost("searchForProjects", {searchTerm: term}))
+  }
 }
 
 const homepageApi = new HomepageApi();
-export default projectApi;
+export default homepageApi;
