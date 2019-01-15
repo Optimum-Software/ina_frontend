@@ -43,9 +43,6 @@ export default class RegistrationScreenOptional extends Component {
   editOptionalInfo() {
     this.resetErrors()
     User.getUserId().then(id => {
-      //debug
-      id = 19
-      //debug
       if(this.state.imgPicked) {
         file = {
           uri: this.state.profilePhoto.uri,
