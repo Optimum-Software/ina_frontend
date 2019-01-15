@@ -16,6 +16,7 @@ import FirebaseApi from "../helpers/FirebaseApi";
 import Api from "../helpers/Api";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
+import { Fragment } from "react";
 
 export default class ChatCollection extends Component {
     constructor() {
@@ -23,21 +24,27 @@ export default class ChatCollection extends Component {
         this.state = {
             loading: true,
             refreshing: false,
-            chats: []
+            chats: [],
+            notLoggedIn: true
         };
     }
 
     componentDidMount() {
       this.getChats()
       //debug only, make sure logged in on firebase
-      //FirebaseApi.login("jelmer.haarman@xs4all.nl", "123456")
-      //
-      //FirebaseApi.createChat("19:20")
+      //FirebaseApi.login("jelmer.haarman@xs4all.nl", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92")
+      //FirebaseApi.createChat("19:21")
+      User.getUserId().then(userId => {
+        console.log(userId)
+        if(userId != null) {
+          this.setState({notLoggedIn: false})
+        }
+      })
     }
 
     getChats() {
       //debug to make sure there is a user
-      //User.storeUserId(20);
+      //User.storeUserId(19);
       //
       User.getUserId().then(id => {
         FirebaseApi.getChats(id).then(res => {
@@ -61,13 +68,12 @@ export default class ChatCollection extends Component {
               photo = Api.getFileUrl(chat.photo_path)
               uid = chat.name
             }
-            
+
             chatItem = {
               title: title,
               photo: photo,
               uid: uid
             }
-            console.log(chatItem)
             chats.push(chatItem)
           }
           this.setState({chats: chats, loading: false})
@@ -91,7 +97,9 @@ export default class ChatCollection extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
@@ -101,7 +109,7 @@ export default class ChatCollection extends Component {
               centerElement="Chat"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
-              style={{container: {"backgroundColor": "#009EF2"}}}
+              style={{container: {"backgroundColor": "#00A6FF"}}}
               onLeftElementPress={() => {
                 this.props.navigation.openDrawer();
               }}
@@ -150,6 +158,7 @@ export default class ChatCollection extends Component {
           )}
         </View>
         </SafeAreaView>
+        </Fragment>
         );
     }
 }
@@ -175,7 +184,7 @@ const styles = StyleSheet.create({
   },
 
   chatTitle: {
-    color: '#FFFFFF', 
+    color: '#FFFFFF',
     fontWeight: 'bold'
   },
 

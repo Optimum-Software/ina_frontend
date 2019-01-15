@@ -7,7 +7,7 @@
  */
 import React, { Component } from "react";
 import { Text, View, SafeAreaView, StyleSheet } from "react-native";
-import { RootNavigator } from "./config/CreateNavigation";
+import { RootNavigation } from "./config/CreateRootNavigation";
 import firebaseApi from "./helpers/FirebaseApi";
 import User from "./helpers/User";
 import OneSignal from "react-native-onesignal";
@@ -24,14 +24,26 @@ export default class App extends React.Component {
     constructor() {
         super();
         console.disableYellowBox = true;
-
         firebaseApi.checkUser();
+        this.state = {
+            loggedIn: false,
+            checkedLoggedIn: false
+        }
     }
 
     componentDidMount() {
         OneSignal.init("33abe35a-5325-45cc-bbee-074d6cc1d558");
-        OneSignal.configure();
         OneSignal.addEventListener("ids", this.onIds);
+        OneSignal.configure();
+        User.getUserId().then( id => {
+            this.setState({checkedLoggedIn: true})
+            console.log(id )
+            if(id != null) {
+                this.setState({loggedIn: true})
+            } else {
+                this.setState({loggedIn: false})
+            }
+        });
     }
 
     componentWillUnmount() {
@@ -42,7 +54,13 @@ export default class App extends React.Component {
         User.storeDeviceId(device.userId);
     }
 
+
     render() {
-        return <ThemeContext.Provider value={getTheme(uiTheme)}><RootNavigator /></ThemeContext.Provider>;
+        const { checkedLoggedIn, loggedIn } = this.state
+        if(!checkedLoggedIn) {
+            return null;
+        }
+        const Root = RootNavigation(loggedIn)
+        return <ThemeContext.Provider value={getTheme(uiTheme)}><Root /></ThemeContext.Provider>;
     }
 }

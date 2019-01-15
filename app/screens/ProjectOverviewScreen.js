@@ -18,6 +18,8 @@ import mountain from "../assets/images/firewatch_5.jpg";
 import line from "../assets/images/Line.png";
 import Router from "../helpers/Router";
 import ProjectApi from "../helpers/ProjectApi"
+import ModalDropdown from 'react-native-modal-dropdown';
+
 
 export default class ProjectOverview extends Component {
   constructor() {
@@ -28,35 +30,93 @@ export default class ProjectOverview extends Component {
     };
 
     let response = ProjectApi.getAllProjects().then(result => {
-        if (result['bool']) {
-            this.setState({
-                data: result['projects']
-            })
-            console.log(this.state.data)
-        }else {
-          alert(result['msg'])
-        }
+      if (result['bool']) {
+        this.setState({
+          data: result['projects']
+        })
+        console.log(this.state.data)
+      } else {
+        alert(result['msg'])
+      }
     });
-
-
-
   }
 
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({navigation}) => ({
     title: "Projecten"
   });
 
-  handelEnd = () => {};
+  handelEnd = () => {
+    };
+
+  filter(idx) {
+    switch (idx) {
+      case '0':
+        this.setState( {data: []} );
+        let response0 = ProjectApi.newestProjects().then(result => {
+          if (result['bool']) {
+            this.setState({
+              data: result['projects']
+            })
+            console.log(this.state.data)
+          } else {
+            alert(result['msg'])
+          }
+        });
+        break;
+      case '1':
+        this.setState( {data: []} );
+        let response1 = ProjectApi.oldestProjects().then(result => {
+          if (result['bool']) {
+            this.setState({
+              data: result['projects']
+            })
+            console.log(this.state.data)
+          } else {
+            alert(result['msg'])
+          }
+        });
+        break;
+      case '2':
+        this.setState( {data: []} );
+        let response2 = ProjectApi.mostLikedProjects().then(result => {
+          if (result['bool']) {
+            this.setState({
+              data: result['projects']
+            })
+            console.log(this.state.data)
+          } else {
+            alert(result['msg'])
+          }
+        });
+        break;
+      case '3':
+        this.setState( {data: []} );
+        let response3 = ProjectApi.mostFollowedProjects().then(result => {
+          if (result['bool']) {
+            this.setState({
+              data: result['projects']
+            })
+            console.log(this.state.data)
+          } else {
+            alert(result['msg'])
+          }
+        });
+        break;
+      default:
+        alert('selectie niet herkend')
+     }
+  }
+
 
   render() {
     return (
       <SafeAreaView style={styles.safeArea}>
-      <StatusBar
-        backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-        barStyle="light-content"
-      />
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
         <View style={styles.container}>
-          <View style={{ height: Header.HEIGHT }}>
+          <View style={{height: Header.HEIGHT}}>
             <Toolbar
               centerElement="Projecten"
               iconSet="MaterialCommunityIcons"
@@ -66,12 +126,24 @@ export default class ProjectOverview extends Component {
               }}
             />
           </View>
+          <View style={{alignItems: 'center'}}>
+            <ModalDropdown options={['Nieuwste', 'Oudste','Meeste likes', 'Meeste follows']}
+                           defaultValue={'Sorteer'}
+                           renderSeparator={false}
+                           style={styles.dropdown}
+                           textStyle={styles.dropdownText}
+                           dropdownStyle={styles.dropdownMenu}
+                           dropdownTextStyle={styles.dropdownOptionsList}
+                           dropdownTextHighlightStyle={styles.dropdownOptionsHighlight}
+                           onSelect={(idx, value) => this.filter(idx, value)}
+              />
+          </View>
           <View>
             <FlatList
               data={this.state.data}
               onEndReached={() => this.handelEnd()}
               numColumns={2}
-              renderItem={({ item }) => (
+              renderItem={({item}) => (
                 <TouchableHighlight
                   style={styles.cardContainer}
                   onPress={() =>
@@ -97,7 +169,7 @@ export default class ProjectOverview extends Component {
                   <View style={styles.card}>
                     <View style={styles.cardImage}>
                       <Image
-                        source={{ uri: item.url }}
+                        source={{uri: item.url}}
                         resizeMode="cover"
                         style={styles.image}
                       />
@@ -105,7 +177,7 @@ export default class ProjectOverview extends Component {
                     <Image
                       source={line}
                       resizeMode="stretch"
-                      style={{ width: "100%", height: "2%" }}
+                      style={{width: "100%", height: "2%"}}
                     />
                     <Text numberOfLines={2} style={styles.cardTitle}>
                       {item.name}
@@ -130,7 +202,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
-   },
+  },
   cardContainer: {
     flex: 1,
     alignItems: "center",
@@ -155,7 +227,7 @@ const styles = StyleSheet.create({
   cardImage: {
     height: "70%",
     width: "100%",
-   },
+  },
   cardTitle: {
     margin: 5,
     fontSize: 15,
@@ -164,7 +236,29 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    borderTopLeftRadius:4,
-    borderTopRightRadius:4,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+  },
+  dropdown: {
+    width: '93%',
+    marginTop: '5%',
+    backgroundColor: '#f0f0f0',
+    borderBottomWidth: 1,
+    borderBottomColor: 'black'
+    },
+  dropdownText: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  dropdownMenu: {
+    width: '93%',
+    alignItems: 'center',
+  },
+  dropdownOptionsHighlight: {
+    fontWeight: 'bold',
+    width: '93%',
+   },
+  dropdownOptionsList: {
+    width: '93%',
   }
 });

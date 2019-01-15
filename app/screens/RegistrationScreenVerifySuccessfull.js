@@ -6,34 +6,36 @@ import {
     View,
     Text,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
+    SafeAreaView,
+    StatusBar,
+    Platform
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Router from "../helpers/Router";
+import { Toolbar } from "react-native-material-ui";
+import { Fragment } from "react";
 
 class RegistrationScreenVerifySuccessfull extends Component {
   render() {
     return (
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="dark-content"
+        />
       <ImageBackground
         source={require("../assets/images/bluewavebg.png")}
         style={{ height: "100%", width: "100%" }}
         resizeMode="stretch"
       >
-        <View
-          style={{
-            flex: 1,
-            paddingTop: "5%",
-            marginLeft: "10%",
-            flexDirection: "column"
-          }}
-        >
-          <Text style={{ color: "#01A6FF", fontWeight: "bold", fontSize: 25, marginBottom: "10%" }}>
-            Verificatie
-          </Text>
-          <Text style={{ color: "#FFFF", fontSize: 16 }}>
-            Het verifiëren van je account is gelukt!
-          </Text>
-        </View>
+      <Toolbar
+
+    centerElement="Verificatie"
+    style={{container: {backgroundColor: '#fff'}, titleText:{color: '#00a6ff'}, leftElement:{color: '#00a6ff'}}}
+  />
         <View
           style={{
             flex: 2,
@@ -86,6 +88,8 @@ class RegistrationScreenVerifySuccessfull extends Component {
           </TouchableOpacity>
         </View>
       </ImageBackground>
+      </SafeAreaView>
+      </Fragment>
     );
   }
 }
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
 
   textContainer: {
     flexDirection: "row",
-    alignSelf: "center" 
+    alignSelf: "center"
   },
 
   actionContainer: {
