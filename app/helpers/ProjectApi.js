@@ -44,6 +44,10 @@ class ProjectApi {
   mostFollowedProjects() {
     return Api.callApiGet("getAllProjectsMostFollowsFirst");
   }
+
+  uploadDocument(projectId, file) {
+    Api.callApiUploadForProject(projectId, "Document", file);
+  }
 }
 
 const projectApi = new ProjectApi();

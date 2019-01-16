@@ -9,7 +9,8 @@ import {
   ImageBackground,
   TouchableOpacity,
   TouchableHighlight,
-  ScrollView
+  ScrollView,
+  Picker
 } from "react-native";
 import { Input } from "react-native-elements";
 import ImagePicker from "react-native-image-picker";
@@ -17,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
+import DatePicker from "react-native-datepicker";
 
 class ProjectCreateFirstScreen extends Component {
   constructor(props) {
@@ -34,7 +36,10 @@ class ProjectCreateFirstScreen extends Component {
       descError: "",
 
       location: "",
-      locationError: ""
+      locationError: "",
+
+      beginDate: "",
+      endDate: ""
     };
   }
 
@@ -78,30 +83,38 @@ class ProjectCreateFirstScreen extends Component {
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
         />
         <View style={styles.inputFieldContainer}>
-          <ImageBackground
+          <TouchableOpacity
             style={styles.imgPickContainer}
-            imageStyle={{ borderRadius: 100, width: "100%", height: "100%" }}
-            source={this.state.pickedImgUri}
+            onPress={() => this.pickImageHandler()}
           >
-            <TouchableOpacity
-              style={styles.imgPickBtn}
-              onPress={() => this.pickImageHandler()}
+            <ImageBackground
+              imageStyle={{
+                borderRadius: 10,
+                width: "100%",
+                height: "100%"
+              }}
+              style={styles.imgBackground}
+              source={this.state.pickedImgUri}
             >
-              <Icon
-                name="image-plus"
-                type="material-community"
-                size={50}
-                color="#00A6FF"
-                underlayColor="#c1efff"
-              />
-            </TouchableOpacity>
-          </ImageBackground>
+              {!this.state.imgPicked && (
+                <Icon
+                  name="image-plus"
+                  type="material-community"
+                  size={50}
+                  color="#FFFFFF"
+                  underlayColor="#FFFFFF"
+                />
+              )}
+            </ImageBackground>
+          </TouchableOpacity>
+
           <Input
             placeholder="Naam"
             placeholderTextColor="#4a6572"
             containerStyle={styles.containerStyle}
             inputStyle={styles.inputStyle}
             value={this.state.name}
+            onChangeText={text => this.setState({ name: text })}
             leftIcon={
               <Icon
                 name="file-document-box-outline"
@@ -119,6 +132,7 @@ class ProjectCreateFirstScreen extends Component {
             containerStyle={styles.containerStyle}
             inputStyle={styles.inputStyle}
             value={this.state.desc}
+            onChangeText={text => this.setState({ desc: text })}
             leftIcon={
               <Icon name="information-outline" size={24} color="#4a6572" />
             }
@@ -132,10 +146,68 @@ class ProjectCreateFirstScreen extends Component {
             containerStyle={styles.containerStyle}
             inputStyle={styles.inputStyle}
             value={this.state.location}
+            onChangeText={text => this.setState({ location: text })}
             leftIcon={<Icon name="map-marker" size={24} color="#4a6572" />}
             shake={true}
             errorStyle={{ color: "red" }}
             errorMessage={this.state.locationError}
+          />
+          <DatePicker
+            style={{
+              width: "75%",
+              marginBottom: "3%",
+              marginTop: "3%"
+            }}
+            date={this.state.beginDate}
+            mode="date"
+            placeholder="Selecteer begin datum"
+            format="YYYY-MM-DD"
+            minDate="2019-01-01"
+            maxDate="2050-06-01"
+            confirmBtnText="Bevestig"
+            cancelBtnText="Annuleren"
+            customStyles={{
+              dateIcon: {
+                position: "absolute",
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+              // ... You can check the source to find the other keys.
+            }}
+            onDateChange={date => {
+              this.setState({ beginDate: date });
+            }}
+          />
+          <DatePicker
+            style={{
+              width: "75%"
+            }}
+            date={this.state.endDate}
+            mode="date"
+            placeholder="Selecteer eind datum"
+            format="YYYY-MM-DD"
+            minDate="2019-01-01"
+            maxDate="2050-06-01"
+            confirmBtnText="Bevestig"
+            cancelBtnText="Annuleren"
+            customStyles={{
+              dateIcon: {
+                position: "absolute",
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+            }}
+            onDateChange={date => {
+              this.setState({ endDate: date });
+            }}
           />
         </View>
         <TouchableOpacity
@@ -163,30 +235,25 @@ const styles = StyleSheet.create({
   },
 
   imgPickContainer: {
-    height: 100,
-    width: 100,
-    borderRadius: 100,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: "5%",
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#4a6572"
+    height: "25%",
+    width: "50%",
+    borderRadius: 10,
+    backgroundColor: "#F0F0F0"
   },
-
-  imgPickBtn: {
-    height: "95%",
-    width: "55%",
-    borderRadius: 100,
-    justifyContent: "center",
-    alignSelf: "center"
+  imgBackground: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
+    resizeMode: "cover",
+    alignItems: "center",
+    justifyContent: "center"
   },
 
   containerStyle: {
     width: "75%",
     alignSelf: "center",
     backgroundColor: "transparent",
-    marginBottom: "3%"
+    marginTop: "3%"
   },
 
   inputContainerStyle: {

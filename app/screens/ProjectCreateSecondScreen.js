@@ -9,10 +9,10 @@ import {
   ImageBackground,
   TouchableOpacity,
   TouchableHighlight,
-  ScrollView
+  ScrollView,
+  FlatList
 } from "react-native";
-import { Input } from "react-native-elements";
-import ImagePicker from "react-native-image-picker";
+import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {
   DocumentPicker,
@@ -29,7 +29,8 @@ class ProjectCreateSecondScreen extends Component {
     this.state = {
       profilePhoto: null,
       pickedImgUri: { uri: "" },
-      imgPicked: false
+      imgPicked: false,
+      documents: []
     };
   }
 
@@ -59,22 +60,35 @@ class ProjectCreateSecondScreen extends Component {
     );
   }
 
-  showDocumentPicker() {
+  pickDocument() {
     DocumentPicker.show(
       {
         filetype: [DocumentPickerUtil.allFiles()]
       },
       (error, res) => {
-        // Android
-        console.log(
-          res.uri,
-          res.type, // mime type
-          res.fileName,
-          res.fileSize
-        );
-        this.setState({ fileName: res.fileName });
+        try {
+          let file = {
+            uri: res.uri,
+            name: res.fileName,
+            type: res.type,
+            size: res.fileSize
+          };
+          this.setState({
+            documents: [...this.state.documents, file]
+          });
+          console.log("STATE array: ");
+          console.log(this.state.documents);
+        } catch {
+          console.log(error);
+        }
       }
     );
+  }
+
+  deleteItem(data) {
+    let allItems = [...this.state.documents];
+    let filteredItems = allItems.filter(item => item.index != data.index);
+    this.setState({ documents: filteredItems });
   }
 
   render() {
@@ -92,20 +106,36 @@ class ProjectCreateSecondScreen extends Component {
             size={120}
             color="#4a6572"
             style={{ alignSelf: "center" }}
+            onPress={() => this.pickDocument()}
           />
           <Text style={styles.textStyle}>
-            Voeg documenten toe aan het project om meer informatie te bieden.
+            Klik op de knop om bestanden toe te voegen
           </Text>
 
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.showDocumentPicker()}
-          >
-            <Text style={styles.buttonTextStyle}>Voeg documenten toe</Text>
-          </TouchableOpacity>
-          <Text style={styles.textStyle}>
-            {"Toegevoegde documenten: " + this.state.fileName}
-          </Text>
+          <Text style={styles.textStyle}>{"Toegevoegde documenten: "}</Text>
+          <View style={styles.documentContainer}>
+            <FlatList
+              data={this.state.documents}
+              renderItem={({ item, index }) => (
+                <View style={{ flexDirection: "row" }}>
+                  <Text numberOfLines={1} style={styles.documentName}>
+                    {++index + " -  " + item.name}
+                  </Text>
+                  <Text numberOfLines={1} style={styles.documentSize}>
+                    {item.size + " kb"}
+                  </Text>
+                  <Icon
+                    name="close-circle"
+                    size={24}
+                    color="#f44336"
+                    onPress={item => {
+                      this.deleteItem(item);
+                    }}
+                  />
+                </View>
+              )}
+            />
+          </View>
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => this.goToNextPart()}
@@ -143,9 +173,25 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: "50%",
     alignSelf: "center",
-    marginTop: "50%",
+    marginTop: "5%",
     backgroundColor: "#00a6ff",
     borderRadius: 25
+  },
+  documentContainer: {
+    height: "45%",
+    width: "90%",
+    paddingTop: "2%",
+    alignSelf: "center"
+  },
+  documentName: {
+    color: "#4a6572",
+    width: "60%",
+    fontSize: 18
+  },
+  documentSize: {
+    color: "#4a6572",
+    width: "30%",
+    fontSize: 18
   }
 });
 

@@ -20,7 +20,7 @@ export default class RegistrationScreenOptional extends Component {
     super();
     this.state = {
       profilePhoto: null,
-      pickedImgUri: { uri: ""},
+      pickedImgUri: { uri: "" },
       imgPicked: false,
       organisation: "",
       organisationError: "",
@@ -41,61 +41,63 @@ export default class RegistrationScreenOptional extends Component {
   }
 
   editOptionalInfo() {
-    this.resetErrors()
+    this.resetErrors();
     User.getUserId().then(id => {
       //debug
-      id = 19
+      id = 19;
       //debug
-      if(this.state.imgPicked) {
+      if (this.state.imgPicked) {
         file = {
           uri: this.state.profilePhoto.uri,
           name: this.state.profilePhoto.fileName,
           type: "multipart/form-data"
-        }
+        };
         UserApi.uploadProfilePhoto(id, file).then(res => {
-          if(res['bool']) {
+          if (res["bool"]) {
             this.setState({
               profilePhoto: null,
-              pickedImgUri: { uri: ""},
-              imgPicked: false,
+              pickedImgUri: { uri: "" },
+              imgPicked: false
             });
           } else {
-            alert(res['msg'])
+            alert(res["msg"]);
           }
-        })
+        });
       }
-      UserApi.editOptionalInfo(id, this.state.organisation, this.state.jobFunction, this.state.bio).then(res => {
-        if(res['bool']) {
+      UserApi.editOptionalInfo(
+        id,
+        this.state.organisation,
+        this.state.jobFunction,
+        this.state.bio
+      ).then(res => {
+        if (res["bool"]) {
           this.setState({
             organisation: "",
             jobFunction: "",
             bio: ""
           });
         } else {
-          alert(res['msg'])
+          alert(res["msg"]);
         }
       });
     });
   }
 
   pickImageHandler() {
-    ImagePicker.showImagePicker(
-      { title: "Kies een profiel photo"},
-      res => {
-        if (res.didCancel) {
-          console.log("User cancelled!");
-        } else if (res.error) {
-          console.log("Error", res.error);
-        } else {
-          this.setState({
-            profilePhoto: res,
-            pickedImgUri: { uri: res.uri},
-            imgPicked: true
-          });
-        }
+    ImagePicker.showImagePicker({ title: "Kies een profiel photo" }, res => {
+      if (res.didCancel) {
+        console.log("User cancelled!");
+      } else if (res.error) {
+        console.log("Error", res.error);
+      } else {
+        this.setState({
+          profilePhoto: res,
+          pickedImgUri: { uri: res.uri },
+          imgPicked: true
+        });
       }
-    );
-  };
+    });
+  }
 
   render() {
     return (
@@ -117,14 +119,15 @@ export default class RegistrationScreenOptional extends Component {
           <View style={{ flex: 2, width: "90%", marginTop: "5%" }}>
             <Text style={styles.infoTextTitle}>Registreren</Text>
             <Text style={styles.infoText}>
-              Je kan deze velden invullen om meer informatie te geven over jezelf.
+              Je kan deze velden invullen om meer informatie te geven over
+              jezelf.
             </Text>
           </View>
         </View>
         <View style={styles.inputFieldContainer}>
           <ImageBackground
             style={styles.imgPickContainer}
-            imageStyle={{borderRadius: 100, width: "100%", height: "100%"}}
+            imageStyle={{ borderRadius: 100, width: "100%", height: "100%" }}
             source={this.state.pickedImgUri}
           >
             <TouchableOpacity
@@ -147,7 +150,11 @@ export default class RegistrationScreenOptional extends Component {
             inputContainerStyle={styles.inputContainerStyle}
             inputStyle={styles.inputStyle}
             value={this.state.organisation}
-            leftIcon={{ type: "font-awesome", name: "building", color: "#FFFFFF" }}
+            leftIcon={{
+              type: "font-awesome",
+              name: "building",
+              color: "#FFFFFF"
+            }}
             onChangeText={organisation => this.setState({ organisation })}
             onSubmitEditing={() => console.log(this.state.organisation)}
             shake={true}
@@ -160,7 +167,11 @@ export default class RegistrationScreenOptional extends Component {
             inputContainerStyle={styles.inputContainerStyle}
             inputStyle={styles.inputStyle}
             value={this.state.jobFunction}
-            leftIcon={{ type: "font-awesome", name: "id-card", color: "#FFFFFF" }}
+            leftIcon={{
+              type: "font-awesome",
+              name: "id-card",
+              color: "#FFFFFF"
+            }}
             onChangeText={jobFunction => this.setState({ jobFunction })}
             onSubmitEditing={() => console.log(this.state.jobFunction)}
           />
@@ -170,12 +181,16 @@ export default class RegistrationScreenOptional extends Component {
             placeholderTextColor="#FFFFFF"
             containerStyle={styles.containerStyle}
             inputContainerStyle={styles.inputContainerStyle}
-            inputStyle={{color: "#FFFFFF", height: null}}
+            inputStyle={{ color: "#FFFFFF", height: null }}
             value={this.state.bio}
-            leftIcon={{ type: "material-community", name: "text-subject", color: "#FFFFFF"}}
-            leftIconContainerStyle={{alignSelf: "flex-start"}}
-            multiline = {true}
-            numberOfLines = {5}
+            leftIcon={{
+              type: "material-community",
+              name: "text-subject",
+              color: "#FFFFFF"
+            }}
+            leftIconContainerStyle={{ alignSelf: "flex-start" }}
+            multiline={true}
+            numberOfLines={5}
             textAlignVertical={"top"}
             onChangeText={bio => this.setState({ bio })}
           />
@@ -187,7 +202,7 @@ export default class RegistrationScreenOptional extends Component {
             style={styles.buttonStyle}
             onPress={() => this.editOptionalInfo()}
           >
-            <Text style={styles.registerText}>Verder</Text>
+            <Text style={styles.buttonText}>Verder</Text>
           </TouchableHighlight>
         </View>
       </ImageBackground>
@@ -198,7 +213,7 @@ export default class RegistrationScreenOptional extends Component {
 const styles = StyleSheet.create({
   container: {
     height: "100%",
-    width: "100%",
+    width: "100%"
   },
 
   infoTextTitle: {
@@ -224,10 +239,10 @@ const styles = StyleSheet.create({
   },
 
   imgPickContainer: {
-    height: '95%',
-    width: '24%',
+    height: "95%",
+    width: "24%",
     borderRadius: 100,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: "5%",
     backgroundColor: "#FFFFFF"
   },
@@ -236,8 +251,8 @@ const styles = StyleSheet.create({
     height: "95%",
     width: "55%",
     borderRadius: 100,
-    justifyContent: 'center',
-    alignSelf: 'center'
+    justifyContent: "center",
+    alignSelf: "center"
   },
 
   containerStyle: {
@@ -271,21 +286,20 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    alignSelf: 'center',
+    alignSelf: "center",
     width: "75%",
     height: "40%",
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 25,
-    marginBottom: '3%',
-    marginTop: '10%',
-    paddingTop: '1.5%',
-    paddingBottom: '1.5%'
+    marginBottom: "3%",
+    marginTop: "10%",
+    paddingTop: "1.5%",
+    paddingBottom: "1.5%"
   },
 
-  registerText: {
+  buttonText: {
     color: "#01A6FF",
     alignSelf: "center",
     fontSize: 20
-  },
-
+  }
 });
