@@ -1,6 +1,7 @@
 import { createStackNavigator } from "react-navigation";
 import ProjectOverviewScreen from "../screens/ProjectOverviewScreen";
 import ProjectDetailScreen from "../screens/ProjectDetailScreen";
+import ExploreScreen from "../screens/ExploreScreen";
 
 export default createStackNavigator(
   {
@@ -18,6 +19,7 @@ export default createStackNavigator(
       })
     }
   },
+
   {
     headerMode: "none"
   }
