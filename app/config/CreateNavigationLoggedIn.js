@@ -41,6 +41,7 @@ import Router from "../helpers/Router";
 import User from "../helpers/User";
 import ProfileParameters from "../helpers/ProfileParameters";
 import Api from "../helpers/Api";
+import ExploreNavigateButton from "./ExploreNavigateButton";
 
 let screen = Dimensions.get("window");
 let firstName = "";
@@ -86,7 +87,7 @@ const CustomDrawerContentComponent = props => (
               // Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
               // }}
                 onPress={() => {
-                  Router.goTo(props.navigation, "Profile", "ProfileScreen");
+                  Router.goTo(props.navigation, "ProfileEdit", "ProfileEdit");
                 }}
               >
                 <ImageBackground
@@ -141,10 +142,10 @@ const CustomDrawerContentComponent = props => (
                 alignSelf: "center"
               }}
             >
+            <Text>
             {organisation}
             </Text>
           </View>
-        </View>
         <View
           style={{
             backgroundColor: "#fff",
@@ -246,38 +247,10 @@ export const Tabs = createBottomTabNavigator(
       }
     },
     Ontdekken: {
-      screen: () => null,
+      screen: ExploreScreen,
       navigationOptions: {
-        tabBarLabel: " ",
-        tabBarIcon: ({ tintColor }) => (
-          <View
-            style={{
-              height: 60,
-              width: 60,
-              backgroundColor: "#00a6ff",
-              borderRadius: 65,
-              marginBottom: 45,
-              alignItems: "center",
-              justifyContent: "center",
-              elevation: 5
-            }}
-          >
-            <Icon
-              name="heart"
-              type="ionicon"
-              size={28}
-              color="white"
-              onPress={() => {
-                NavigationActions.navigate({
-                  routeName: "ProjectStack",
-                  action: NavigationActions.navigate({
-                    routeName: "ExploreScreen"
-                  })
-                });
-              }}
-            />
-          </View>
-        )
+        tabBarVisible: false,
+        tabBarIcon: <ExploreNavigateButton/>
       }
     },
     ChaDtStack: {

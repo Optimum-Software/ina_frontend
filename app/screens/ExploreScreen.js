@@ -20,6 +20,7 @@ import { Fragment } from "react";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import ProjectApi from "../helpers/ProjectApi.js";
+import FirebaseApi from "../helpers/FirebaseApi";
 import Api from "../helpers/Api.js";
 import Router from "../helpers/Router.js";
 import User from "../helpers/User.js";
@@ -46,7 +47,6 @@ export default class ExploreScreen extends React.Component {
       this.setState({ cards: response["projects"] });
     });
     this.animatedValue = new Animated.Value(0);
-    console.log(fullWidth);
   }
 
   componentDidMount() {
@@ -56,7 +56,6 @@ export default class ExploreScreen extends React.Component {
   updateStack = () => {
     ProjectApi.getAllProjects().then(response => {
       this.setState({ cards: response["projects"] });
-      console.log(response);
       setTimeout(() => this.swiper.triggerRight(), 2000);
     });
   };
@@ -74,6 +73,7 @@ export default class ExploreScreen extends React.Component {
         this.state.cards[this.state.cardIndex].creator.firstName +
         " " +
         this.state.cards[this.state.cardIndex].creator.lastName;
+      FirebaseApi.createChat(uid);
       Router.goTo(this.props.navigation, "ChatStack", "Chat", {
         uid: uid,
         title: title
@@ -82,12 +82,10 @@ export default class ExploreScreen extends React.Component {
   }
 
   addLike() {
-    console.log("like");
     this.setState({ swipeDirection: "right" });
   }
 
   dislike() {
-    console.log("dislike");
     this.setState({ swipeDirection: "left" });
   }
 
@@ -234,6 +232,7 @@ export default class ExploreScreen extends React.Component {
           {this.state.cards.map(card => {
             return (
               <TouchableWithoutFeedback
+                key={card.id}
                 onPress={() => (this.state.showDetails ? null : this.animate())}
               >
                 <Animated.View style={{ marginTop: marginTop }}>
