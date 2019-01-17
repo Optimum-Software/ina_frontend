@@ -159,6 +159,7 @@ export default class ProfileEditScreen extends Component {
           	 		value={this.state.firstName}
           	 		label="Voornaam"
           	 		labelStyle={styles.labelStyle}
+                maxLength={30}
           	 		leftIcon={{ type: "font-awesome", name: "user", color: "#a8a8a8" }}
           	 		leftIconContainerStyle={{alignSelf: 'flex-start'}}
           	 		onChangeText={firstName => this.setState({ firstName })}
@@ -171,11 +172,38 @@ export default class ProfileEditScreen extends Component {
           	 		value={this.state.lastName}
           	 		label="Achternaam"
           	 		labelStyle={styles.labelStyle}
+                maxLength={30}
           	 		leftIcon={{ type: "font-awesome", name: "user", color: "#a8a8a8" }}
           	 		leftIconContainerStyle={{alignSelf: 'flex-start'}}
           	 		onChangeText={lastName => this.setState({ lastName })}
           	 		onSubmitEditing={() => console.log(this.state.lastName)}
           		/>
+              <Input
+                containerStyle={styles.containerStyle}
+                inputContainerStyle={styles.inputContainerStyle}
+                inputStyle={styles.inputStyle}
+                value={this.state.organisation}
+                label="Organisatie"
+                labelStyle={styles.labelStyle}
+                maxLength={50}
+                leftIcon={{ type: "font-awesome", name: "user", color: "#a8a8a8" }}
+                leftIconContainerStyle={{alignSelf: 'flex-start'}}
+                onChangeText={organisation => this.setState({ organisation })}
+                onSubmitEditing={() => console.log(this.state.organisation)}
+              />
+              <Input
+                containerStyle={styles.containerStyle}
+                inputContainerStyle={styles.inputContainerStyle}
+                inputStyle={styles.inputStyle}
+                value={this.state._function}
+                label="Functie"
+                labelStyle={styles.labelStyle}
+                maxLength={50}
+                leftIcon={{ type: "font-awesome", name: "user", color: "#a8a8a8" }}
+                leftIconContainerStyle={{alignSelf: 'flex-start'}}
+                onChangeText={_function => this.setState({ _function })}
+                onSubmitEditing={() => console.log(this.state._function)}
+              />
           		<Input
           			containerStyle={[styles.containerStyle]}
           	 		inputContainerStyle={[styles.inputContainerStyle, {height: 150}]}
@@ -183,6 +211,7 @@ export default class ProfileEditScreen extends Component {
           	 		value={this.state.bio}
           	 		label="Bio"
           	 		labelStyle={styles.labelStyle}
+                maxLength={2000}
           	 		leftIcon={{ type: "font-awesome", name: "user", color: "#a8a8a8" }}
           	 		leftIconContainerStyle={{alignSelf: 'flex-start'}}
           	 		multiline = {true}
@@ -190,30 +219,6 @@ export default class ProfileEditScreen extends Component {
             		textAlignVertical={'top'}
           	 		onChangeText={bio => this.setState({ bio })}
           	 		onSubmitEditing={() => console.log(this.state.bio)}
-          		/>
-          		<Input
-          	 		containerStyle={styles.containerStyle}
-          	 		inputContainerStyle={styles.inputContainerStyle}
-          	 		inputStyle={styles.inputStyle}
-          	 		value={this.state.organisation}
-          	 		label="Organisatie"
-          	 		labelStyle={styles.labelStyle}
-          	 		leftIcon={{ type: "font-awesome", name: "user", color: "#a8a8a8" }}
-          	 		leftIconContainerStyle={{alignSelf: 'flex-start'}}
-          	 		onChangeText={organisation => this.setState({ organisation })}
-          	 		onSubmitEditing={() => console.log(this.state.organisation)}
-          		/>
-          		<Input
-          	 		containerStyle={styles.containerStyle}
-          	 		inputContainerStyle={styles.inputContainerStyle}
-          	 		inputStyle={styles.inputStyle}
-          	 		value={this.state._function}
-          	 		label="Functie"
-          	 		labelStyle={styles.labelStyle}
-          	 		leftIcon={{ type: "font-awesome", name: "user", color: "#a8a8a8" }}
-          	 		leftIconContainerStyle={{alignSelf: 'flex-start'}}
-          	 		onChangeText={_function => this.setState({ _function })}
-          	 		onSubmitEditing={() => console.log(this.state._function)}
           		/>
           	</View>
           	<TouchableHighlight
