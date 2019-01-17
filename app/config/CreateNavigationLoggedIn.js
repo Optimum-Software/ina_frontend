@@ -38,6 +38,7 @@ import ProjectStack from "./ProjectStackNavigator";
 import UserApi from "../helpers/UserApi";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
+import ProfileParameters from "../helpers/ProfileParameters";
 import Api from "../helpers/Api";
 
 let screen = Dimensions.get("window");
@@ -79,7 +80,11 @@ const CustomDrawerContentComponent = props => (
           }}
         >
         <TouchableOpacity
-          onPress={() => {Router.goTo(props.navigation, 'Profile', 'ProfileScreen')}}
+          // onPress={() => {
+            // ProfileParameters.storeUserId(23)
+            // Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
+          // }}
+          onPress={() => {Router.goTo(props.navigation, 'ProfileEdit', 'ProfileEdit')}}
         >
           <ImageBackground
             source={profilePhoto}
@@ -121,6 +126,7 @@ const CustomDrawerContentComponent = props => (
                 color: "#fff"
               }}
             >
+            {organisation}
             </Text>
           </View>
         </View>
@@ -248,7 +254,7 @@ export const Drawer = createDrawerNavigator(
     SavedProjectScreen: {
       screen: SavedProjectScreen,
       navigationOptions: {
-        drawerLabel: "Opgeslagen",
+        drawerLabel: "Mijn projecten",
         drawerIcon: ({ tintColor }) => (
           <Icon name="bookmark" size={25} color={tintColor} />
         )

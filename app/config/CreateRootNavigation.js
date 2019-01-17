@@ -1,8 +1,8 @@
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { RootNavigatorLoggedOut } from "./CreateNavigationLoggedOut";
 import { RootNavigatorLoggedIn } from "./CreateNavigationLoggedIn";
+import ProfileEditScreen from "../screens/ProfileEditScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import User from "../helpers/User";
 export const RootNav = (isLoggedIn) => { return createSwitchNavigator(
     {
       LoggedIn: {
@@ -11,7 +11,10 @@ export const RootNav = (isLoggedIn) => { return createSwitchNavigator(
       LoggedOut: {
         screen: RootNavigatorLoggedOut
       },
-      Profile: {
+      ProfileEdit: {
+        screen: ProfileEditScreen
+      },
+      ProfileScreen: {
         screen: ProfileScreen
       }
     },
