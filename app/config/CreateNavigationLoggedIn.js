@@ -226,7 +226,7 @@ export const Tabs = createBottomTabNavigator(
       }
     },
     Ontdekken: {
-      screen: ProjectStack,
+      screen: () => null,
       navigationOptions: {
         tabBarLabel: " ",
         tabBarIcon: ({ tintColor }) => (

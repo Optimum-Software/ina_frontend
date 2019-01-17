@@ -23,10 +23,12 @@ import ProjectApi from "../helpers/ProjectApi.js";
 import Api from "../helpers/Api.js";
 import Router from "../helpers/Router.js";
 import User from "../helpers/User.js";
-import CardStack, { Card } from "react-native-card-stack-swiper";
+import Card from "../swipe-plugin/Card.js";
+import CardStack from "../swipe-plugin/CardStack.js";
 import LinearGradient from "react-native-linear-gradient";
 import { Toolbar } from "react-native-material-ui";
 import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
+import TimerMixin from "react-timer-mixin";
 
 const { fullWidth, fullHeight } = Dimensions.get("window");
 
@@ -55,16 +57,9 @@ export default class ExploreScreen extends React.Component {
     ProjectApi.getAllProjects().then(response => {
       this.setState({ cards: response["projects"] });
       console.log(response);
+      setTimeout(() => this.swiper.triggerRight(), 2000);
     });
   };
-
-  undoSwipe() {
-    this.setState({ cardIndex: this.state.cardIndex - 1 });
-  }
-
-  ignore() {
-    this.swiper.swipeLeft();
-  }
 
   startChat() {
     User.getUserId().then(id => {
@@ -88,10 +83,12 @@ export default class ExploreScreen extends React.Component {
 
   addLike() {
     console.log("like");
+    this.setState({ swipeDirection: "right" });
   }
 
-  like() {
-    this.swiper.swipeRight();
+  dislike() {
+    console.log("dislike");
+    this.setState({ swipeDirection: "left" });
   }
 
   animate() {
@@ -102,7 +99,7 @@ export default class ExploreScreen extends React.Component {
     this.animatedValue.setValue(0);
     Animated.timing(this.animatedValue, {
       toValue: 1,
-      duration: 500,
+      duration: 250,
       easing: Easing.ease,
       extrapolate: "clamp"
     }).start();
@@ -115,20 +112,11 @@ export default class ExploreScreen extends React.Component {
     this.animatedValue.setValue(1);
     Animated.timing(this.animatedValue, {
       toValue: 0,
-      duration: 500,
+      duration: 250,
       easing: Easing.ease,
       extrapolate: "clamp"
     }).start();
   }
-
-  onSwiped = type => {
-    this.setState({ cardIndex: this.state.cardIndex + 1 });
-    switch (type) {
-      case "right":
-        this.addLike();
-        break;
-    }
-  };
 
   tapCard() {
     this.setState({ showDetails: !this.showDetails });
@@ -142,12 +130,49 @@ export default class ExploreScreen extends React.Component {
           ? (Dimensions.get("window").height - 150) * 0.8
           : (Dimensions.get("window").height - 90) * 0.8,
         isIphoneX()
+          ? (Dimensions.get("window").height - 150) * 0.7
+          : (Dimensions.get("window").height - 90) * 0.7,
+        isIphoneX()
           ? (Dimensions.get("window").height - 150) * 0.6
-          : (Dimensions.get("window").height - 90) * 0.6,
+          : (Dimensions.get("window").height - 90) * 0.6
+      ]
+    });
+
+    const width = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [
+        Dimensions.get("window").width * 0.95,
+        Dimensions.get("window").width
+      ]
+    });
+
+    const marginBottom = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [
+        0,
         isIphoneX()
           ? (Dimensions.get("window").height - 150) * 0.4
           : (Dimensions.get("window").height - 90) * 0.4
       ]
+    });
+
+    const detailTop = this.animatedValue.interpolate({
+      inputRange: [0, 0.25, 1],
+      outputRange: [
+        Dimensions.get("window").height - 90,
+        (Dimensions.get("window").height - 90) * 0.75,
+        (Dimensions.get("window").height - 90) * 0.5
+      ]
+    });
+
+    const fabSize = this.animatedValue.interpolate({
+      inputRange: [0, 0.85, 1],
+      outputRange: [0, 0, 60]
+    });
+
+    const marginTop = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [10, 0]
     });
 
     const opacity = this.animatedValue.interpolate({
@@ -174,21 +199,44 @@ export default class ExploreScreen extends React.Component {
             Router.goBack(this.props.navigation);
           }}
         />
-          <CardStack
-            style={styles.container}
-            renderNoMoreCards={() => (
-              <Text style={{ fontWeight: "700", fontSize: 18, color: "gray" }}>
+
+        <CardStack
+          style={styles.container}
+          verticalSwipe={false}
+          horizontalSwipe={!this.state.showDetails ? true : false}
+          renderNoMoreCards={() => (
+            <View
+              style={{
+                height: Dimensions.get("window").height,
+                width: Dimensions.get("window").width,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "700",
+                  fontSize: 18,
+                  color: "gray",
+                  alignSelf: "center"
+                }}
+              >
                 No more cards :(
               </Text>
-            )}
-            ref={swiper => {
-              this.swiper = swiper;
-            }}
-            onSwiped={() => console.log("onSwiped")}
-            onSwipedLeft={() => console.log("onSwipedLeft")}
-          >
-            {this.state.cards.map(card => {
-              return (
+            </View>
+          )}
+          ref={swiper => {
+            this.swiper = swiper;
+          }}
+          onSwipedLeft={index => this.addLike()}
+          onSwipedRight={index => this.dislike()}
+        >
+          {this.state.cards.map(card => {
+            return (
+              <TouchableWithoutFeedback
+                onPress={() => (this.state.showDetails ? null : this.animate())}
+              >
+                <Animated.View style={{ marginTop: marginTop }}>
                   <Card
                     elevation={5}
                     style={{
@@ -203,7 +251,7 @@ export default class ExploreScreen extends React.Component {
                       },
                       borderColor: "grey",
                       borderWidth: 0,
-                      alignItems: "flex-end",
+                      alignItems: "center",
                       borderRadius: 15,
                       width: Dimensions.get("window").width - 20,
                       height: (Dimensions.get("window").height - 90) * 0.8,
@@ -215,164 +263,226 @@ export default class ExploreScreen extends React.Component {
                     <Animated.Image
                       style={{
                         height: height,
-                        width: "100%",
+                        width: width,
                         resizeMode: "cover",
                         justifyContent: "center",
                         position: "absolute",
-                        borderRadius: 15
+                        borderRadius: marginTop
                       }}
                       source={{
                         uri: Api.getFileUrl(card.thumbnail)
                       }}
                     />
-                    <Animated.View
-                      style={{
-                        opacity: opacity,
-                        top: 10,
-                        left: 10,
-                        position: "absolute",
-                        zIndex: 3
-                      }}
-                      onPress={() => this.animateRev()}
-                    >
-                      <TouchableOpacity onPress={() => this.animateRev()}>
-                        <Icon
-                          name="close"
-                          color="white"
-                          size={30}
-                          style={{}}
-                          onPress={() => this.animateRev()}
-                        />
-                      </TouchableOpacity>
-                    </Animated.View>
-                    {this.state.showDetails && (
+
+                    {!this.state.showDetails && (
                       <Animated.View
                         style={{
-                          flexDirection: "column",
-                          padding: 15,
-                          marginTop: isIphoneX()
-                            ? (Dimensions.get("window").height - 150) * 0.4
-                            : (Dimensions.get("window").height - 90) * 0.4,
-
-                          opacity: opacity
+                          width: "100%",
+                          height: "100%",
+                          opacity: opacityRev,
+                          alignItems: "flex-end",
+                          justifyContent: "flex-end"
                         }}
                       >
-                        <Text
+                        <LinearGradient
+                          colors={["#00000000", "#000000cc"]}
                           style={{
-                            marginLeft: 10,
-                            marginRight: 10,
-                            fontSize: 24,
-                            fontWeight: "bold"
-                          }}
-                          numberOfLines={1}
-                        >
-                          {card.name}
-                        </Text>
-                        <Text
-                          style={{
-                            marginLeft: 10,
-                            marginRight: 10,
-                            marginBottom: 10,
-                            fontSize: 16,
-                            fontWeight: "bold"
+                            width: "100%",
+                            height: "25%",
+                            borderRadius: 15,
+                            justifyContent: "flex-end"
                           }}
                         >
-                          {card.creator.firstName + " " + card.creator.lastName}
-                        </Text>
-                        <Text
-                          style={{
-                            margin: 10,
-                            height: isIphoneX()
-                              ? (Dimensions.get("window").height - 150) * 0.2
-                              : (Dimensions.get("window").height - 90) * 0.2
-                          }}
-                        >
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit. Duis eleifend mauris ut sapien convallis, et
-                          aliquet libero gravida. Maecenas varius feugiat purus
-                          vitae porta. Vestibulum malesuada ultricies enim, vel
-                          elementum quam dictum ut. Nunc nec nisi pretium,
-                          cursus sem a, hendrerit ipsum.
-                        </Text>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "center",
+                              alignItems: "center"
+                            }}
+                          >
+                            <Animated.View
+                              style={{
+                                flexDirection: "column",
+                                width: "85%"
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  marginLeft: 10,
+                                  marginRight: 10,
+                                  fontSize: 24,
+                                  fontWeight: "bold",
+                                  color: "white"
+                                }}
+                                numberOfLines={1}
+                              >
+                                {card.name}
+                              </Text>
+                              <Text
+                                style={{
+                                  marginLeft: 10,
+                                  marginRight: 10,
+                                  marginBottom: 10,
+                                  fontSize: 16,
+                                  fontWeight: "bold",
+                                  color: "white"
+                                }}
+                              >
+                                {card.creator.firstName +
+                                  " " +
+                                  card.creator.lastName}
+                              </Text>
+                            </Animated.View>
+
+                            <Icon
+                              name="information"
+                              color="white"
+                              size={30}
+                              style={{ zIndex: 0, elevation: 5 }}
+                              elevation={5}
+                              onPress={() => this.animate()}
+                            />
+                          </View>
+                          <Text
+                            numberOfLines={2}
+                            style={{
+                              color: "white",
+                              paddingLeft: 22,
+                              paddingRight: 40,
+                              paddingBottom: 15
+                            }}
+                          >
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit. Duis eleifend mauris ut sapien convallis, et
+                            aliquet libero gravida. Maecenas varius feugiat
+                            purus vitae porta. Vestibulum malesuada ultricies
+                            enim, vel elementum quam dictum ut. Nunc nec nisi
+                            pretium, cursus sem a, hendrerit ipsum.
+                          </Text>
+                        </LinearGradient>
                       </Animated.View>
                     )}
                     <Animated.View
                       style={{
-                        opacity: opacityRev,
-                        width: "100%",
-                        height: "100%",
-                        alignItems: "flex-end",
-                        justifyContent: "flex-end"
+                        backgroundColor: "white",
+                        width: Dimensions.get("window").width,
+                        position: "absolute",
+                        top: detailTop,
+                        padding: 25,
+                        alignItems: "center"
                       }}
                     >
-                      <LinearGradient
-                        colors={["#00000000", "#000000cc"]}
+                      <View
                         style={{
-                          width: "100%",
-                          height: "25%",
-                          borderRadius: 15,
-                          justifyContent: "flex-end"
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center"
                         }}
                       >
-                        <View
+                        <Animated.View
                           style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center"
+                            flexDirection: "column",
+                            width: "100%"
                           }}
                         >
-                          <View
-                            style={{ flexDirection: "column", width: "85%" }}
+                          <Text
+                            style={{
+                              marginLeft: 10,
+                              marginRight: 10,
+                              fontSize: 24,
+                              fontWeight: "bold"
+                            }}
+                            numberOfLines={1}
                           >
-                            <Text
-                              style={{
-                                marginLeft: 10,
-                                marginRight: 10,
-                                fontSize: 24,
-                                fontWeight: "bold",
-                                color: "white"
-                              }}
-                              numberOfLines={1}
-                            >
-                              {card.name}
-                            </Text>
-                            <Text
-                              style={{
-                                marginLeft: 10,
-                                marginRight: 10,
-                                marginBottom: 10,
-                                fontSize: 16,
-                                fontWeight: "bold",
-                                color: "white"
-                              }}
-                            >
-                              {card.creator.firstName +
-                                " " +
-                                card.creator.lastName}
-                            </Text>
-                          </View>
-
-                          <Icon
-                            name="information"
-                            color="white"
-                            size={30}
-                            style={{ zIndex: 0, elevation: 5, }}
-                            elevation={5}
-                            onPress={() => this.animate()}
-                          />
-                        </View>
-                      </LinearGradient>
+                            {card.name}
+                          </Text>
+                          <Text
+                            style={{
+                              marginLeft: 10,
+                              marginRight: 10,
+                              marginBottom: 10,
+                              fontSize: 16,
+                              fontWeight: "bold"
+                            }}
+                          >
+                            {card.creator.firstName +
+                              " " +
+                              card.creator.lastName}
+                          </Text>
+                        </Animated.View>
+                      </View>
+                      <View
+                        style={{
+                          height: 1,
+                          backgroundColor: "#b5babf",
+                          marginTop: 15,
+                          marginBottom: 15,
+                          width: "95%",
+                          alignSelf: "center"
+                        }}
+                      />
+                      <Text
+                        style={{
+                          width: Dimensions.get("window").width - 75
+                        }}
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Duis eleifend mauris ut sapien convallis, et aliquet
+                        libero gravida. Maecenas varius feugiat purus vitae
+                        porta. Vestibulum malesuada ultricies enim, vel
+                        elementum quam dictum ut. Nunc nec nisi pretium, cursus
+                        sem a, hendrerit ipsum.
+                      </Text>
+                      <Text
+                        style={{
+                          paddingTop: 25,
+                          fontSize: 18,
+                          fontWeight: "bold",
+                          color: "#00a6ff"
+                        }}
+                      >
+                        Meer informatie
+                      </Text>
+                    </Animated.View>
+                    <Animated.View
+                      style={{
+                        backgroundColor: "#00a6ff",
+                        height: fabSize,
+                        width: fabSize,
+                        borderRadius: 60,
+                        position: "absolute",
+                        top: (Dimensions.get("window").height - 90) * 0.5 - 30,
+                        right: 25,
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
+                    >
+                      <Icon
+                        name="arrow-down-bold-outline"
+                        type="font-awesome"
+                        iconStyle={{ padding: 5 }}
+                        size={25}
+                        color="white"
+                        onPress={() => this.animateRev()}
+                      />
                     </Animated.View>
                   </Card>
-              );
-            })}
-          </CardStack>
+                </Animated.View>
+              </TouchableWithoutFeedback>
+            );
+          })}
+        </CardStack>
 
-          <View style={styles.footer}>
+        <View style={styles.footer}>
+          <Animated.View style={{ opacity: opacityRev }}>
             <TouchableHighlight
               underlayColor="#efc137ad"
               style={[styles.mediumButtonStyle, { backgroundColor: "#efc137" }]}
-              onPress={() => this.undoSwipe()}
+              onPress={() =>
+                this.state.swipeDirection == "left"
+                  ? this.swiper.goBackFromRight()
+                  : this.swiper.goBackFromLeft()
+              }
             >
               <Icon
                 name="undo"
@@ -382,10 +492,12 @@ export default class ExploreScreen extends React.Component {
                 color="white"
               />
             </TouchableHighlight>
+          </Animated.View>
+          <Animated.View style={{ opacity: opacityRev }}>
             <TouchableHighlight
               underlayColor="#f44336ad"
               style={[styles.bigButtonStyle, { backgroundColor: "#f44336" }]}
-              onPress={() => this.ignore()}
+              onPress={() => this.swiper.swipeLeft()}
             >
               <Icon
                 name="close"
@@ -395,11 +507,12 @@ export default class ExploreScreen extends React.Component {
                 color="white"
               />
             </TouchableHighlight>
-
+          </Animated.View>
+          <Animated.View style={{ opacity: opacityRev }}>
             <TouchableHighlight
               underlayColor="#64dd17ad"
               style={[styles.bigButtonStyle, { backgroundColor: "#64dd17" }]}
-              onPress={() => this.like()}
+              onPress={() => this.swiper.swipeRight()}
             >
               <Icon
                 name="heart-outline"
@@ -409,6 +522,8 @@ export default class ExploreScreen extends React.Component {
                 color="white"
               />
             </TouchableHighlight>
+          </Animated.View>
+          <Animated.View style={{ opacity: opacityRev }}>
             <TouchableHighlight
               underlayColor="#03a9f4ad"
               style={[styles.mediumButtonStyle, { backgroundColor: "#03a9f4" }]}
@@ -421,7 +536,8 @@ export default class ExploreScreen extends React.Component {
                 color="white"
               />
             </TouchableHighlight>
-          </View>
+          </Animated.View>
+        </View>
       </SafeAreaView>
     );
   }
@@ -432,8 +548,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "white",
-    marginTop: 10
+    backgroundColor: "white"
   },
 
   bigButtonStyle: {
