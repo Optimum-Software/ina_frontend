@@ -18,37 +18,25 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
-import DatePicker from "react-native-datepicker";
 
 class ProjectCreateFirstScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      profilePhoto: null,
-      pickedImgUri: { uri: "" },
+      thumbnail: null,
+      pickedImgUri: "",
       imgPicked: false,
 
-      name: "",
+      name: "Bert's project",
+      desc: "Mooi ding",
+
       nameError: "",
-
-      desc: "",
       descError: "",
-
-      location: "",
-      locationError: "",
-
-      beginDate: "",
-      endDate: ""
+      thumbnailError: ""
     };
   }
 
-  resetErrors() {
-    this.setState({
-      organisationError: "",
-      jobFunctionError: ""
-    });
-  }
   pickImageHandler() {
     ImagePicker.showImagePicker({ title: "Kies een profiel photo" }, res => {
       if (res.didCancel) {
@@ -57,20 +45,49 @@ class ProjectCreateFirstScreen extends Component {
         console.log("Error", res.error);
       } else {
         this.setState({
-          profilePhoto: res,
-          pickedImgUri: { uri: res.uri },
-          imgPicked: true
+          thumbnail: res,
+          pickedImgUri: res.uri,
+          imgPicked: true,
+          thumbnailError: ""
         });
       }
     });
   }
   goToNextPart() {
-    Router.goTo(
-      this.props.navigation,
-      "ProjectStack",
-      "ProjectCreateSecondScreen",
-      {}
-    );
+    if (
+      //  this.state.thumbnail != null &&
+      this.state.name != "" &&
+      this.state.desc != ""
+    ) {
+      this.setState({
+        nameError: "",
+        descError: "",
+        thumbnailError: ""
+      });
+      Router.goTo(
+        this.props.navigation,
+        "ProjectStack",
+        "ProjectCreateSecondScreen",
+        {
+          thumbnail: this.state.thumbnail,
+          imgUri: this.state.pickedImgUri,
+          name: this.state.name,
+          desc: this.state.desc
+        }
+      );
+    } else if (this.state.thumbnail == null) {
+      this.setState({
+        thumbnailError: "Kies een omslagfoto voor het project."
+      });
+    } else if (this.state.name == "") {
+      this.setState({
+        nameError: "Geef het project een naam"
+      });
+    } else if (this.state.desc == "") {
+      this.setState({
+        descError: "Geef het project een beschrijving"
+      });
+    }
   }
 
   render() {
@@ -94,7 +111,7 @@ class ProjectCreateFirstScreen extends Component {
                 height: "100%"
               }}
               style={styles.imgBackground}
-              source={this.state.pickedImgUri}
+              source={{ uri: this.state.pickedImgUri }}
             >
               {!this.state.imgPicked && (
                 <Icon
@@ -107,7 +124,7 @@ class ProjectCreateFirstScreen extends Component {
               )}
             </ImageBackground>
           </TouchableOpacity>
-
+          <Text style={{ color: "red" }}>{this.state.thumbnailError}</Text>
           <Input
             placeholder="Naam"
             placeholderTextColor="#4a6572"
@@ -123,92 +140,24 @@ class ProjectCreateFirstScreen extends Component {
               />
             }
             shake={true}
-            errorStyle={{ color: "red" }}
-            errorMessage={this.state.nameError}
           />
+          <Text style={{ color: "red" }}>{this.state.nameError}</Text>
+
           <Input
             placeholder="Beschrijving"
             placeholderTextColor="#4a6572"
+            multiline={true}
+            numberOfLines={8}
             containerStyle={styles.containerStyle}
-            inputStyle={styles.inputStyle}
+            inputStyle={(styles.inputStyle, { height: 150 })}
             value={this.state.desc}
             onChangeText={text => this.setState({ desc: text })}
             leftIcon={
               <Icon name="information-outline" size={24} color="#4a6572" />
             }
             shake={true}
-            errorStyle={{ color: "red" }}
-            errorMessage={this.state.descError}
           />
-          <Input
-            placeholder="Locatie"
-            placeholderTextColor="#4a6572"
-            containerStyle={styles.containerStyle}
-            inputStyle={styles.inputStyle}
-            value={this.state.location}
-            onChangeText={text => this.setState({ location: text })}
-            leftIcon={<Icon name="map-marker" size={24} color="#4a6572" />}
-            shake={true}
-            errorStyle={{ color: "red" }}
-            errorMessage={this.state.locationError}
-          />
-          <DatePicker
-            style={{
-              width: "75%",
-              marginBottom: "3%",
-              marginTop: "3%"
-            }}
-            date={this.state.beginDate}
-            mode="date"
-            placeholder="Selecteer begin datum"
-            format="YYYY-MM-DD"
-            minDate="2019-01-01"
-            maxDate="2050-06-01"
-            confirmBtnText="Bevestig"
-            cancelBtnText="Annuleren"
-            customStyles={{
-              dateIcon: {
-                position: "absolute",
-                left: 0,
-                top: 4,
-                marginLeft: 0
-              },
-              dateInput: {
-                marginLeft: 36
-              }
-              // ... You can check the source to find the other keys.
-            }}
-            onDateChange={date => {
-              this.setState({ beginDate: date });
-            }}
-          />
-          <DatePicker
-            style={{
-              width: "75%"
-            }}
-            date={this.state.endDate}
-            mode="date"
-            placeholder="Selecteer eind datum"
-            format="YYYY-MM-DD"
-            minDate="2019-01-01"
-            maxDate="2050-06-01"
-            confirmBtnText="Bevestig"
-            cancelBtnText="Annuleren"
-            customStyles={{
-              dateIcon: {
-                position: "absolute",
-                left: 0,
-                top: 4,
-                marginLeft: 0
-              },
-              dateInput: {
-                marginLeft: 36
-              }
-            }}
-            onDateChange={date => {
-              this.setState({ endDate: date });
-            }}
-          />
+          <Text style={{ color: "red" }}>{this.state.descError}</Text>
         </View>
         <TouchableOpacity
           style={styles.buttonStyle}
@@ -228,15 +177,15 @@ const styles = StyleSheet.create({
   },
 
   inputFieldContainer: {
-    flex: 1,
+    backgroundColor: "red",
+    height: "80%",
     flexDirection: "column",
-    alignItems: "center",
-    marginTop: "5%"
+    alignItems: "center"
   },
 
   imgPickContainer: {
-    height: "25%",
-    width: "50%",
+    height: "30%",
+    width: "75%",
     borderRadius: 10,
     backgroundColor: "#F0F0F0"
   },

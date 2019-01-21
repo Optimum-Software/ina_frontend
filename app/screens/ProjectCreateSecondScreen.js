@@ -12,43 +12,27 @@ import {
   ScrollView,
   FlatList
 } from "react-native";
-import { ListItem } from "react-native-elements";
+import { ListItem, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {
-  DocumentPicker,
-  DocumentPickerUtil
-} from "react-native-document-picker";
 
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
+import DatePicker from "react-native-datepicker";
 
 class ProjectCreateSecondScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      profilePhoto: null,
-      pickedImgUri: { uri: "" },
-      imgPicked: false,
-      documents: []
-    };
-  }
+      location: "Groningen",
+      beginDate: "",
+      endDate: "",
 
-  pickImageHandler() {
-    ImagePicker.showImagePicker({ title: "Kies een profiel photo" }, res => {
-      if (res.didCancel) {
-        console.log("User cancelled!");
-      } else if (res.error) {
-        console.log("Error", res.error);
-      } else {
-        this.setState({
-          profilePhoto: res,
-          pickedImgUri: { uri: res.uri },
-          imgPicked: true,
-          fileName: ""
-        });
-      }
-    });
+      thumbnail: this.props.navigation.getParam("thumbnail", ""),
+      imgUri: this.props.navigation.getParam("imgUri", ""),
+      name: this.props.navigation.getParam("name", ""),
+      desc: this.props.navigation.getParam("desc", "")
+    };
   }
 
   goToNextPart() {
@@ -56,93 +40,104 @@ class ProjectCreateSecondScreen extends Component {
       this.props.navigation,
       "ProjectStack",
       "ProjectCreateThirdScreen",
-      {}
-    );
-  }
-
-  pickDocument() {
-    DocumentPicker.show(
       {
-        filetype: [DocumentPickerUtil.allFiles()]
-      },
-      (error, res) => {
-        try {
-          let file = {
-            uri: res.uri,
-            name: res.fileName,
-            type: res.type,
-            size: res.fileSize
-          };
-          this.setState({
-            documents: [...this.state.documents, file]
-          });
-          console.log("STATE array: ");
-          console.log(this.state.documents);
-        } catch {
-          console.log(error);
-        }
+        thumbnail: this.state.thumbnail,
+        imgUri: this.state.imgUri,
+        name: this.state.name,
+        desc: this.state.desc,
+        location: this.state.location,
+        beginDate: this.state.beginDate,
+        endDate: this.state.endDate
       }
     );
-  }
-
-  deleteItem(data) {
-    let allItems = [...this.state.documents];
-    let filteredItems = allItems.filter(item => item.index != data.index);
-    this.setState({ documents: filteredItems });
   }
 
   render() {
     return (
       <View style={styles.container}>
         <Toolbar
-          centerElement="Voeg documenten toe"
+          centerElement="Optionele informatie"
           iconSet="MaterialCommunityIcons"
           leftElement={"chevron-left"}
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
         />
         <View style={styles.inputFieldContainer}>
-          <Icon
-            name="file-upload"
-            size={120}
-            color="#4a6572"
-            style={{ alignSelf: "center" }}
-            onPress={() => this.pickDocument()}
+          <Input
+            placeholder="Locatie"
+            placeholderTextColor="#4a6572"
+            containerStyle={styles.containerStyle}
+            inputStyle={styles.inputStyle}
+            value={this.state.location}
+            onChangeText={text => this.setState({ location: text })}
+            leftIcon={<Icon name="map-marker" size={24} color="#4a6572" />}
+            shake={true}
+            errorStyle={{ color: "red" }}
+            errorMessage={this.state.locationError}
           />
-          <Text style={styles.textStyle}>
-            Klik op de knop om bestanden toe te voegen
-          </Text>
-
-          <Text style={styles.textStyle}>{"Toegevoegde documenten: "}</Text>
-          <View style={styles.documentContainer}>
-            <FlatList
-              data={this.state.documents}
-              renderItem={({ item, index }) => (
-                <View style={{ flexDirection: "row" }}>
-                  <Text numberOfLines={1} style={styles.documentName}>
-                    {++index + " -  " + item.name}
-                  </Text>
-                  <Text numberOfLines={1} style={styles.documentSize}>
-                    {item.size + " kb"}
-                  </Text>
-                  <Icon
-                    name="close-circle"
-                    size={24}
-                    color="#f44336"
-                    onPress={item => {
-                      this.deleteItem(item);
-                    }}
-                  />
-                </View>
-              )}
-            />
-          </View>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.goToNextPart()}
-          >
-            <Text style={styles.buttonTextStyle}>Verder</Text>
-          </TouchableOpacity>
+          <DatePicker
+            style={{
+              width: "75%",
+              marginBottom: "3%",
+              marginTop: "3%"
+            }}
+            date={this.state.beginDate}
+            mode="date"
+            placeholder="Selecteer begin datum"
+            format="YYYY-MM-DD"
+            minDate="2019-01-01"
+            maxDate="2050-06-01"
+            confirmBtnText="Bevestig"
+            cancelBtnText="Annuleren"
+            customStyles={{
+              dateIcon: {
+                position: "absolute",
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+              // ... You can check the source to find the other keys.
+            }}
+            onDateChange={date => {
+              this.setState({ beginDate: date });
+            }}
+          />
+          <DatePicker
+            style={{
+              width: "75%"
+            }}
+            date={this.state.endDate}
+            mode="date"
+            placeholder="Selecteer eind datum"
+            format="YYYY-MM-DD"
+            minDate="2019-01-01"
+            maxDate="2050-06-01"
+            confirmBtnText="Bevestig"
+            cancelBtnText="Annuleren"
+            customStyles={{
+              dateIcon: {
+                position: "absolute",
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+            }}
+            onDateChange={date => {
+              this.setState({ endDate: date });
+            }}
+          />
         </View>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => this.goToNextPart()}
+        >
+          <Text style={styles.buttonTextStyle}>Verder</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -154,13 +149,13 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   inputFieldContainer: {
-    flex: 1,
+    backgroundColor: "red",
+    height: "80%",
     flexDirection: "column",
-    alignItems: "center",
-    marginTop: "5%"
+    alignItems: "center"
   },
   textStyle: {
-    fontSize: 20,
+    fontSize: 14,
     color: "#4a6572",
     textAlign: "center"
   },
@@ -173,25 +168,23 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: "50%",
     alignSelf: "center",
-    marginTop: "5%",
     backgroundColor: "#00a6ff",
     borderRadius: 25
   },
-  documentContainer: {
-    height: "45%",
-    width: "90%",
-    paddingTop: "2%",
-    alignSelf: "center"
+
+  containerStyle: {
+    width: "75%",
+    alignSelf: "center",
+    backgroundColor: "transparent",
+    marginTop: "3%"
   },
-  documentName: {
-    color: "#4a6572",
-    width: "60%",
-    fontSize: 18
+
+  inputContainerStyle: {
+    borderBottomColor: "#4a6572"
   },
-  documentSize: {
-    color: "#4a6572",
-    width: "30%",
-    fontSize: 18
+
+  inputStyle: {
+    color: "#4a6572"
   }
 });
 

@@ -53,7 +53,6 @@ User.getUserId().then(id => {
       profilePhoto.uri = Api.getFileUrl(res["user"].profilePhotoPath);
       organisation = res["user"].organisation;
     });
-    console.log(profilePhoto);
   }
 });
 
@@ -79,22 +78,28 @@ const CustomDrawerContentComponent = props => (
                 alignItems: "center"
               }}
             >
-              <ImageBackground
-                source={profilePhoto}
-                resizeMode="cover"
-                style={{
-                  marginLeft: "5%",
-                  width: 75,
-                  height: 75,
-                  borderRadius: 100,
-                  backgroundColor: "white"
+              <TouchableOpacity
+                onPress={() => {
+                  Router.goTo(props.navigation, "Profile", "ProfileScreen");
                 }}
-                imageStyle={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 200
-                }}
-              />
+              >
+                <ImageBackground
+                  source={profilePhoto}
+                  resizeMode="cover"
+                  style={{
+                    marginLeft: "5%",
+                    width: 75,
+                    height: 75,
+                    borderRadius: 100,
+                    backgroundColor: "white"
+                  }}
+                  imageStyle={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 200
+                  }}
+                />
+              </TouchableOpacity>
               <View
                 style={{
                   flexDirection: "column",
@@ -117,9 +122,7 @@ const CustomDrawerContentComponent = props => (
                   style={{
                     color: "#fff"
                   }}
-                >
-                  Scheikunde docent
-                </Text>
+                />
               </View>
             </View>
             <View
@@ -253,15 +256,6 @@ export const Drawer = createDrawerNavigator(
         drawerLabel: "Ontdekken",
         drawerIcon: ({ tintColor }) => (
           <Icon name="compass" size={25} color={tintColor} />
-        )
-      }
-    },
-    GroupStack: {
-      screen: GroupStack,
-      navigationOptions: {
-        drawerLabel: "Groepen",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="account-group" size={25} color={tintColor} />
         )
       }
     },

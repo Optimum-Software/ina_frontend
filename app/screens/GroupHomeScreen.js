@@ -426,6 +426,7 @@ const styles = StyleSheet.create({
   },
   personList: {
     width: "100%",
+    backgroundColor: "#cfd8dc",
     height: 50,
     justifyContent: "center",
     alignItems: "flex-start"

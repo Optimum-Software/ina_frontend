@@ -19,6 +19,7 @@ import line from "../assets/images/Line.png";
 import Router from "../helpers/Router";
 import ProjectApi from "../helpers/ProjectApi";
 import ModalDropdown from "react-native-modal-dropdown";
+import Api from "../helpers/Api";
 
 export default class ProjectOverview extends Component {
   constructor() {
@@ -45,65 +46,65 @@ export default class ProjectOverview extends Component {
   });
 
   handelEnd = () => {};
-
-  filter(idx) {
-    switch (idx) {
-      case "0":
-        this.setState({ data: [] });
-        let response0 = ProjectApi.newestProjects().then(result => {
-          if (result["bool"]) {
-            this.setState({
-              data: result["projects"]
-            });
-            console.log(this.state.data);
-          } else {
-            alert(result["msg"]);
-          }
-        });
-        break;
-      case "1":
-        this.setState({ data: [] });
-        let response1 = ProjectApi.oldestProjects().then(result => {
-          if (result["bool"]) {
-            this.setState({
-              data: result["projects"]
-            });
-            console.log(this.state.data);
-          } else {
-            alert(result["msg"]);
-          }
-        });
-        break;
-      case "2":
-        this.setState({ data: [] });
-        let response2 = ProjectApi.mostLikedProjects().then(result => {
-          if (result["bool"]) {
-            this.setState({
-              data: result["projects"]
-            });
-            console.log(this.state.data);
-          } else {
-            alert(result["msg"]);
-          }
-        });
-        break;
-      case "3":
-        this.setState({ data: [] });
-        let response3 = ProjectApi.mostFollowedProjects().then(result => {
-          if (result["bool"]) {
-            this.setState({
-              data: result["projects"]
-            });
-            console.log(this.state.data);
-          } else {
-            alert(result["msg"]);
-          }
-        });
-        break;
-      default:
-        alert("selectie niet herkend");
-    }
-  }
+  //
+  // filter(idx) {
+  //   switch (idx) {
+  //     case "0":
+  //       this.setState({ data: [] });
+  //       let response0 = ProjectApi.newestProjects().then(result => {
+  //         if (result["bool"]) {
+  //           this.setState({
+  //             data: result["projects"]
+  //           });
+  //           console.log(this.state.data);
+  //         } else {
+  //           alert(result["msg"]);
+  //         }
+  //       });
+  //       break;
+  //     case "1":
+  //       this.setState({ data: [] });
+  //       let response1 = ProjectApi.oldestProjects().then(result => {
+  //         if (result["bool"]) {
+  //           this.setState({
+  //             data: result["projects"]
+  //           });
+  //           console.log(this.state.data);
+  //         } else {
+  //           alert(result["msg"]);
+  //         }
+  //       });
+  //       break;
+  //     case "2":
+  //       this.setState({ data: [] });
+  //       let response2 = ProjectApi.mostLikedProjects().then(result => {
+  //         if (result["bool"]) {
+  //           this.setState({
+  //             data: result["projects"]
+  //           });
+  //           console.log(this.state.data);
+  //         } else {
+  //           alert(result["msg"]);
+  //         }
+  //       });
+  //       break;
+  //     case "3":
+  //       this.setState({ data: [] });
+  //       let response3 = ProjectApi.mostFollowedProjects().then(result => {
+  //         if (result["bool"]) {
+  //           this.setState({
+  //             data: result["projects"]
+  //           });
+  //           console.log(this.state.data);
+  //         } else {
+  //           alert(result["msg"]);
+  //         }
+  //       });
+  //       break;
+  //     default:
+  //       alert("selectie niet herkend");
+  //   }
+  //}
 
   render() {
     return (
@@ -161,14 +162,15 @@ export default class ProjectOverview extends Component {
                       {
                         id: item.id,
                         name: item.name,
-                        url: item.url,
                         desc: item.desc,
                         start_date: item.start_date,
                         end_date: item.end_date,
                         created_at: item.created_at,
                         like_count: item.like_count,
                         follower_count: item.follower_count,
-                        location: item.location
+                        location: item.location,
+                        thumbnail: item.url,
+                        creator: item.creator
                       }
                     )
                   }
@@ -176,7 +178,7 @@ export default class ProjectOverview extends Component {
                   <View style={styles.card}>
                     <View style={styles.cardImage}>
                       <Image
-                        source={{ uri: item.url }}
+                        source={{ uri: Api.getFileUrl(item.thumbnail) }}
                         resizeMode="cover"
                         style={styles.image}
                       />

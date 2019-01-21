@@ -34,10 +34,10 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "bertde.boer@hotmail.com",
+      email: "bertdeboer101@gmail.com",
       emailError: "",
 
-      pw: "Welkom123",
+      pw: "123456",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);

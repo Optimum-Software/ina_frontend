@@ -37,7 +37,6 @@ export default class App extends React.Component {
         OneSignal.configure();
         User.getUserId().then( id => {
             this.setState({checkedLoggedIn: true})
-            console.log(id )
             if(id != null) {
                 this.setState({loggedIn: true})
             } else {

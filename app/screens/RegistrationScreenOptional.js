@@ -43,9 +43,6 @@ export default class RegistrationScreenOptional extends Component {
   editOptionalInfo() {
     this.resetErrors();
     User.getUserId().then(id => {
-      //debug
-      id = 19;
-      //debug
       if (this.state.imgPicked) {
         file = {
           uri: this.state.profilePhoto.uri,
@@ -179,8 +176,8 @@ export default class RegistrationScreenOptional extends Component {
           <Input
             placeholder="Bio"
             placeholderTextColor="#FFFFFF"
-            containerStyle={styles.containerStyle}
-            inputContainerStyle={styles.inputContainerStyle}
+            containerStyle={[styles.containerStyle]}
+            inputContainerStyle={[styles.inputContainerStyle]}
             inputStyle={{ color: "#FFFFFF", height: null }}
             value={this.state.bio}
             leftIcon={{

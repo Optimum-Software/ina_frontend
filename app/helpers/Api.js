@@ -2,7 +2,8 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http://145.37.152.82:8000";
+  ip = "http://145.37.153.142:8000";
+
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -48,7 +49,7 @@ class Api {
   async callApiGet(action) {
     try {
       let response = await this.timeout(
-        30000,
+        5000,
         fetch(this.url + action, {
           method: "GET",
           headers: {
@@ -134,9 +135,33 @@ class Api {
     }
   }
 
-  async callApiUploadForProject(projectId, name, file) {
+  async callApiPostForm(action, data) {
+    try {
+      let response = await this.timeout(
+        10000,
+        fetch(this.url + action, {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data"
+          },
+          body: data
+        })
+      );
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
+  }
+
+  async callApiUploadForProject(projectId, name, files) {
     const data = new FormData();
-    data.append(projectId + "_" + name, file);
+    for (file in files) {
+      data.append(projectId + "_" + name, file);
+    }
     try {
       let response = await this.timeout(
         3000,
@@ -206,6 +231,7 @@ class Api {
   }
 
   getFileUrl(path) {
+    console.log(this.mediaUrl + path);
     return this.mediaUrl + path;
   }
 }

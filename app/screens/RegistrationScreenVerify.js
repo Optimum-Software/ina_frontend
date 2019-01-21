@@ -104,7 +104,6 @@ export default class RegistrationScreenStart extends Component {
     ).then(result => {
       console.log(result);
       if (!result["bool"]) {
-        firebaseApi.deleteUser(firebaseUser);
         firebaseApi.deleteUser(emailAccount);
       } else {
         userId = result["id"];
