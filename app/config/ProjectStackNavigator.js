@@ -6,6 +6,7 @@ import ProjectCreateSecondScreen from "../screens/ProjectCreateSecondScreen";
 import ProjectCreateThirdScreen from "../screens/ProjectCreateThirdScreen";
 import ProjectCreateFourthScreen from "../screens/ProjectCreateFourthScreen";
 import ProjectMembersScreen from "../screens/ProjectMembersScreen";
+import ExploreScreen from "../screens/ExploreScreen";
 
 export default createStackNavigator(
   {
@@ -18,6 +19,13 @@ export default createStackNavigator(
 
     ProjectDetailScreen: {
       screen: ProjectDetailScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+
+    ExploreScreen: {
+      screen: ExploreScreen,
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })
@@ -54,6 +62,7 @@ export default createStackNavigator(
       })
     }
   },
+
   {
     headerMode: "none"
   }

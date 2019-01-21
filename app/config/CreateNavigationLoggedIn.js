@@ -21,7 +21,8 @@ import {
   createBottomTabNavigator,
   createDrawerNavigator,
   createAppContainer,
-  DrawerItems
+  DrawerItems,
+  NavigationActions
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "../screens/HomeScreen";
@@ -38,7 +39,9 @@ import ProjectStack from "./ProjectStackNavigator";
 import UserApi from "../helpers/UserApi";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
+import ProfileParameters from "../helpers/ProfileParameters";
 import Api from "../helpers/Api";
+import ExploreNavigateButton from "./ExploreNavigateButton";
 
 let screen = Dimensions.get("window");
 let firstName = "";
@@ -79,8 +82,12 @@ const CustomDrawerContentComponent = props => (
               }}
             >
               <TouchableOpacity
+                // onPress={() => {
+                // ProfileParameters.storeUserId(23)
+                // Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
+                // }}
                 onPress={() => {
-                  Router.goTo(props.navigation, "Profile", "ProfileScreen");
+                  Router.goTo(props.navigation, "ProfileEdit", "ProfileEdit");
                 }}
               >
                 <ImageBackground
@@ -124,6 +131,18 @@ const CustomDrawerContentComponent = props => (
                   }}
                 />
               </View>
+            </View>
+            <View
+              style={{
+                backgroundColor: "#fff",
+                width: "90%",
+                paddingLeft: "5%",
+                paddingRight: "5%",
+                height: 1,
+                alignSelf: "center"
+              }}
+            >
+              <Text>{organisation}</Text>
             </View>
             <View
               style={{
@@ -211,7 +230,7 @@ export const Tabs = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="home" type="entypo" size={28} color={tintColor} />
+          <Icon name="home-outline" size={28} color={tintColor} />
         )
       }
     },
@@ -220,7 +239,23 @@ export const Tabs = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: "Projecten",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="folder-open" type="ionicon" size={28} color={tintColor} />
+          <Icon name="lightbulb-on-outline" size={28} color={tintColor} />
+        )
+      }
+    },
+    Ontdekken: {
+      screen: ExploreScreen,
+      navigationOptions: {
+        tabBarVisible: false,
+        tabBarIcon: <ExploreNavigateButton />
+      }
+    },
+    ChaDtStack: {
+      screen: ChatStack,
+      navigationOptions: {
+        tabBarLabel: "Chats",
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="pillar" size={28} color={tintColor} />
         )
       }
     },
@@ -229,13 +264,14 @@ export const Tabs = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: "Chats",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="forum" type="ionicon" size={28} color={tintColor} />
+          <Icon name="trophy-outline" size={28} color={tintColor} />
         )
       }
     }
   },
   {
-    headerMode: "none"
+    headerMode: "none",
+    tabBarOptions: { showLabel: false }
   }
 );
 
@@ -271,7 +307,7 @@ export const Drawer = createDrawerNavigator(
     SavedProjectScreen: {
       screen: SavedProjectScreen,
       navigationOptions: {
-        drawerLabel: "Opgeslagen",
+        drawerLabel: "Mijn projecten",
         drawerIcon: ({ tintColor }) => (
           <Icon name="bookmark" size={25} color={tintColor} />
         )

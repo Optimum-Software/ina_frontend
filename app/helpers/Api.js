@@ -231,7 +231,6 @@ class Api {
   }
 
   getFileUrl(path) {
-    console.log(this.mediaUrl + path);
     return this.mediaUrl + path;
   }
 }

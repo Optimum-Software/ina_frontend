@@ -152,6 +152,7 @@ export default class RegistrationScreenOptional extends Component {
               name: "building",
               color: "#FFFFFF"
             }}
+            maxLength={50}
             onChangeText={organisation => this.setState({ organisation })}
             onSubmitEditing={() => console.log(this.state.organisation)}
             shake={true}
@@ -169,6 +170,7 @@ export default class RegistrationScreenOptional extends Component {
               name: "id-card",
               color: "#FFFFFF"
             }}
+            maxLength={50}
             onChangeText={jobFunction => this.setState({ jobFunction })}
             onSubmitEditing={() => console.log(this.state.jobFunction)}
           />
@@ -188,6 +190,7 @@ export default class RegistrationScreenOptional extends Component {
             leftIconContainerStyle={{ alignSelf: "flex-start" }}
             multiline={true}
             numberOfLines={5}
+            maxLength={2000}
             textAlignVertical={"top"}
             onChangeText={bio => this.setState({ bio })}
           />

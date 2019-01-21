@@ -8,28 +8,101 @@ import {
   Dimensions,
   ImageBackground,
   TouchableHighlight,
-  TouchableOpacity,
   ScrollView,
   SafeAreaView,
   StatusBar,
   Platform
 } from "react-native";
-import { NavigationActions, Header } from "react-navigation";
+import {
+  NavigationActions,
+  Header,
+  createMaterialTopTabNavigator
+} from "react-navigation";
 import Router from "../helpers/Router";
 import { Toolbar } from "react-native-material-ui";
 import line from "../assets/images/Line.png";
 import ProjectApi from "../helpers/ProjectApi";
-import Api from "../helpers/Api";
 import User from "../helpers/User";
+import Carousel from "react-native-snap-carousel";
+import DetailTab from "./DetailTab";
+import NewsTab from "./NewsTab";
+import { TabView, TabBar, SceneMap } from "react-native-tab-view";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Api from "../helpers/Api";
+
+const FirstRoute = props => (
+  <View style={[styles.scene, { backgroundColor: "white" }]}>
+    {console.log(props)}
+    <DetailTab {...props} />
+  </View>
+);
+const SecondRoute = props => (
+  <View style={[styles.scene, { backgroundColor: "white" }]}>
+    <NewsTab {...props} />
+  </View>
+);
+
+const getTabBarIcon = props => {
+  const { route } = props;
+
+  if (route.key === "detail") {
+    return <Icon name="information-outline" size={18} color={"black"} />;
+  } else {
+    return <Icon name="newspaper" size={18} color={"black"} />;
+  }
+};
 
 export default class ProjectDetail extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: "Project"
+  });
+
   constructor(props) {
     super(props);
+
     this.state = {
       bookmarked: "bookmark",
+      id: "",
+      index: 0,
       liked: false,
-      member: false,
       isModalVisible: false,
+      tags: [],
+      routes: [
+        { key: "detail", title: "Details" },
+        { key: "news", title: "Nieuws" }
+      ],
+      entries: [
+        {
+          title: "Beautiful and dramatic Antelope Canyon",
+          subtitle: "Lorem ipsum dolor sit amet et nuncat mergitur",
+          illustration:
+            "https://cdn1.bloovi.be/frontend/files/blog/images/826x452/65-procent-van-kinderen-die-vandaag-naar-school-trekken-zullen-job-hebben-die-nog-niet-bestaat-en-dat-is-een-probleem.jpg"
+        },
+        {
+          title: "Earlier this morning, NYC",
+          subtitle: "Lorem ipsum dolor sit amet",
+          illustration:
+            "https://www.frankwatching.com/app/uploads/2014/01/Trendrapport_5_Datagedreven-Onderwijs_lr.jpg"
+        },
+        {
+          title: "White Pocket Sunset",
+          subtitle: "Lorem ipsum dolor sit amet et nuncat ",
+          illustration:
+            "http://www.ajournals.com/wp-content/uploads/2015/05/Biology.jpg"
+        },
+        {
+          title: "Acrocorinth, Greece",
+          subtitle: "Lorem ipsum dolor sit amet et nuncat mergitur",
+          illustration:
+            "https://www.altushost.com/wp-content/uploads/2016/07/image05.jpg"
+        },
+        {
+          title: "The lone tree, majestic landscape of New Zealand",
+          subtitle: "Lorem ipsum dolor sit amet",
+          illustration:
+            "https://file.mockplus.com/image/2016/05/207cd074-b336-43bc-a42d-346e397baf81.jpg"
+        }
+      ],
       project: {
         id: this.props.navigation.getParam("id", ""),
         name: this.props.navigation.getParam("name", ""),
@@ -42,26 +115,10 @@ export default class ProjectDetail extends Component {
         location: this.props.navigation.getParam("location", ""),
         thumbnail: this.props.navigation.getParam("thumbnail", ""),
         creator: this.props.navigation.getParam("creator", "")
-      },
-      tags: [],
-      projectMembers: []
+      }
     };
-  }
 
-  componentDidMount() {
-    this.updateProjectInfo();
-    User.getUserId().then(id => {
-      console.log("PRINTSSSSSSS");
-      console.log(id);
-      console.log(this.state.project.id);
-      ProjectApi.checkIfMember(id, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          this.setState({ member: true });
-        } else {
-          this.setState({ member: false });
-        }
-      });
-    });
+    console.log(this.state);
   }
 
   followProject(projectId, userId) {
@@ -116,188 +173,103 @@ export default class ProjectDetail extends Component {
     return tagItems;
   }
 
-  joinProject() {
-    User.getUserId().then(id => {
-      ProjectApi.joinProject(id, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          this.setState({ member: true });
-          this.updateProjectInfo();
-          alert("Je neemt nu deel aan dit project");
-        } else {
-          alert(result["msg"]);
-        }
-      });
-    });
+  _renderItem({ item, index }) {
+    return (
+      <View style={styles.slide}>
+        <Image
+          source={{ uri: item.illustration }}
+          resizeMode="cover"
+          style={{ width: "100%", height: 200 }}
+        />
+      </View>
+    );
   }
 
-  leaveProject() {
-    User.getUserId().then(id => {
-      ProjectApi.leaveProject(id, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          alert("Je neemt niet langer deel aan dit project");
-          this.setState({ member: false });
-          this.updateProjectInfo();
-        } else {
-          alert(result["msg"]);
-        }
-      });
-    });
-  }
+  _renderTabBar = props => (
+    <TabBar
+      {...props}
+      scrollEnabled
+      indicatorStyle={styles.indicator}
+      style={styles.tabbar}
+      tabStyle={styles.tab}
+      labelStyle={styles.label}
+      renderIcon={props => getTabBarIcon(props)}
+    />
+  );
 
-  updateProjectInfo() {
-    ProjectApi.getProjectById(this.state.project.id).then(result => {
-      if (result["bool"]) {
-        this.setState({
-          project: result["project"]
-        });
-      } else {
-        alert("Kon project niet updaten");
-      }
-    });
-    ProjectApi.getProjectMembersById(this.state.project.id).then(result => {
-      if (result["bool"]) {
-        this.setState({
-          projectMembers: result["members"]
-        });
-        console.log(this.state.projectMembers);
-      } else {
-        alert("Er zijn geen deelnemers aan dit project");
-      }
-    });
-  }
+  renderScene = ({ route }) => {
+    switch (route.key) {
+      case "detail":
+        return <FirstRoute project={this.state.project} />;
+      case "news":
+        return <SecondRoute project={this.state.project} />;
+      default:
+        return null;
+    }
+  };
 
   render() {
+    let { width, height } = Dimensions.get("window");
+    const sliderWidth = width;
+    const itemWidth = width;
+
     return (
       <SafeAreaView style={styles.safeArea}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
         />
+        <Toolbar
+          centerElement="Project informatie"
+          iconSet="MaterialCommunityIcons"
+          leftElement={"arrow-left"}
+          rightElement="share-variant"
+          onLeftElementPress={() => {
+            Router.goBack(this.props.navigation);
+          }}
+        />
         <ScrollView>
-          <View style={{ height: Header.HEIGHT }}>
-            <Toolbar
-              leftElement={"chevron-left"}
-              onLeftElementPress={() => Router.goBack(this.props.navigation)}
-              centerElement="Project informatie"
-              rightElement={this.state.bookmarked}
-              onRightElementPress={() => {
-                if (this.state.bookmarked == "bookmark") {
-                  this.setState({ bookmarked: "markunread" });
-                } else {
-                  this.setState({ bookmarked: "bookmark" });
-                }
-              }}
-            />
-          </View>
           <View style={styles.container}>
             <View style={styles.card}>
-              <Image
-                source={{ uri: Api.getFileUrl(this.state.project.thumbnail) }}
-                resizeMode="cover"
-                style={{ width: "100%", height: 200 }}
-              />
+              {/*<Image*/}
+              {/*source={{uri: url}}*/}
+              {/*resizeMode="cover"*/}
+              {/*style={{width: "100%", height: 200}}*/}
+              {/*/>*/}
+              <View style={{ width: "100%", height: 200 }}>
+                <Carousel
+                  ref={c => {
+                    this._carousel = c;
+                  }}
+                  data={this.state.entries}
+                  renderItem={this._renderItem}
+                  sliderWidth={sliderWidth}
+                  itemWidth={itemWidth}
+                  autoplay={true}
+                  autoplayInterval={6000}
+                  loop={true}
+                />
+              </View>
               <Image
                 source={line}
                 resizeMode="stretch"
-                style={{ width: "100%", height: "2%" }}
+                style={{ width: "100%", height: 2 }}
               />
-              <View>
-                <Text style={styles.title}>{this.state.project.name}</Text>
-                <Text>{this.state.desc}</Text>
+              <View
+                style={{
+                  width: Dimensions.get("window").width,
+                  height: Dimensions.get("window").height
+                }}
+              >
+                <TabView
+                  navigationState={this.state}
+                  renderScene={this.renderScene}
+                  onIndexChange={index => this.setState({ index })}
+                  initialLayout={{ width: Dimensions.get("window").width }}
+                  renderTabBar={this._renderTabBar}
+                  labelStyle={styles.label}
+                />
               </View>
-              <View>
-                <TouchableHighlight
-                  onPress={() => {
-                    User.getUserId().then(userId => {
-                      if (userId != null) {
-                        this.likedProject(this.state.project.id, userId);
-                      } else {
-                        Router.goTo(
-                          this.props.navigation,
-                          "LoginStack",
-                          "LoginScreen",
-                          null
-                        );
-                      }
-                    });
-                  }}
-                  style={styles.button}
-                >
-                  <Text style={styles.buttonText}>like</Text>
-                </TouchableHighlight>
-              </View>
-              <View>
-                <TouchableHighlight
-                  onPress={() => {
-                    User.getUserId().then(userId => {
-                      if (userId != null) {
-                        this.followProject(this.state.project.id, userId);
-                      } else {
-                        Router.goTo(
-                          this.props.navigation,
-                          "LoginStack",
-                          "LoginScreen",
-                          null
-                        );
-                      }
-                    });
-                  }}
-                  style={styles.button}
-                >
-                  <Text style={styles.buttonText}>follow</Text>
-                </TouchableHighlight>
-              </View>
-              <View>
-                {this.state.member == false && (
-                  <TouchableHighlight
-                    style={styles.joinButton}
-                    onPress={() => this.joinProject()}
-                  >
-                    <Text style={{ fontSize: 18, color: "#fff" }}>
-                      Word lid
-                    </Text>
-                  </TouchableHighlight>
-                )}
-                {this.state.member == true && (
-                  <TouchableHighlight
-                    style={styles.leaveButton}
-                    onPress={() => this.leaveProject()}
-                  >
-                    <Text style={{ fontSize: 18, color: "#fff" }}>
-                      Verlaat groep
-                    </Text>
-                  </TouchableHighlight>
-                )}
-                <TouchableOpacity
-                  style={styles.personList}
-                  onPress={() =>
-                    Router.goTo(
-                      this.props.navigation,
-                      "ProjectStack",
-                      "ProjectMembersScreen",
-                      { persons: this.state.projectMembers }
-                    )
-                  }
-                >
-                  <FlatList
-                    data={this.state.projectMembers}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({ item }) => (
-                      <View style={styles.personCard}>
-                        <Image
-                          source={{
-                            uri: Api.getFileUrl(item.profilePhotoPath)
-                          }}
-                          resizeMode="cover"
-                          style={{ width: 50, height: 50, borderRadius: 100 }}
-                        />
-                      </View>
-                    )}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View>{this.tags(this.state.project.id)}</View>
             </View>
           </View>
         </ScrollView>
@@ -312,6 +284,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#00a6ff"
   },
   container: {
+    marginBottom: 120,
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
@@ -336,7 +309,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height
   },
 
-  image: {
+  image2: {
     height: "50%",
     width: "100%"
   },
@@ -357,35 +330,27 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold"
   },
-  modalContainer: {},
-  personList: {
-    width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "flex-start"
+  sliderContentContainer: {
+    paddingVertical: 10 // for custom animation
   },
-  personCard: {
-    height: 50,
-    width: 50,
-    backgroundColor: "#F1F1F1",
-    borderRadius: 100
+  scene: {
+    flex: 1
   },
-  joinButton: {
-    backgroundColor: "#f39200",
-    width: "100%",
-    height: 30,
-    marginBottom: "2%",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center"
+  tabbar: {
+    backgroundColor: "#dee5e8",
+    height: 44
   },
-  leaveButton: {
-    backgroundColor: "#ef5350",
-    width: "100%",
-    height: 30,
-    marginBottom: "2%",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center"
-  }
+  tab: {
+    height: 40,
+    width: Dimensions.get("window").width / 2,
+    flexDirection: "row"
+  },
+  indicator: {
+    backgroundColor: "#00a6ff"
+  },
+  label: {
+    color: "black"
+  },
+
+  modalContainer: {}
 });

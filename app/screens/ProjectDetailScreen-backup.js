@@ -25,6 +25,7 @@ import User from "../helpers/User";
 export default class ProjectDetail extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       bookmarked: "bookmark",
       liked: false,

@@ -31,7 +31,6 @@ import HomepageApi from "../helpers/HomepageApi";
 export default class Home extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       groups: [],
       topics: [],
@@ -218,6 +217,7 @@ export default class Home extends Component {
                 data={this.state.topics}
                 onEndReached={() => this.handelEnd()}
                 horizontal={true}
+                showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => {
                   return (
                     <ImageBackground
@@ -253,7 +253,6 @@ export default class Home extends Component {
                 }}
               />
             </View>
-
             <View style={styles.separator} />
             <View>
               <Text style={styles.title}>Top trending</Text>
@@ -274,14 +273,15 @@ export default class Home extends Component {
                           {
                             id: item.id,
                             name: item.name,
-                            url: item.thumbnail,
                             desc: item.desc,
                             start_date: item.start_date,
                             end_date: item.end_date,
                             created_at: item.created_at,
                             like_count: item.like_count,
                             follower_count: item.follower_count,
-                            location: item.location
+                            location: item.location,
+                            thumbnail: item.url,
+                            creator: item.creator
                           }
                         )
                       }

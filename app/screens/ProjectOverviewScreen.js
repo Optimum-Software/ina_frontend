@@ -30,6 +30,7 @@ export default class ProjectOverview extends Component {
     };
 
     let response = ProjectApi.getAllProjects().then(result => {
+      console.log(result);
       if (result["bool"]) {
         this.setState({
           data: result["projects"]
