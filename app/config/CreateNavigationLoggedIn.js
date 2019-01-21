@@ -39,7 +39,9 @@ import ProjectStack from "./ProjectStackNavigator";
 import UserApi from "../helpers/UserApi";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
+import ProfileParameters from "../helpers/ProfileParameters";
 import Api from "../helpers/Api";
+import ExploreNavigateButton from "./ExploreNavigateButton";
 
 let screen = Dimensions.get("window");
 let firstName = "";
@@ -80,8 +82,12 @@ const CustomDrawerContentComponent = props => (
               }}
             >
               <TouchableOpacity
+              // onPress={() => {
+              // ProfileParameters.storeUserId(23)
+              // Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
+              // }}
                 onPress={() => {
-                  Router.goTo(props.navigation, "Profile", "ProfileScreen");
+                  Router.goTo(props.navigation, "ProfileEdit", "ProfileEdit");
                 }}
               >
                 <ImageBackground
@@ -135,10 +141,25 @@ const CustomDrawerContentComponent = props => (
                 height: 1,
                 alignSelf: "center"
               }}
-            />
-            <View style={{ paddingLeft: "5%", paddingTop: "5%", flex: 3 }}>
-              <DrawerItems {...props} />
-              <TouchableHighlight
+            >
+            <Text>
+            {organisation}
+            </Text>
+          </View>
+        <View
+          style={{
+            backgroundColor: "#fff",
+            width: "90%",
+            paddingLeft: '5%',
+            paddingRight: '5%',
+            height: 1,
+            alignSelf: "center",
+          }}
+        />
+        <View style={{paddingLeft: '5%', paddingTop: '5%', flex: 3 }}>
+
+          <DrawerItems {...props} />
+          <TouchableHighlight
                 key="logout"
                 onPress={() => {
                   UserApi.logout();
@@ -226,38 +247,10 @@ export const Tabs = createBottomTabNavigator(
       }
     },
     Ontdekken: {
-      screen: () => null,
+      screen: ExploreScreen,
       navigationOptions: {
-        tabBarLabel: " ",
-        tabBarIcon: ({ tintColor }) => (
-          <View
-            style={{
-              height: 60,
-              width: 60,
-              backgroundColor: "#00a6ff",
-              borderRadius: 65,
-              marginBottom: 45,
-              alignItems: "center",
-              justifyContent: "center",
-              elevation: 5
-            }}
-          >
-            <Icon
-              name="heart"
-              type="ionicon"
-              size={28}
-              color="white"
-              onPress={() => {
-                NavigationActions.navigate({
-                  routeName: "ProjectStack",
-                  action: NavigationActions.navigate({
-                    routeName: "ExploreScreen"
-                  })
-                });
-              }}
-            />
-          </View>
-        )
+        tabBarVisible: false,
+        tabBarIcon: <ExploreNavigateButton/>
       }
     },
     ChaDtStack: {
@@ -317,7 +310,7 @@ export const Drawer = createDrawerNavigator(
     SavedProjectScreen: {
       screen: SavedProjectScreen,
       navigationOptions: {
-        drawerLabel: "Opgeslagen",
+        drawerLabel: "Mijn projecten",
         drawerIcon: ({ tintColor }) => (
           <Icon name="bookmark" size={25} color={tintColor} />
         )

@@ -199,6 +199,7 @@ export default class Home extends Component {
               data={this.state.topics}
               onEndReached={() => this.handelEnd()}
               horizontal={true}
+              showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => {
                 return (
                   <ImageBackground

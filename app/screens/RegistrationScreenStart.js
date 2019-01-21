@@ -174,6 +174,7 @@ export default class RegistrationScreenStart extends Component {
                   name: "user",
                   color: "#FFFFFF"
                 }}
+                maxLength={30}
                 onChangeText={firstName => this.setState({ firstName })}
                 onSubmitEditing={() => console.log(this.state.firstName)}
                 shake={true}
@@ -191,6 +192,7 @@ export default class RegistrationScreenStart extends Component {
                   name: "user",
                   color: "#FFFFFF"
                 }}
+                maxLength={30}
                 onChangeText={lastName => this.setState({ lastName })}
                 onSubmitEditing={() => console.log("end")}
               />
@@ -207,6 +209,7 @@ export default class RegistrationScreenStart extends Component {
                   name: "envelope",
                   color: "#FFFFFF"
                 }}
+                maxLength={50}
                 autoCapitalize="none"
                 onChangeText={email => this.setState({ email })}
                 onSubmitEditing={() => console.log("end")}
