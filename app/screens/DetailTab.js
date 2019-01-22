@@ -8,8 +8,21 @@ import {
   TouchableOpacity
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Api from "../helpers/Api";
 
 export default class DetailTab extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      project: props.project
+    };
+
+    console.log("PROPS");
+    console.log(props);
+    console.log("STATE");
+    console.log(this.state);
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -22,8 +35,7 @@ export default class DetailTab extends Component {
           >
             <Image
               source={{
-                uri:
-                  "https://avatars3.githubusercontent.com/u/1271226?s=460&v=4"
+                uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
               }}
               resizeMode="cover"
               style={{
@@ -40,9 +52,13 @@ export default class DetailTab extends Component {
             />
             <View style={{ paddingLeft: 15 }}>
               <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                Co-discovery learning
+                {this.state.project.name}
               </Text>
-              <Text>Davey Schippers</Text>
+              <Text>
+                {this.state.project.creator.firstName +
+                  " " +
+                  this.state.project.creator.lastName}
+              </Text>
             </View>
           </View>
           <Icon name="heart-outline" size={36} color={"red"} />
@@ -58,13 +74,7 @@ export default class DetailTab extends Component {
             alignSelf: "center"
           }}
         />
-        <Text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eleifend
-          mauris ut sapien convallis, et aliquet libero gravida. Maecenas varius
-          feugiat purus vitae porta. Vestibulum malesuada ultricies enim, vel
-          elementum quam dictum ut. Nunc nec nisi pretium, cursus sem a,
-          hendrerit ipsum.
-        </Text>
+        <Text>{this.state.project.desc}</Text>
 
         <View
           style={{

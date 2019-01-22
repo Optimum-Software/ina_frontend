@@ -17,6 +17,7 @@ import Router from "../helpers/Router";
 import { Toolbar } from "react-native-material-ui";
 import Api from "../helpers/Api";
 import GroupApi from "../helpers/GroupApi";
+import User from "../helpers/User";
 
 import {
   Card,
@@ -27,107 +28,6 @@ import {
   Avatar
 } from "react-native-elements";
 import ViewMoreText from "react-native-view-more-text";
-
-const admins = [
-  {
-    id: 1,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 2,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 3,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  }
-];
-
-const persons = [
-  {
-    id: 1,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 2,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 3,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 4,
-    name: "Gaauwe",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 5,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 6,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 7,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 8,
-    name: "Gaauwe",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 9,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 10,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 11,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 12,
-    name: "Gaauwe",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 13,
-    name: "Jelmer",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 14,
-    name: "Bert",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 15,
-    name: "Wouter",
-    photo_path: "../assets/images/person-stock.png"
-  },
-  {
-    id: 16,
-    name: "Gaauwe",
-    photo_path: "../assets/images/person-stock.png"
-  }
-];
 
 const projects = [
   {
@@ -171,55 +71,109 @@ const projects = [
   }
 ];
 
-const group = {
-  id: 1,
-  name: "React Native Grunn",
-  desc:
-    "Spicy jalapeno pork belly short loin venison jerky buffalo beef short ribs. Salami pork loin turducken pastrami pork chop chicken sausage hamburger chuck ribeye. Pig ground round pancetta, sausage bresaola sirloin rump meatloaf boudin pastrami ham hock. Filet mignon bresaola doner ground round cupim short ribs tenderloin pork loin, ball tip brisket turducken swine pork chop sirloin short loin. Andouille shank pastrami salami sirloin.",
-  photo_path: "../assets/images/banner.jpeg",
-  created_at: "2018-12-19 00:00:00.000000",
-  member_count: 0,
-  public: 1
-};
 export default class GroupHomeScreen extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       showDesc: false,
-      group: {}
+      groupAdmin: {},
+      groupMembers: [],
+      showAdminBio: false,
+      group: {
+        id: this.props.navigation.getParam("id", ""),
+        name: this.props.navigation.getParam("name", ""),
+        desc: this.props.navigation.getParam("desc", ""),
+        photo_path: this.props.navigation.getParam("photo_path", ""),
+        created_at: this.props.navigation.getParam("created_at", ""),
+        member_count: this.props.navigation.getParam("member_count", ""),
+        public_bool: this.props.navigation.getParam("public_bool", "")
+      },
+      groupAdminBio: "",
+      member: this.props.navigation.getParam("member", "")
     };
   }
   handelEnd = () => {};
 
   componentDidMount() {
-    GroupApi.getGroupById(1).then(result => {
-      this.setState({
-        group: result["group"]
-      });
-      console.log(this.state.group);
-    });
+    this.updateGroupInfo();
   }
 
-  showDesc() {
-    this.setState({
-      showDesc: this.state.showDesc ? false : true
-    });
-  }
   renderViewMore(onPress) {
     return (
       <Text style={styles.viewMoreText} onPress={onPress}>
-        View more
+        Lees meer
       </Text>
     );
   }
   renderViewLess(onPress) {
     return (
       <Text style={styles.viewMoreText} onPress={onPress}>
-        View less
+        Lees minder
       </Text>
     );
   }
+
+  joinGroup() {
+    User.getUserId().then(id => {
+      GroupApi.joinGroup(id, this.state.group.id).then(result => {
+        if (result["bool"]) {
+          this.setState({ member: true });
+          this.updateGroupInfo();
+          alert("Je bent nu lid");
+        } else {
+          alert(result["msg"]);
+        }
+      });
+    });
+  }
+
+  leaveGroup() {
+    User.getUserId().then(id => {
+      GroupApi.leaveGroup(id, this.state.group.id).then(result => {
+        if (result["bool"]) {
+          alert("Je hebt de groep verlaten");
+          this.setState({ member: false });
+          this.updateGroupInfo();
+        } else {
+          alert(result["msg"]);
+        }
+      });
+    });
+  }
+
+  updateGroupInfo() {
+    GroupApi.getGroupById(this.state.group.id).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          group: result["group"]
+        });
+      } else {
+        alert("Kon groep niet updaten");
+      }
+    });
+    GroupApi.getGroupMembersById(this.state.group.id).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          groupMembers: result["members"]
+        });
+        console.log(this.state.groupMembers);
+      } else {
+        alert("Er zijn geen deelnemers");
+      }
+    });
+    GroupApi.getGroupAdminById(this.state.group.id).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          groupAdmin: result["user"],
+          groupAdminBio: result["user"].bio
+        });
+        console.log(this.state.groupAdmin);
+      } else {
+        alert("Kan groep admin niet vinden");
+      }
+    });
+  }
+
   render() {
     const { navigation } = this.props;
 
@@ -234,14 +188,12 @@ export default class GroupHomeScreen extends Component {
     return (
       <View style={styles.container}>
         <Toolbar
-          centerElement={name}
-          iconSet="MaterialCommunityIcons"
-          leftElement={"menu"}
-          rightElement={"share-variant"}
           color="#00a6ff"
-          onLeftElementPress={() => {
-            this.props.navigation.openDrawer();
-          }}
+          iconSet="MaterialCommunityIcons"
+          centerElement={this.state.group.name}
+          leftElement={"chevron-left"}
+          onLeftElementPress={() => Router.goBack(this.props.navigation)}
+          rightElement={"share-variant"}
           onRightElementPress={() => {
             alert("share");
           }}
@@ -252,15 +204,29 @@ export default class GroupHomeScreen extends Component {
             marginBottom: "5%"
           }}
         >
-          <Image source={{ uri: photo_path }} style={styles.banner} />
+          <Image
+            source={{ uri: this.state.group.photo_path }}
+            style={styles.banner}
+          />
           <View style={styles.containerMargin}>
-            <TouchableHighlight
-              style={styles.joinButton}
-              onPress={() => alert("Je bent nu lid")}
-            >
-              <Text style={{ fontSize: 18, color: "#fff" }}>Word lid</Text>
-            </TouchableHighlight>
-
+            {this.state.member == false && (
+              <TouchableHighlight
+                style={styles.joinButton}
+                onPress={() => this.joinGroup()}
+              >
+                <Text style={{ fontSize: 18, color: "#fff" }}>Word lid</Text>
+              </TouchableHighlight>
+            )}
+            {this.state.member == true && (
+              <TouchableHighlight
+                style={styles.leaveButton}
+                onPress={() => this.leaveGroup()}
+              >
+                <Text style={{ fontSize: 18, color: "#fff" }}>
+                  Verlaat groep
+                </Text>
+              </TouchableHighlight>
+            )}
             <TouchableOpacity
               style={styles.personList}
               onPress={() =>
@@ -268,20 +234,22 @@ export default class GroupHomeScreen extends Component {
                   this.props.navigation,
                   "GroupStack",
                   "GroupMembersScreen",
-                  { persons: persons }
+                  { persons: this.state.groupMembers }
                 )
               }
             >
               <FlatList
-                data={persons}
+                data={this.state.groupMembers}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
                   <View style={styles.personCard}>
                     <Image
-                      source={require("../assets/images/person-stock.png")}
-                      resizeMode="contain"
-                      style={{ width: "100%", height: "100%" }}
+                      source={{
+                        uri: item.profilePhotoPath
+                      }}
+                      resizeMode="cover"
+                      style={{ width: 50, height: 50, borderRadius: 100 }}
                     />
                   </View>
                 )}
@@ -289,18 +257,17 @@ export default class GroupHomeScreen extends Component {
             </TouchableOpacity>
 
             <View style={{ marginTop: "5%", marginBottom: "8%" }}>
-              {
-                // TODO: maak leden dynamisch
-              }
-              <Text style={styles.h2}>{persons.length} Leden</Text>
+              <Text style={styles.h2}>
+                {this.state.groupMembers.length} Leden
+              </Text>
               {
                 // TODO: voeg locatie toe aan groep
               }
               <Text style={styles.text}>Groningen, Netherlands</Text>
-              {public_bool == 1 && (
+              {this.state.group.public_bool == 1 && (
                 <Text style={styles.text}>Publieke groep</Text>
               )}
-              {public_bool == 0 && (
+              {this.state.group.public_bool == 0 && (
                 <Text style={styles.text}>Besloten groep</Text>
               )}
               <ViewMoreText
@@ -309,48 +276,49 @@ export default class GroupHomeScreen extends Component {
                 renderViewLess={this.renderViewLess}
                 textStyle={(styles.text, { marginTop: "2%" })}
               >
-                <Text>{desc}</Text>
+                <Text>{this.state.group.desc}</Text>
               </ViewMoreText>
             </View>
-            {this.state.showDesc && (
-              <Text style={{ marginTop: "1%" }}>{desc}</Text>
-            )}
 
             <Divider style={{ backgroundColor: "#a8a8a8" }} />
 
             <View style={{ marginBottom: "8%" }}>
-              <Text style={styles.h1}>Organisatoren</Text>
+              <Text style={styles.h1}>Administrator</Text>
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
                   marginTop: "3%"
                 }}
               >
-                <Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                    uri:
-                      "https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg"
-                  }}
-                />
-                <Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                    uri:
-                      "https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg"
-                  }}
-                />
-                <Avatar
-                  size="medium"
-                  rounded
-                  source={{
-                    uri:
-                      "https://s3.amazonaws.com/uifaces/faces/twitter/kfriedson/128.jpg"
-                  }}
-                />
+                <View style={{ flexDirection: "row" }}>
+                  <Avatar
+                    size="medium"
+                    rounded
+                    source={{
+                      uri: this.state.groupAdmin.profilePhotoPath
+                    }}
+                  />
+                  <View style={{ marginLeft: "1%" }}>
+                    <Text>
+                      {this.state.groupAdmin.firstName +
+                        " " +
+                        this.state.groupAdmin.lastName}
+                    </Text>
+                    <Text>
+                      {this.state.groupAdmin.function +
+                        " bij " +
+                        this.state.groupAdmin.organisation}
+                    </Text>
+                  </View>
+                </View>
+                <Text>{"Over " + this.state.groupAdmin.firstName}</Text>
+                <ViewMoreText
+                  numberOfLines={3}
+                  renderViewMore={this.renderViewMore}
+                  renderViewLess={this.renderViewLess}
+                  textStyle={styles.text}
+                >
+                  <Text>{this.state.groupAdminBio}</Text>
+                </ViewMoreText>
               </View>
             </View>
 
@@ -458,9 +426,10 @@ const styles = StyleSheet.create({
   },
   personList: {
     width: "100%",
+    backgroundColor: "#cfd8dc",
     height: 50,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   personCard: {
     height: 50,
@@ -476,6 +445,15 @@ const styles = StyleSheet.create({
 
   joinButton: {
     backgroundColor: "#f39200",
+    width: "100%",
+    height: 30,
+    marginBottom: "2%",
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  leaveButton: {
+    backgroundColor: "#ef5350",
     width: "100%",
     height: 30,
     marginBottom: "2%",

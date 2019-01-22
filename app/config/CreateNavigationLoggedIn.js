@@ -82,10 +82,10 @@ const CustomDrawerContentComponent = props => (
               }}
             >
               <TouchableOpacity
-              // onPress={() => {
-              // ProfileParameters.storeUserId(23)
-              // Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
-              // }}
+                // onPress={() => {
+                // ProfileParameters.storeUserId(23)
+                // Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
+                // }}
                 onPress={() => {
                   Router.goTo(props.navigation, "ProfileEdit", "ProfileEdit");
                 }}
@@ -142,24 +142,21 @@ const CustomDrawerContentComponent = props => (
                 alignSelf: "center"
               }}
             >
-            <Text>
-            {organisation}
-            </Text>
-          </View>
-        <View
-          style={{
-            backgroundColor: "#fff",
-            width: "90%",
-            paddingLeft: '5%',
-            paddingRight: '5%',
-            height: 1,
-            alignSelf: "center",
-          }}
-        />
-        <View style={{paddingLeft: '5%', paddingTop: '5%', flex: 3 }}>
-
-          <DrawerItems {...props} />
-          <TouchableHighlight
+              <Text>{organisation}</Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: "#fff",
+                width: "90%",
+                paddingLeft: "5%",
+                paddingRight: "5%",
+                height: 1,
+                alignSelf: "center"
+              }}
+            />
+            <View style={{ paddingLeft: "5%", paddingTop: "5%", flex: 3 }}>
+              <DrawerItems {...props} />
+              <TouchableHighlight
                 key="logout"
                 onPress={() => {
                   UserApi.logout();
@@ -250,7 +247,7 @@ export const Tabs = createBottomTabNavigator(
       screen: ExploreScreen,
       navigationOptions: {
         tabBarVisible: false,
-        tabBarIcon: <ExploreNavigateButton/>
+        tabBarIcon: <ExploreNavigateButton />
       }
     },
     ChaDtStack: {

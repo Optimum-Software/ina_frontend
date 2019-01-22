@@ -33,6 +33,7 @@ import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVe
 import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
 import ProjectStack from "./ProjectStackNavigator";
+import GroupStack from "./GroupStackNavigator";
 
 let screen = Dimensions.get("window");
 
@@ -173,7 +174,7 @@ export const Drawer = createDrawerNavigator(
           <Icon name="settings" size={25} color={tintColor} />
         )
       }
-    },
+    }
   },
   {
     drawerPosition: "left",

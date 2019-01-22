@@ -288,7 +288,7 @@ export default class RegistrationScreenStart extends Component {
                 }
               >
                 <Text style={{ color: "#fff", fontSize: 14 }}>
-                  Al een account?{" "}
+                  Al een account?
                 </Text>
                 <Text
                   style={{ color: "#fff", fontSize: 14, fontWeight: "bold" }}
@@ -297,7 +297,6 @@ export default class RegistrationScreenStart extends Component {
                 </Text>
               </TouchableOpacity>
             </View>
-
           </ImageBackground>
         </SafeAreaView>
       </Fragment>

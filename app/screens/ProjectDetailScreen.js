@@ -13,7 +13,11 @@ import {
   StatusBar,
   Platform
 } from "react-native";
-import { Header, createMaterialTopTabNavigator } from "react-navigation";
+import {
+  NavigationActions,
+  Header,
+  createMaterialTopTabNavigator
+} from "react-navigation";
 import Router from "../helpers/Router";
 import { Toolbar } from "react-native-material-ui";
 import line from "../assets/images/Line.png";
@@ -24,15 +28,17 @@ import DetailTab from "./DetailTab";
 import NewsTab from "./NewsTab";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Api from "../helpers/Api";
 
-const FirstRoute = () => (
+const FirstRoute = props => (
   <View style={[styles.scene, { backgroundColor: "white" }]}>
-    <DetailTab />
+    {console.log(props)}
+    <DetailTab {...props} />
   </View>
 );
-const SecondRoute = () => (
+const SecondRoute = props => (
   <View style={[styles.scene, { backgroundColor: "white" }]}>
-    <NewsTab />
+    <NewsTab {...props} />
   </View>
 );
 
@@ -51,8 +57,9 @@ export default class ProjectDetail extends Component {
     title: "Project"
   });
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       bookmarked: "bookmark",
       id: "",
@@ -95,8 +102,23 @@ export default class ProjectDetail extends Component {
           illustration:
             "https://file.mockplus.com/image/2016/05/207cd074-b336-43bc-a42d-346e397baf81.jpg"
         }
-      ]
+      ],
+      project: {
+        id: this.props.navigation.getParam("id", ""),
+        name: this.props.navigation.getParam("name", ""),
+        desc: this.props.navigation.getParam("desc", ""),
+        start_date: this.props.navigation.getParam("start_date", ""),
+        end_date: this.props.navigation.getParam("end_date", ""),
+        created_at: this.props.navigation.getParam("created_at", ""),
+        like_count: this.props.navigation.getParam("like_count", ""),
+        follower_count: this.props.navigation.getParam("follower_count", ""),
+        location: this.props.navigation.getParam("location", ""),
+        thumbnail: this.props.navigation.getParam("thumbnail", ""),
+        creator: this.props.navigation.getParam("creator", "")
+      }
     };
+
+    console.log(this.state);
   }
 
   followProject(projectId, userId) {
@@ -175,20 +197,18 @@ export default class ProjectDetail extends Component {
     />
   );
 
+  renderScene = ({ route }) => {
+    switch (route.key) {
+      case "detail":
+        return <FirstRoute project={this.state.project} />;
+      case "news":
+        return <SecondRoute project={this.state.project} />;
+      default:
+        return null;
+    }
+  };
+
   render() {
-    const { navigation } = this.props;
-
-    const id = navigation.getParam("id", "");
-    const name = navigation.getParam("name", "");
-    const url = navigation.getParam("url", "");
-    const desc = navigation.getParam("desc", "");
-    const start_date = navigation.getParam("start_date", "");
-    const end_date = navigation.getParam("end_date", "");
-    const created_at = navigation.getParam("created_at", "");
-    const like_count = navigation.getParam("like_count", "");
-    const follower_count = navigation.getParam("follower_count", "");
-    const location = navigation.getParam("location", "");
-
     let { width, height } = Dimensions.get("window");
     const sliderWidth = width;
     const itemWidth = width;
@@ -243,10 +263,7 @@ export default class ProjectDetail extends Component {
               >
                 <TabView
                   navigationState={this.state}
-                  renderScene={SceneMap({
-                    detail: FirstRoute,
-                    news: SecondRoute
-                  })}
+                  renderScene={this.renderScene}
                   onIndexChange={index => this.setState({ index })}
                   initialLayout={{ width: Dimensions.get("window").width }}
                   renderTabBar={this._renderTabBar}

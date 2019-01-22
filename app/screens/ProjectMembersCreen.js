@@ -13,7 +13,7 @@ import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 import { ListItem } from "react-native-elements";
 
-export default class GroupMembersScreen extends Component {
+export default class ProjectMembersScreen extends Component {
   constructor() {
     super();
     this.state = {

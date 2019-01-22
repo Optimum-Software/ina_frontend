@@ -2,7 +2,8 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http://145.37.144.76:8000"
+  ip = "http://145.37.153.142:8000";
+
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -91,7 +92,7 @@ class Api {
   async callApiDelete(action, data) {
     try {
       let response = await this.timeout(
-        3000,
+        10000,
         fetch(this.url + action, {
           method: "DELETE",
           headers: {
@@ -137,7 +138,7 @@ class Api {
   async callApiPostForm(action, data) {
     try {
       let response = await this.timeout(
-        5000,
+        10000,
         fetch(this.url + action, {
           method: "POST",
           headers: {
@@ -156,9 +157,11 @@ class Api {
     }
   }
 
-  async callApiUploadForProject(projectId, name, file) {
+  async callApiUploadForProject(projectId, name, files) {
     const data = new FormData();
-    data.append(projectId + "_" + name, file);
+    for (file in files) {
+      data.append(projectId + "_" + name, file);
+    }
     try {
       let response = await this.timeout(
         3000,

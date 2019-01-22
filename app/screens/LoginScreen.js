@@ -34,7 +34,7 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "jelmer.haarman@xs4all.nl",
+      email: "bertdeboer101@gmail.com",
       emailError: "",
 
       pw: "123456",
@@ -64,26 +64,24 @@ class LoginScreen extends Component {
     this.setState({
       emailError: "",
       pwError: ""
-    })
+    });
   }
 
   login() {
-    this.resetErrors()
+    this.resetErrors();
     if (this.checkInputEmpty() && this.checkEmail()) {
       let hashedPw = SHA256(this.state.pw).toString();
       UserApi.login(this.state.email, hashedPw).then(result => {
-        console.log(result)
+        console.log(result);
         if (result.bool) {
-          FirebaseApi.login(this.state.email, hashedPw)
+          FirebaseApi.login(this.state.email, hashedPw);
           User.getDeviceId().then(deviceId => {
-            UserApi.createDeviceId(result.userId, deviceId).then(result => {
-
-            });
+            UserApi.createDeviceId(result.userId, deviceId).then(result => {});
           });
           User.storeUserId(result.userId);
           User.storeToken(result.token);
-          Router.switchLogin(this.props.navigation)
-          Router.goTo(this.props.navigation, "Tabs", "HomeScreen")
+          Router.switchLogin(this.props.navigation);
+          Router.goTo(this.props.navigation, "Tabs", "HomeScreen");
         } else {
           this.setState({ pwError: result.msg });
         }
@@ -132,7 +130,7 @@ class LoginScreen extends Component {
               centerElement="Inloggen"
               iconSet="MaterialCommunityIcons"
               leftElement={"menu"}
-              style={{container: {"backgroundColor": "#01A6FF"}}}
+              style={{ container: { backgroundColor: "#01A6FF" } }}
               onLeftElementPress={() => {
                 this.props.navigation.openDrawer();
               }}
@@ -203,7 +201,7 @@ class LoginScreen extends Component {
                 <Text
                   style={{
                     color: "#ffffff",
-                    paddingBottom: "15%",
+                    paddingBottom: "15%"
                   }}
                 >
                   Wachtwoord vergeten?
@@ -227,7 +225,14 @@ class LoginScreen extends Component {
                     )
                   }
                 >
-                  <Text style={{ color: "#ffffff", paddingTop: 5, paddingBottom: 5, fontSize: 14 }}>
+                  <Text
+                    style={{
+                      color: "#ffffff",
+                      paddingTop: 5,
+                      paddingBottom: 5,
+                      fontSize: 14
+                    }}
+                  >
                     Nog geen account?
                     <Text> </Text>
                     <Text
@@ -282,7 +287,7 @@ const styles = StyleSheet.create({
   bottom: {
     width: "100%",
     flex: 2.3,
-    justifyContent: 'center',
+    justifyContent: "center",
     backgroundColor: "transparent",
     paddingLeft: "15%",
     paddingRight: "15%",
