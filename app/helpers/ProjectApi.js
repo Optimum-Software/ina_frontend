@@ -19,32 +19,116 @@ class ProjectApi {
     return Api.callApiGet("getAllProjectTagsById/" + id);
   }
 
+  getProjectById(id) {
+    return Api.callApiGet("getProjectById/" + id);
+  }
   likeProject(id, userId) {
-    userData = {"id": id, "userId": userId}
-    return (Api.callApiPost("likeProjectById", userData))
+    userData = { id: id, userId: userId };
+    return Api.callApiPost("likeProjectById", userData);
   }
 
   followProject(id, userId) {
-    userData = {"id": id, "userId": userId}
-    return (Api.callApiPost("followProjectById", userData))
-     }
+    userData = { id: id, userId: userId };
+    return Api.callApiPost("followProjectById", userData);
+  }
 
   newestProjects() {
-    return (Api.callApiGet("getAllProjectsNewestFirst"))
+    return Api.callApiGet("getAllProjectsNewestFirst");
   }
 
   oldestProjects() {
-    return (Api.callApiGet("getAllProjectsOldestFirst"))
+    return Api.callApiGet("getAllProjectsOldestFirst");
   }
 
   mostLikedProjects() {
-    return (Api.callApiGet("getAllProjectsMostLikedFirst"))
+    return Api.callApiGet("getAllProjectsMostLikedFirst");
   }
 
   mostFollowedProjects() {
-    return (Api.callApiGet("getAllProjectsMostFollowsFirst"))
-   }
+    return Api.callApiGet("getAllProjectsMostFollowsFirst");
+  }
 
+  createProject(
+    creatorId,
+    name,
+    desc,
+    location,
+    beginDate,
+    endDate,
+    imgUri,
+    documents
+  ) {
+    const data = new FormData();
+
+    data.append("creatorId", creatorId);
+    data.append("name", name);
+    data.append("desc", desc);
+    data.append("location", location);
+    data.append("beginDate", beginDate);
+    data.append("endDate", endDate);
+
+    projectThumbnail = {
+      uri: imgUri,
+      name: "thumbnail",
+      type: "multipart/form-data"
+    };
+    data.append("thumbnail", projectThumbnail);
+
+    for (i in documents) {
+      document = documents[i];
+      console.log(document);
+      newDoc = {
+        uri: document.uri,
+        name: document.name,
+        type: "multipart/form-data",
+        size: document.size
+      };
+      data.append("" + newDoc.name, newDoc);
+    }
+    return Api.callApiPostForm("createProject", data);
+  }
+
+  getProjectMembersById(id) {
+    return Api.callApiGet("getMembersByProjectId/" + id);
+  }
+
+  joinProject(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiPost("createMember", userData);
+  }
+
+  leaveProject(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiDelete("deleteMember", userData);
+  }
+
+  checkIfMember(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiPost("getMember", userData);
+  }
+
+  updateProject(projectId, userId, title, content) {
+    userData = {
+      project: projectId,
+      user: userId,
+      title: title,
+      content: content
+    }
+    return Api.callApiPost("addProjectUpdate", userData)
+  }
+
+  getUpdatesForProject(projectId) {
+    return Api.callApiGet("getProjectUpdatesByProjectId/" + projectId)
+  }
 }
 
 const projectApi = new ProjectApi();

@@ -24,19 +24,19 @@ export default class RegistrationScreenStart extends Component {
   constructor() {
     super();
     this.state = {
-      firstName: "test",
+      firstName: "",
       firstNameError: "",
 
-      lastName: "test",
+      lastName: "",
       lastNameError: "",
 
-      email: "test@test.com",
+      email: "",
       emailError: "",
 
-      pw: "123456",
+      pw: "",
       pwError: "",
 
-      pwRepeat: "123456",
+      pwRepeat: "",
       pwRepeatError: "",
 
       loading: false
@@ -288,7 +288,7 @@ export default class RegistrationScreenStart extends Component {
                 }
               >
                 <Text style={{ color: "#fff", fontSize: 14 }}>
-                  Al een account?{" "}
+                  Al een account?
                 </Text>
                 <Text
                   style={{ color: "#fff", fontSize: 14, fontWeight: "bold" }}
@@ -297,7 +297,6 @@ export default class RegistrationScreenStart extends Component {
                 </Text>
               </TouchableOpacity>
             </View>
-
           </ImageBackground>
         </SafeAreaView>
       </Fragment>

@@ -12,8 +12,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 import { ListItem } from "react-native-elements";
+import Api from "../helpers/Api";
 
-export default class GroupMembersScreen extends Component {
+export default class ProjectMembersScreen extends Component {
   constructor() {
     super();
     this.state = {
@@ -55,7 +56,7 @@ export default class GroupMembersScreen extends Component {
                   title={item.firstName + " " + item.lastName}
                   subtitle={item.organisation}
                   leftAvatar={{
-                    source: { uri: item.profilePhotoPath }
+                    source: { uri: Api.getFileUrl(item.profilePhotoPath) }
                   }}
                   chevronColor="white"
                   chevron

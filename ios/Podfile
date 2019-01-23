@@ -37,6 +37,8 @@ target 'ina_frontend' do
     # Pods for testing
     pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
+    pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
+
   end
 
   target 'ina_frontendTests' do

@@ -1,9 +1,17 @@
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator, createTopTabNavigator } from "react-navigation";
+import GroupOverviewScreen from "../screens/GroupOverviewScreen";
 import GroupHomeScreen from "../screens/GroupHomeScreen";
 import GroupMembersScreen from "../screens/GroupMembersScreen";
+import GroupCreate from "../screens/GroupCreate";
 
 export default createStackNavigator(
   {
+    GroupOverviewScreen: {
+      screen: GroupOverviewScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
     GroupHomeScreen: {
       screen: GroupHomeScreen,
       navigationOptions: ({ navigation }) => ({
@@ -12,6 +20,12 @@ export default createStackNavigator(
     },
     GroupMembersScreen: {
       screen: GroupMembersScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    GroupCreate: {
+      screen: GroupCreate,
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })
