@@ -13,8 +13,7 @@ import ProjectApi from "../helpers/ProjectApi";
 import Router from "../helpers/Router";
 import { Toolbar } from "react-native-material-ui";
 
-const Entities = require("html-entities").AllHtmlEntities;
-const html = new Entities();
+import { decode, encode } from 'he';
 
 export default class ProjectUpdateCreate extends Component{
 	constructor() {
@@ -35,7 +34,7 @@ export default class ProjectUpdateCreate extends Component{
 		this.setState({loading: true})
 		if(this.checkInput()) {
 			User.getUserId().then(id => {
-				ProjectApi.updateProject(this.state.project.id, id, html.encode(this.state.title), html.encode(this.state.content)).then(res => {
+				ProjectApi.updateProject(this.state.project.id, id, encode(this.state.title), encode(this.state.content)).then(res => {
 					if(res['bool']) {
 						this.setState({loading: false, title: '', content: ''})
 					}

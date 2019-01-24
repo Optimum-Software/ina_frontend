@@ -237,6 +237,7 @@ export const Tabs = createBottomTabNavigator(
     ProjectStack: {
       screen: ProjectStack,
       navigationOptions: {
+        tabBarVisible: false,
         tabBarLabel: "Projecten",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="lightbulb-on-outline" size={28} color={tintColor} />

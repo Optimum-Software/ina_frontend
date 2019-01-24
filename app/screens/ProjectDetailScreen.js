@@ -224,11 +224,6 @@ export default class ProjectDetail extends Component {
         <ScrollView>
           <View style={styles.container}>
             <View style={styles.card}>
-              {/*<Image*/}
-              {/*source={{uri: url}}*/}
-              {/*resizeMode="cover"*/}
-              {/*style={{width: "100%", height: 200}}*/}
-              {/*/>*/}
               <View style={{ width: "100%", height: 200 }}>
                 <Carousel
                   ref={c => {
@@ -248,12 +243,6 @@ export default class ProjectDetail extends Component {
                 resizeMode="stretch"
                 style={{ width: "100%", height: 2 }}
               />
-              <View
-                style={{
-                  width: Dimensions.get("window").width,
-                  height: Dimensions.get("window").height
-                }}
-              >
                 <TabView
                   navigationState={this.state}
                   renderScene={this.renderScene}
@@ -262,7 +251,6 @@ export default class ProjectDetail extends Component {
                   renderTabBar={this._renderTabBar}
                   labelStyle={styles.label}
                 />
-              </View>
             </View>
           </View>
         </ScrollView>
@@ -277,23 +265,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#00a6ff"
   },
   container: {
-    marginBottom: 120,
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    height: Dimensions.get("window").height - 105
+    height: Dimensions.get("window").height - 80
   },
 
   cardContainer: {
     flex: 1,
-    margin: 10
   },
   card: {
     backgroundColor: "#F1F1F1",
     // margin: 10,
     width: "100%",
     height: "100%",
-    marginBottom: 10,
     elevation: 3
   },
 
