@@ -25,13 +25,6 @@ export default createStackNavigator(
       })
     },
 
-    ExploreScreen: {
-      screen: ExploreScreen,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
-
     ProjectCreateFirstScreen: {
       screen: ProjectCreateFirstScreen,
       navigationOptions: ({ navigation }) => ({

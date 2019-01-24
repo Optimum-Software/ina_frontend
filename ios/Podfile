@@ -39,6 +39,13 @@ target 'ina_frontend' do
 
     pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
 
+
+    pod 'react-native-video', :path => '../node_modules/react-native-video'
+
+    pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
+    pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
+
   end
 
   target 'ina_frontendTests' do

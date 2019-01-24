@@ -97,6 +97,12 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+
     defaultConfig {
         applicationId "com.ina_frontend"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -148,6 +154,9 @@ android {
 }
 
 dependencies {
+    //compile project(':rn-fetch-blob')
+    compile project(':react-native-fetch-blob')
+    compile project(':react-native-video')
     compile project(':react-native-document-picker')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-vector-icons')

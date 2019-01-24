@@ -168,8 +168,10 @@ export default class ProjectOverview extends Component {
                         like_count: item.like_count,
                         follower_count: item.follower_count,
                         location: item.location,
-                        thumbnail: item.url,
-                        creator: item.creator
+                        thumbnail: item.thumbnail,
+                        creator: item.creator,
+                        images: item.images,
+                        files: item.files
                       }
                     )
                   }
