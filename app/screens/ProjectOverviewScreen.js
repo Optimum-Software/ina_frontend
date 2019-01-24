@@ -15,11 +15,10 @@ import {
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
-import mountain from "../assets/images/firewatch_5.jpg";
 import line from "../assets/images/line3.png";
 import Router from "../helpers/Router";
+import User from "../helpers/User";
 import ProjectApi from "../helpers/ProjectApi";
-import ModalDropdown from "react-native-modal-dropdown";
 import Api from "../helpers/Api";
 import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
@@ -32,7 +31,8 @@ export default class ProjectOverview extends Component {
     this.state = {
       data: [],
       refreshing: false,
-      loading: false
+      loading: false,
+      loggedIn: false
     };
 
     ProjectApi.getAllProjects().then(result => {
@@ -52,15 +52,26 @@ export default class ProjectOverview extends Component {
 
   onLoad = () => {
     this.setState({refreshing: true, loading: true})
+
+    User.getUserId().then(id => {
+      if(id != null) {
+        this.setState({loggedIn: true})
+      } else {
+        this.setState({loggedIn: false})
+      }
+      this.setState({refreshing: false, loading: false})
+    });
+
     tagToFilter = this.props.navigation.getParam("tag", "")
     if(tagToFilter != null) {
       ProjectApi.getProjectByTag(tagToFilter).then(res => {
+        console.log(res)
         if(res['bool']) {
-          this.setState({data: res['projects']}
+          this.setState({data: res["projects"]})
           this.props.navigation.setParams({ tag: null})
         }
         this.setState({refreshing: false, loading: false})
-      })
+      });
     } else {
       ProjectApi.getAllProjects().then(result => {
         if (result["bool"]) {
@@ -71,6 +82,7 @@ export default class ProjectOverview extends Component {
         this.setState({refreshing: false, loading: false})
       });
     }
+
   }
 
   onRefresh() {
@@ -86,6 +98,7 @@ export default class ProjectOverview extends Component {
         />
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
+          {this.state.loggedIn && (
             <Toolbar
               centerElement="Projecten"
               iconSet="MaterialCommunityIcons"
@@ -103,6 +116,17 @@ export default class ProjectOverview extends Component {
                 );
               }}
             />
+          )}
+          {!this.state.loggedIn && (
+            <Toolbar
+              centerElement="Projecten"
+              iconSet="MaterialCommunityIcons"
+              leftElement={"menu"}
+              onLeftElementPress={() => {
+                this.props.navigation.openDrawer();
+              }}
+            />
+          )}  
           </View>
           <View>
           {this.state.data.length > 0 && !this.state.refreshing &&(
@@ -181,7 +205,6 @@ export default class ProjectOverview extends Component {
               </Ripple>
             </View>
           )}
-          {console.log(this.state.loading)}
           {this.state.loading && (
             <View
               style={{
