@@ -29,6 +29,9 @@ import NewsTab from "./NewsTab";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Api from "../helpers/Api";
+import * as mime from "react-native-mime-types";
+import { Thumbnail } from "react-native-thumbnail-video";
+import { CachedImage } from "react-native-cached-image";
 
 const FirstRoute = props => (
   <View style={[styles.scene, { backgroundColor: "white" }]}>
@@ -71,38 +74,6 @@ export default class ProjectDetail extends Component {
         { key: "detail", title: "Details" },
         { key: "news", title: "Nieuws" }
       ],
-      entries: [
-        {
-          title: "Beautiful and dramatic Antelope Canyon",
-          subtitle: "Lorem ipsum dolor sit amet et nuncat mergitur",
-          illustration:
-            "https://cdn1.bloovi.be/frontend/files/blog/images/826x452/65-procent-van-kinderen-die-vandaag-naar-school-trekken-zullen-job-hebben-die-nog-niet-bestaat-en-dat-is-een-probleem.jpg"
-        },
-        {
-          title: "Earlier this morning, NYC",
-          subtitle: "Lorem ipsum dolor sit amet",
-          illustration:
-            "https://www.frankwatching.com/app/uploads/2014/01/Trendrapport_5_Datagedreven-Onderwijs_lr.jpg"
-        },
-        {
-          title: "White Pocket Sunset",
-          subtitle: "Lorem ipsum dolor sit amet et nuncat ",
-          illustration:
-            "http://www.ajournals.com/wp-content/uploads/2015/05/Biology.jpg"
-        },
-        {
-          title: "Acrocorinth, Greece",
-          subtitle: "Lorem ipsum dolor sit amet et nuncat mergitur",
-          illustration:
-            "https://www.altushost.com/wp-content/uploads/2016/07/image05.jpg"
-        },
-        {
-          title: "The lone tree, majestic landscape of New Zealand",
-          subtitle: "Lorem ipsum dolor sit amet",
-          illustration:
-            "https://file.mockplus.com/image/2016/05/207cd074-b336-43bc-a42d-346e397baf81.jpg"
-        }
-      ],
       project: {
         id: this.props.navigation.getParam("id", ""),
         name: this.props.navigation.getParam("name", ""),
@@ -114,11 +85,11 @@ export default class ProjectDetail extends Component {
         follower_count: this.props.navigation.getParam("follower_count", ""),
         location: this.props.navigation.getParam("location", ""),
         thumbnail: this.props.navigation.getParam("thumbnail", ""),
-        creator: this.props.navigation.getParam("creator", "")
+        creator: this.props.navigation.getParam("creator", ""),
+        images: this.props.navigation.getParam("images", ""),
+        files: this.props.navigation.getParam("files", "")
       }
     };
-
-    console.log(this.state);
   }
 
   followProject(projectId, userId) {
@@ -174,13 +145,44 @@ export default class ProjectDetail extends Component {
   }
 
   _renderItem({ item, index }) {
+    type = mime.lookup(
+      item
+        .toString()
+        .substring(item.toString().length - 3, item.toString().length)
+    );
     return (
       <View style={styles.slide}>
-        <Image
-          source={{ uri: item.illustration }}
-          resizeMode="cover"
-          style={{ width: "100%", height: 200 }}
-        />
+        {!item.includes("videoThumbnail_") && (
+          <CachedImage
+            source={{ uri: Api.getFileUrl(item) }}
+            resizeMode="cover"
+            style={{ width: "100%", height: 200 }}
+          />
+        )}
+        {item.includes("videoThumbnail_") && (
+          <CachedImage
+            style={{
+              height: "100%",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+            source={{ uri: Api.getFileUrl(item) }}
+          >
+            <View
+              style={{
+                backgroundColor: "rgba(0, 0, 0, 0.8)",
+                justifyContent: "center",
+                alignItems: "center",
+                height: 75,
+                width: 75,
+                borderRadius: 75
+              }}
+            >
+              <Icon name="play" size={48} color={"white"} />
+            </View>
+          </CachedImage>
+        )}
       </View>
     );
   }
@@ -241,7 +243,7 @@ export default class ProjectDetail extends Component {
                   ref={c => {
                     this._carousel = c;
                   }}
-                  data={this.state.entries}
+                  data={this.state.project.images}
                   renderItem={this._renderItem}
                   sliderWidth={sliderWidth}
                   itemWidth={itemWidth}

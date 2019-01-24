@@ -184,7 +184,9 @@ export default class ExploreScreen extends React.Component {
     });
 
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: "white", paddingBottom: 50 }}
+      >
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"

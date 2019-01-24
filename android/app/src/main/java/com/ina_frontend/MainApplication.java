@@ -3,6 +3,8 @@ package com.ina_frontend;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.brentvatne.react.ReactVideoPackage;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -31,6 +33,8 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new RNFetchBlobPackage(),
+            new ReactVideoPackage(),
             new ReactNativeDocumentPicker(),
             new LinearGradientPackage(), new ImagePickerPackage(), new RNFirebasePackage(),
           new RNFirebaseAuthPackage(), new RNFirebaseDatabasePackage(), new VectorIconsPackage(),
