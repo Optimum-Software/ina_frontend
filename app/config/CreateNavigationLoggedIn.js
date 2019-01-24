@@ -25,7 +25,7 @@ import {
   NavigationActions
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import HomeScreen from "../screens/HomeScreen";
+import HomeStack from "./HomeStackNavigator";
 import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import SettingsScreen from "../screens/SettingsScreen";
@@ -223,25 +223,40 @@ const CustomDrawerContentComponent = props => (
   </Fragment>
 );
 
+const tabbarVisible = navigation => {
+  const { routes } = navigation.state;
+
+  let showTabbar = true;
+  routes.forEach(route => {
+    if (route.routeName === "ProjectDetailScreen") {
+      showTabbar = false;
+    }
+  });
+
+  return showTabbar;
+};
+
 export const Tabs = createBottomTabNavigator(
   {
-    Home: {
-      screen: HomeScreen,
-      navigationOptions: {
+    HomeStack: {
+      screen: HomeStack,
+      navigationOptions: ({ navigation }) => ({
+        tabBarVisible: tabbarVisible(navigation),
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="home-outline" size={28} color={tintColor} />
         )
-      }
+      })
     },
     ProjectStack: {
       screen: ProjectStack,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
+        tabBarVisible: tabbarVisible(navigation),
         tabBarLabel: "Projecten",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="lightbulb-on-outline" size={28} color={tintColor} />
         )
-      }
+      })
     },
     Ontdekken: {
       screen: ExploreScreen,
