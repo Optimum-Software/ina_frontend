@@ -231,32 +231,33 @@ export default class ProjectDetail extends Component {
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
         />
-        <LinearGradient
-          colors={["#00000099", "#00000000"]}
-          style={{
-            width: "100%",
-            position: "absolute",
-            top: 0,
-            zIndex: 3,
-            height: 65
-          }}
-        >
-          <Toolbar
-            style={{
-              container: { backgroundColor: "transparent", elevation: 0 }
-            }}
-            iconSet="MaterialCommunityIcons"
-            leftElement={"arrow-left"}
-            rightElement="share-variant"
-            onLeftElementPress={() => {
-              Router.goBack(this.props.navigation);
-            }}
-          />
-        </LinearGradient>
+
         <ScrollView>
           <View style={styles.container}>
             <View style={styles.card}>
               <View style={{ width: "100%", height: 200 }}>
+              <LinearGradient
+                colors={["#00000099", "#00000000"]}
+                style={{
+                  width: "100%",
+                  position: "absolute",
+                  top: 0,
+                  zIndex: 3,
+                  height: 65
+                }}
+              >
+                <Toolbar
+                  style={{
+                    container: { backgroundColor: "transparent", elevation: 0 }
+                  }}
+                  iconSet="MaterialCommunityIcons"
+                  leftElement={"arrow-left"}
+                  rightElement="share-variant"
+                  onLeftElementPress={() => {
+                    Router.goBack(this.props.navigation);
+                  }}
+                />
+              </LinearGradient>
                 <Carousel
                   ref={c => {
                     this._carousel = c;
