@@ -38,20 +38,23 @@ class ProjectCreateFirstScreen extends Component {
   }
 
   pickImageHandler() {
-    ImagePicker.showImagePicker({ title: "Kies een profiel photo" }, res => {
-      if (res.didCancel) {
-        console.log("User cancelled!");
-      } else if (res.error) {
-        console.log("Error", res.error);
-      } else {
-        this.setState({
-          thumbnail: res,
-          pickedImgUri: res.uri,
-          imgPicked: true,
-          thumbnailError: ""
-        });
+    ImagePicker.showImagePicker(
+      { title: "Kies een omslagfoto voor het project" },
+      res => {
+        if (res.didCancel) {
+          console.log("User cancelled!");
+        } else if (res.error) {
+          console.log("Error", res.error);
+        } else {
+          this.setState({
+            thumbnail: res,
+            pickedImgUri: res.uri,
+            imgPicked: true,
+            thumbnailError: ""
+          });
+        }
       }
-    });
+    );
   }
   goToNextPart() {
     if (
@@ -149,7 +152,10 @@ class ProjectCreateFirstScreen extends Component {
             multiline={true}
             numberOfLines={8}
             containerStyle={styles.containerStyle}
-            inputStyle={(styles.inputStyle, { height: 150 })}
+            inputStyle={{
+              height: 150,
+              color: "#4a6572"
+            }}
             value={this.state.desc}
             onChangeText={text => this.setState({ desc: text })}
             leftIcon={
@@ -177,15 +183,17 @@ const styles = StyleSheet.create({
   },
 
   inputFieldContainer: {
-    backgroundColor: "red",
     height: "80%",
+    width: "90%",
+    paddingTop: "5%",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    alignSelf: "center"
   },
 
   imgPickContainer: {
     height: "30%",
-    width: "75%",
+    width: "100%",
     borderRadius: 10,
     backgroundColor: "#F0F0F0"
   },
@@ -199,7 +207,7 @@ const styles = StyleSheet.create({
   },
 
   containerStyle: {
-    width: "75%",
+    width: "100%",
     alignSelf: "center",
     backgroundColor: "transparent",
     marginTop: "3%"

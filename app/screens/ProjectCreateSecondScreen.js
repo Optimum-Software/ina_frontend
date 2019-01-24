@@ -62,6 +62,15 @@ class ProjectCreateSecondScreen extends Component {
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
         />
         <View style={styles.inputFieldContainer}>
+          <Text
+            style={{
+              color: "#4a6572",
+              marginLeft: "5%"
+            }}
+          >
+            Deze informatie is niet verplicht om in te vullen. De informatie kan
+            echter wel helpen om uw project meer inhoud te geven.
+          </Text>
           <Input
             placeholder="Locatie"
             placeholderTextColor="#4a6572"
@@ -76,7 +85,7 @@ class ProjectCreateSecondScreen extends Component {
           />
           <DatePicker
             style={{
-              width: "75%",
+              width: "100%",
               marginBottom: "3%",
               marginTop: "3%"
             }}
@@ -106,7 +115,7 @@ class ProjectCreateSecondScreen extends Component {
           />
           <DatePicker
             style={{
-              width: "75%"
+              width: "100%"
             }}
             date={this.state.endDate}
             mode="date"
@@ -149,10 +158,12 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   inputFieldContainer: {
-    backgroundColor: "red",
     height: "80%",
+    width: "90%",
+    paddingTop: "5%",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    alignSelf: "center"
   },
   textStyle: {
     fontSize: 14,
@@ -173,10 +184,10 @@ const styles = StyleSheet.create({
   },
 
   containerStyle: {
-    width: "75%",
+    width: "100%",
     alignSelf: "center",
     backgroundColor: "transparent",
-    marginTop: "3%"
+    marginTop: "5%"
   },
 
   inputContainerStyle: {

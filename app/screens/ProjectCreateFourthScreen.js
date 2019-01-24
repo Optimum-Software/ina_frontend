@@ -2,7 +2,13 @@
 
 import React, { Component } from "react";
 
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { Toolbar } from "react-native-material-ui";
@@ -82,7 +88,20 @@ class ProjectCreateFourthScreen extends Component {
               onLeftElementPress={() => Router.goBack(this.props.navigation)}
             />
 
-            <View style={styles.content} />
+            <View style={styles.content}>
+              {this.state.creating && (
+                <View>
+                  <Text style={styles.loadingTextStyle}>
+                    Project wordt aangemaakt...
+                  </Text>
+                  <ActivityIndicator
+                    size="large"
+                    color="#00a6ff"
+                    style={{ marginTop: "5%" }}
+                  />
+                </View>
+              )}
+            </View>
 
             <TouchableOpacity
               style={styles.buttonStyle}
@@ -101,7 +120,15 @@ class ProjectCreateFourthScreen extends Component {
             />
 
             <View style={styles.content}>
-              <Icon name="verified" size={140} color="#fff" />
+              <Icon
+                name="verified"
+                size={200}
+                color="#4a6572"
+                style={{ marginTop: "5%" }}
+              />
+              <Text style={styles.succesTextStyle}>
+                Project is succesvol aangemaakt!
+              </Text>
             </View>
 
             <TouchableOpacity
@@ -123,10 +150,22 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   content: {
-    backgroundColor: "red",
     height: "80%",
+    width: "90%",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    alignSelf: "center"
+  },
+  loadingTextStyle: {
+    fontSize: 16,
+    color: "#4a6572",
+    textAlign: "center"
+  },
+  succesTextStyle: {
+    fontSize: 16,
+    color: "#4a6572",
+    textAlign: "center",
+    marginTop: "5%"
   },
   buttonStyle: {
     width: "50%",

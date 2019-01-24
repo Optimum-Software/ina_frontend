@@ -97,18 +97,20 @@ class ProjectCreateThirdScreen extends Component {
         />
         <View style={styles.inputFieldContainer}>
           <Icon
-            name="file-upload"
-            size={120}
-            color="#4a6572"
+            name="plus-circle-outline"
+            size={100}
+            color="#00a6ff"
             style={{ alignSelf: "center" }}
             onPress={() => this.pickDocument()}
           />
           <Text style={styles.textStyle}>
-            Klik op de knop om bestanden toe te voegen
+            Klik op de knop om bestanden toe te voegen aan het project
           </Text>
 
-          <Text style={styles.textStyle}>{"Toegevoegde documenten: "}</Text>
           <View style={styles.documentContainer}>
+            <Text style={styles.documentText}>
+              {"Toegevoegde documenten: "}
+            </Text>
             <FlatList
               data={this.state.documents}
               renderItem={({ item, index }) => (
@@ -149,16 +151,19 @@ const styles = StyleSheet.create({
     width: "100%"
   },
   inputFieldContainer: {
-    backgroundColor: "red",
     height: "80%",
+    width: "90%",
+    paddingTop: "5%",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    alignSelf: "center"
   },
   textStyle: {
-    fontSize: 20,
+    fontSize: 18,
     color: "#4a6572",
     textAlign: "center"
   },
+
   buttonTextStyle: {
     padding: "4%",
     fontSize: 16,
@@ -170,6 +175,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     backgroundColor: "#00a6ff",
     borderRadius: 25
+  },
+  documentText: {
+    fontSize: 18,
+    marginTop: "5%",
+    marginBottom: "2%",
+    fontWeight: "bold",
+    color: "#4a6572"
   },
   documentContainer: {
     height: "45%",
