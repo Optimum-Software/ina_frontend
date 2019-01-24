@@ -115,6 +115,20 @@ class ProjectApi {
     };
     return Api.callApiPost("getMember", userData);
   }
+
+  updateProject(projectId, userId, title, content) {
+    userData = {
+      project: projectId,
+      user: userId,
+      title: title,
+      content: content
+    }
+    return Api.callApiPost("addProjectUpdate", userData)
+  }
+
+  getUpdatesForProject(projectId) {
+    return Api.callApiGet("getProjectUpdatesByProjectId/" + projectId)
+  }
 }
 
 const projectApi = new ProjectApi();
