@@ -34,7 +34,7 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "bertdeboer101@gmail.com",
+      email: "jelmer.haarman@xs4all.nl",
       emailError: "",
 
       pw: "123456",

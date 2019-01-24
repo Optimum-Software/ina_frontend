@@ -6,6 +6,7 @@ import ProjectCreateSecondScreen from "../screens/ProjectCreateSecondScreen";
 import ProjectCreateThirdScreen from "../screens/ProjectCreateThirdScreen";
 import ProjectCreateFourthScreen from "../screens/ProjectCreateFourthScreen";
 import ProjectMembersScreen from "../screens/ProjectMembersScreen";
+import ProjectUpdateCreate from "../screens/ProjectUpdateCreate";
 import ExploreScreen from "../screens/ExploreScreen";
 
 export default createStackNavigator(
@@ -50,6 +51,12 @@ export default createStackNavigator(
     },
     ProjectMembersScreen: {
       screen: ProjectMembersScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    ProjectUpdateCreate: {
+      screen: ProjectUpdateCreate,
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })

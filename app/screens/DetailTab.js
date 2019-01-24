@@ -11,20 +11,13 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Api from "../helpers/Api";
-import RNFetchBlob from "rn-fetch-blob";
 
 export default class DetailTab extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       project: props.project
     };
-
-    console.log("PROPS");
-    console.log(props);
-    console.log("STATE");
-    console.log(this.state);
   }
 
   render() {
