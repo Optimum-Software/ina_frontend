@@ -8,6 +8,8 @@ import ProjectCreateFourthScreen from "../screens/ProjectCreateFourthScreen";
 import ProjectMembersScreen from "../screens/ProjectMembersScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import HomeScreen from "../screens/HomeScreen";
+import Videoplayer from "../screens/Videoplayer";
+import Imageviewer from "../screens/Imageviewer";
 
 export default createStackNavigator(
   {
@@ -23,6 +25,18 @@ export default createStackNavigator(
 
     ProjectDetailScreen: {
       screen: ProjectDetailScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    Videoplayer: {
+      screen: Videoplayer,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    Imageviewer: {
+      screen: Imageviewer,
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })
