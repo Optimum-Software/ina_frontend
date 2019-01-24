@@ -32,6 +32,8 @@ import HomepageApi from "../helpers/HomepageApi";
 import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
 
+const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
+
 export default class Home extends Component {
   constructor(props) {
     super(props);
@@ -278,12 +280,7 @@ export default class Home extends Component {
                         style={[
                           styles.topicContainer,
                           {
-                            backgroundColor:
-                              index == 0
-                                ? "#3AAA35FF"
-                                : index == 1
-                                ? "#312783FF"
-                                : "#F39200FF"
+                            backgroundColor: colorArray[index % 4]
                           }
                         ]}
                         onPress={() => this.goToProjectFilterByTag(item.name)}

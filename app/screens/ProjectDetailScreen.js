@@ -32,6 +32,8 @@ import Api from "../helpers/Api";
 import * as mime from "react-native-mime-types";
 import { Thumbnail } from "react-native-thumbnail-video";
 import { CachedImage } from "react-native-cached-image";
+import LinearGradient from "react-native-linear-gradient";
+import Ripple from "react-native-material-ripple";
 
 const FirstRoute = props => (
   <View style={[styles.scene, { backgroundColor: "white" }]}>
@@ -59,6 +61,8 @@ export default class ProjectDetail extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Project"
   });
+
+  navigation = this.props.navigation;
 
   constructor(props) {
     super(props);
@@ -128,22 +132,6 @@ export default class ProjectDetail extends Component {
     });
   }
 
-  tags(id) {
-    let response = ProjectApi.getAllTags(id).then(result => {
-      console.log("hallllloooooo");
-      if (result["bool"]) {
-        this.setState({
-          tags: result["tags"]
-        });
-        console.log(this.state.tags);
-      } else {
-        alert(result["msg"]);
-      }
-    });
-    const tagItems = this.state.tags.map(tag => <Text>{tag.name}</Text>);
-    return tagItems;
-  }
-
   _renderItem({ item, index }) {
     type = mime.lookup(
       item
@@ -153,35 +141,53 @@ export default class ProjectDetail extends Component {
     return (
       <View style={styles.slide}>
         {!item.includes("videoThumbnail_") && (
-          <CachedImage
-            source={{ uri: Api.getFileUrl(item) }}
-            resizeMode="cover"
-            style={{ width: "100%", height: 200 }}
-          />
+          <Ripple
+            onPress={() =>
+              Router.goTo(this.props.navigation, "HomeStack", "Imageviewer", {
+                url: Api.getFileUrl(item.substring(0, item.length))
+              })
+            }
+            rippleColor="#fff"
+          >
+            <CachedImage
+              source={{ uri: Api.getFileUrl(item) }}
+              resizeMode="cover"
+              style={{ width: "100%", height: 200 }}
+            />
+          </Ripple>
         )}
         {item.includes("videoThumbnail_") && (
-          <CachedImage
-            style={{
-              height: "100%",
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-            source={{ uri: Api.getFileUrl(item) }}
+          <Ripple
+            onPress={() =>
+              Router.goTo(this.props.navigation, "HomeStack", "Videoplayer", {
+                url: Api.getFileUrl(item.substring(0, item.length - 4))
+              })
+            }
+            rippleColor="#fff"
           >
-            <View
+            <CachedImage
               style={{
-                backgroundColor: "rgba(0, 0, 0, 0.8)",
-                justifyContent: "center",
+                height: "100%",
+                width: "100%",
                 alignItems: "center",
-                height: 75,
-                width: 75,
-                borderRadius: 75
+                justifyContent: "center"
               }}
+              source={{ uri: Api.getFileUrl(item) }}
             >
-              <Icon name="play" size={48} color={"white"} />
-            </View>
-          </CachedImage>
+              <View
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 75,
+                  width: 75,
+                  borderRadius: 75
+                }}
+              >
+                <Icon name="play" size={48} color={"white"} />
+              </View>
+            </CachedImage>
+          </Ripple>
         )}
       </View>
     );
@@ -202,9 +208,9 @@ export default class ProjectDetail extends Component {
   renderScene = ({ route }) => {
     switch (route.key) {
       case "detail":
-        return <FirstRoute project={this.state.project} />;
+        return <FirstRoute project={this.state} />;
       case "news":
-        return <SecondRoute project={this.state.project} />;
+        return <SecondRoute project={this.state} />;
       default:
         return null;
     }
@@ -221,15 +227,28 @@ export default class ProjectDetail extends Component {
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
         />
-        <Toolbar
-          centerElement="Project informatie"
-          iconSet="MaterialCommunityIcons"
-          leftElement={"arrow-left"}
-          rightElement="share-variant"
-          onLeftElementPress={() => {
-            Router.goBack(this.props.navigation);
+        <LinearGradient
+          colors={["#00000099", "#00000000"]}
+          style={{
+            width: "100%",
+            position: "absolute",
+            top: 0,
+            zIndex: 3,
+            height: 65
           }}
-        />
+        >
+          <Toolbar
+            style={{
+              container: { backgroundColor: "transparent", elevation: 0 }
+            }}
+            iconSet="MaterialCommunityIcons"
+            leftElement={"arrow-left"}
+            rightElement="share-variant"
+            onLeftElementPress={() => {
+              Router.goBack(this.props.navigation);
+            }}
+          />
+        </LinearGradient>
         <ScrollView>
           <View style={styles.container}>
             <View style={styles.card}>
@@ -244,7 +263,7 @@ export default class ProjectDetail extends Component {
                     this._carousel = c;
                   }}
                   data={this.state.project.images}
-                  renderItem={this._renderItem}
+                  renderItem={this._renderItem.bind(this)}
                   sliderWidth={sliderWidth}
                   itemWidth={itemWidth}
                   autoplay={true}
