@@ -45,6 +45,7 @@ export default class ProjectOverview extends Component {
   }
 
   componentDidMount() {
+    this.onLoad()
     this.props.navigation.addListener("willFocus", this.onLoad);
   }
 

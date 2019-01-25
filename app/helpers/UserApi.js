@@ -15,6 +15,10 @@ class UserApi {
     return Api.callApiPost("getUserByEmail", userData);
   }
 
+  getUserSettings(id) {
+    return Api.callApiGet("getUserSettings/" + id)
+  }
+
   login(username, password) {
     userData = { username: username, password: password };
     return Api.callApiPost("login", userData);
@@ -36,6 +40,14 @@ class UserApi {
       username: email
     };
     return Api.callApiPost("createUser", userData);
+  }
+
+  saveUserSettings(id, canNotificate) {
+    userData = {
+      userId: id,
+      canNotificate: canNotificate
+    }
+    return Api.callApiPost('saveUserSettings', userData);
   }
 
   uploadProfilePhoto(userId, file) {
