@@ -10,102 +10,87 @@ import {
   View,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  ActivityIndicator
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
-import mountain from "../assets/images/firewatch_5.jpg";
-import line from "../assets/images/Line.png";
+import line from "../assets/images/line3.png";
 import Router from "../helpers/Router";
+import User from "../helpers/User";
 import ProjectApi from "../helpers/ProjectApi";
-import ModalDropdown from "react-native-modal-dropdown";
 import Api from "../helpers/Api";
+import { CachedImage } from "react-native-cached-image";
+import Ripple from "react-native-material-ripple";
+import { Icon } from "react-native-elements";
 
 export default class ProjectOverview extends Component {
   constructor() {
     super();
 
     this.state = {
-      data: []
+      data: [],
+      refreshing: false,
+      loading: false,
+      loggedIn: false
     };
 
-    let response = ProjectApi.getAllProjects().then(result => {
+    ProjectApi.getAllProjects().then(result => {
       if (result["bool"]) {
         this.setState({
           data: result["projects"]
         });
-      } else {
-        alert(result["msg"]);
       }
     });
   }
 
-  static navigationOptions = ({ navigation }) => ({
-    title: "Projecten"
-  });
+  componentDidMount() {
+    this.onLoad()
+    this.props.navigation.addListener("willFocus", this.onLoad);
+  }
 
   handelEnd = () => {};
-  //
-  // filter(idx) {
-  //   switch (idx) {
-  //     case "0":
-  //       this.setState({ data: [] });
-  //       let response0 = ProjectApi.newestProjects().then(result => {
-  //         if (result["bool"]) {
-  //           this.setState({
-  //             data: result["projects"]
-  //           });
-  //           console.log(this.state.data);
-  //         } else {
-  //           alert(result["msg"]);
-  //         }
-  //       });
-  //       break;
-  //     case "1":
-  //       this.setState({ data: [] });
-  //       let response1 = ProjectApi.oldestProjects().then(result => {
-  //         if (result["bool"]) {
-  //           this.setState({
-  //             data: result["projects"]
-  //           });
-  //           console.log(this.state.data);
-  //         } else {
-  //           alert(result["msg"]);
-  //         }
-  //       });
-  //       break;
-  //     case "2":
-  //       this.setState({ data: [] });
-  //       let response2 = ProjectApi.mostLikedProjects().then(result => {
-  //         if (result["bool"]) {
-  //           this.setState({
-  //             data: result["projects"]
-  //           });
-  //           console.log(this.state.data);
-  //         } else {
-  //           alert(result["msg"]);
-  //         }
-  //       });
-  //       break;
-  //     case "3":
-  //       this.setState({ data: [] });
-  //       let response3 = ProjectApi.mostFollowedProjects().then(result => {
-  //         if (result["bool"]) {
-  //           this.setState({
-  //             data: result["projects"]
-  //           });
-  //           console.log(this.state.data);
-  //         } else {
-  //           alert(result["msg"]);
-  //         }
-  //       });
-  //       break;
-  //     default:
-  //       alert("selectie niet herkend");
-  //   }
-  //}
 
-  render() {
+  onLoad = () => {
+    this.setState({refreshing: true, loading: true})
+
+    User.getUserId().then(id => {
+      if(id != null) {
+        this.setState({loggedIn: true})
+      } else {
+        this.setState({loggedIn: false})
+      }
+      this.setState({refreshing: false, loading: false})
+    });
+
+    tagToFilter = this.props.navigation.getParam("tag", "")
+    if(tagToFilter != null) {
+      ProjectApi.getProjectByTag(tagToFilter).then(res => {
+        console.log(res)
+        if(res['bool']) {
+          this.setState({data: res["projects"]})
+          this.props.navigation.setParams({ tag: null})
+        }
+        this.setState({refreshing: false, loading: false})
+      });
+    } else {
+      ProjectApi.getAllProjects().then(result => {
+        if (result["bool"]) {
+          this.setState({
+            data: result["projects"]
+          });
+        }
+        this.setState({refreshing: false, loading: false})
+      });
+    }
+
+  }
+
+  onRefresh() {
+    this.onLoad()
+  }
+
+  render() {  
     return (
       <SafeAreaView style={styles.safeArea}>
         <StatusBar
@@ -114,6 +99,7 @@ export default class ProjectOverview extends Component {
         />
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
+          {this.state.loggedIn && (
             <Toolbar
               centerElement="Projecten"
               iconSet="MaterialCommunityIcons"
@@ -131,72 +117,106 @@ export default class ProjectOverview extends Component {
                 );
               }}
             />
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <ModalDropdown
-              options={["Nieuwste", "Oudste", "Meeste likes", "Meeste follows"]}
-              defaultValue={"Sorteer"}
-              renderSeparator={false}
-              style={styles.dropdown}
-              textStyle={styles.dropdownText}
-              dropdownStyle={styles.dropdownMenu}
-              dropdownTextStyle={styles.dropdownOptionsList}
-              dropdownTextHighlightStyle={styles.dropdownOptionsHighlight}
-              onSelect={(idx, value) => this.filter(idx, value)}
+          )}
+          {!this.state.loggedIn && (
+            <Toolbar
+              centerElement="Projecten"
+              iconSet="MaterialCommunityIcons"
+              leftElement={"menu"}
+              onLeftElementPress={() => {
+                this.props.navigation.openDrawer();
+              }}
             />
+          )}  
           </View>
           <View>
-            <FlatList
+          {this.state.data.length > 0 && !this.state.refreshing &&(
+              <FlatList
               data={this.state.data}
               onEndReached={() => this.handelEnd()}
               numColumns={2}
-              renderItem={({ item }) => (
-                <TouchableHighlight
-                  style={styles.cardContainer}
-                  onPress={() =>
-                    Router.goTo(
-                      this.props.navigation,
-                      "ProjectStack",
-                      "ProjectDetailScreen",
-                      {
-                        id: item.id,
-                        name: item.name,
-                        desc: item.desc,
-                        start_date: item.start_date,
-                        end_date: item.end_date,
-                        created_at: item.created_at,
-                        like_count: item.like_count,
-                        follower_count: item.follower_count,
-                        location: item.location,
-                        thumbnail: item.thumbnail,
-                        creator: item.creator,
-                        images: item.images,
-                        files: item.files
-                      }
-                    )
-                  }
-                >
-                  <View style={styles.card}>
-                    <View style={styles.cardImage}>
-                      <Image
-                        source={{ uri: Api.getFileUrl(item.thumbnail) }}
+              refreshing={this.state.refreshing}
+              onRefresh={() => this.onRefresh()}
+              keyExtractor={item => item.id}
+              renderItem={({ item, index }) => {
+                return (
+                  <Ripple
+                    rippleColor="#FFF"
+                    style={styles.cardContainer}
+                    key={item.id}
+                    onPress={() =>
+                      Router.goTo(
+                        this.props.navigation,
+                        "ProjectStack",
+                        "ProjectDetailScreen",
+                        {
+                          id: item.id,
+                          name: item.name,
+                          desc: item.desc,
+                          start_date: item.start_date,
+                          end_date: item.end_date,
+                          created_at: item.created_at,
+                          like_count: item.like_count,
+                          follower_count: item.follower_count,
+                          location: item.location,
+                          thumbnail: item.thumbnail,
+                          creator: item.creator,
+                          images: item.images,
+                          files: item.files
+                        }
+                      )}
+                  >  
+                    <View style={styles.card}>
+                      <View style={styles.cardImage}>
+                        <CachedImage
+                        source={{ uri: Api.getFileUrl(item.thumbnail)}}
                         resizeMode="cover"
                         style={styles.image}
                       />
+                      </View>
+                      <Image
+                        source={line}
+                        resizeMode="stretch"
+                        style={{ width: "100%", height: "2%" }}
+                      />
+                        <Text numberOfLines={2} style={styles.cardTitle}>
+                          {item.name}
+                        </Text>
                     </View>
-                    <Image
-                      source={line}
-                      resizeMode="stretch"
-                      style={{ width: "100%", height: "2%" }}
-                    />
-                    <Text numberOfLines={2} style={styles.cardTitle}>
-                      {item.name}
-                    </Text>
-                  </View>
-                </TouchableHighlight>
-              )}
-              keyExtractor={item => item.id}
+                  </Ripple>
+                )
+              }}
             />
+            )
+          }
+          {this.state.data.length == 0 && !this.state.loading && (
+            <View style={styles.emptyBox}>
+              <Text style={styles.emptyText}>Er zijn geen projecten gevonden</Text>
+              <Ripple
+                rippleColor='#00a6ff'
+                style={styles.refreshButton}
+                onPress={() => this.onRefresh()}
+              >
+                <Icon
+                  name="refresh"
+                  type="font-awesome"
+                  size={25}
+                  color="#FFF"
+                />
+              </Ripple>
+            </View>
+          )}
+          {this.state.loading && (
+            <View
+              style={{
+                height: '92.5%',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <ActivityIndicator size="large" color="#000" />
+            </View>
+          )}
           </View>
         </View>
       </SafeAreaView>
@@ -209,18 +229,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#00a6ff"
   },
+
   container: {
     flex: 1,
     backgroundColor: "#ffffff"
   },
+
   cardContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     margin: 10
   },
+
   card: {
-    backgroundColor: "#F1F1F1",
+    backgroundColor: "#FFF",
     margin: 10,
     width: "100%",
     height: 180,
@@ -229,46 +252,42 @@ const styles = StyleSheet.create({
     borderRadius: 4
   },
 
-  imageBackground: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-  },
-
   cardImage: {
     height: "70%",
     width: "100%"
   },
   cardTitle: {
     margin: 5,
-    fontSize: 15,
-    fontWeight: "bold"
+    fontSize: 16,
+    fontWeight: "medium",
+    color: '#4a6572'
   },
+
   image: {
     width: "100%",
     height: "100%",
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4
   },
-  dropdown: {
-    width: "93%",
-    marginTop: "5%",
-    backgroundColor: "#f0f0f0",
-    borderBottomWidth: 1,
-    borderBottomColor: "black"
+
+  emptyBox: {
+    alignItems: 'center', 
+    marginTop: '25%'
   },
-  dropdownText: {
-    fontWeight: "bold",
-    fontSize: 18
+
+  emptyText: {
+    color: "#4a6572",
+    fontSize: 24,
+    fontWeight: 'medium'
   },
-  dropdownMenu: {
-    width: "93%",
-    alignItems: "center"
-  },
-  dropdownOptionsHighlight: {
-    fontWeight: "bold",
-    width: "93%"
-  },
-  dropdownOptionsList: {
-    width: "93%"
+
+  refreshButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 100,
+    backgroundColor: '#009ef2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 30
   }
 });

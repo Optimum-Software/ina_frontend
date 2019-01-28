@@ -129,6 +129,13 @@ class ProjectApi {
   getUpdatesForProject(projectId) {
     return Api.callApiGet("getProjectUpdatesByProjectId/" + projectId)
   }
+
+  getProjectByTag(tag) {
+    userData = {
+      tagName: tag
+    }
+    return Api.callApiPost("getProjectsByTag", userData)
+  }
 }
 
 const projectApi = new ProjectApi();
