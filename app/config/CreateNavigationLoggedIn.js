@@ -306,7 +306,7 @@ export const Drawer = createDrawerNavigator(
       navigationOptions: {
         drawerLabel: "Chat",
         drawerIcon: ({ tintColor }) => (
-          <Icon name="compass" size={25} color={tintColor} />
+          <Icon name="message" size={25} color={tintColor} />
         )
       }
     },

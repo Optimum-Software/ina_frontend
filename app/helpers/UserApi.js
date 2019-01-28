@@ -73,9 +73,10 @@ class UserApi {
     return Api.callApiPost("createDevice", userData);
   }
 
-  notifyUser(userId) {
+  notifyUser(userId, chatId) {
     userData = {
-      userId: userId
+      userId: userId,
+      chatId: chatId
     };
 
     return Api.callApiPost("sendMessageToUserById", userData);
@@ -113,6 +114,14 @@ class UserApi {
     };
     data.append("thumbnail", photoFile);
     return Api.callApiPostForm("updateUser", data);
+  }
+
+  getNotifications(id) {
+    return Api.callApiGet("getNotificationByUser/"+id);
+  }
+
+  markAsRead(id) {
+    return Api.callApiGet("markAsRead/" + id);
   }
 }
 

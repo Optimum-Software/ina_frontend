@@ -27,6 +27,7 @@ import Api from "../helpers/Api";
 import GroupApi from "../helpers/GroupApi";
 import ProjectApi from "../helpers/ProjectApi";
 import User from "../helpers/User";
+import UserApi from "../helpers/UserApi";
 import LinearGradient from "react-native-linear-gradient";
 import HomepageApi from "../helpers/HomepageApi";
 import { CachedImage } from "react-native-cached-image";
@@ -45,7 +46,8 @@ export default class Home extends Component {
       loggedIn: false,
       dateNow: null,
       refreshing: false,
-      search: false
+      search: false,
+      unRead: 0
     };
     this.animatedValue = new Animated.Value(0);
   }
@@ -54,6 +56,23 @@ export default class Home extends Component {
     this.getTags();
     this.getTrendingProjects();
     this.getUserIfLoggedIn();
+    this.getNotificationCount();
+  }
+
+  getNotificationCount() {
+    let unRead = 0
+    User.getUserId().then(id => {
+      UserApi.getNotifications(id).then(res => {
+        if(res['bool']) {
+          for(noti of res['notifications']) {
+            if(!noti['read']) {
+              unRead++
+              this.setState({unRead: unRead})
+            }
+          }
+        }
+      })
+    })
   }
 
   animate() {
@@ -209,7 +228,7 @@ export default class Home extends Component {
                         Welkom {this.state.user.firstName},
                       </Text>
                       <Text style={styles.textSubTitle}>
-                        Er zijn 4 nieuwe meldingen voor je
+                        Er zijn {this.state.unRead} nieuwe meldingen voor je
                       </Text>
                     </View>
                   </ImageBackground>
@@ -383,7 +402,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     margin: 5,
     fontSize: 16,
-    fontWeight: "medium",
+    fontWeight: "bold",
     color: '#4a6572'
   },
 

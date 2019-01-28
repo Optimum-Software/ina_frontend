@@ -20,6 +20,7 @@ export default class Chat extends Component {
   constructor() {
     super();
     this.state = {
+      chatId: null,
       uid: null,
       messages: [],
       currentUser: FirebaseApi.getCurrentUser()
@@ -28,9 +29,11 @@ export default class Chat extends Component {
 
   componentDidMount() {
     this.setState({
-      uid: this.props.navigation.state.params.uid,
-      title: this.props.navigation.state.params.title
+      chatId: this.props.navigation.getParam("chatId", ""),
+      uid: this.props.navigation.getParam("uid", ""),
+      title: this.props.navigation.getParam("title", "")
     });
+    console.log(this.props.navigation.getParam("uid", ""))
     this.getMessages();
   }
 
@@ -75,7 +78,7 @@ export default class Chat extends Component {
   }
 
   onSend(messages = []) {
-    FirebaseApi.sendMessage(this.state.currentUser, this.state.uid, messages);
+    FirebaseApi.sendMessage(this.state.currentUser, this.state.uid, this.state.chatId, messages);
   }
 
   getColor(username) {

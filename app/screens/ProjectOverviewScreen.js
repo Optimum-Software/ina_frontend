@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     margin: 5,
     fontSize: 16,
-    fontWeight: "medium",
+    fontWeight: "bold",
     color: '#4a6572'
   },
 
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   emptyText: {
     color: "#4a6572",
     fontSize: 24,
-    fontWeight: 'medium'
+    fontWeight: 'bold'
   },
 
   refreshButton: {

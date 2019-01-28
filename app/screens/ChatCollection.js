@@ -31,9 +31,6 @@ export default class ChatCollection extends Component {
 
     componentDidMount() {
       this.getChats()
-      //debug only, make sure logged in on firebase
-      //FirebaseApi.login("jelmer.haarman@xs4all.nl", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92")
-      //FirebaseApi.createChat("19:21")
       User.getUserId().then(userId => {
         console.log(userId)
         if(userId != null) {
@@ -43,9 +40,6 @@ export default class ChatCollection extends Component {
     }
 
     getChats() {
-      //debug to make sure there is a user
-      //User.storeUserId(19);
-      //
       User.getUserId().then(id => {
         FirebaseApi.getChats(id).then(res => {
           chats = []
@@ -72,7 +66,8 @@ export default class ChatCollection extends Component {
             chatItem = {
               title: title,
               photo: photo,
-              uid: uid
+              uid: uid,
+              chatId: chat.id
             }
             chats.push(chatItem)
           }
@@ -87,8 +82,8 @@ export default class ChatCollection extends Component {
     this.setState({"refreshing": false})
   }
 
-  goToChat(uid, title) {
-    Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid, title: title})
+  goToChat(chatId, uid, title) {
+    Router.goTo(this.props.navigation, 'ChatStack', 'Chat', {uid: uid, title: title, chatId: chatId})
   }
 
   renderItemSeparator() {
@@ -138,7 +133,7 @@ export default class ChatCollection extends Component {
                   contentContainerStyle={styles.chatBoxItem}
                   titleStyle={styles.chatTitle}
                   subtitleStyle={styles.chatSubTitle}
-                  onPress={() => this.goToChat(item.uid, item.title)}
+                  onPress={() => this.goToChat(item.uid, item.title, item.chatId)}
                 />
               )}
             />
