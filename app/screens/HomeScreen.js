@@ -31,6 +31,7 @@ import LinearGradient from "react-native-linear-gradient";
 import HomepageApi from "../helpers/HomepageApi";
 import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
+import line2 from "../assets/images/line3.png";
 
 const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
 
@@ -199,23 +200,6 @@ export default class Home extends Component {
                     source={require("../assets/images/bluewavebgRev.png")}
                     resizeMode="stretch"
                   >
-                    {/* <CachedImage
-                        source={{
-                          uri: Api.getFileUrl(this.state.user.profilePhotoPath)
-                        }}
-                        resizeMode="cover"
-                        style={{
-                          width: 60,
-                          height: 60,
-                          borderRadius: 100,
-                          backgroundColor: "white"
-                        }}
-                        imageStyle={{
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: 200
-                        }}
-                      /> */}
                     <View
                       style={{
                         paddingTop: 10,
@@ -312,13 +296,7 @@ export default class Home extends Component {
                   return (
                     <Ripple
                       rippleColor="#fff"
-                      style={[
-                        styles.card,
-                        {
-                          marginBottom:
-                            index != this.state.projects.length - 1 ? 0 : 15
-                        }
-                      ]}
+                      style={styles.cardContainer}
                       key={item.id}
                       onPress={() =>
                         Router.goTo(
@@ -343,47 +321,23 @@ export default class Home extends Component {
                         )
                       }
                     >
-                      <CachedImage
-                        source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                        resizeMode="cover"
-                        style={styles.image}
-                      >
-                        <LinearGradient
-                          colors={
-                            item.name.length < 25
-                              ? [
-                                  "#00000000",
-                                  "#00000000",
-                                  "#00000000",
-                                  "#00000099",
-                                  "#00000099"
-                                ]
-                              : [
-                                  "#00000000",
-                                  "#00000000",
-                                  "#00000099",
-                                  "#00000099"
-                                ]
-                          }
-                          style={{
-                            height: "100%",
-                            justifyContent: "flex-end",
-                            alignItems: "flex-start",
-                            padding: 10,
-                            borderRadius: 5
-                          }}
-                        >
-                          <Text
-                            style={{
-                              textAlignVertical: "bottom",
-                              color: "white",
-                              fontFamily: "Montserrat-Medium"
-                            }}
-                          >
+                      <View style={styles.card}>
+                        <View style={styles.cardImage}>
+                          <CachedImage
+                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
+                          resizeMode="cover"
+                          style={styles.image}
+                        />
+                        </View>
+                        <Image
+                          source={line2}
+                          resizeMode="stretch"
+                          style={{ width: "100%", height: "2%" }}
+                        />
+                          <Text numberOfLines={2} style={styles.cardTitle}>
                             {item.name}
                           </Text>
-                        </LinearGradient>
-                      </CachedImage>
+                      </View>
                     </Ripple>
                   );
                 }}
@@ -410,8 +364,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    margin: 10,
-    borderRadius: 5
+    margin: 10
   },
 
   topicContainer: {
@@ -424,14 +377,21 @@ const styles = StyleSheet.create({
     margin: 10
   },
 
+  cardTitle: {
+    margin: 5,
+    fontSize: 16,
+    fontWeight: "medium",
+    color: '#4a6572'
+  },
+
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#FFF",
     margin: 10,
-    width: "43.5%",
-    height: 125,
+    width: "100%",
+    height: 180,
     marginBottom: 10,
-    elevation: 20,
-    borderRadius: 5
+    elevation: 3,
+    borderRadius: 4
   },
 
   imageBackground: {
@@ -440,16 +400,8 @@ const styles = StyleSheet.create({
   },
 
   cardImage: {
-    borderRadius: 5,
-
-    height: "100%",
+    height: "70%",
     width: "100%"
-  },
-
-  cardTitle: {
-    margin: 5,
-    fontSize: 15,
-    fontWeight: "bold"
   },
 
   title: {
@@ -471,7 +423,8 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 5
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4
   },
 
   searchBarContainerStyle: {
