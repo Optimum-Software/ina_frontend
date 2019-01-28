@@ -12,6 +12,8 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Api from "../helpers/Api";
 import ProjectApi from "../helpers/ProjectApi";
+import Ripple from "react-native-material-ripple";
+import { CachedImage } from "react-native-cached-image";
 
 export default class DetailTab extends Component {
   constructor(props) {
@@ -45,55 +47,68 @@ export default class DetailTab extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.personCard}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <Image
-              source={{
-                uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
-              }}
-              resizeMode="cover"
+      <FlatList
+
+        data={this.state.project.images}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item, index }) => {
+          return (
+            <Ripple
+              rippleColor="#fff"
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: 100,
-                backgroundColor: "white"
+                width: this.state.project.images.length > 1 ? Dimensions.get("window").width * 0.5 : Dimensions.get("window").width * 0.9,
+                height: Dimensions.get("window").width * 0.4,
+                marginTop: 25,
+
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+                marginLeft:
+                  index == 0
+                    ? Dimensions.get("window").width * 0.045
+                    : Dimensions.get("window").width * 0.024,
+                    marginRight:
+                      index == this.state.project.images.length -1
+                        ? Dimensions.get("window").width * 0.045
+                        : Dimensions.get("window").width * 0.024,
               }}
-              imageStyle={{
-                width: "100%",
-                height: "100%",
-                borderRadius: 200
-              }}
-            />
-            <View style={{ paddingLeft: 15 }}>
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                {this.state.project.name}
-              </Text>
-              <Text>
-                {this.state.project.creator.firstName +
-                  " " +
-                  this.state.project.creator.lastName}
-              </Text>
-            </View>
-          </View>
-          <Icon name="heart-outline" size={36} color={"red"} />
-        </View>
-        <View
-          style={{
-            height: 1,
-            opacity: 0.3,
-            backgroundColor: "#b5babf",
-            marginTop: 15,
-            marginBottom: 15,
-            width: "100%",
-            alignSelf: "center"
-          }}
-        />
-        <Text>{this.state.project.desc}</Text>
+            >
+              <CachedImage
+                source={{ uri: Api.getFileUrl(item) }}
+                resizeMode="cover"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 5,
+                  elevation: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+{item.includes("videoThumbnail_") && (
+<View
+style={{
+backgroundColor: "rgba(0, 0, 0, 0.8)",
+justifyContent: "center",
+alignItems: "center",
+height: 55,
+width: 55,
+borderRadius: 75,
+elevation: 6,
+zIndex: 5,
+}}
+>
+<Icon name="play" size={36} color={"white"} />
+</View>)}
+                </CachedImage>
+            </Ripple>
+          );
+        }}
+      />
+
+        <View style={{paddingLeft: 30, paddingRight: 30}}>
+        <Text style={{fontFamily: 'Montserrat-Regular',}}>{this.state.project.desc}</Text>
 
         <View
           style={{
@@ -229,6 +244,7 @@ export default class DetailTab extends Component {
             })}
           </View>
         </View>
+        </View>
       </View>
     );
   }
@@ -236,7 +252,6 @@ export default class DetailTab extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     flex: 1
   },
   personCard: {

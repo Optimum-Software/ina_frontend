@@ -231,52 +231,107 @@ export default class ProjectDetail extends Component {
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
         />
-
         <ScrollView>
-          <View style={styles.container}>
-            <View style={styles.card}>
-              <View style={{ width: "100%", height: 200 }}>
-              <LinearGradient
-                colors={["#00000099", "#00000000"]}
-                style={{
-                  width: "100%",
-                  position: "absolute",
-                  top: 0,
-                  zIndex: 3,
-                  height: 65
-                }}
-              >
-                <Toolbar
-                  style={{
-                    container: { backgroundColor: "transparent", elevation: 0 }
-                  }}
-                  iconSet="MaterialCommunityIcons"
-                  leftElement={"arrow-left"}
-                  rightElement="share-variant"
-                  onLeftElementPress={() => {
-                    Router.goBack(this.props.navigation);
-                  }}
-                />
-              </LinearGradient>
-                <Carousel
-                  ref={c => {
-                    this._carousel = c;
-                  }}
-                  data={this.state.project.images}
-                  renderItem={this._renderItem.bind(this)}
-                  sliderWidth={sliderWidth}
-                  itemWidth={itemWidth}
-                  autoplay={true}
-                  autoplayInterval={6000}
-                  loop={true}
-                />
-              </View>
+        <View style={styles.container}>
+          <Toolbar
+            style={{ container: { backgroundColor: "#00a6ff", elevation: 0 } }}
+            leftElement={"arrow-back"}
+            rightElement={'share'}
+            onLeftElementPress={() => {
+              this.props.navigation.openDrawer();
+            }}
+          />
+
+          <ImageBackground
+            style={{ height: 100, width: "100%", alignItems: "center" }}
+            source={require("../assets/images/bluewavebgRev.png")}
+            resizeMode="stretch"
+          >
+          <View
+            style={{
+              backgroundColor: "white",
+              elevation: 2,
+              justifyContent: "center",
+              paddingLeft: Dimensions.get("window").width * 0.05,
+              borderTopLeftRadius: 5,
+              borderTopRightRadius: 5,
+              zIndex: -1,
+
+              height: Dimensions.get("window").height * 0.15,
+              width: Dimensions.get("window").width * 0.9
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center"
+              }}
+            >
               <Image
-                source={line}
-                resizeMode="stretch"
-                style={{ width: "100%", height: 2 }}
+                source={{
+                  uri: Api.getFileUrl(
+                    this.state.project.creator.profilePhotoPath
+                  )
+                }}
+                resizeMode="cover"
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 100,
+                  backgroundColor: "white"
+                }}
+                imageStyle={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: 200
+                }}
               />
-              <TabView
+              <View style={{ paddingLeft: 15 }}>
+                <Text style={{ fontSize: 18, fontFamily: "Montserrat-Bold", }}>
+                  {this.state.project.name}
+                </Text >
+                <Text style={{fontFamily: "Montserrat-Medium"}}>
+                  {this.state.project.creator.firstName +
+                    " " +
+                    this.state.project.creator.lastName}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    paddingTop: 5
+                  }}
+                >
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Icon name="heart-outline" size={16} color={"dark-gray"} />
+                <Text style={{fontFamily: "Montserrat-Regular", paddingLeft: 5}}>51</Text>
+                </View>
+                <View style={{paddingLeft: 10,flexDirection: 'row', alignItems: 'center'}}>
+                <Icon name="bookmark-outline" size={16} color={"dark-gray"} />
+                <Text style={{fontFamily: "Montserrat-Regular", paddingLeft: 5}}>14</Text>
+                </View>
+
+                </View>
+              </View>
+            </View>
+            <View style={{height: 10, alignItems: 'flex-start', width: Dimensions.get("window").width * 0.9, backgroundColor: 'white', zIndex: 10, position: 'absolute',
+            top: Dimensions.get("window").height * 0.15}}>
+            <View
+              style={{
+                height: 1,
+                opacity: 0.3,
+                backgroundColor: "#b5babf",
+                width: "85%",
+                alignSelf: "center"
+              }}
+            />
+            </View>
+          </View>
+
+          </ImageBackground>
+
+
+          <TabView
                 navigationState={this.state}
                 renderScene={this.renderScene}
                 onIndexChange={index => this.setState({ index })}
@@ -284,8 +339,8 @@ export default class ProjectDetail extends Component {
                 renderTabBar={this._renderTabBar}
                 labelStyle={styles.label}
               />
-            </View>
-          </View>
+
+        </View>
         </ScrollView>
       </SafeAreaView>
     );
@@ -349,17 +404,27 @@ const styles = StyleSheet.create({
   },
   tabbar: {
     backgroundColor: "#dee5e8",
-    height: 44
+    height: 44,
+    marginTop: 8,
+    marginLeft: Dimensions.get("window").width * 0.05,
+    marginRight: Dimensions.get("window").width * 0.05,
+    zIndex: 10,
+    elevation: 5,
+    backgroundColor: 'white',
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5
   },
   tab: {
-    height: 40,
-    width: Dimensions.get("window").width / 2,
+    height: 45,
+    width: Dimensions.get("window").width * 0.45,
     flexDirection: "row"
   },
   indicator: {
+    borderRadius: 5,
     backgroundColor: "#00a6ff"
   },
   label: {
+    fontFamily: 'Montserrat-Regular',
     color: "black"
   },
 
