@@ -2,7 +2,7 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http://145.37.153.159:8000";
+  ip = "http://145.37.153.16:8000";
 
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
@@ -25,17 +25,15 @@ class Api {
 
   async callApiPost(action, data) {
     try {
-      let response = await this.timeout(
-        5000,
-        fetch(this.url + action, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        })
-      );
+      let response = await fetch(this.url + action, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -48,15 +46,13 @@ class Api {
 
   async callApiGet(action) {
     try {
-      let response = await this.timeout(
-        5000,
-        fetch(this.url + action, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          }
-        })
-      );
+      let response = await fetch(this.url + action, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -69,16 +65,14 @@ class Api {
 
   async callApiGetSafe(action, token) {
     try {
-      let response = await this.timeout(
-        5000,
-        fetch(this.url + action, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Token " + token
-          }
-        })
-      );
+      let response = await fetch(this.url + action, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Token " + token
+        }
+      });
+
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -91,17 +85,15 @@ class Api {
 
   async callApiDelete(action, data) {
     try {
-      let response = await this.timeout(
-        10000,
-        fetch(this.url + action, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        })
-      );
+      let response = await fetch(this.url + action, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -114,17 +106,15 @@ class Api {
 
   async callApiPut(action, data) {
     try {
-      let response = await this.timeout(
-        3000,
-        fetch(this.url + action, {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        })
-      );
+      let response = await fetch(this.url + action, {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -137,16 +127,13 @@ class Api {
 
   async callApiPostForm(action, data) {
     try {
-      let response = await this.timeout(
-        10000,
-        fetch(this.url + action, {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data"
-          },
-          body: data
-        })
-      );
+      let response = await fetch(this.url + action, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        body: data
+      });
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -163,16 +150,14 @@ class Api {
       data.append(projectId + "_" + name, file);
     }
     try {
-      let response = await this.timeout(
-        3000,
-        fetch(this.url + "uploadFileForProject", {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data"
-          },
-          body: data
-        })
-      );
+      let response = await fetch(this.url + "uploadFileForProject", {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        body: data
+      });
+
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -187,16 +172,14 @@ class Api {
     const data = new FormData();
     data.append(userId + "_" + name, file);
     try {
-      let response = await this.timeout(
-        3000,
-        fetch(this.url + "uploadFileForUser", {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data"
-          },
-          body: data
-        })
-      );
+      let response = await fetch(this.url + "uploadFileForUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        body: data
+      });
+
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {

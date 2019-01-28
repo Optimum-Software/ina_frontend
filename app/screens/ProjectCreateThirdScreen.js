@@ -10,7 +10,10 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   ScrollView,
-  FlatList
+  FlatList,
+  SafeAreaView,
+  StatusBar,
+  Platform
 } from "react-native";
 import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -35,7 +38,10 @@ class ProjectCreateThirdScreen extends Component {
       desc: this.props.navigation.getParam("desc", ""),
       location: this.props.navigation.getParam("location", ""),
       beginDate: this.props.navigation.getParam("beginDate", ""),
-      endDate: this.props.navigation.getParam("endDate", "")
+      endDate: this.props.navigation.getParam("endDate", ""),
+      tags: this.props.navigation.getParam("tags", ""),
+
+      totalSize: 0
     };
   }
 
@@ -52,7 +58,8 @@ class ProjectCreateThirdScreen extends Component {
         desc: this.state.desc,
         location: this.state.location,
         beginDate: this.state.beginDate,
-        endDate: this.state.endDate
+        endDate: this.state.endDate,
+        tags: this.state.tags
       }
     );
   }
@@ -70,9 +77,15 @@ class ProjectCreateThirdScreen extends Component {
             type: res.type,
             size: res.fileSize
           };
-          this.setState({
-            documents: [...this.state.documents, file]
-          });
+          // check if new total size is lower than 100 mb
+          if (this.state.totalSize + file.size < 104857600) {
+            this.setState({
+              documents: [...this.state.documents, file],
+              totalSize: this.state.totalSize + file.size
+            });
+          } else {
+            alert("Het totale uploadlimiet voor documenten is 100 mb");
+          }
         } catch {
           console.log(error);
         }
@@ -88,80 +101,106 @@ class ProjectCreateThirdScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
         <Toolbar
-          centerElement="Voeg documenten toe"
+          centerElement="Project aanmaken 3/3"
           iconSet="MaterialCommunityIcons"
           leftElement={"chevron-left"}
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
         />
-        <View style={styles.inputFieldContainer}>
-          <Icon
-            name="plus-circle-outline"
-            size={100}
-            color="#00a6ff"
-            style={{ alignSelf: "center" }}
-            onPress={() => this.pickDocument()}
-          />
-          <Text style={styles.textStyle}>
-            Klik op de knop om bestanden toe te voegen aan het project
-          </Text>
+        <View style={{ height: "80%", width: "100%" }}>
+          <View style={styles.inputFieldContainer}>
+            <Text style={styles.labelStyle}>BESTANDEN TOEVOEGEN</Text>
 
-          <View style={styles.documentContainer}>
-            <Text style={styles.documentText}>
-              {"Toegevoegde documenten: "}
-            </Text>
-            <FlatList
-              data={this.state.documents}
-              renderItem={({ item, index }) => (
-                <View style={{ flexDirection: "row" }}>
-                  <Text numberOfLines={1} style={styles.documentName}>
-                    {++index + " -  " + item.name}
-                  </Text>
-                  <Text numberOfLines={1} style={styles.documentSize}>
-                    {item.size + " kb"}
-                  </Text>
-                  <Icon
-                    name="close-circle"
-                    size={24}
-                    color="#f44336"
-                    onPress={item => {
-                      this.deleteItem(item);
-                    }}
-                  />
-                </View>
-              )}
+            <Icon
+              name="file-plus"
+              size={120}
+              color="#dee5e8"
+              style={{ alignSelf: "center" }}
+              onPress={() => this.pickDocument()}
             />
+            <Text style={styles.textStyle}>
+              Voeg een bestand toe aan je project door op bovenstaande knop te
+              drukken.
+            </Text>
+
+            <View style={styles.documentContainer}>
+              <Text style={styles.documentText}>
+                {"Toegevoegde documenten: "}
+              </Text>
+              <FlatList
+                data={this.state.documents}
+                renderItem={({ item, index }) => (
+                  <View style={{ flexDirection: "row" }}>
+                    <Text numberOfLines={1} style={styles.documentName}>
+                      {++index + " -  " + item.name}
+                    </Text>
+                    <Text numberOfLines={1} style={styles.documentSize}>
+                      {item.size + " kb"}
+                    </Text>
+                    <Icon
+                      name="close-circle"
+                      size={24}
+                      color="#f44336"
+                      onPress={item => {
+                        this.deleteItem(item);
+                      }}
+                    />
+                  </View>
+                )}
+              />
+            </View>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          onPress={() => this.goToNextPart()}
+        <View
+          style={{
+            width: "100%",
+            height: "10%"
+          }}
         >
-          <Text style={styles.buttonTextStyle}>Verder</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            onPress={() => this.goToNextPart()}
+          >
+            <Text style={styles.buttonTextStyle}>Maak project</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     height: "100%",
     width: "100%"
   },
   inputFieldContainer: {
-    height: "80%",
     width: "90%",
     paddingTop: "5%",
+    paddingBottom: "5%",
     flexDirection: "column",
     alignItems: "center",
     alignSelf: "center"
   },
   textStyle: {
-    fontSize: 18,
-    color: "#4a6572",
+    fontSize: 14,
+    color: "#a8a8a8",
+    fontWeight: "100",
     textAlign: "center"
+  },
+  labelStyle: {
+    paddingBottom: "2%",
+    width: "100%",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#a8a8a8",
+    borderBottomWidth: 1,
+    borderBottomColor: "#4a6572"
   },
 
   buttonTextStyle: {
@@ -181,21 +220,23 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     marginBottom: "2%",
     fontWeight: "bold",
-    color: "#4a6572"
+    color: "#a8a8a8"
   },
   documentContainer: {
-    height: "45%",
+    height: "50%",
     width: "90%",
     paddingTop: "2%",
     alignSelf: "center"
   },
   documentName: {
     color: "#4a6572",
+    fontWeight: "200",
     width: "60%",
     fontSize: 18
   },
   documentSize: {
     color: "#4a6572",
+    fontWeight: "200",
     width: "30%",
     fontSize: 18
   }

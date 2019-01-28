@@ -7,7 +7,10 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  SafeAreaView,
+  StatusBar,
+  Platform
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -15,7 +18,7 @@ import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 import ProjectApi from "../helpers/ProjectApi";
 import User from "../helpers/User";
-
+import { BallIndicator } from "react-native-indicators";
 class ProjectCreateFourthScreen extends Component {
   constructor(props) {
     super(props);
@@ -30,8 +33,13 @@ class ProjectCreateFourthScreen extends Component {
       endDate: this.props.navigation.getParam("endDate", ""),
       thumbnail: this.props.navigation.getParam("thumbnail", ""),
       imgUri: this.props.navigation.getParam("imgUri", ""),
-      documents: this.props.navigation.getParam("documents", "")
+      documents: this.props.navigation.getParam("documents", ""),
+      tags: this.props.navigation.getParam("tags", "")
     };
+  }
+
+  componentDidMount() {
+    this.createProject();
   }
 
   createProject() {
@@ -47,71 +55,73 @@ class ProjectCreateFourthScreen extends Component {
         this.state.beginDate,
         this.state.endDate,
         this.state.imgUri,
-        this.state.documents
+        this.state.documents,
+        this.state.tags
       ).then(result => {
         console.log("RESPONSE");
         console.log(result);
         if (result["bool"]) {
-          this.setState({
-            creating: false,
-            projectCreated: true
+          ProjectApi.getProjectById(result["id"]).then(result => {
+            this.setState({
+              creating: false,
+              projectCreated: true,
+              project: result["project"]
+            });
           });
-          alert("Aangemaakt jonguh");
         } else {
           this.setState({
             creating: false,
             projectCreated: false
           });
-          alert("Aanmaken ging fout");
+          alert(result["msg"]);
         }
       });
     });
   }
 
   goToNextPart() {
-    Router.goTo(
-      this.props.navigation,
-      "ProjectStack",
-      "ProjectOverviewScreen",
-      {}
-    );
+    Router.goTo(this.props.navigation, "ProjectStack", "ProjectDetailScreen", {
+      id: this.state.project.id,
+      name: this.state.project.name,
+      desc: this.state.project.desc,
+      start_date: this.state.project.start_date,
+      end_date: this.state.project.end_date,
+      created_at: this.state.project.created_at,
+      like_count: this.state.project.like_count,
+      follower_count: this.state.project.follower_count,
+      location: this.state.project.location,
+      thumbnail: this.state.project.thumbnail,
+      creator: this.state.project.creator,
+      images: this.state.project.images,
+      files: this.state.project.files
+    });
   }
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
         {this.state.projectCreated == false && (
           <View style={styles.container}>
             <Toolbar
-              centerElement="Maak het project aan"
+              centerElement="Project aanmaken"
               iconSet="MaterialCommunityIcons"
-              leftElement={"chevron-left"}
-              onLeftElementPress={() => Router.goBack(this.props.navigation)}
             />
 
             <View style={styles.content}>
               {this.state.creating && (
-                <View>
+                <View style={{ paddingTop: "5%" }}>
                   <Text style={styles.loadingTextStyle}>
                     Project wordt aangemaakt...
                   </Text>
-                  <ActivityIndicator
-                    size="large"
-                    color="#00a6ff"
-                    style={{ marginTop: "5%" }}
-                  />
+                  <BallIndicator size={100} color="#00a6ff" />
                 </View>
               )}
             </View>
-
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => this.createProject()}
-            >
-              <Text style={styles.buttonTextStyle}>Maak project</Text>
-            </TouchableOpacity>
           </View>
         )}
-
         {this.state.projectCreated && (
           <View style={styles.container}>
             <Toolbar
@@ -135,17 +145,17 @@ class ProjectCreateFourthScreen extends Component {
               style={styles.buttonStyle}
               onPress={() => this.goToNextPart()}
             >
-              <Text style={styles.buttonTextStyle}>Ga naar het overzicht</Text>
+              <Text style={styles.buttonTextStyle}>Ga naar jouw project</Text>
             </TouchableOpacity>
           </View>
         )}
-      </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     height: "100%",
     width: "100%"
   },
@@ -159,7 +169,8 @@ const styles = StyleSheet.create({
   loadingTextStyle: {
     fontSize: 16,
     color: "#4a6572",
-    textAlign: "center"
+    textAlign: "center",
+    marginBottom: "2%"
   },
   succesTextStyle: {
     fontSize: 16,

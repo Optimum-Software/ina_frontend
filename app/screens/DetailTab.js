@@ -5,7 +5,9 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Linking,
+  FlatList
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Api from "../helpers/Api";
@@ -23,6 +25,7 @@ export default class DetailTab extends Component {
     console.log("STATE");
     console.log(this.state);
   }
+
   render() {
     return (
       <View style={styles.container}>
@@ -142,35 +145,38 @@ export default class DetailTab extends Component {
             alignSelf: "center"
           }}
         />
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingLeft: 15,
-            paddingBottom: 10
-          }}
-        >
-          <Icon name="file-document-outline" size={48} color={"grey"} />
-          <View style={{ flexDirection: "column" }}>
-            <Text style={{ fontWeight: "bold" }}>Handleiding.pdf</Text>
-            <Text>3.04 Mb</Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingLeft: 15
-          }}
-        >
-          <Icon name="file-document-outline" size={48} color={"grey"} />
-          <View style={{ flexDirection: "column" }}>
-            <Text style={{ fontWeight: "bold" }}>
-              Research_Co_Discovery.pdf
-            </Text>
-            <Text>3.04 Mb</Text>
-          </View>
-        </View>
+        <FlatList
+          data={this.state.project.files}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() =>
+                Linking.canOpenURL(Api.getFileUrl(item)).then(supported => {
+                  if (supported) {
+                    Linking.openURL(Api.getFileUrl(item));
+                  } else {
+                    console.log(
+                      "Don't know how to open URI: " + Api.getFileUrl(item)
+                    );
+                  }
+                })
+              }
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingLeft: 15,
+                paddingBottom: 10
+              }}
+            >
+              <Icon name="file-document-outline" size={48} color={"grey"} />
+              <View style={{ flexDirection: "column" }}>
+                <Text style={{ fontWeight: "bold" }}>
+                  {item.split("/")[item.split("/").length - 1]}
+                </Text>
+                <Text>3.04 Mb</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
         <View
           style={{
             height: 1,
