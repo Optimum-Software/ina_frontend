@@ -31,6 +31,7 @@ import LinearGradient from "react-native-linear-gradient";
 import HomepageApi from "../helpers/HomepageApi";
 import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
+import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 import line2 from "../assets/images/line3.png";
 
 const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
@@ -186,6 +187,7 @@ export default class Home extends Component {
           <ScrollView
             refreshControl={
               <RefreshControl
+              style={{backgroundColor: '#00a6ff'}}
                 colors={["#94D600"]}
                 refreshing={this.state.refreshing}
                 onRefresh={this.onRefresh}
@@ -254,7 +256,7 @@ export default class Home extends Component {
                 renderItem={({ item, index }) => {
                   return (
                     <CachedImage
-                      style={styles.topicContainer}
+                      style={[styles.topicContainer, {    marginTop: Dimensions.get("window").width * 0.05}]}
                       imageStyle={{ borderRadius: 5 }}
                       source={{ uri: Api.getFileUrl(item.thumbnail) }}
                       key={item.id}
@@ -286,7 +288,7 @@ export default class Home extends Component {
               />
             </View>
             <View>
-              <Text style={styles.title}>Trending Projecten</Text>
+              <Text style={[styles.title, {    marginTop: 30}]}>Trending Projecten</Text>
               <FlatList
                 data={this.state.projects}
                 onEndReached={() => this.handelEnd()}
@@ -369,13 +371,16 @@ const styles = StyleSheet.create({
 
   topicContainer: {
     elevation: 3,
-    height: 75,
-    width: 100,
+    width: Dimensions.get("window").width * 0.285,
+    height: Dimensions.get("window").width * 0.285,
+
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
-    margin: 10
-  },
+    marginLeft: Dimensions.get("window").width * 0.024,
+    marginRight: Dimensions.get("window").width * 0.024,
+
+    },
 
   cardTitle: {
     margin: 5,
@@ -385,11 +390,15 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "#FFF",
-    margin: 10,
-    width: "100%",
-    height: 180,
-    marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+    marginLeft: Dimensions.get("window").width * 0.024,
+    marginRight: Dimensions.get("window").width * 0.024,
+    marginTop: Dimensions.get("window").width * 0.05,
+    width: Dimensions.get("window").width * 0.43,
+    height: (Dimensions.get("window").height - 90) * 0.2,
+    ...ifIphoneX({
+      height: (Dimensions.get("window").height - 150) * 0.17
+    }),
     elevation: 3,
     borderRadius: 4
   },
@@ -406,8 +415,8 @@ const styles = StyleSheet.create({
 
   title: {
     fontFamily: "Montserrat-Medium",
-
     fontSize: 20,
+    marginTop: 15,
     margin: 10
   },
 
@@ -479,7 +488,4 @@ const styles = StyleSheet.create({
     color: "white"
   },
 
-  customFont: {
-    // or fontFamily: 'Tittilium WebBold Italic'
-  }
 });
