@@ -6,6 +6,10 @@ import ProjectCreateSecondScreen from "../screens/ProjectCreateSecondScreen";
 import ProjectCreateThirdScreen from "../screens/ProjectCreateThirdScreen";
 import ProjectCreateFourthScreen from "../screens/ProjectCreateFourthScreen";
 import ProjectMembersScreen from "../screens/ProjectMembersScreen";
+import ProjectUpdateCreate from "../screens/ProjectUpdateCreate";
+import ProjectEditFirstScreen from "../screens/ProjectEditFirstScreen";
+import ProjectEditSecondScreen from "../screens/ProjectEditSecondScreen";
+import ProjectEditThirdScreen from "../screens/ProjectEditThirdScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 
 export default createStackNavigator(
@@ -50,6 +54,30 @@ export default createStackNavigator(
     },
     ProjectMembersScreen: {
       screen: ProjectMembersScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    ProjectUpdateCreate: {
+      screen: ProjectUpdateCreate,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    ProjectEditFirstScreen: {
+      screen: ProjectEditFirstScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    ProjectEditSecondScreen: {
+      screen: ProjectEditSecondScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    ProjectEditThirdScreen: {
+      screen: ProjectEditThirdScreen,
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })

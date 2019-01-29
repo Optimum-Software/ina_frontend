@@ -156,7 +156,7 @@ const CustomDrawerContentComponent = props => (
             />
             <View style={{ paddingLeft: "5%", paddingTop: "5%", flex: 3 }}>
               <DrawerItems {...props} />
-              <TouchableHighlight
+              <TouchableOpacity
                 key="logout"
                 onPress={() => {
                   UserApi.logout();
@@ -200,7 +200,7 @@ const CustomDrawerContentComponent = props => (
                     </Text>
                   </View>
                 </SafeAreaView>
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
           </ImageBackground>
         </View>
@@ -301,10 +301,10 @@ export const Drawer = createDrawerNavigator(
         )
       }
     },
-    ExploreScreen: {
-      screen: ExploreScreen,
+    Chats: {
+      screen: ChatStack,
       navigationOptions: {
-        drawerLabel: "Ontdekken",
+        drawerLabel: "Chat",
         drawerIcon: ({ tintColor }) => (
           <Icon name="compass" size={25} color={tintColor} />
         )

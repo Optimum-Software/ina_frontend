@@ -154,6 +154,7 @@ android {
 }
 
 dependencies {
+    compile project(':rn-fetch-blob')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-video')
     compile project(':react-native-document-picker')

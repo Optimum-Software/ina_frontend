@@ -31,6 +31,10 @@ import LinearGradient from "react-native-linear-gradient";
 import HomepageApi from "../helpers/HomepageApi";
 import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
+import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
+import line2 from "../assets/images/line3.png";
+
+const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
 
 export default class Home extends Component {
   constructor(props) {
@@ -183,6 +187,7 @@ export default class Home extends Component {
           <ScrollView
             refreshControl={
               <RefreshControl
+                style={{ backgroundColor: "#00a6ff" }}
                 colors={["#94D600"]}
                 refreshing={this.state.refreshing}
                 onRefresh={this.onRefresh}
@@ -197,23 +202,6 @@ export default class Home extends Component {
                     source={require("../assets/images/bluewavebgRev.png")}
                     resizeMode="stretch"
                   >
-                    {/* <CachedImage
-                        source={{
-                          uri: Api.getFileUrl(this.state.user.profilePhotoPath)
-                        }}
-                        resizeMode="cover"
-                        style={{
-                          width: 60,
-                          height: 60,
-                          borderRadius: 100,
-                          backgroundColor: "white"
-                        }}
-                        imageStyle={{
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: 200
-                        }}
-                      /> */}
                     <View
                       style={{
                         paddingTop: 10,
@@ -268,7 +256,10 @@ export default class Home extends Component {
                 renderItem={({ item, index }) => {
                   return (
                     <CachedImage
-                      style={styles.topicContainer}
+                      style={[
+                        styles.topicContainer,
+                        { marginTop: Dimensions.get("window").width * 0.05 }
+                      ]}
                       imageStyle={{ borderRadius: 5 }}
                       source={{ uri: Api.getFileUrl(item.thumbnail) }}
                       key={item.id}
@@ -278,12 +269,7 @@ export default class Home extends Component {
                         style={[
                           styles.topicContainer,
                           {
-                            backgroundColor:
-                              index == 0
-                                ? "#3AAA35FF"
-                                : index == 1
-                                ? "#312783FF"
-                                : "#F39200FF"
+                            backgroundColor: colorArray[index % 4]
                           }
                         ]}
                         onPress={() => this.goToProjectFilterByTag(item.name)}
@@ -305,7 +291,9 @@ export default class Home extends Component {
               />
             </View>
             <View>
-              <Text style={styles.title}>Trending Projecten</Text>
+              <Text style={[styles.title, { marginTop: 30 }]}>
+                Trending Projecten
+              </Text>
               <FlatList
                 data={this.state.projects}
                 onEndReached={() => this.handelEnd()}
@@ -315,13 +303,7 @@ export default class Home extends Component {
                   return (
                     <Ripple
                       rippleColor="#fff"
-                      style={[
-                        styles.card,
-                        {
-                          marginBottom:
-                            index != this.state.projects.length - 1 ? 0 : 15
-                        }
-                      ]}
+                      style={styles.cardContainer}
                       key={item.id}
                       onPress={() =>
                         Router.goTo(
@@ -346,47 +328,23 @@ export default class Home extends Component {
                         )
                       }
                     >
-                      <CachedImage
-                        source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                        resizeMode="cover"
-                        style={styles.image}
-                      >
-                        <LinearGradient
-                          colors={
-                            item.name.length < 25
-                              ? [
-                                  "#00000000",
-                                  "#00000000",
-                                  "#00000000",
-                                  "#00000099",
-                                  "#00000099"
-                                ]
-                              : [
-                                  "#00000000",
-                                  "#00000000",
-                                  "#00000099",
-                                  "#00000099"
-                                ]
-                          }
-                          style={{
-                            height: "100%",
-                            justifyContent: "flex-end",
-                            alignItems: "flex-start",
-                            padding: 10,
-                            borderRadius: 5
-                          }}
-                        >
-                          <Text
-                            style={{
-                              textAlignVertical: "bottom",
-                              color: "white",
-                              fontFamily: "Montserrat-Medium"
-                            }}
-                          >
-                            {item.name}
-                          </Text>
-                        </LinearGradient>
-                      </CachedImage>
+                      <View style={styles.card}>
+                        <View style={styles.cardImage}>
+                          <CachedImage
+                            source={{ uri: Api.getFileUrl(item.thumbnail) }}
+                            resizeMode="cover"
+                            style={styles.image}
+                          />
+                        </View>
+                        <Image
+                          source={line2}
+                          resizeMode="stretch"
+                          style={{ width: "100%", height: "2%" }}
+                        />
+                        <Text numberOfLines={2} style={styles.cardTitle}>
+                          {item.name}
+                        </Text>
+                      </View>
                     </Ripple>
                   );
                 }}
@@ -413,28 +371,40 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    margin: 10,
-    borderRadius: 5
+    margin: 10
   },
 
   topicContainer: {
     elevation: 3,
-    height: 75,
-    width: 100,
+    width: Dimensions.get("window").width * 0.285,
+    height: Dimensions.get("window").width * 0.285,
+
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
-    margin: 10
+    marginLeft: Dimensions.get("window").width * 0.024,
+    marginRight: Dimensions.get("window").width * 0.024
+  },
+
+  cardTitle: {
+    margin: 5,
+    fontSize: 16,
+    fontWeight: "100",
+    color: "#4a6572"
   },
 
   card: {
     backgroundColor: "#FFFFFF",
-    margin: 10,
-    width: "43.5%",
-    height: 125,
-    marginBottom: 10,
-    elevation: 20,
-    borderRadius: 5
+    marginLeft: Dimensions.get("window").width * 0.024,
+    marginRight: Dimensions.get("window").width * 0.024,
+    marginTop: Dimensions.get("window").width * 0.05,
+    width: Dimensions.get("window").width * 0.43,
+    height: (Dimensions.get("window").height - 90) * 0.2,
+    ...ifIphoneX({
+      height: (Dimensions.get("window").height - 150) * 0.17
+    }),
+    elevation: 3,
+    borderRadius: 4
   },
 
   imageBackground: {
@@ -443,22 +413,14 @@ const styles = StyleSheet.create({
   },
 
   cardImage: {
-    borderRadius: 5,
-
-    height: "100%",
+    height: "70%",
     width: "100%"
-  },
-
-  cardTitle: {
-    margin: 5,
-    fontSize: 15,
-    fontWeight: "bold"
   },
 
   title: {
     fontFamily: "Montserrat-Medium",
-
     fontSize: 20,
+    marginTop: 15,
     margin: 10
   },
 
@@ -474,7 +436,8 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 5
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4
   },
 
   searchBarContainerStyle: {
@@ -527,9 +490,5 @@ const styles = StyleSheet.create({
 
     fontSize: 16,
     color: "white"
-  },
-
-  customFont: {
-    // or fontFamily: 'Tittilium WebBold Italic'
   }
 });

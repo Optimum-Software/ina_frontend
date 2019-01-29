@@ -16,12 +16,14 @@ import {
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
-import line from "../assets/images/Line.png";
+import line from "../assets/images/line3.png";
 import Router from "../helpers/Router";
 import SavedApi from "../helpers/SavedApi";
 import Api from "../helpers/Api";
 import User from "../helpers/User";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
+import { CachedImage } from "react-native-cached-image";
+import Ripple from "react-native-material-ripple";
 
 export default class SavedProjects extends Component {
   constructor() {
@@ -77,47 +79,50 @@ export default class SavedProjects extends Component {
   handelEnd = () => {}
 
   _renderItem = ({item}) => (
-    <TouchableOpacity
+    <Ripple
+      rippleColor="#FFF"
       style={styles.cardContainer}
       key={item.id}
       onPress={() =>
-        Router.goTo(
-          this.props.navigation,
-          "ProjectStack",
-          "ProjectDetailScreen",
+      Router.goTo(
+      this.props.navigation,
+        "ProjectStack",
+        "ProjectDetailScreen",
           {
             id: item.id,
             name: item.name,
-            url: item.thumbnail,
             desc: item.desc,
             start_date: item.start_date,
             end_date: item.end_date,
             created_at: item.created_at,
             like_count: item.like_count,
             follower_count: item.follower_count,
-            location: item.location
+            location: item.location,
+            thumbnail: item.thumbnail,
+            creator: item.creator,
+            images: item.images,
+            files: item.files
           }
-        )
-      }
-    >
+      )}
+    >  
       <View style={styles.card}>
-        <View style={styles.cardImage}>
-          <Image
-            source={{uri: Api.getFileUrl(item.thumbnail)}}
-            resizeMode="cover"
-            style={styles.image}
-          />
-        </View>
-        <Image
-          source={line}
-          resizeMode="stretch"
-          style={{width: "100%", height: "2%"}}
-        />
-        <Text numberOfLines={2} style={styles.cardTitle}>
-          {item.name}
-        </Text>
-      </View>
-    </TouchableOpacity>
+          <View style={styles.cardImage}>
+            <CachedImage
+              source={{ uri: Api.getFileUrl(item.thumbnail)}}
+              resizeMode="cover"
+              style={styles.image}
+            />
+          </View>
+            <Image
+              source={line}
+              resizeMode="stretch"
+              style={{ width: "100%", height: "2%" }}
+            />
+            <Text numberOfLines={2} style={styles.cardTitle}>
+              {item.name}
+            </Text>
+          </View>
+    </Ripple>
   )
 
   render() {
