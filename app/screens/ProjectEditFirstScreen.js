@@ -19,28 +19,33 @@ import {
 import { Input } from "react-native-elements";
 import ImagePicker from "react-native-image-picker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import Api from "../helpers/Api";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 
-class ProjectCreateFirstScreen extends Component {
+class ProjectEditFirstScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      thumbnail: null,
-      pickedImgUri: "",
-      imgPicked: false,
-
-      name: "Bert's project",
-      desc:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel lacinia nisl, et mattis ante. Etiam auctor orci est, scelerisque tincidunt dolor blandit ut. Nunc semper dignissim odio eget aliquet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris consectetur accumsan pharetra. Fusce at mattis magna. Sed a sodales felis, quis sagittis ipsum. Suspendisse auctor orci sed laoreet auctor. Aenean id blandit velit, id tincidunt dui. Ut consequat nulla eget dolor consequat feugiat.",
+      imgPicked: true,
 
       nameError: "",
       descError: "",
       thumbnailError: "",
 
-      textAreaHeight: 40
+      textAreaHeight: 40,
+
+      id: this.props.navigation.getParam("id", ""),
+      name: this.props.navigation.getParam("name", ""),
+      desc: this.props.navigation.getParam("desc", ""),
+      start_date: this.props.navigation.getParam("start_date", ""),
+      end_date: this.props.navigation.getParam("end_date", ""),
+      location: this.props.navigation.getParam("location", ""),
+      thumbnail: this.props.navigation.getParam("thumbnail", ""),
+      images: this.props.navigation.getParam("images", ""),
+      files: this.props.navigation.getParam("files", ""),
+      tags: this.props.navigation.getParam("tags", "")
     };
   }
 
@@ -54,8 +59,7 @@ class ProjectCreateFirstScreen extends Component {
           console.log("Error", res.error);
         } else {
           this.setState({
-            thumbnail: res,
-            pickedImgUri: res.uri,
+            thumbnail: res.uri,
             imgPicked: true,
             thumbnailError: ""
           });
@@ -63,6 +67,7 @@ class ProjectCreateFirstScreen extends Component {
       }
     );
   }
+
   goToNextPart() {
     if (
       this.state.thumbnail != null &&
@@ -77,12 +82,18 @@ class ProjectCreateFirstScreen extends Component {
       Router.goTo(
         this.props.navigation,
         "ProjectStack",
-        "ProjectCreateSecondScreen",
+        "ProjectEditSecondScreen",
         {
-          thumbnail: this.state.thumbnail,
-          imgUri: this.state.pickedImgUri,
+          id: this.state.id,
           name: this.state.name,
-          desc: this.state.desc
+          desc: this.state.desc,
+          start_date: this.state.start_date,
+          end_date: this.state.end_date,
+          location: this.state.location,
+          thumbnail: this.state.thumbnail,
+          images: this.state.images,
+          files: this.state.files,
+          tags: this.state.tags
         }
       );
     } else if (this.state.thumbnail == null) {
@@ -93,13 +104,13 @@ class ProjectCreateFirstScreen extends Component {
       });
     } else if (this.state.name == "") {
       this.setState({
-        nameError: "Geef het project een naam",
+        nameError: "Dit veld mag niet leeg zijn.",
         thumbnailError: "",
         descError: ""
       });
     } else if (this.state.desc == "") {
       this.setState({
-        descError: "Geef het project een beschrijving",
+        descError: "Dit veld mag niet leeg zijn.",
         thumbnailError: "",
         nameError: ""
       });
@@ -120,7 +131,7 @@ class ProjectCreateFirstScreen extends Component {
           barStyle="light-content"
         />
         <Toolbar
-          centerElement="Project aanmaken 1/3"
+          centerElement="Project aanpassen"
           iconSet="MaterialCommunityIcons"
           leftElement={"chevron-left"}
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
@@ -138,7 +149,7 @@ class ProjectCreateFirstScreen extends Component {
                   height: 150
                 }}
                 style={styles.imgBackground}
-                source={{ uri: this.state.pickedImgUri }}
+                source={{ uri: this.state.thumbnail }}
               >
                 {!this.state.imgPicked && (
                   <Icon
@@ -276,4 +287,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProjectCreateFirstScreen;
+export default ProjectEditFirstScreen;

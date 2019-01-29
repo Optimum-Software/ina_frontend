@@ -24,22 +24,23 @@ import DatePicker from "react-native-datepicker";
 import AutoTags from "react-native-tag-autocomplete";
 import ProjectApi from "../helpers/ProjectApi";
 
-class ProjectCreateSecondScreen extends Component {
+class ProjectEditSecondScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      location: "Groningen",
-      beginDate: "",
-      endDate: "",
-
       suggestions: [],
-      tagsSelected: [],
+      tagsSelected: this.props.navigation.getParam("tags", ""),
 
-      thumbnail: this.props.navigation.getParam("thumbnail", ""),
-      imgUri: this.props.navigation.getParam("imgUri", ""),
+      id: this.props.navigation.getParam("id", ""),
       name: this.props.navigation.getParam("name", ""),
-      desc: this.props.navigation.getParam("desc", "")
+      desc: this.props.navigation.getParam("desc", ""),
+      start_date: this.props.navigation.getParam("start_date", ""),
+      end_date: this.props.navigation.getParam("end_date", ""),
+      location: this.props.navigation.getParam("location", ""),
+      thumbnail: this.props.navigation.getParam("thumbnail", ""),
+      images: this.props.navigation.getParam("images", ""),
+      files: this.props.navigation.getParam("files", "")
     };
 
     ProjectApi.getAllTag().then(result => {
@@ -93,15 +94,17 @@ class ProjectCreateSecondScreen extends Component {
     Router.goTo(
       this.props.navigation,
       "ProjectStack",
-      "ProjectCreateThirdScreen",
+      "ProjectEditThirdScreen",
       {
-        thumbnail: this.state.thumbnail,
-        imgUri: this.state.imgUri,
+        id: this.state.id,
         name: this.state.name,
         desc: this.state.desc,
+        start_date: this.state.start_date,
+        end_date: this.state.end_date,
         location: this.state.location,
-        beginDate: this.state.beginDate,
-        endDate: this.state.endDate,
+        thumbnail: this.state.thumbnail,
+        images: this.state.images,
+        files: this.state.files,
         tags: this.state.tagsSelected
       }
     );
@@ -115,7 +118,7 @@ class ProjectCreateSecondScreen extends Component {
           barStyle="light-content"
         />
         <Toolbar
-          centerElement="Optionele informatie 2/3"
+          centerElement="Project aanpassen"
           iconSet="MaterialCommunityIcons"
           leftElement={"chevron-left"}
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
@@ -155,7 +158,7 @@ class ProjectCreateSecondScreen extends Component {
                 marginBottom: "3%",
                 marginTop: "3%"
               }}
-              date={this.state.beginDate}
+              date={this.state.start_date}
               mode="date"
               placeholder="Selecteer begin datum"
               format="YYYY-MM-DD"
@@ -164,7 +167,7 @@ class ProjectCreateSecondScreen extends Component {
               confirmBtnText="Bevestig"
               cancelBtnText="Annuleren"
               onDateChange={date => {
-                this.setState({ beginDate: date });
+                this.setState({ start_date: date });
               }}
             />
 
@@ -174,7 +177,7 @@ class ProjectCreateSecondScreen extends Component {
               style={{
                 width: "100%"
               }}
-              date={this.state.endDate}
+              date={this.state.end_date}
               mode="date"
               placeholder="Selecteer eind datum"
               format="YYYY-MM-DD"
@@ -183,7 +186,7 @@ class ProjectCreateSecondScreen extends Component {
               confirmBtnText="Bevestig"
               cancelBtnText="Annuleren"
               onDateChange={date => {
-                this.setState({ endDate: date });
+                this.setState({ end_date: date });
               }}
             />
           </View>
@@ -262,4 +265,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProjectCreateSecondScreen;
+export default ProjectEditSecondScreen;

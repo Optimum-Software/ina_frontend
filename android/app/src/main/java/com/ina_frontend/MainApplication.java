@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.RNFetchBlob.RNFetchBlobPackage;
+
 import com.brentvatne.react.ReactVideoPackage;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.BV.LinearGradient.LinearGradientPackage;
