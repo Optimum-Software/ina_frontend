@@ -13,6 +13,8 @@ import {
   StatusBar,
   Platform
 } from "react-native";
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+
 import {
   NavigationActions,
   Header,
@@ -34,6 +36,8 @@ import { CachedImage } from "react-native-cached-image";
 import LinearGradient from "react-native-linear-gradient";
 import Ripple from "react-native-material-ripple";
 import line from "../assets/images/Line.png";
+import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
+import { Fragment } from "react";
 
 const FirstRoute = props => (
   <View style={[styles.scene, { backgroundColor: "white" }]}>
@@ -136,7 +140,7 @@ export default class ProjectDetail extends Component {
         .substring(item.toString().length - 3, item.toString().length)
     );
     return (
-      <View style={styles.slide}>
+      <View style={{height: '100%', width: '100%'}}>
         {!item.includes("videoThumbnail_") && (
           <Ripple
             onPress={() =>
@@ -149,7 +153,7 @@ export default class ProjectDetail extends Component {
             <CachedImage
               source={{ uri: Api.getFileUrl(item) }}
               resizeMode="cover"
-              style={{ width: "100%", height: 200 }}
+              style={{ width: "100%", height: '100%' }}
             />
           </Ripple>
         )}
@@ -226,112 +230,51 @@ export default class ProjectDetail extends Component {
     const itemWidth = width;
 
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
         />
-        <ScrollView>
-        <View style={styles.container}>
-          <Toolbar
-            style={{ container: { backgroundColor: "#00a6ff", elevation: 0 } }}
-            leftElement={"arrow-back"}
-            rightElement={'share'}
-            onLeftElementPress={() => {
-              this.props.navigation.openDrawer();
-            }}
-          />
+        <Toolbar
+          centerElement={this.state.project.name}
+          iconSet="MaterialCommunityIcons"
+          leftElement={"arrow-left"}
+          rightElement="share-variant"
+          onLeftElementPress={() => {
+            Router.goBack(this.props.navigation);
+          }}
+        />
+        <ScrollView scrollEnabled={false}
+>
+          <View style={styles.container}>
+            <View style={styles.card}>
 
-          <ImageBackground
-            style={{ height: 100, width: "100%", alignItems: "center" }}
-            source={require("../assets/images/bluewavebgRev.png")}
-            resizeMode="stretch"
-          >
-          <View
-            style={{
-              backgroundColor: "white",
-              elevation: 2,
-              justifyContent: "center",
-              paddingLeft: Dimensions.get("window").width * 0.05,
-              borderTopLeftRadius: 5,
-              borderTopRightRadius: 5,
-              zIndex: -1,
+              <View style={{ width: "100%", height: (Dimensions.get("window").height - 90) * 0.35,
+              ...ifIphoneX({
+                height: (Dimensions.get("window").height - 150) * 0.3
+              }) }}>
 
-              height: Dimensions.get("window").height * 0.15,
-              width: Dimensions.get("window").width * 0.9
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center"
-              }}
-            >
-              <Image
-                source={{
-                  uri: Api.getFileUrl(
-                    this.state.project.creator.profilePhotoPath
-                  )
-                }}
-                resizeMode="cover"
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 100,
-                  backgroundColor: "white"
-                }}
-                imageStyle={{
-                  width: "100%",
-                  height: "100%",
-                  borderRadius: 200
-                }}
-              />
-              <View style={{ paddingLeft: 15 }}>
-                <Text style={{ fontSize: 18, fontFamily: "Montserrat-Bold", }}>
-                  {this.state.project.name}
-                </Text >
-                <Text style={{fontFamily: "Montserrat-Medium"}}>
-                  {this.state.project.creator.firstName +
-                    " " +
-                    this.state.project.creator.lastName}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    paddingTop: 5
+                <Carousel
+                  ref={c => {
+                    this._carousel = c;
                   }}
-                >
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Icon name="heart-outline" size={16} color={"dark-gray"} />
-                <Text style={{fontFamily: "Montserrat-Regular", paddingLeft: 5}}>51</Text>
-                </View>
-                <View style={{paddingLeft: 10,flexDirection: 'row', alignItems: 'center'}}>
-                <Icon name="bookmark-outline" size={16} color={"dark-gray"} />
-                <Text style={{fontFamily: "Montserrat-Regular", paddingLeft: 5}}>14</Text>
-                </View>
-
-                </View>
+                  data={this.state.project.images}
+                  renderItem={this._renderItem.bind(this)}
+                  sliderWidth={sliderWidth}
+                  itemWidth={itemWidth}
+                  autoplay={true}
+                  autoplayInterval={6000}
+                  loop={true}
+                />
               </View>
-            </View>
-            <View style={{height: 10, alignItems: 'flex-start', width: Dimensions.get("window").width * 0.9, backgroundColor: 'white', zIndex: 10, position: 'absolute',
-            top: Dimensions.get("window").height * 0.15}}>
-            <View
-              style={{
-                height: 1,
-                opacity: 0.3,
-                backgroundColor: "#b5babf",
-                width: "85%",
-                alignSelf: "center"
-              }}
-            />
-            </View>
-          </View>
-
-          </ImageBackground>
-
-
-          <TabView
+              <Image
+                source={line}
+                resizeMode="stretch"
+                style={{ width: "100%", height: 2 }}
+              />
+              <TabView
                 navigationState={this.state}
                 renderScene={this.renderScene}
                 onIndexChange={index => this.setState({ index })}
@@ -339,46 +282,27 @@ export default class ProjectDetail extends Component {
                 renderTabBar={this._renderTabBar}
                 labelStyle={styles.label}
               />
-
-        </View>
+            </View>
+          </View>
         </ScrollView>
       </SafeAreaView>
+      </Fragment>
     );
   }
 }
 
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1,
     backgroundColor: "#00a6ff"
   },
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    height: Dimensions.get("window").height
+    height: isIphoneX() ? Dimensions.get("window").height - (Header.HEIGHT + getStatusBarHeight() + 25) : Dimensions.get("window").height - (Header.HEIGHT + getStatusBarHeight())
   },
 
-  cardContainer: {
-    flex: 1
-  },
-  card: {
-    backgroundColor: "#F1F1F1",
-    // margin: 10,
-    width: "100%",
-    height: "100%",
-    elevation: 3
-  },
 
-  imageBackground: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-  },
-
-  image2: {
-    height: "50%",
-    width: "100%"
-  },
   title: {
     margin: 5,
     fontSize: 20,
@@ -404,27 +328,19 @@ const styles = StyleSheet.create({
   },
   tabbar: {
     backgroundColor: "#dee5e8",
-    height: 44,
-    marginTop: 8,
-    marginLeft: Dimensions.get("window").width * 0.05,
-    marginRight: Dimensions.get("window").width * 0.05,
-    zIndex: 10,
-    elevation: 5,
-    backgroundColor: 'white',
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5
+    height: 44
   },
   tab: {
-    height: 45,
-    width: Dimensions.get("window").width * 0.45,
+    height: Platform.OS === 'android' ? 40 : 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: Dimensions.get("window").width / 2,
     flexDirection: "row"
   },
   indicator: {
-    borderRadius: 5,
     backgroundColor: "#00a6ff"
   },
   label: {
-    fontFamily: 'Montserrat-Regular',
     color: "black"
   },
 

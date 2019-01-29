@@ -188,7 +188,7 @@ export default class Home extends Component {
             refreshControl={
               <RefreshControl
               style={{backgroundColor: '#00a6ff'}}
-                colors={["#94D600"]}
+                colors={["#00a6ff"]}
                 refreshing={this.state.refreshing}
                 onRefresh={this.onRefresh}
               />
@@ -246,7 +246,8 @@ export default class Home extends Component {
                 </Animated.View>
               )}
               {this.state.search && <View style={styles.separator} />}
-              <Text style={styles.title}>Trending Topics</Text>
+              {this.state.topics.length > 0 &&
+              <Text style={styles.title}>Trending Topics</Text>}
 
               <FlatList
                 data={this.state.topics}
@@ -287,7 +288,9 @@ export default class Home extends Component {
               />
             </View>
             <View>
-              <Text style={[styles.title, {    marginTop: 10}]}>Trending Projecten</Text>
+            {this.state.projects.length > 0 &&
+
+              <Text style={[styles.title, {    marginTop: 10}]}>Trending Projecten</Text>}
               <FlatList
                 data={this.state.projects}
                 onEndReached={() => this.handelEnd()}
