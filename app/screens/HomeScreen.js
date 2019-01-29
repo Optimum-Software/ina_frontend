@@ -53,6 +53,10 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    this.props.navigation.addListener("willFocus", this.onLoad); 
+  }
+
+  onLoad = () => {
     this.getTags();
     this.getTrendingProjects();
     this.getUserIfLoggedIn();
@@ -63,12 +67,14 @@ export default class Home extends Component {
     let unRead = 0
     User.getUserId().then(id => {
       UserApi.getNotifications(id).then(res => {
+        console.log(res)
         if(res['bool']) {
           for(noti of res['notifications']) {
+            console.log(noti.read)
             if(!noti['read']) {
               unRead++
-              this.setState({unRead: unRead})
             }
+            this.setState({unRead: unRead})
           }
         }
       })
@@ -147,7 +153,6 @@ export default class Home extends Component {
   }
 
   search(term) {
-    console.log(term);
     HomepageApi.searchTags(term).then(res => {
       if (res["bool"]) {
         this.setState({ topics: res["tags"] });
@@ -166,9 +171,7 @@ export default class Home extends Component {
 
   onRefresh = () => {
     this.setState({ refreshing: true, searchTerm: "" });
-    this.getTags();
-    this.getTrendingProjects();
-    this.getUserIfLoggedIn();
+    this.onLoad()
     this.setState({ refreshing: false });
   };
 
@@ -227,9 +230,21 @@ export default class Home extends Component {
                       <Text style={[styles.textTitle, styles.customFont]}>
                         Welkom {this.state.user.firstName},
                       </Text>
-                      <Text style={styles.textSubTitle}>
-                        Er zijn {this.state.unRead} nieuwe meldingen voor je
-                      </Text>
+                      {this.state.unRead > 1 && (
+                        <Text style={styles.textSubTitle}>
+                          Er zijn {this.state.unRead} nieuwe meldingen voor je
+                        </Text>
+                      )}
+                      {this.state.unRead == 1 && (
+                        <Text style={styles.textSubTitle}>
+                          Er is {this.state.unRead} nieuwe melding voor je
+                        </Text>
+                      )}
+                      {this.state.unRead == 0 && (
+                        <Text style={styles.textSubTitle}>
+                          Er is geen nieuwe meldingen
+                        </Text>
+                      )}
                     </View>
                   </ImageBackground>
                 </View>

@@ -121,6 +121,7 @@ class UserApi {
   }
 
   markAsRead(id) {
+    console.log("hallo")
     return Api.callApiGet("markAsRead/" + id);
   }
 }

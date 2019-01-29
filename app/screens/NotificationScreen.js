@@ -30,6 +30,7 @@ export default class NotificationScreen extends Component{
   }
 
   componentDidMount() {
+    this.props.navigation.addListener("willFocus", this.onLoad);
     User.getUserId().then(id => {
       UserApi.getNotifications(id).then(res => {
         if(res['bool']) {
@@ -37,6 +38,10 @@ export default class NotificationScreen extends Component{
         }
       })
     });
+  }
+
+  onLoad = () => {
+    this.onRefresh()
   }
 
   handelEnd() {}
@@ -64,7 +69,6 @@ export default class NotificationScreen extends Component{
         />
           <FlatList
             data={this.state.notificationList}
-            keyExtractor={item => "" + item.id}
             onEndReached={() => this.handelEnd()}
             refreshing={this.state.refreshing}
             onRefresh={() => this.onRefresh()}
@@ -78,7 +82,29 @@ export default class NotificationScreen extends Component{
                   sender = item.chat.user1
                 }
                 return (
-                  <View>
+                  <View key={item.id}>
+                  {item.read && (
+                    <Ripple
+                      onPress={() => {
+                          Router.goTo(this.props.navigation, 'ChatStack', 'Chat', 
+                            {
+                              uid: item.chat.chatUid,
+                              title: sender.firstName,
+                              chatId: item.chat.id
+                            }
+                          );
+                      }}
+                      style={styles.box}>
+                      <CachedImage 
+                        source={{uri: Api.getFileUrl(sender.profilePhotoPath)}}
+                        resizeMode="cover"
+                        style={styles.image}
+                        imageStyle={styles.imageStyle}
+                      />
+                      <Text style={[styles.textStyle, {color: '#4a6572'}]}>Nieuw bericht van {sender.firstName}</Text>
+                    </Ripple>
+                  )}
+                  {!item.read && (
                     <Ripple
                       onPress={() => {
                         UserApi.markAsRead(item.id).then(res => {
@@ -92,30 +118,27 @@ export default class NotificationScreen extends Component{
                         }
                         );
                       }}
-                      style={styles.box}>
+                      style={[styles.box, {backgroundColor: '#00a6ff'}]}>
                       <CachedImage 
                         source={{uri: Api.getFileUrl(sender.profilePhotoPath)}}
                         resizeMode="cover"
                         style={styles.image}
                         imageStyle={styles.imageStyle}
                       />
-                      {item.read && (
-                        <Text style={[styles.textStyle, {color: '#4a6572'}]}>Nieuw bericht van {sender.firstName}</Text>
-                      )}
-                      {!item.read && (
-                        <Text style={[styles.textStyle, {color: '#232f34'}]}>Nieuw bericht van {sender.firstName}</Text>
-                      )}
+                      <Text style={[styles.textStyle, {color: '#4a6572'}]}>Nieuw bericht van {sender.firstName}</Text>
                     </Ripple>
+                  )} 
                     <View style={styles.separator}/>
                   </View>
                 );
               } else if(item.type==1) {
                 return (
-                  <View>
+                  <View key={item.id}>
+                  {item.read && (
                     <Ripple 
                       onPress={() => {
                         Router.goTo(this.props.navigation, "ProjectStack","ProjectDetailScreen",
-                        {
+                          {
                             id: item.project.id,
                             name: item.project.name,
                             desc: item.project.desc,
@@ -130,7 +153,8 @@ export default class NotificationScreen extends Component{
                             images: item.project.images,
                             files: item.project.files
                           }
-                      )}}
+                        );
+                      }}
                       style={styles.box}>
                       <CachedImage 
                         source={{uri: Api.getFileUrl(item.project.thumbnail)}}
@@ -138,8 +162,42 @@ export default class NotificationScreen extends Component{
                         style={styles.projectImage}
                         imageStyle={styles.projectImageStyle}
                       />
-                      <Text style={styles.textStyle}>Update voor project: {item.project.name}</Text>
+                      <Text style={[styles.textStyle, {color: '#4a6572'}]}>Update voor project: {item.project.name}</Text>
                     </Ripple>
+                  )}
+                  {!item.read && (
+                    <Ripple 
+                      onPress={() => {
+                        UserApi.markAsRead(item.id).then(res => {
+                          Router.goTo(this.props.navigation, "ProjectStack","ProjectDetailScreen",
+                            {
+                              id: item.project.id,
+                              name: item.project.name,
+                              desc: item.project.desc,
+                              start_date: item.project.startDate,
+                              end_date: item.project.endDate,
+                              created_at: item.project.createdAt,
+                              like_count: item.project.likeCount,
+                              follower_count: item.project.followerCount,
+                              location: item.project.location,
+                              thumbnail: item.project.thumbnail,
+                              creator: item.project.creator,
+                              images: item.project.images,
+                              files: item.project.files
+                            }
+                          )
+                        })
+                      }}
+                      style={[styles.box, {backgroundColor: '#00a6ff'}]}>
+                      <CachedImage 
+                        source={{uri: Api.getFileUrl(item.project.thumbnail)}}
+                        resizeMode="cover"
+                        style={styles.projectImage}
+                        imageStyle={styles.projectImageStyle}
+                      />
+                      <Text style={[styles.textStyle, {color: '#4a6572'}]}>Update voor project: {item.project.name}</Text>
+                    </Ripple>
+                  )}
                     <View style={styles.separator}/>
                   </View>
                 );
@@ -202,9 +260,7 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: "#b5babf",
-    marginTop: 3,
-    marginBottom: 3,
-    width: "90%",
+    width: "100%",
     alignSelf: "center"
   },
 })
