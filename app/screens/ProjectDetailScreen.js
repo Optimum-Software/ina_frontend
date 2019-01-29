@@ -13,6 +13,8 @@ import {
   StatusBar,
   Platform
 } from "react-native";
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+
 import {
   NavigationActions,
   Header,
@@ -34,6 +36,8 @@ import { CachedImage } from "react-native-cached-image";
 import LinearGradient from "react-native-linear-gradient";
 import Ripple from "react-native-material-ripple";
 import line from "../assets/images/Line.png";
+import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
+import { Fragment } from "react";
 
 const FirstRoute = props => (
   <View style={[styles.scene, { backgroundColor: "white" }]}>
@@ -136,7 +140,7 @@ export default class ProjectDetail extends Component {
         .substring(item.toString().length - 3, item.toString().length)
     );
     return (
-      <View style={styles.slide}>
+      <View style={{height: '100%', width: '100%'}}>
         {!item.includes("videoThumbnail_") && (
           <Ripple
             onPress={() =>
@@ -149,7 +153,7 @@ export default class ProjectDetail extends Component {
             <CachedImage
               source={{ uri: Api.getFileUrl(item) }}
               resizeMode="cover"
-              style={{ width: "100%", height: 200 }}
+              style={{ width: "100%", height: '100%' }}
             />
           </Ripple>
         )}
@@ -226,38 +230,32 @@ export default class ProjectDetail extends Component {
     const itemWidth = width;
 
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
         />
-
-        <ScrollView>
+        <Toolbar
+          centerElement={this.state.project.name}
+          iconSet="MaterialCommunityIcons"
+          leftElement={"arrow-left"}
+          rightElement="share-variant"
+          onLeftElementPress={() => {
+            Router.goBack(this.props.navigation);
+          }}
+        />
+        <ScrollView scrollEnabled={false}
+>
           <View style={styles.container}>
             <View style={styles.card}>
-              <View style={{ width: "100%", height: 200 }}>
-              <LinearGradient
-                colors={["#00000099", "#00000000"]}
-                style={{
-                  width: "100%",
-                  position: "absolute",
-                  top: 0,
-                  zIndex: 3,
-                  height: 65
-                }}
-              >
-                <Toolbar
-                  style={{
-                    container: { backgroundColor: "transparent", elevation: 0 }
-                  }}
-                  iconSet="MaterialCommunityIcons"
-                  leftElement={"arrow-left"}
-                  rightElement="share-variant"
-                  onLeftElementPress={() => {
-                    Router.goBack(this.props.navigation);
-                  }}
-                />
-              </LinearGradient>
+
+              <View style={{ width: "100%", height: (Dimensions.get("window").height - 90) * 0.35,
+              ...ifIphoneX({
+                height: (Dimensions.get("window").height - 150) * 0.3
+              }) }}>
+
                 <Carousel
                   ref={c => {
                     this._carousel = c;
@@ -288,42 +286,23 @@ export default class ProjectDetail extends Component {
           </View>
         </ScrollView>
       </SafeAreaView>
+      </Fragment>
     );
   }
 }
 
 const styles = StyleSheet.create({
   safeArea: {
-    flex: 1,
     backgroundColor: "#00a6ff"
   },
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    height: Dimensions.get("window").height
+    height: isIphoneX() ? Dimensions.get("window").height - (Header.HEIGHT + getStatusBarHeight() + 25) : Dimensions.get("window").height - (Header.HEIGHT + getStatusBarHeight())
   },
 
-  cardContainer: {
-    flex: 1
-  },
-  card: {
-    backgroundColor: "#F1F1F1",
-    // margin: 10,
-    width: "100%",
-    height: "100%",
-    elevation: 3
-  },
 
-  imageBackground: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height
-  },
-
-  image2: {
-    height: "50%",
-    width: "100%"
-  },
   title: {
     margin: 5,
     fontSize: 20,
@@ -352,7 +331,9 @@ const styles = StyleSheet.create({
     height: 44
   },
   tab: {
-    height: 40,
+    height: Platform.OS === 'android' ? 40 : 50,
+    justifyContent: 'center',
+    alignItems: 'center',
     width: Dimensions.get("window").width / 2,
     flexDirection: "row"
   },

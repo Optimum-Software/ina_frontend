@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
   labelText: {
     color: '#4a6572',
     fontSize: 24,
-    fontWeight: 'light'
   },
 
   labels: {

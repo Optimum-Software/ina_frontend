@@ -188,7 +188,7 @@ export default class Home extends Component {
             refreshControl={
               <RefreshControl
               style={{backgroundColor: '#00a6ff'}}
-                colors={["#94D600"]}
+                colors={["#00a6ff"]}
                 refreshing={this.state.refreshing}
                 onRefresh={this.onRefresh}
               />
@@ -246,7 +246,8 @@ export default class Home extends Component {
                 </Animated.View>
               )}
               {this.state.search && <View style={styles.separator} />}
-              <Text style={styles.title}>Trending Topics</Text>
+              {this.state.topics.length > 0 &&
+              <Text style={styles.title}>Trending Topics</Text>}
 
               <FlatList
                 data={this.state.topics}
@@ -256,7 +257,7 @@ export default class Home extends Component {
                 renderItem={({ item, index }) => {
                   return (
                     <CachedImage
-                      style={[styles.topicContainer, {    marginTop: Dimensions.get("window").width * 0.05}]}
+                      style={[styles.topicContainer, {    marginTop: Dimensions.get("window").width * 0.05, marginBottom: Dimensions.get("window").width * 0.05}]}
                       imageStyle={{ borderRadius: 5 }}
                       source={{ uri: Api.getFileUrl(item.thumbnail) }}
                       key={item.id}
@@ -273,7 +274,6 @@ export default class Home extends Component {
                       >
                         <Text
                           style={{
-                            fontFamily: "Montserrat-Medium",
                             textAlignVertical: "bottom",
                             textAlign: "center",
                             color: "white"
@@ -288,7 +288,9 @@ export default class Home extends Component {
               />
             </View>
             <View>
-              <Text style={[styles.title, {    marginTop: 30}]}>Trending Projecten</Text>
+            {this.state.projects.length > 0 &&
+
+              <Text style={[styles.title, {    marginTop: 10}]}>Trending Projecten</Text>}
               <FlatList
                 data={this.state.projects}
                 onEndReached={() => this.handelEnd()}
@@ -323,7 +325,7 @@ export default class Home extends Component {
                         )
                       }
                     >
-                      <View style={styles.card}>
+                      <View style={[styles.card, {marginBottom: index == this.state.projects.length - 1 || index == this.state.projects.length - 2  ? 15 : 0}]}>
                         <View style={styles.cardImage}>
                           <CachedImage
                           source={{ uri: Api.getFileUrl(item.thumbnail)}}
@@ -366,11 +368,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    margin: 10
   },
 
   topicContainer: {
     elevation: 3,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
     width: Dimensions.get("window").width * 0.285,
     height: Dimensions.get("window").width * 0.285,
 
@@ -385,7 +393,6 @@ const styles = StyleSheet.create({
   cardTitle: {
     margin: 5,
     fontSize: 16,
-    fontWeight: "medium",
     color: '#4a6572'
   },
 
@@ -395,11 +402,18 @@ const styles = StyleSheet.create({
     marginRight: Dimensions.get("window").width * 0.024,
     marginTop: Dimensions.get("window").width * 0.05,
     width: Dimensions.get("window").width * 0.43,
-    height: (Dimensions.get("window").height - 90) * 0.2,
+    height: (Dimensions.get("window").height - 90) * 0.35,
     ...ifIphoneX({
-      height: (Dimensions.get("window").height - 150) * 0.17
+      height: (Dimensions.get("window").height - 150) * 0.24
     }),
     elevation: 3,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
     borderRadius: 4
   },
 
@@ -414,7 +428,6 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontFamily: "Montserrat-Medium",
     fontSize: 20,
     marginTop: 15,
     margin: 10
@@ -433,7 +446,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderTopLeftRadius: 4,
-    borderTopRightRadius: 4
+    borderTopRightRadius: 4,
+    overflow: 'hidden'
   },
 
   searchBarContainerStyle: {
@@ -476,13 +490,11 @@ const styles = StyleSheet.create({
   },
 
   textTitle: {
-    fontFamily: "Montserrat-Bold",
     fontSize: 24,
     color: "white"
   },
 
   textSubTitle: {
-    fontFamily: "Montserrat-Regular",
 
     fontSize: 16,
     color: "white"
