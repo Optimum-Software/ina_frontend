@@ -93,6 +93,7 @@ export default class ProjectDetail extends Component {
         files: this.props.navigation.getParam("files", "")
       }
     };
+    console.log(this.state);
   }
 
   followProject(projectId, userId) {
