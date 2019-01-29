@@ -160,11 +160,11 @@ class ProjectEditThirdScreen extends Component {
                 renderItem={({ item, index }) => (
                   <View style={{ flexDirection: "row" }}>
                     <Text numberOfLines={1} style={styles.documentName}>
-                      {++index + " -  " + item.name}
+                      {++index +
+                        " -  " +
+                        item.split("/")[item.split("/").length - 1]}
                     </Text>
-                    <Text numberOfLines={1} style={styles.documentSize}>
-                      {item.size + " kb"}
-                    </Text>
+
                     <Icon
                       name="close-circle"
                       size={24}

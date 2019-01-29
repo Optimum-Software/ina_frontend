@@ -67,6 +67,7 @@ class ProjectEditFirstScreen extends Component {
       }
     );
   }
+
   goToNextPart() {
     if (
       this.state.thumbnail != null &&
@@ -148,7 +149,7 @@ class ProjectEditFirstScreen extends Component {
                   height: 150
                 }}
                 style={styles.imgBackground}
-                source={{ uri: Api.getFileUrl(this.state.thumbnail) }}
+                source={{ uri: this.state.thumbnail }}
               >
                 {!this.state.imgPicked && (
                   <Icon

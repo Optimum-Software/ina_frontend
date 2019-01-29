@@ -23,6 +23,7 @@ import Api from "../helpers/Api";
 import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
 import { Icon } from "react-native-elements";
+import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 
 export default class ProjectOverview extends Component {
   constructor() {
@@ -138,6 +139,7 @@ export default class ProjectOverview extends Component {
                   refreshing={this.state.refreshing}
                   onRefresh={() => this.onRefresh()}
                   keyExtractor={item => item.id}
+                  contentContainerStyle={{ paddingLeft: 10, paddingRight: 10 }}
                   renderItem={({ item, index }) => {
                     return (
                       <Ripple
@@ -241,17 +243,27 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    margin: 10
+    justifyContent: "center"
   },
 
   card: {
-    backgroundColor: "#FFF",
-    margin: 10,
-    width: "100%",
-    height: 180,
-    marginBottom: 10,
+    backgroundColor: "#FFFFFF",
+    marginLeft: Dimensions.get("window").width * 0.024,
+    marginRight: Dimensions.get("window").width * 0.024,
+    marginTop: Dimensions.get("window").width * 0.05,
+    width: Dimensions.get("window").width * 0.43,
+    height: (Dimensions.get("window").height - 90) * 0.35,
+    ...ifIphoneX({
+      height: (Dimensions.get("window").height - 150) * 0.24
+    }),
     elevation: 3,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
     borderRadius: 4
   },
 
@@ -262,7 +274,6 @@ const styles = StyleSheet.create({
   cardTitle: {
     margin: 5,
     fontSize: 16,
-    fontWeight: "100",
     color: "#4a6572"
   },
 
@@ -280,8 +291,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     color: "#4a6572",
-    fontSize: 24,
-    fontWeight: "100"
+    fontSize: 24
   },
 
   refreshButton: {

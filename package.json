@@ -37,6 +37,7 @@
     "react-native-onesignal": "^3.2.11",
     "react-native-snap-carousel": "^3.7.5",
     "react-native-tag-autocomplete": "^1.0.21",
+    "react-native-status-bar-height": "^2.2.0",
     "react-native-thumbnail-video": "^0.1.1",
     "react-native-vector-icons": "^6.2.0",
     "react-native-video": "^4.3.1",
