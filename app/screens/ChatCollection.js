@@ -32,7 +32,6 @@ export default class ChatCollection extends Component {
     componentDidMount() {
       this.getChats()
       User.getUserId().then(userId => {
-        console.log(userId)
         if(userId != null) {
           this.setState({notLoggedIn: false})
         }
@@ -133,7 +132,7 @@ export default class ChatCollection extends Component {
                   contentContainerStyle={styles.chatBoxItem}
                   titleStyle={styles.chatTitle}
                   subtitleStyle={styles.chatSubTitle}
-                  onPress={() => this.goToChat(item.uid, item.title, item.chatId)}
+                  onPress={() => this.goToChat(item.chatId, item.uid, item.title)}
                 />
               )}
             />

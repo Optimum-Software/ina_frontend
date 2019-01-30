@@ -106,13 +106,6 @@ class FirebaseService {
       return(Api.callApiGet("getChatsForUser/" + userId))
     }
 
-    getMsgsRef(uid) {
-      return this.app
-        .database()
-        .ref("Chats")
-        .child(uid);
-    }
-
     notifyUser(uid, chatId) {
         ids = uid.split(":");
 
@@ -145,6 +138,7 @@ class FirebaseService {
     }
 
     getMsgsRef(uid) {
+        console.log(this.app.database().ref("Chats").child(uid))
         return this.app
             .database()
             .ref("Chats")

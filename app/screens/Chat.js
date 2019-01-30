@@ -33,15 +33,15 @@ export default class Chat extends Component {
       uid: this.props.navigation.getParam("uid", ""),
       title: this.props.navigation.getParam("title", "")
     });
-    console.log(this.props.navigation.getParam("uid", ""))
     this.getMessages();
   }
 
   getMessages() {
     var count = 0;
-    FirebaseApi.getMsgsRef(this.props.navigation.state.params.uid).on(
+    FirebaseApi.getMsgsRef(this.props.navigation.getParam("uid", "")).on(
       "value",
       snapshot => {
+        console.log("hallo")
         // gets around Redux panicking about actions in reducers
         setTimeout(() => {
           var items = [];

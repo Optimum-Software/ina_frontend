@@ -19,6 +19,7 @@ import User from "../helpers/User";
 import Api from "../helpers/Api";
 import { Input, Icon } from "react-native-elements";
 import ImagePicker from "react-native-image-picker";
+import { CachedImage } from "react-native-cached-image";
 
 export default class ProfileEditScreen extends Component {
   constructor() {
@@ -85,6 +86,7 @@ export default class ProfileEditScreen extends Component {
   		UserApi.updateUser(id, this.state.firstName, this.state.lastName, this.state.bio, this.state.organisation, this.state._function, this.state.profilePhoto.uri).then(res => {
   			if(res['bool']) {
   				alert(res['msg'])
+          Router.switchLogin(this.props.navigation)
   			} else {
   				alert(res['msg'])
   			}
@@ -115,7 +117,7 @@ export default class ProfileEditScreen extends Component {
           {!this.state.loading && (
 					<View style={{paddingLeft: '5%', paddingRight: '5%', paddingBottom: '5%'}}>
           	<View style={{flexDirection: 'row', justifyContent: 'center'}}>
-          		<Image
+          		<CachedImage
           		  source={this.state.profilePhoto}
           		  resizeMode="cover"
           		  style={styles.profilePhoto}

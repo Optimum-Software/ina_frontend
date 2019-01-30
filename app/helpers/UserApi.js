@@ -106,7 +106,6 @@ class UserApi {
     data.append("bio", bio);
     data.append("organisation", organisation);
     data.append("function", _function);
-
     photoFile = {
       uri: thumbnail,
       name: id + "_thumbnail",
@@ -121,7 +120,6 @@ class UserApi {
   }
 
   markAsRead(id) {
-    console.log("hallo")
     return Api.callApiGet("markAsRead/" + id);
   }
 }

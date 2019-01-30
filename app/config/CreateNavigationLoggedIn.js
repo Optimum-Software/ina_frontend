@@ -26,12 +26,15 @@ import {
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeStack from "./HomeStackNavigator";
+
 import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
 import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVerifySuccessfull";
+import InProgres from "../screens/InProgres";
 
+import { CachedImage } from "react-native-cached-image";
 import GroupStack from "./GroupStackNavigator";
 import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
@@ -67,7 +70,7 @@ const CustomDrawerContentComponent = props => (
     <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
       <View>
         <View style={{ height: "90%" }}>
-          <ImageBackground
+          <CachedImage
             source={require("../assets/images/drawer.png")}
             resizeMode="stretch"
             style={{
@@ -82,19 +85,15 @@ const CustomDrawerContentComponent = props => (
               }}
             >
               <TouchableOpacity
-                // onPress={() => {
-                // ProfileParameters.storeUserId(23)
-                // Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
-                // }}
                 onPress={() => {
-                  Router.goTo(props.navigation, "ProfileEdit", "ProfileEdit");
+                  Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
                 }}
               >
-                <ImageBackground
+                <CachedImage
                   source={profilePhoto}
                   resizeMode="cover"
                   style={{
-                    marginLeft: "5%",
+                    marginLeft: "20%",
                     width: 75,
                     height: 75,
                     borderRadius: 100,
@@ -103,7 +102,7 @@ const CustomDrawerContentComponent = props => (
                   imageStyle={{
                     width: "100%",
                     height: "100%",
-                    borderRadius: 200
+                    borderRadius: 100
                   }}
                 />
               </TouchableOpacity>
@@ -127,22 +126,15 @@ const CustomDrawerContentComponent = props => (
                 </Text>
                 <Text
                   style={{
-                    color: "#fff"
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontSize: 16,
+                    marginBottom: 10
                   }}
-                />
+                >
+                {organisation}
+              </Text>
               </View>
-            </View>
-            <View
-              style={{
-                backgroundColor: "#fff",
-                width: "90%",
-                paddingLeft: "5%",
-                paddingRight: "5%",
-                height: 1,
-                alignSelf: "center"
-              }}
-            >
-              <Text>{organisation}</Text>
             </View>
             <View
               style={{
@@ -202,7 +194,7 @@ const CustomDrawerContentComponent = props => (
                 </SafeAreaView>
               </TouchableOpacity>
             </View>
-          </ImageBackground>
+          </CachedImage>
         </View>
         <TouchableOpacity
           onPress={() => props.navigation.closeDrawer()}
@@ -265,19 +257,19 @@ export const Tabs = createBottomTabNavigator(
         tabBarIcon: <ExploreNavigateButton />
       }
     },
-    ChaDtStack: {
-      screen: ChatStack,
+    Market: {
+      screen: InProgres,
       navigationOptions: {
-        tabBarLabel: "Chats",
+        tabBarLabel: "Markt",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="pillar" size={28} color={tintColor} />
         )
       }
     },
-    ChatStack: {
-      screen: ChatStack,
+    Challenge: {
+      screen: InProgres,
       navigationOptions: {
-        tabBarLabel: "Chats",
+        tabBarLabel: "Uitdagingen",
         tabBarIcon: ({ tintColor }) => (
           <Icon name="trophy-outline" size={28} color={tintColor} />
         )

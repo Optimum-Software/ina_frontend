@@ -43,20 +43,25 @@ export default class ExploreScreen extends React.Component {
       cardIndex: 0,
       showDetails: false
     };
-    ProjectApi.getAllProjects().then(response => {
-      this.setState({ cards: response["projects"] });
-    });
+    User.getUserId().then(id => {
+      ProjectApi.getSwipeProjects(id).then(response => {
+        this.setState({ cards: response["projects"] });
+      });
+    })
     this.animatedValue = new Animated.Value(0);
   }
 
   componentDidMount() {
     this.updateStack();
+    this.props.navigation.addListener("willFocus", this.updateStack);
   }
 
   updateStack = () => {
-    ProjectApi.getAllProjects().then(response => {
-      this.setState({ cards: response["projects"] });
-      setTimeout(() => this.swiper.triggerRight(), 2000);
+    User.getUserId().then(id => {
+      ProjectApi.getSwipeProjects(id).then(response => {
+        this.setState({ cards: response["projects"] });
+        setTimeout(() => this.swiper.triggerRight(), 2000);
+      });
     });
   };
 
@@ -81,11 +86,16 @@ export default class ExploreScreen extends React.Component {
     });
   }
 
-  addLike() {
+  addLike(index) {
+    User.getUserId().then(id => {
+      ProjectApi.likeProject(this.state.cards[index].id, id).then(res => console.log(res))
+    })
+    
     this.setState({ swipeDirection: "right" });
+
   }
 
-  dislike() {
+  dislike(index) {
     this.setState({ swipeDirection: "left" });
   }
 
@@ -184,9 +194,7 @@ export default class ExploreScreen extends React.Component {
     });
 
     return (
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: "white", paddingBottom: 50 }}
-      >
+      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
@@ -228,8 +236,8 @@ export default class ExploreScreen extends React.Component {
           ref={swiper => {
             this.swiper = swiper;
           }}
-          onSwipedLeft={index => this.addLike()}
-          onSwipedRight={index => this.dislike()}
+          onSwipedRight={index => this.addLike(index)}
+          onSwipedLeft={index => this.dislike(index)}
         >
           {this.state.cards.map(card => {
             return (
