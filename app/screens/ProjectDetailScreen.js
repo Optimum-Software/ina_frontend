@@ -13,7 +13,7 @@ import {
   StatusBar,
   Platform
 } from "react-native";
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 import {
   NavigationActions,
@@ -140,7 +140,7 @@ export default class ProjectDetail extends Component {
         .substring(item.toString().length - 3, item.toString().length)
     );
     return (
-      <View style={{height: '100%', width: '100%'}}>
+      <View style={{ height: "100%", width: "100%" }}>
         {!item.includes("videoThumbnail_") && (
           <Ripple
             onPress={() =>
@@ -153,7 +153,7 @@ export default class ProjectDetail extends Component {
             <CachedImage
               source={{ uri: Api.getFileUrl(item) }}
               resizeMode="cover"
-              style={{ width: "100%", height: '100%' }}
+              style={{ width: "100%", height: "100%" }}
             />
           </Ripple>
         )}
@@ -233,59 +233,61 @@ export default class ProjectDetail extends Component {
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-        <StatusBar
-          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-          barStyle="light-content"
-        />
-        <Toolbar
-          centerElement={this.state.project.name}
-          iconSet="MaterialCommunityIcons"
-          leftElement={"arrow-left"}
-          rightElement="share-variant"
-          onLeftElementPress={() => {
-            Router.goBack(this.props.navigation);
-          }}
-        />
-        <ScrollView scrollEnabled={false}
->
-          <View style={styles.container}>
-            <View style={styles.card}>
-
-              <View style={{ width: "100%", height: (Dimensions.get("window").height - 90) * 0.35,
-              ...ifIphoneX({
-                height: (Dimensions.get("window").height - 150) * 0.3
-              }) }}>
-
-                <Carousel
-                  ref={c => {
-                    this._carousel = c;
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            barStyle="light-content"
+          />
+          <Toolbar
+            centerElement={this.state.project.name}
+            iconSet="MaterialCommunityIcons"
+            leftElement={"arrow-left"}
+            rightElement="share-variant"
+            onLeftElementPress={() => {
+              Router.goBack(this.props.navigation);
+            }}
+          />
+          <ScrollView scrollEnabled={false}>
+            <View style={styles.container}>
+              <View style={styles.card}>
+                <View
+                  style={{
+                    width: "100%",
+                    height: (Dimensions.get("window").height - 90) * 0.35,
+                    ...ifIphoneX({
+                      height: (Dimensions.get("window").height - 150) * 0.3
+                    })
                   }}
-                  data={this.state.project.images}
-                  renderItem={this._renderItem.bind(this)}
-                  sliderWidth={sliderWidth}
-                  itemWidth={itemWidth}
-                  autoplay={true}
-                  autoplayInterval={6000}
-                  loop={true}
+                >
+                  <Carousel
+                    ref={c => {
+                      this._carousel = c;
+                    }}
+                    data={this.state.project.images}
+                    renderItem={this._renderItem.bind(this)}
+                    sliderWidth={sliderWidth}
+                    itemWidth={itemWidth}
+                    autoplay={true}
+                    autoplayInterval={6000}
+                    loop={true}
+                  />
+                </View>
+                <Image
+                  source={line}
+                  resizeMode="stretch"
+                  style={{ width: "100%", height: 2 }}
+                />
+                <TabView
+                  navigationState={this.state}
+                  renderScene={this.renderScene}
+                  onIndexChange={index => this.setState({ index })}
+                  initialLayout={{ width: Dimensions.get("window").width }}
+                  renderTabBar={this._renderTabBar}
+                  labelStyle={styles.label}
                 />
               </View>
-              <Image
-                source={line}
-                resizeMode="stretch"
-                style={{ width: "100%", height: 2 }}
-              />
-              <TabView
-                navigationState={this.state}
-                renderScene={this.renderScene}
-                onIndexChange={index => this.setState({ index })}
-                initialLayout={{ width: Dimensions.get("window").width }}
-                renderTabBar={this._renderTabBar}
-                labelStyle={styles.label}
-              />
             </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
       </Fragment>
     );
   }
@@ -299,9 +301,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    height: isIphoneX() ? Dimensions.get("window").height - (Header.HEIGHT + getStatusBarHeight() + 25) : Dimensions.get("window").height - (Header.HEIGHT + getStatusBarHeight())
+    height: isIphoneX()
+      ? Dimensions.get("window").height -
+        (Header.HEIGHT + getStatusBarHeight() + 25)
+      : Dimensions.get("window").height - (Header.HEIGHT + getStatusBarHeight())
   },
-
 
   title: {
     margin: 5,
@@ -331,9 +335,9 @@ const styles = StyleSheet.create({
     height: 44
   },
   tab: {
-    height: Platform.OS === 'android' ? 40 : 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: Platform.OS === "android" ? 40 : 50,
+    justifyContent: "center",
+    alignItems: "center",
     width: Dimensions.get("window").width / 2,
     flexDirection: "row"
   },

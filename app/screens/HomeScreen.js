@@ -15,7 +15,8 @@ import {
   TouchableHighlight,
   RefreshControl,
   Animated,
-  Easing
+  Easing,
+  Linking
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -33,6 +34,7 @@ import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
 import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 import line2 from "../assets/images/line3.png";
+ import RNFetchBlob from 'react-native-fetch-blob';
 
 const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
 
@@ -50,14 +52,38 @@ export default class Home extends Component {
       refreshing: false,
       search: false
     };
+    console.log(this.props)
     this.animatedValue = new Animated.Value(0);
+    Router.setDispatcher(this.props.navigation);
   }
 
   componentDidMount() {
+    Linking.addEventListener('url', this._handleOpenURL);
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        ProjectApi.getProjectById(url.substring(Platform.OS === 'android' ? 27 : 6, url.length)).then(result => {
+          Router.goTo(this.props.navigation, "ProjectStack", "ProjectDetailScreen", result["project"]);
+        });
+
+      }
+    }).catch(err => console.error('An error occurred', err));
     this.getTags();
     this.getTrendingProjects();
     this.getUserIfLoggedIn();
+
+
   }
+
+  componentWillUnmount() {
+  Linking.removeEventListener('url', this._handleOpenURL);
+}
+_handleOpenURL(event) {
+  ProjectApi.getProjectById(event.url.substring(Platform.OS === 'android' ? 27 : 6, event.url.length)).then(result => {
+    console.log(Router);
+    console.log(this.props);
+    Router.goToDeeplink("ProjectStack", "ProjectDetailScreen", result["project"]);
+  });
+}
 
   animate() {
     this.setState({ search: true });
@@ -187,7 +213,7 @@ export default class Home extends Component {
           <ScrollView
             refreshControl={
               <RefreshControl
-              style={{backgroundColor: '#00a6ff'}}
+                style={{ backgroundColor: "#00a6ff" }}
                 colors={["#00a6ff"]}
                 refreshing={this.state.refreshing}
                 onRefresh={this.onRefresh}
@@ -246,8 +272,9 @@ export default class Home extends Component {
                 </Animated.View>
               )}
               {this.state.search && <View style={styles.separator} />}
-              {this.state.topics.length > 0 &&
-              <Text style={styles.title}>Trending Topics</Text>}
+              {this.state.topics.length > 0 && (
+                <Text style={styles.title}>Trending Topics</Text>
+              )}
 
               <FlatList
                 data={this.state.topics}
@@ -257,7 +284,13 @@ export default class Home extends Component {
                 renderItem={({ item, index }) => {
                   return (
                     <CachedImage
-                      style={[styles.topicContainer, {    marginTop: Dimensions.get("window").width * 0.05, marginBottom: Dimensions.get("window").width * 0.05}]}
+                      style={[
+                        styles.topicContainer,
+                        {
+                          marginTop: Dimensions.get("window").width * 0.05,
+                          marginBottom: Dimensions.get("window").width * 0.05
+                        }
+                      ]}
                       imageStyle={{ borderRadius: 5 }}
                       source={{ uri: Api.getFileUrl(item.thumbnail) }}
                       key={item.id}
@@ -288,9 +321,11 @@ export default class Home extends Component {
               />
             </View>
             <View>
-            {this.state.projects.length > 0 &&
-
-              <Text style={[styles.title, {    marginTop: 10}]}>Trending Projecten</Text>}
+              {this.state.projects.length > 0 && (
+                <Text style={[styles.title, { marginTop: 10 }]}>
+                  Trending Projecten
+                </Text>
+              )}
               <FlatList
                 data={this.state.projects}
                 onEndReached={() => this.handelEnd()}
@@ -325,22 +360,33 @@ export default class Home extends Component {
                         )
                       }
                     >
-                      <View style={[styles.card, {marginBottom: index == this.state.projects.length - 1 || index == this.state.projects.length - 2  ? 15 : 0}]}>
+                      <View
+                        style={[
+                          styles.card,
+                          {
+                            marginBottom:
+                              index == this.state.projects.length - 1 ||
+                              index == this.state.projects.length - 2
+                                ? 15
+                                : 0
+                          }
+                        ]}
+                      >
                         <View style={styles.cardImage}>
                           <CachedImage
-                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
-                          resizeMode="cover"
-                          style={styles.image}
-                        />
+                            source={{ uri: Api.getFileUrl(item.thumbnail) }}
+                            resizeMode="cover"
+                            style={styles.image}
+                          />
                         </View>
                         <Image
                           source={line2}
                           resizeMode="stretch"
                           style={{ width: "100%", height: "2%" }}
                         />
-                          <Text numberOfLines={2} style={styles.cardTitle}>
-                            {item.name}
-                          </Text>
+                        <Text numberOfLines={2} style={styles.cardTitle}>
+                          {item.name}
+                        </Text>
                       </View>
                     </Ripple>
                   );
@@ -367,12 +413,12 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center"
   },
 
   topicContainer: {
     elevation: 3,
-    shadowColor: '#000000',
+    shadowColor: "#000000",
     shadowOffset: {
       width: 0,
       height: 3
@@ -386,14 +432,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     marginLeft: Dimensions.get("window").width * 0.024,
-    marginRight: Dimensions.get("window").width * 0.024,
-
-    },
+    marginRight: Dimensions.get("window").width * 0.024
+  },
 
   cardTitle: {
     margin: 5,
     fontSize: 16,
-    color: '#4a6572'
+
+    color: "#4a6572"
   },
 
   card: {
@@ -407,7 +453,7 @@ const styles = StyleSheet.create({
       height: (Dimensions.get("window").height - 150) * 0.24
     }),
     elevation: 3,
-    shadowColor: '#000000',
+    shadowColor: "#000000",
     shadowOffset: {
       width: 0,
       height: 3
@@ -447,7 +493,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
-    overflow: 'hidden'
+    overflow: "hidden"
   },
 
   searchBarContainerStyle: {
@@ -495,9 +541,7 @@ const styles = StyleSheet.create({
   },
 
   textSubTitle: {
-
     fontSize: 16,
     color: "white"
-  },
-
+  }
 });
