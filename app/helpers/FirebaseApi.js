@@ -106,14 +106,7 @@ class FirebaseService {
       return(Api.callApiGet("getChatsForUser/" + userId))
     }
 
-    getMsgsRef(uid) {
-      return this.app
-        .database()
-        .ref("Chats")
-        .child(uid);
-    }
-
-    notifyUser(uid) {
+    notifyUser(uid, chatId) {
         ids = uid.split(":");
 
         //debug
@@ -124,7 +117,7 @@ class FirebaseService {
             } else {
                 resId = ids[0];
             }
-            UserApi.notifyUser(parseInt(resId));
+            UserApi.notifyUser(parseInt(resId), chatId);
         });
     }
 
@@ -145,13 +138,14 @@ class FirebaseService {
     }
 
     getMsgsRef(uid) {
+        console.log(this.app.database().ref("Chats").child(uid))
         return this.app
             .database()
             .ref("Chats")
             .child(uid);
     }
 
-    sendMessage(sender, uid, messages = []) {
+    sendMessage(sender, uid, chatId, messages = []) {
         const ref = this.app
             .database()
             .ref("Chats")
@@ -173,7 +167,7 @@ class FirebaseService {
             }
         };
         ref.push().set(chatMessage);
-        this.notifyUser(uid)
+        this.notifyUser(uid, chatId)
     }
 }
 const firebaseService = new FirebaseService();

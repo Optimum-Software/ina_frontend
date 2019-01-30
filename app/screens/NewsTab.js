@@ -30,7 +30,8 @@ export default class NewsTab extends Component{
   }
 
   componentDidMount() {
-  	ProjectApi.getUpdatesForProject(this.props.project.id).then(res => {
+    console.log(this.props)
+  	ProjectApi.getUpdatesForProject(this.props.project.project.id).then(res => {
   		if(res['bool']) {
   			this.setState({updateList: res['updates']})
   		}
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
 
 	titleStyle: {
 		fontSize: 24,
-		color: '#232f34',
+		fontWeight: 'bold'
 	},
 
 	contentStyle: {

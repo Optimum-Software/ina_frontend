@@ -28,6 +28,7 @@ import Api from "../helpers/Api";
 import GroupApi from "../helpers/GroupApi";
 import ProjectApi from "../helpers/ProjectApi";
 import User from "../helpers/User";
+import UserApi from "../helpers/UserApi";
 import LinearGradient from "react-native-linear-gradient";
 import HomepageApi from "../helpers/HomepageApi";
 import { CachedImage } from "react-native-cached-image";
@@ -50,7 +51,8 @@ export default class Home extends Component {
       loggedIn: false,
       dateNow: null,
       refreshing: false,
-      search: false
+      search: false,
+      unRead: 0
     };
     console.log(this.props)
     this.animatedValue = new Animated.Value(0);
@@ -58,6 +60,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    this.props.navigation.addListener("willFocus", this.onLoad);
     Linking.addEventListener('url', this._handleOpenURL);
     Linking.getInitialURL().then((url) => {
       if (url) {
@@ -67,11 +70,29 @@ export default class Home extends Component {
 
       }
     }).catch(err => console.error('An error occurred', err));
+  }
+
+  onLoad = () => {
     this.getTags();
     this.getTrendingProjects();
     this.getUserIfLoggedIn();
+    this.getNotificationCount();
+  }
 
-
+  getNotificationCount() {
+    let unRead = 0
+    User.getUserId().then(id => {
+      UserApi.getNotifications(id).then(res => {
+        if(res['bool']) {
+          for(noti of res['notifications']) {
+            if(!noti['read']) {
+              unRead++
+            }
+            this.setState({unRead: unRead})
+          }
+        }
+      })
+    })
   }
 
   componentWillUnmount() {
@@ -110,7 +131,6 @@ _handleOpenURL(event) {
   getTags() {
     Api.callApiGet("getAllTags").then(response => {
       if (response["bool"]) {
-        console.log(response["msg"]);
         this.setState({ topics: response["tags"] });
       }
     });
@@ -157,7 +177,6 @@ _handleOpenURL(event) {
   }
 
   search(term) {
-    console.log(term);
     HomepageApi.searchTags(term).then(res => {
       if (res["bool"]) {
         this.setState({ topics: res["tags"] });
@@ -176,9 +195,7 @@ _handleOpenURL(event) {
 
   onRefresh = () => {
     this.setState({ refreshing: true, searchTerm: "" });
-    this.getTags();
-    this.getTrendingProjects();
-    this.getUserIfLoggedIn();
+    this.onLoad()
     this.setState({ refreshing: false });
   };
 
@@ -238,9 +255,21 @@ _handleOpenURL(event) {
                       <Text style={[styles.textTitle, styles.customFont]}>
                         Welkom {this.state.user.firstName},
                       </Text>
-                      <Text style={styles.textSubTitle}>
-                        Er zijn 4 nieuwe meldingen voor je
-                      </Text>
+                      {this.state.unRead > 1 && (
+                        <Text style={styles.textSubTitle}>
+                          Er zijn {this.state.unRead} nieuwe meldingen voor je
+                        </Text>
+                      )}
+                      {this.state.unRead == 1 && (
+                        <Text style={styles.textSubTitle}>
+                          Er is {this.state.unRead} nieuwe melding voor je
+                        </Text>
+                      )}
+                      {this.state.unRead == 0 && (
+                        <Text style={styles.textSubTitle}>
+                          Er is geen nieuwe meldingen
+                        </Text>
+                      )}
                     </View>
                   </ImageBackground>
                 </View>
@@ -360,18 +389,29 @@ _handleOpenURL(event) {
                         )
                       }
                     >
-                      <View
-                        style={[
-                          styles.card,
-                          {
-                            marginBottom:
-                              index == this.state.projects.length - 1 ||
-                              index == this.state.projects.length - 2
-                                ? 15
-                                : 0
-                          }
-                        ]}
-                      >
+                    {index != (this.state.projects.length - 1) &&(
+                      //not last card
+                      <View style={styles.card}>
+                        <View style={styles.cardImage}>
+                          <CachedImage
+                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
+                          resizeMode="cover"
+                          style={styles.image}
+                        />
+                        </View>
+                        <Image
+                          source={line2}
+                          resizeMode="stretch"
+                          style={{ width: "100%", height: "2%" }}
+                        />
+                          <Text numberOfLines={2} style={styles.cardTitle}>
+                            {item.name}
+                          </Text>
+                      </View>
+                    )}
+                    {index == (this.state.projects.length - 1) && (index+1) % 2 == 0 &&(
+                      //last card but even index
+                      <View style={styles.card}>
                         <View style={styles.cardImage}>
                           <CachedImage
                             source={{ uri: Api.getFileUrl(item.thumbnail) }}
@@ -388,9 +428,29 @@ _handleOpenURL(event) {
                           {item.name}
                         </Text>
                       </View>
+                    )}
+                    {index == (this.state.projects.length - 1) && (index+1) % 2 != 0 && (
+                      //last card but uneven index
+                      <View style={styles.cardUneven}>
+                        <View style={styles.cardImage}>
+                          <CachedImage
+                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
+                          resizeMode="cover"
+                          style={styles.image}
+                        />
+                        </View>
+                        <Image
+                          source={line2}
+                          resizeMode="stretch"
+                          style={{ width: "100%", height: "2%" }}
+                        />
+                          <Text numberOfLines={2} style={styles.cardTitle}>
+                            {item.name}
+                          </Text>
+                      </View>
+                    )}
                     </Ripple>
-                  );
-                }}
+                    )}}
               />
             </View>
           </ScrollView>
@@ -427,7 +487,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     width: Dimensions.get("window").width * 0.285,
     height: Dimensions.get("window").width * 0.285,
-
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
@@ -438,8 +497,8 @@ const styles = StyleSheet.create({
   cardTitle: {
     margin: 5,
     fontSize: 16,
-
-    color: "#4a6572"
+    fontWeight: "bold",
+    color: '#4a6572'
   },
 
   card: {
@@ -460,6 +519,19 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 3,
     shadowOpacity: 0.2,
+    borderRadius: 4
+  },
+
+  cardUneven: {
+    backgroundColor: "#FFFFFF",
+    margin: 10,
+    width: "100%",
+    height: (Dimensions.get("window").height - 90) * 0.2,
+    ...ifIphoneX({
+      height: (Dimensions.get("window").height - 150) * 0.17
+    }),
+    marginBottom: 10,
+    elevation: 3,
     borderRadius: 4
   },
 

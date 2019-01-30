@@ -7,7 +7,9 @@ import {
   View,
   Image,
   Text,
-  ScrollView
+  ScrollView,
+  Dimensions,
+  TouchableHighlight
 } from "react-native";
 import { Toolbar } from "react-native-material-ui";
 import UserApi from "../helpers/UserApi";
@@ -17,6 +19,8 @@ import User from "../helpers/User";
 import ProfileParameters from "../helpers/ProfileParameters";
 import Api from "../helpers/Api";
 import line from "../assets/images/Line.png";
+import { Icon } from "react-native-elements";
+import { CachedImage } from "react-native-cached-image";
 
 export default class ProfileScreen extends Component {
   constructor() {
@@ -28,25 +32,43 @@ export default class ProfileScreen extends Component {
       lastName: '',
       organisation: '',
       _function: '',
-      bio: ''
+      bio: '',
+      admin: false
     };
 
   }
 
   componentDidMount() {
     ProfileParameters.getUserId().then(id => {
-      ProfileParameters.storeUserId(null)
-      Api.callApiGetSafe('getUserById/' + id).then(res => {
-        this.setState({
-          id: res.user.id,
-          firstName: res.user.firstName,
-          lastName: res.user.lastName,
-          organisation: res.user.organisation,
-          _function: res.user.function,
-          bio: res.user.bio,
-          profilePhoto: {uri: Api.getFileUrl(res.user.profilePhotoPath)},
+      if(id != null) {
+        ProfileParameters.storeUserId(null)
+        Api.callApiGetSafe('getUserById/' + id).then(res => {
+          this.setState({
+            id: res.user.id,
+            firstName: res.user.firstName,
+            lastName: res.user.lastName,
+            organisation: res.user.organisation,
+            _function: res.user.function,
+            bio: res.user.bio,
+            profilePhoto: {uri: Api.getFileUrl(res.user.profilePhotoPath)},
+          })
         })
-      })
+      } else {
+        User.getUserId().then(id => {
+          Api.callApiGetSafe('getUserById/' + id).then(res => {
+            this.setState({
+              id: res.user.id,
+              firstName: res.user.firstName,
+              lastName: res.user.lastName,
+              organisation: res.user.organisation,
+              _function: res.user.function,
+              bio: res.user.bio,
+              profilePhoto: {uri: Api.getFileUrl(res.user.profilePhotoPath)},
+              admin: true
+            })
+          })
+        })
+      }
     })
   }
 
@@ -64,18 +86,18 @@ export default class ProfileScreen extends Component {
             leftElement={"chevron-left"}
             style={{container: {"backgroundColor": "#009EF2"}}}
             onLeftElementPress={() => {
-              Router.goTo(this.props.navigation, 'Tabs', 'Home');
+              Router.goTo(this.props.navigation, 'LoggedIn', 'LoggedIn');
             }}
           />
         </View>
-        <ScrollView style={{flex: 1}}>
-          <Image
+        <ScrollView >
+          <CachedImage
             source={this.state.profilePhoto}
             resizeMode="cover"
             style={styles.profilePhoto}
           />
-          <View style={{height: '70%'}}>
-            <Image
+          <View style={{height: Dimensions.get("window").height * 0.7}}>
+            <CachedImage
               source={line}
               resizeMode="stretch"
               style={{width: "100%", height: 3}}
@@ -98,6 +120,22 @@ export default class ProfileScreen extends Component {
             </View>
           </View>
         </ScrollView>
+        { this.state.admin && (
+          <TouchableHighlight
+            underlayColor="#009ef2"
+            style={styles.buttonStyle}
+            onPress={() => {
+              Router.goTo(this.props.navigation, "ProfileEdit", "ProfileEditScreen")
+            }}
+          >
+            <Icon
+              name="edit"
+              type="entypo"
+              size={30}
+              color="#FFF"
+            />
+          </TouchableHighlight>
+        )}
       </SafeAreaView>
     );
   }
@@ -105,13 +143,24 @@ export default class ProfileScreen extends Component {
 
 const styles = StyleSheet.create({
   safeArea: {
-    paddingBottom: 10,
     flex: 1
+  },
+
+  buttonStyle: {
+    height: 70,
+    width: 70,
+    borderRadius: 100,
+    backgroundColor: '#00a6ff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 200,
+    right: 15
   },
 
   profilePhoto: {
     width: '100%',
-    height: '30%'
+    height: Dimensions.get("window").height * 0.3
   },
   personalInfoBox: {
     marginTop: 30,

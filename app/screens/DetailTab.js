@@ -22,6 +22,8 @@ import Api from "../helpers/Api";
 import ProjectApi from "../helpers/ProjectApi";
 import User from "../helpers/User";
 import Router from "../helpers/Router";
+import Ripple from "react-native-material-ripple";
+import FirebaseApi from "../helpers/FirebaseApi";
 
 export default class DetailTab extends Component {
   constructor(props) {
@@ -29,8 +31,13 @@ export default class DetailTab extends Component {
     this.state = {
       project: props.project.project,
       tags: [],
-      userId: null
+      userId: null,
+      projectMembers: [],
+      likeCount: props.project.project.like_count,
+      followCount: props.project.project.follower_count,
+      liked: false
     };
+    console.log(props.project.project.follower_count)
     User.getUserId().then(userId => {
       this.setState({ userId: userId });
       ProjectApi.checkIfMember(userId, this.state.project.id).then(result => {
@@ -43,10 +50,14 @@ export default class DetailTab extends Component {
     });
     this.tags(this.state.project.id);
 
+    this.getMembers();
+  }
+
+  getMembers(){
     ProjectApi.getProjectMembersById(this.state.project.id).then(result => {
       if (result["bool"]) {
         this.setState({
-          projectMembers: result["members"]
+          projectMembers: result["members"],
         });
         console.log(this.state.projectMembers);
       } else {
@@ -61,20 +72,40 @@ export default class DetailTab extends Component {
         this.setState({
           tags: result["tags"]
         });
-        console.log(this.state.tags);
-      } else {
-        console.log(result["msg"]);
       }
     });
   }
+  startChat() {
+    console.log('Starting chat');
+
+    User.getUserId().then(id => {
+      let creatorId = this.state.project.creator.id;
+      let uid = "";
+      if (creatorId > id) {
+        uid = id + ":" + creatorId;
+      } else {
+        uid = creatorId + ":" + id;
+      }
+      let title =
+        this.state.project.creator.firstName +
+        " " +
+        this.state.project.creator.lastName;
+      FirebaseApi.createChat(uid);
+      Router.goTo(this.props.navigation, "ChatStack", "Chat", {
+        uid: uid,
+        title: title
+      });
+    });
+  }
+
 
   joinProject() {
     User.getUserId().then(id => {
       ProjectApi.joinProject(id, this.state.project.id).then(result => {
+        console.log(result);
         if (result["bool"]) {
-          this.setState({ member: true });
-          this.updateProjectInfo();
-          alert("Je neemt nu deel aan dit project");
+          this.setState({ member: true,   });
+          this.getMembers();
         } else {
           alert(result["msg"]);
         }
@@ -86,9 +117,8 @@ export default class DetailTab extends Component {
     User.getUserId().then(id => {
       ProjectApi.leaveProject(id, this.state.project.id).then(result => {
         if (result["bool"]) {
-          alert("Je neemt niet langer deel aan dit project");
-          this.setState({ member: false });
-          this.updateProjectInfo();
+          this.setState({ member: false, });
+this.getMembers();
         } else {
           alert(result["msg"]);
         }
@@ -106,24 +136,24 @@ export default class DetailTab extends Component {
               alignItems: "center"
             }}
           >
-          <Image
-            source={{
-              uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
-            }}
-            resizeMode="cover"
-            style={{
-              marginRight: 10,
-              width: 40,
-              height: 40,
-              borderRadius: 100,
-              backgroundColor: "white"
-            }}
-            imageStyle={{
-              width: "100%",
-              height: "100%",
-              borderRadius: 200
-            }}
-          />
+            <Image
+              source={{
+                uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
+              }}
+              resizeMode="cover"
+              style={{
+                marginRight: 10,
+                width: 40,
+                height: 40,
+                borderRadius: 100,
+                backgroundColor: "white"
+              }}
+              imageStyle={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 200
+              }}
+            />
             <View style={{ paddingLeft: 0 }}>
               <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                 {this.state.project.name}
@@ -133,7 +163,6 @@ export default class DetailTab extends Component {
                   " " +
                   this.state.project.creator.lastName}
               </Text>
-
             </View>
           </View>
           {this.state.userId == this.state.project.creator.id && (
@@ -162,30 +191,48 @@ export default class DetailTab extends Component {
             />
           )}
           {this.state.userId != this.state.project.creator.id && (
-            <Icon name="heart-outline" size={36} color={"red"} />
+            <Ripple
+              rippleColor="#fff"
+              onPress={() =>
+                User.getUserId().then(id => {
+                  ProjectApi.likeProject(this.state.project.id, id).then(res =>
+                    this.setState({ likeCount: res["likedCount"], liked: true })
+                  );
+                })
+              }
+            >
+              {this.state.liked && <Icon name="heart" size={36} color={"red"} />}
+              {!this.state.liked && <Icon name="heart-outline" size={36} color={"red"} />}
+            </Ripple>
           )}
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center', paddingLeft: 65,}}>
-        <Icon
-          name="heart-outline"
-          color='grey'
-          size={16}/>
-          <Text>{this.state.project.like_count} likes</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingLeft: 65,
+            paddingBottom: this.state.projectMembers.length > 0 ? 0 : 15
+          }}
+        >
+          <Icon name="heart-outline" color="grey" size={16} />
+          <Text>{this.state.likeCount} likes</Text>
 
           <Icon
-          style={{paddingLeft: 5}}
+            style={{ paddingLeft: 5 }}
             name="account-outline"
-            color='grey'
-            size={16}/>
-            <Text>{this.state.project.follower_count} volgers</Text>
-          </View>
-          <Text style={{paddingLeft: 65, paddingBottom: 15, paddingTop: 5}}>Deelnemers:</Text>
-
+            color="grey"
+            size={16}
+          />
+          <Text>{this.state.followCount} volgers</Text>
+        </View>
+        {this.state.projectMembers.length > 0 && (
+          <Text style={{ paddingLeft: 65, paddingBottom: 15, paddingTop: 5 }}>
+            Deelnemers:
+          </Text>
+        )}
         <View>
-
-
           <TouchableOpacity
-          style={{paddingLeft: 50}}
+            style={{ paddingLeft: 60 }}
             onPress={() =>
               Router.goTo(
                 this.props.navigation,
@@ -200,13 +247,20 @@ export default class DetailTab extends Component {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               renderItem={({ item }) => (
-                <View style={{paddingLeft: 15, paddingBottom: 15}}>
+                <View
+                  style={{ paddingLeft: 5, paddingBottom: 15, elevation: 5 }}
+                >
                   <Image
                     source={{
                       uri: Api.getFileUrl(item.profilePhotoPath)
                     }}
                     resizeMode="cover"
-                    style={{ width: 40, height: 40, borderRadius: 100 }}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 100,
+                      elevation: 5
+                    }}
                   />
                 </View>
               )}
@@ -307,24 +361,26 @@ export default class DetailTab extends Component {
         >
           <TouchableOpacity
             style={styles.buttonStyle}
-            onPress={() => this.login()}
+            onPress={() => this.startChat()}
           >
             <Text style={styles.textStyle}>Verstuur een bericht</Text>
           </TouchableOpacity>
           {!this.state.member == true && (
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.joinProject()}
-          >
-            <Text style={styles.textStyle}>Deelnemen</Text>
-          </TouchableOpacity>)}
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={() => this.joinProject()}
+            >
+              <Text style={styles.textStyle}>Deelnemen</Text>
+            </TouchableOpacity>
+          )}
           {this.state.member == true && (
             <TouchableOpacity
               style={styles.buttonStyle}
               onPress={() => this.leaveProject()}
             >
               <Text style={styles.textStyle}>Verlaten</Text>
-            </TouchableOpacity>)}
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => this.login()}
