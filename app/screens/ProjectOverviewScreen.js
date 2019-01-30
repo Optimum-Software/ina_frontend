@@ -167,93 +167,71 @@ export default class ProjectOverview extends Component {
                             }
                           )
                         }
-<<<<<<< HEAD
-                      )}
-                  >  
-                    {index != (this.state.data.length - 1) &&(
-                      //not last card
-                      <View style={styles.card}>
-                        <View style={styles.cardImage}>
-                          <CachedImage
-                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
-                          resizeMode="cover"
-                          style={styles.image}
-                        />
-                        </View>
-                        <Image
-                          source={line}
-                          resizeMode="stretch"
-                          style={{ width: "100%", height: "2%" }}
-                        />
-                          <Text numberOfLines={2} style={styles.cardTitle}>
-                            {item.name}
-                          </Text>
-                      </View>
-                    )}
-                    {index == (this.state.data.length - 1) && (index+1) % 2 == 0 &&(
-                      //last card but even index
-                      <View style={styles.card}>
-                        <View style={styles.cardImage}>
-                          <CachedImage
-                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
-                          resizeMode="cover"
-                          style={styles.image}
-                        />
-                        </View>
-                        <Image
-                          source={line}
-                          resizeMode="stretch"
-                          style={{ width: "100%", height: "2%" }}
-                        />
-                          <Text numberOfLines={2} style={styles.cardTitle}>
-                            {item.name}
-                          </Text>
-                      </View>
-                    )}
-                    {index == (this.state.data.length - 1) && (index+1) % 2 != 0 && (
-                      //last card but uneven index
-                      <View style={styles.cardUneven}>
-                        <View style={styles.cardImage}>
-                          <CachedImage
-                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
-                          resizeMode="cover"
-                          style={styles.image}
-                        />
-                        </View>
-                        <Image
-                          source={line}
-                          resizeMode="stretch"
-                          style={{ width: "100%", height: "2%" }}
-                        />
-                          <Text numberOfLines={2} style={styles.cardTitle}>
-                            {item.name}
-                          </Text>
-                      </View>
-                    )} 
-=======
-                      >
+                      >  
+                      {index != (this.state.data.length - 1) &&(
+                        //not last card
                         <View style={styles.card}>
                           <View style={styles.cardImage}>
                             <CachedImage
-                              source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                              resizeMode="cover"
-                              style={styles.image}
-                            />
+                            source={{ uri: Api.getFileUrl(item.thumbnail)}}
+                            resizeMode="cover"
+                            style={styles.image}
+                          />
                           </View>
                           <Image
                             source={line}
                             resizeMode="stretch"
                             style={{ width: "100%", height: "2%" }}
                           />
-                          <Text numberOfLines={2} style={styles.cardTitle}>
-                            {item.name}
-                          </Text>
+                            <Text numberOfLines={2} style={styles.cardTitle}>
+                              {item.name}
+                            </Text>
                         </View>
-                      </Ripple>
-                    );
-                  }}
-                />
-              )}
+                      )}
+                      {index == (this.state.data.length - 1) && (index+1) % 2 == 0 &&(
+                        //last card but even index
+                        <View style={styles.card}>
+                          <View style={styles.cardImage}>
+                            <CachedImage
+                            source={{ uri: Api.getFileUrl(item.thumbnail)}}
+                            resizeMode="cover"
+                            style={styles.image}
+                          />
+                          </View>
+                          <Image
+                            source={line}
+                            resizeMode="stretch"
+                            style={{ width: "100%", height: "2%" }}
+                          />
+                            <Text numberOfLines={2} style={styles.cardTitle}>
+                              {item.name}
+                            </Text>
+                        </View>
+                      )}
+                      {index == (this.state.data.length - 1) && (index+1) % 2 != 0 && (
+                        //last card but uneven index
+                        <View style={styles.cardUneven}>
+                          <View style={styles.cardImage}>
+                            <CachedImage
+                            source={{ uri: Api.getFileUrl(item.thumbnail)}}
+                            resizeMode="cover"
+                            style={styles.image}
+                          />
+                          </View>
+                          <Image
+                            source={line}
+                            resizeMode="stretch"
+                            style={{ width: "100%", height: "2%" }}
+                          />
+                            <Text numberOfLines={2} style={styles.cardTitle}>
+                              {item.name}
+                            </Text>
+                        </View>
+                      )}
+                    </Ripple>
+                    )}
+                  }
+                />)}
             {this.state.data.length == 0 &&
               !this.state.loading && (
                 <View style={styles.emptyBox}>
@@ -271,7 +249,6 @@ export default class ProjectOverview extends Component {
                       size={25}
                       color="#FFF"
                     />
->>>>>>> upstream/master
                   </Ripple>
                 </View>
               )}
@@ -316,7 +293,6 @@ const styles = StyleSheet.create({
     marginRight: Dimensions.get("window").width * 0.024,
     marginTop: Dimensions.get("window").width * 0.05,
     width: Dimensions.get("window").width * 0.43,
-<<<<<<< HEAD
     height: (Dimensions.get("window").height - 90) * 0.2,
     ...ifIphoneX({
       height: (Dimensions.get("window").height - 150) * 0.17
@@ -334,12 +310,6 @@ const styles = StyleSheet.create({
       height: (Dimensions.get("window").height - 150) * 0.17
     }),
     marginBottom: 10,
-=======
-    height: (Dimensions.get("window").height - 90) * 0.35,
-    ...ifIphoneX({
-      height: (Dimensions.get("window").height - 150) * 0.24
-    }),
->>>>>>> upstream/master
     elevation: 3,
     shadowColor: "#000000",
     shadowOffset: {
@@ -358,12 +328,8 @@ const styles = StyleSheet.create({
   cardTitle: {
     margin: 5,
     fontSize: 16,
-<<<<<<< HEAD
     fontWeight: "bold",
     color: '#4a6572'
-=======
-    color: "#4a6572"
->>>>>>> upstream/master
   },
 
   image: {
@@ -380,12 +346,8 @@ const styles = StyleSheet.create({
 
   emptyText: {
     color: "#4a6572",
-<<<<<<< HEAD
     fontSize: 24,
     fontWeight: 'bold'
-=======
-    fontSize: 24
->>>>>>> upstream/master
   },
 
   refreshButton: {
