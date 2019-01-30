@@ -15,6 +15,10 @@ class ProjectApi {
     return Api.callApiGet("getAllProjects");
   }
 
+  getAllTag() {
+    return Api.callApiGet("getAllTags");
+  }
+
   getAllTags(id) {
     return Api.callApiGet("getAllProjectTagsById/" + id);
   }
@@ -60,7 +64,8 @@ class ProjectApi {
     beginDate,
     endDate,
     imgUri,
-    documents
+    documents,
+    tags
   ) {
     const data = new FormData();
 
@@ -70,6 +75,13 @@ class ProjectApi {
     data.append("location", location);
     data.append("beginDate", beginDate);
     data.append("endDate", endDate);
+    console.log("TAGS VOOR HET AANMAKEN VAN PROJECT");
+    console.log(tags);
+    let count = 0;
+    tags.forEach(tag => {
+      data.append("#" + count, tag.name);
+      count++;
+    });
 
     projectThumbnail = {
       uri: imgUri,

@@ -46,32 +46,32 @@ export default class ProjectOverview extends Component {
   }
 
   componentDidMount() {
-    this.onLoad()
+    this.onLoad();
     this.props.navigation.addListener("willFocus", this.onLoad);
   }
 
   handelEnd = () => {};
 
   onLoad = () => {
-    this.setState({refreshing: true, loading: true})
+    this.setState({ refreshing: true, loading: true });
 
     User.getUserId().then(id => {
-      if(id != null) {
-        this.setState({loggedIn: true})
+      if (id != null) {
+        this.setState({ loggedIn: true });
       } else {
-        this.setState({loggedIn: false})
+        this.setState({ loggedIn: false });
       }
-      this.setState({refreshing: false, loading: false})
+      this.setState({ refreshing: false, loading: false });
     });
 
-    tagToFilter = this.props.navigation.getParam("tag", "")
-    if(tagToFilter != null) {
+    tagToFilter = this.props.navigation.getParam("tag", "");
+    if (tagToFilter != null) {
       ProjectApi.getProjectByTag(tagToFilter).then(res => {
         if(res['bool']) {
           this.setState({data: res["projects"]})
           this.props.navigation.setParams({ tag: null})
         }
-        this.setState({refreshing: false, loading: false})
+        this.setState({ refreshing: false, loading: false });
       });
     } else {
       ProjectApi.getAllProjects().then(result => {
@@ -80,17 +80,16 @@ export default class ProjectOverview extends Component {
             data: result["projects"]
           });
         }
-        this.setState({refreshing: false, loading: false})
+        this.setState({ refreshing: false, loading: false });
       });
     }
-
-  }
+  };
 
   onRefresh() {
-    this.onLoad()
+    this.onLoad();
   }
 
-  render() {  
+  render() {
     return (
       <SafeAreaView style={styles.safeArea}>
         <StatusBar
@@ -99,71 +98,76 @@ export default class ProjectOverview extends Component {
         />
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
-          {this.state.loggedIn && (
-            <Toolbar
-              centerElement="Projecten"
-              iconSet="MaterialCommunityIcons"
-              leftElement={"menu"}
-              onLeftElementPress={() => {
-                this.props.navigation.openDrawer();
-              }}
-              rightElement={"plus"}
-              onRightElementPress={() => {
-                Router.goTo(
-                  this.props.navigation,
-                  "ProjectStack",
-                  "ProjectCreateFirstScreen",
-                  {}
-                );
-              }}
-            />
-          )}
-          {!this.state.loggedIn && (
-            <Toolbar
-              centerElement="Projecten"
-              iconSet="MaterialCommunityIcons"
-              leftElement={"menu"}
-              onLeftElementPress={() => {
-                this.props.navigation.openDrawer();
-              }}
-            />
-          )}  
+            {this.state.loggedIn && (
+              <Toolbar
+                centerElement="Projecten"
+                iconSet="MaterialCommunityIcons"
+                leftElement={"menu"}
+                onLeftElementPress={() => {
+                  this.props.navigation.openDrawer();
+                }}
+                rightElement={"plus"}
+                onRightElementPress={() => {
+                  Router.goTo(
+                    this.props.navigation,
+                    "ProjectStack",
+                    "ProjectCreateFirstScreen",
+                    {}
+                  );
+                }}
+              />
+            )}
+            {!this.state.loggedIn && (
+              <Toolbar
+                centerElement="Projecten"
+                iconSet="MaterialCommunityIcons"
+                leftElement={"menu"}
+                onLeftElementPress={() => {
+                  this.props.navigation.openDrawer();
+                }}
+              />
+            )}
           </View>
           <View>
-          {this.state.data.length > 0 && !this.state.refreshing &&(
-              <FlatList
-              data={this.state.data}
-              onEndReached={() => this.handelEnd()}
-              numColumns={2}
-              refreshing={this.state.refreshing}
-              onRefresh={() => this.onRefresh()}
-              keyExtractor={item => item.id}
-              renderItem={({ item, index }) => {
-                return (
-                  <Ripple
-                    rippleColor="#FFF"
-                    style={styles.cardContainer}
-                    key={item.id}
-                    onPress={() =>
-                      Router.goTo(
-                        this.props.navigation,
-                        "ProjectStack",
-                        "ProjectDetailScreen",
-                        {
-                          id: item.id,
-                          name: item.name,
-                          desc: item.desc,
-                          start_date: item.start_date,
-                          end_date: item.end_date,
-                          created_at: item.created_at,
-                          like_count: item.like_count,
-                          follower_count: item.follower_count,
-                          location: item.location,
-                          thumbnail: item.thumbnail,
-                          creator: item.creator,
-                          images: item.images,
-                          files: item.files
+            {this.state.data.length > 0 &&
+              !this.state.refreshing && (
+                <FlatList
+                  data={this.state.data}
+                  onEndReached={() => this.handelEnd()}
+                  numColumns={2}
+                  refreshing={this.state.refreshing}
+                  onRefresh={() => this.onRefresh()}
+                  keyExtractor={item => item.id}
+                  contentContainerStyle={{ paddingLeft: 10, paddingRight: 10 }}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <Ripple
+                        rippleColor="#FFF"
+                        style={styles.cardContainer}
+                        key={item.id}
+                        onPress={() =>
+                          Router.goTo(
+                            this.props.navigation,
+                            "ProjectStack",
+                            "ProjectDetailScreen",
+                            {
+                              id: item.id,
+                              name: item.name,
+                              desc: item.desc,
+                              start_date: item.start_date,
+                              end_date: item.end_date,
+                              created_at: item.created_at,
+                              like_count: item.like_count,
+                              follower_count: item.follower_count,
+                              location: item.location,
+                              thumbnail: item.thumbnail,
+                              creator: item.creator,
+                              images: item.images,
+                              files: item.files
+                            }
+                          )
                         }
+<<<<<<< HEAD
                       )}
                   >  
                     {index != (this.state.data.length - 1) &&(
@@ -226,40 +230,62 @@ export default class ProjectOverview extends Component {
                           </Text>
                       </View>
                     )} 
-                  </Ripple>
-                )
-              }}
-            />
-            )
-          }
-          {this.state.data.length == 0 && !this.state.loading && (
-            <View style={styles.emptyBox}>
-              <Text style={styles.emptyText}>Er zijn geen projecten gevonden</Text>
-              <Ripple
-                rippleColor='#00a6ff'
-                style={styles.refreshButton}
-                onPress={() => this.onRefresh()}
-              >
-                <Icon
-                  name="refresh"
-                  type="font-awesome"
-                  size={25}
-                  color="#FFF"
+=======
+                      >
+                        <View style={styles.card}>
+                          <View style={styles.cardImage}>
+                            <CachedImage
+                              source={{ uri: Api.getFileUrl(item.thumbnail) }}
+                              resizeMode="cover"
+                              style={styles.image}
+                            />
+                          </View>
+                          <Image
+                            source={line}
+                            resizeMode="stretch"
+                            style={{ width: "100%", height: "2%" }}
+                          />
+                          <Text numberOfLines={2} style={styles.cardTitle}>
+                            {item.name}
+                          </Text>
+                        </View>
+                      </Ripple>
+                    );
+                  }}
                 />
-              </Ripple>
-            </View>
-          )}
-          {this.state.loading && (
-            <View
-              style={{
-                height: '92.5%',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <ActivityIndicator size="large" color="#000" />
-            </View>
-          )}
+              )}
+            {this.state.data.length == 0 &&
+              !this.state.loading && (
+                <View style={styles.emptyBox}>
+                  <Text style={styles.emptyText}>
+                    Er zijn geen projecten gevonden
+                  </Text>
+                  <Ripple
+                    rippleColor="#00a6ff"
+                    style={styles.refreshButton}
+                    onPress={() => this.onRefresh()}
+                  >
+                    <Icon
+                      name="refresh"
+                      type="font-awesome"
+                      size={25}
+                      color="#FFF"
+                    />
+>>>>>>> upstream/master
+                  </Ripple>
+                </View>
+              )}
+            {this.state.loading && (
+              <View
+                style={{
+                  height: "92.5%",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <ActivityIndicator size="large" color="#000" />
+              </View>
+            )}
           </View>
         </View>
       </SafeAreaView>
@@ -281,8 +307,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    margin: 10
+    justifyContent: "center"
   },
 
   card: {
@@ -291,6 +316,7 @@ const styles = StyleSheet.create({
     marginRight: Dimensions.get("window").width * 0.024,
     marginTop: Dimensions.get("window").width * 0.05,
     width: Dimensions.get("window").width * 0.43,
+<<<<<<< HEAD
     height: (Dimensions.get("window").height - 90) * 0.2,
     ...ifIphoneX({
       height: (Dimensions.get("window").height - 150) * 0.17
@@ -308,7 +334,20 @@ const styles = StyleSheet.create({
       height: (Dimensions.get("window").height - 150) * 0.17
     }),
     marginBottom: 10,
+=======
+    height: (Dimensions.get("window").height - 90) * 0.35,
+    ...ifIphoneX({
+      height: (Dimensions.get("window").height - 150) * 0.24
+    }),
+>>>>>>> upstream/master
     elevation: 3,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
     borderRadius: 4
   },
 
@@ -319,8 +358,12 @@ const styles = StyleSheet.create({
   cardTitle: {
     margin: 5,
     fontSize: 16,
+<<<<<<< HEAD
     fontWeight: "bold",
     color: '#4a6572'
+=======
+    color: "#4a6572"
+>>>>>>> upstream/master
   },
 
   image: {
@@ -331,23 +374,27 @@ const styles = StyleSheet.create({
   },
 
   emptyBox: {
-    alignItems: 'center', 
-    marginTop: '25%'
+    alignItems: "center",
+    marginTop: "25%"
   },
 
   emptyText: {
     color: "#4a6572",
+<<<<<<< HEAD
     fontSize: 24,
     fontWeight: 'bold'
+=======
+    fontSize: 24
+>>>>>>> upstream/master
   },
 
   refreshButton: {
     height: 50,
     width: 50,
     borderRadius: 100,
-    backgroundColor: '#009ef2',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#009ef2",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 30
   }
 });

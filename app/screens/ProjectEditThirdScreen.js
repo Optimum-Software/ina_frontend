@@ -21,28 +21,51 @@ import {
   DocumentPicker,
   DocumentPickerUtil
 } from "react-native-document-picker";
-
+import Api from "../helpers/Api";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 
-class ProjectCreateThirdScreen extends Component {
+class ProjectEditThirdScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       documents: [],
 
-      thumbnail: this.props.navigation.getParam("thumbnail", ""),
-      imgUri: this.props.navigation.getParam("imgUri", ""),
+      id: this.props.navigation.getParam("id", ""),
       name: this.props.navigation.getParam("name", ""),
       desc: this.props.navigation.getParam("desc", ""),
+      start_date: this.props.navigation.getParam("start_date", ""),
+      end_date: this.props.navigation.getParam("end_date", ""),
       location: this.props.navigation.getParam("location", ""),
-      beginDate: this.props.navigation.getParam("beginDate", ""),
-      endDate: this.props.navigation.getParam("endDate", ""),
+      thumbnail: this.props.navigation.getParam("thumbnail", ""),
+      images: this.props.navigation.getParam("images", ""),
+      files: this.props.navigation.getParam("files", ""),
       tags: this.props.navigation.getParam("tags", ""),
 
       totalSize: 0
     };
+  }
+
+  componentDidMount() {
+    console.log("HI ");
+    console.log(this.state);
+    for (let document of this.state.images) {
+      console.log("IMAGES");
+      console.log(document);
+      this.setState({
+        documents: [...this.state.documents, Api.getFileUrl(document)]
+      });
+    }
+
+    for (let document of this.state.files) {
+      console.log("FILES");
+      console.log(document);
+
+      this.setState({
+        documents: [...this.state.documents, Api.getFileUrl(document)]
+      });
+    }
   }
 
   goToNextPart() {
@@ -107,7 +130,7 @@ class ProjectCreateThirdScreen extends Component {
           barStyle="light-content"
         />
         <Toolbar
-          centerElement="Project aanmaken 3/3"
+          centerElement="Project aanpassen"
           iconSet="MaterialCommunityIcons"
           leftElement={"chevron-left"}
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
@@ -137,11 +160,11 @@ class ProjectCreateThirdScreen extends Component {
                 renderItem={({ item, index }) => (
                   <View style={{ flexDirection: "row" }}>
                     <Text numberOfLines={1} style={styles.documentName}>
-                      {++index + " -  " + item.name}
+                      {++index +
+                        " -  " +
+                        item.split("/")[item.split("/").length - 1]}
                     </Text>
-                    <Text numberOfLines={1} style={styles.documentSize}>
-                      {item.size + " kb"}
-                    </Text>
+
                     <Icon
                       name="close-circle"
                       size={24}
@@ -242,4 +265,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProjectCreateThirdScreen;
+export default ProjectEditThirdScreen;

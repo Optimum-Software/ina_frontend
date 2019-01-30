@@ -7,19 +7,32 @@ import {
   Image,
   TouchableOpacity,
   Linking,
-  FlatList
+  FlatList,
+  ScrollView,
+  SafeAreaView
 } from "react-native";
+import {
+  NavigationActions,
+  Header,
+  createMaterialTopTabNavigator
+} from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Api from "../helpers/Api";
 import ProjectApi from "../helpers/ProjectApi";
+import User from "../helpers/User";
+import Router from "../helpers/Router";
 
 export default class DetailTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
       project: props.project.project,
-      tags: []
+      tags: [],
+      userId: null
     };
+    User.getUserId().then(userId => {
+      this.setState({ userId: userId });
+    });
     this.tags(this.state.project.id);
   }
 
@@ -35,7 +48,7 @@ export default class DetailTab extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView>
         <View style={styles.personCard}>
           <View
             style={{
@@ -71,21 +84,55 @@ export default class DetailTab extends Component {
               </Text>
             </View>
           </View>
-          <Icon name="heart-outline" size={36} color={"red"} />
+          {this.state.userId == this.state.project.creator.id && (
+            <Icon
+              name="square-edit-outline"
+              size={36}
+              onPress={() => {
+                Router.goTo(
+                  this.props.navigation,
+                  "ProjectStack",
+                  "ProjectEditFirstScreen",
+                  {
+                    id: this.state.project.id,
+                    name: this.state.project.name,
+                    desc: this.state.project.desc,
+                    start_date: this.state.project.start_date,
+                    end_date: this.state.project.end_date,
+                    location: this.state.project.location,
+                    thumbnail: this.state.project.thumbnail,
+                    images: this.state.project.images,
+                    files: this.state.project.files,
+                    tags: this.state.tags
+                  }
+                );
+              }}
+            />
+          )}
+          {this.state.userId != this.state.project.creator.id && (
+            <Icon name="heart-outline" size={36} color={"red"} />
+          )}
         </View>
         <View
           style={{
             height: 1,
             opacity: 0.3,
             backgroundColor: "#b5babf",
-            marginTop: 15,
             marginBottom: 15,
-            width: "100%",
+            marginLeft: 15,
+            marginRight: 15,
+            width: "90%",
             alignSelf: "center"
           }}
         />
-        <Text>{this.state.project.desc}</Text>
-
+        <Text
+          style={{
+            marginLeft: 15,
+            marginRight: 15
+          }}
+        >
+          {this.state.project.desc}
+        </Text>
         <View
           style={{
             height: 1,
@@ -94,7 +141,9 @@ export default class DetailTab extends Component {
             backgroundColor: "#b5babf",
             marginTop: 15,
             marginBottom: 15,
-            width: "100%",
+            marginLeft: 15,
+            marginRight: 15,
+            width: "90%",
             alignSelf: "center"
           }}
         />
@@ -115,9 +164,11 @@ export default class DetailTab extends Component {
                 })
               }
               style={{
+                width: "90%",
                 flexDirection: "row",
                 alignItems: "center",
                 paddingLeft: 15,
+                paddingRight: 15,
                 paddingBottom: 10
               }}
             >
@@ -126,7 +177,6 @@ export default class DetailTab extends Component {
                 <Text style={{ fontWeight: "bold" }}>
                   {item.split("/")[item.split("/").length - 1]}
                 </Text>
-                <Text>3.04 Mb</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -137,104 +187,121 @@ export default class DetailTab extends Component {
               height: 1,
               opacity: 0.3,
               backgroundColor: "#b5babf",
-              marginTop: 10,
+              marginTop: 15,
               marginBottom: 15,
-              width: "100%",
+              marginLeft: 15,
+              marginRight: 15,
+              width: "90%",
               alignSelf: "center"
             }}
           />
         )}
         <View
           style={{
-            flexDirection: "row",
+            flexDirection: "column",
             justifyContent: "space-evenly",
-            margin: 10
+            margin: 10,
+            marginLeft: 35,
+            marginRight: 35
           }}
         >
           <TouchableOpacity
-            style={{
-              backgroundColor: "#00a6ff",
-              borderRadius: 10,
-              width: 100,
-              elevation: 5,
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 10
-            }}
+            style={styles.buttonStyle}
+            onPress={() => this.login()}
           >
-            <Text style={{ color: "white" }}>Volgen</Text>
+            <Text style={styles.textStyle}>Verstuur een bericht</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{
-              backgroundColor: "#00a6ff",
-              borderRadius: 10,
-              width: 100,
-              elevation: 5,
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 10
-            }}
+            style={styles.buttonStyle}
+            onPress={() => this.login()}
           >
-            <Text style={{ color: "white" }}>Contact</Text>
+            <Text style={styles.textStyle}>Deelnemen</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonStyle}
+            onPress={() => this.login()}
+          >
+            <Text style={styles.textStyle}>Project opslaan</Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            height: 1,
-            opacity: 0.3,
-            backgroundColor: "#b5babf",
-            marginTop: 15,
-            marginBottom: 15,
-            width: "100%",
-            alignSelf: "center"
-          }}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "flex-start",
-            paddingTop: 10
-          }}
-        >
-          <Icon name="tag" size={24} color={"grey"} />
-          <View style={{ flexDirection: "row", flexGrow: 0, flexWrap: "wrap" }}>
-            {this.state.tags.map(tag => {
-              return (
-                <View
-                  style={{
-                    paddingTop: 2,
-                    paddingBottom: 3,
-                    marginBottom: 5,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    borderRadius: 5,
-                    marginLeft: 10,
-                    backgroundColor: "grey"
-                  }}
-                >
-                  <Text style={{ fontSize: 12, color: "white" }}>
-                    {tag.name}
-                  </Text>
-                </View>
-              );
-            })}
+        {this.state.tags.length > 0 && (
+          <View
+            style={{
+              height: 1,
+              opacity: 0.3,
+              backgroundColor: "#b5babf",
+              marginTop: 15,
+              marginBottom: 15,
+              marginLeft: 15,
+              marginRight: 15,
+              width: "90%",
+              alignSelf: "center"
+            }}
+          />
+        )}
+        {this.state.tags.length > 0 && (
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-start",
+              paddingTop: 10,
+              paddingBottom: 10,
+              marginLeft: 15,
+              marginRight: 15
+            }}
+          >
+            <Icon name="tag" size={24} color={"grey"} />
+            <View
+              style={{ flexDirection: "row", flexGrow: 0, flexWrap: "wrap" }}
+            >
+              {this.state.tags.map(tag => {
+                return (
+                  <View
+                    style={{
+                      paddingTop: 2,
+                      paddingBottom: 3,
+                      marginBottom: 5,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      borderRadius: 5,
+                      marginLeft: 10,
+                      backgroundColor: "grey"
+                    }}
+                  >
+                    <Text style={{ fontSize: 12, color: "white" }}>
+                      {tag.name}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
           </View>
-        </View>
-      </View>
+        )}
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    flex: 1
-  },
   personCard: {
-    width: "100%",
-    height: "10%",
+    marginLeft: 15,
+    marginRight: 15,
+    width: Dimensions.get("window").width - 45,
+    height: Dimensions.get("window").height * 0.1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
+  },
+  textStyle: {
+    padding: "5%",
+    fontSize: 16,
+    color: "white",
+    textAlign: "center"
+  },
+
+  buttonStyle: {
+    marginBottom: 15,
+    backgroundColor: "#00a6ff",
+    borderRadius: 25
   }
 });
