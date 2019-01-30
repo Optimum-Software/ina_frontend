@@ -157,6 +157,7 @@ const CustomDrawerContentComponent = props => (
                   props.navigation.closeDrawer();
                   Router.switchLogout(props.navigation);
                   props.navigation.navigate("DrawerClose");
+                  
                 }}
                 delayPressIn={0}
               >

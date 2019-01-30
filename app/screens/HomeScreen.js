@@ -53,6 +53,7 @@ export default class Home extends Component {
       unRead: 0
     };
     this.animatedValue = new Animated.Value(0);
+    console.log(this.props.navigation)
   }
 
   componentDidMount() {

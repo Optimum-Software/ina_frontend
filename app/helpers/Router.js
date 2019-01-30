@@ -1,4 +1,4 @@
-import { NavigationActions } from "react-navigation";
+import { NavigationActions, StackActions} from "react-navigation";
 let instance = null;
 class Router {
 
@@ -27,10 +27,19 @@ class Router {
 	}
 
 	switchLogin(dispatcher) {
+		console.log(dispatcher)
 		dispatcher.navigate("LoggedIn")
 	}
 
 	switchLogout(dispatcher) {
+		console.log(dispatcher)
+		dispatcher.dispatch(
+			StackActions.reset({
+    			index: 0,
+    			key: "HomeStack",
+    			actions: []
+    		})
+		)
 		dispatcher.navigate("LoggedOut")
 	}
 }

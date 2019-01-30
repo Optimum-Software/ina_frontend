@@ -23,7 +23,7 @@ import {
   DrawerItems
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import HomeScreen from "../screens/HomeScreen";
+import HomeStack from "./HomeStackNavigator";
 import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import SettingsScreen from "../screens/SettingsScreen";
@@ -113,12 +113,12 @@ const CustomDrawerContentComponent = props => (
 
 export const Tabs = createBottomTabNavigator(
   {
-    Home: {
-      screen: HomeScreen,
+    HomeStack: {
+      screen: HomeStack,
       navigationOptions: {
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="home" type="entypo" size={28} color={tintColor} />
+          <Icon name="home-outline" size={28} color={tintColor} />
         )
       }
     },
@@ -127,7 +127,7 @@ export const Tabs = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: "Projecten",
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="folder-open" type="ionicon" size={28} color={tintColor} />
+          <Icon name="lightbulb-on-outline" size={28} color={tintColor} />
         )
       }
     }
@@ -157,24 +157,6 @@ export const Drawer = createDrawerNavigator(
         )
       }
     },
-    ExploreScreen: {
-      screen: ExploreScreen,
-      navigationOptions: {
-        drawerLabel: "Ontdekken",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="compass" size={25} color={tintColor} />
-        )
-      }
-    },
-    SettingsScreen: {
-      screen: SettingsScreen,
-      navigationOptions: {
-        drawerLabel: "Instellingen",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="settings" size={25} color={tintColor} />
-        )
-      }
-    }
   },
   {
     drawerPosition: "left",

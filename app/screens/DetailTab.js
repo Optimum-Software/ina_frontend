@@ -29,10 +29,6 @@ export default class DetailTab extends Component {
         this.setState({
           tags: result["tags"]
         });
-        console.log("STATE TAGS SHI");
-        console.log(this.state.tags);
-      } else {
-        alert(result["msg"]);
       }
     });
   }
