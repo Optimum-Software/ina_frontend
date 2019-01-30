@@ -28,7 +28,8 @@ class ProjectCreateFirstScreen extends Component {
     super(props);
 
     this.state = {
-      thumbnail: null,
+      thumbnailUri: null,
+      thumbnailName: null,
       pickedImgUri: "",
       imgPicked: false,
 
@@ -54,8 +55,8 @@ class ProjectCreateFirstScreen extends Component {
           console.log("Error", res.error);
         } else {
           this.setState({
-            thumbnail: res,
-            pickedImgUri: res.uri,
+            thumbnailUri: res.uri,
+            thumbnailName: res.fileName,
             imgPicked: true,
             thumbnailError: ""
           });
@@ -65,7 +66,7 @@ class ProjectCreateFirstScreen extends Component {
   }
   goToNextPart() {
     if (
-      this.state.thumbnail != null &&
+      this.state.thumbnailUri != null &&
       this.state.name != "" &&
       this.state.desc != ""
     ) {
@@ -79,13 +80,13 @@ class ProjectCreateFirstScreen extends Component {
         "ProjectStack",
         "ProjectCreateSecondScreen",
         {
-          thumbnail: this.state.thumbnail,
-          imgUri: this.state.pickedImgUri,
+          thumbnailUri: this.state.thumbnailUri,
+          thumbnailName: this.state.thumbnailName,
           name: this.state.name,
           desc: this.state.desc
         }
       );
-    } else if (this.state.thumbnail == null) {
+    } else if (this.state.thumbnailUri == null) {
       this.setState({
         thumbnailError: "Kies een omslagfoto voor het project.",
         nameError: "",
@@ -138,7 +139,7 @@ class ProjectCreateFirstScreen extends Component {
                   height: 150
                 }}
                 style={styles.imgBackground}
-                source={{ uri: this.state.pickedImgUri }}
+                source={{ uri: this.state.thumbnailUri }}
               >
                 {!this.state.imgPicked && (
                   <Icon

@@ -59,7 +59,8 @@ class ProjectApi {
     location,
     beginDate,
     endDate,
-    imgUri,
+    thumbnailUri,
+    thumbnailName,
     documents,
     tags
   ) {
@@ -80,8 +81,8 @@ class ProjectApi {
     });
 
     projectThumbnail = {
-      uri: imgUri,
-      name: "thumbnail",
+      uri: thumbnailUri,
+      name: thumbnailName,
       type: "multipart/form-data"
     };
     data.append("thumbnail", projectThumbnail);
@@ -98,6 +99,57 @@ class ProjectApi {
       data.append("" + newDoc.name, newDoc);
     }
     return Api.callApiPostForm("createProject", data);
+  }
+
+  editProject(
+    projectId,
+    name,
+    desc,
+    location,
+    beginDate,
+    endDate,
+    thumbnailUri,
+    thumbnailName,
+    documents,
+    tags
+  ) {
+    const data = new FormData();
+
+    data.append("projectId", projectId);
+    data.append("name", name);
+    data.append("desc", desc);
+    data.append("location", location);
+    data.append("beginDate", beginDate);
+    data.append("endDate", endDate);
+
+    let count = 0;
+    tags.forEach(tag => {
+      data.append("#" + count, tag.name);
+      count++;
+    });
+
+    projectThumbnail = {
+      uri: thumbnailUri,
+      name: thumbnailName,
+      type: "multipart/form-data"
+    };
+    console.log("THUMBNAIL");
+    console.log(projectThumbnail);
+    data.append("thumbnail", projectThumbnail);
+
+    for (i in documents) {
+      document = documents[i];
+      let newDoc = {
+        uri: document.uri,
+        name: document.name,
+        type: "multipart/form-data",
+        size: document.size
+      };
+      console.log(newDoc);
+
+      data.append("" + newDoc.name, newDoc);
+    }
+    return Api.callApiPostForm("editProject", data);
   }
 
   getProjectMembersById(id) {
@@ -134,19 +186,19 @@ class ProjectApi {
       user: userId,
       title: title,
       content: content
-    }
-    return Api.callApiPost("addProjectUpdate", userData)
+    };
+    return Api.callApiPost("addProjectUpdate", userData);
   }
 
   getUpdatesForProject(projectId) {
-    return Api.callApiGet("getProjectUpdatesByProjectId/" + projectId)
+    return Api.callApiGet("getProjectUpdatesByProjectId/" + projectId);
   }
 
   getProjectByTag(tag) {
     userData = {
       tagName: tag
-    }
-    return Api.callApiPost("getProjectsByTag", userData)
+    };
+    return Api.callApiPost("getProjectsByTag", userData);
   }
 }
 

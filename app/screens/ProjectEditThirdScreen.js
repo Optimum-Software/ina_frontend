@@ -13,7 +13,8 @@ import {
   FlatList,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  ActivityIndicator
 } from "react-native";
 import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -24,6 +25,7 @@ import {
 import Api from "../helpers/Api";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
+import ProjectApi from "../helpers/ProjectApi";
 
 class ProjectEditThirdScreen extends Component {
   constructor(props) {
@@ -38,53 +40,125 @@ class ProjectEditThirdScreen extends Component {
       start_date: this.props.navigation.getParam("start_date", ""),
       end_date: this.props.navigation.getParam("end_date", ""),
       location: this.props.navigation.getParam("location", ""),
-      thumbnail: this.props.navigation.getParam("thumbnail", ""),
+      thumbnailUri: this.props.navigation.getParam("thumbnailUri", ""),
+      thumbnailName: this.props.navigation.getParam("thumbnailName", ""),
       images: this.props.navigation.getParam("images", ""),
       files: this.props.navigation.getParam("files", ""),
       tags: this.props.navigation.getParam("tags", ""),
 
-      totalSize: 0
+      totalSize: 0,
+      editing: true
     };
   }
 
   componentDidMount() {
-    console.log("HI ");
-    console.log(this.state);
-    for (let document of this.state.images) {
-      console.log("IMAGES");
-      console.log(document);
-      this.setState({
-        documents: [...this.state.documents, Api.getFileUrl(document)]
-      });
+    // Add images to documents
+    console.log(this.state.images);
+    console.log(this.state.files);
+
+    try {
+      for (let document of this.state.images) {
+        let nameWithExtension = document.split("/")[
+          document.split("/").length - 1
+        ];
+
+        let pathArray = nameWithExtension.split(".");
+        let type = pathArray[pathArray.length - 1];
+        let file = {
+          uri: Api.getFileUrl(document),
+          name: nameWithExtension,
+          type: type
+        };
+        console.log(file);
+        let list = this.state.documents;
+        list.push(file);
+        this.setState({ documents: list });
+
+        console.log(this.state.documents);
+      }
+    } catch (e) {
+      console.log(e);
     }
+    // Add files to documents
+    try {
+      for (let document of this.state.files) {
+        let nameWithExtension = document.split("/")[
+          document.split("/").length - 1
+        ];
 
-    for (let document of this.state.files) {
-      console.log("FILES");
-      console.log(document);
+        let pathArray = nameWithExtension.split(".");
+        let type = pathArray[pathArray.length - 1];
+        let file = {
+          uri: Api.getFileUrl(document),
+          name: nameWithExtension,
+          type: type
+        };
+        let list = this.state.documents;
+        list.push(file);
+        this.setState({ documents: list });
 
-      this.setState({
-        documents: [...this.state.documents, Api.getFileUrl(document)]
-      });
+        console.log(this.state.documents);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
-  goToNextPart() {
-    Router.goTo(
-      this.props.navigation,
-      "ProjectStack",
-      "ProjectCreateFourthScreen",
-      {
-        documents: this.state.documents,
-        thumbnail: this.state.thumbnail,
-        imgUri: this.state.imgUri,
-        name: this.state.name,
-        desc: this.state.desc,
-        location: this.state.location,
-        beginDate: this.state.beginDate,
-        endDate: this.state.endDate,
-        tags: this.state.tags
+  saveChanges() {
+    this.setState({
+      editing: true
+    });
+    ProjectApi.editProject(
+      this.state.id,
+      this.state.name,
+      this.state.desc,
+      this.state.location,
+      this.state.start_date,
+      this.state.end_date,
+      this.state.thumbnailUri,
+      this.state.thumbnailName,
+      this.state.documents,
+      this.state.tags
+    ).then(result => {
+      console.log("RESPONSE");
+      console.log(result);
+      if (result["bool"]) {
+        ProjectApi.getProjectById(result["id"]).then(result => {
+          if (result["bool"]) {
+            this.setState({
+              editing: false,
+              projectEdited: true,
+              project: result["project"]
+            });
+            this.goToProject();
+          }
+        });
+      } else {
+        this.setState({
+          editing: false,
+          projectEdited: false
+        });
+        alert(result["msg"]);
       }
-    );
+    });
+  }
+
+  goToProject() {
+    Router.goTo(this.props.navigation, "ProjectStack", "ProjectDetailScreen", {
+      id: this.state.project.id,
+      name: this.state.project.name,
+      desc: this.state.project.desc,
+      start_date: this.state.project.start_date,
+      end_date: this.state.project.end_date,
+      created_at: this.state.project.created_at,
+      like_count: this.state.project.like_count,
+      follower_count: this.state.project.follower_count,
+      location: this.state.project.location,
+      thumbnail: this.state.project.thumbnail,
+      creator: this.state.project.creator,
+      images: this.state.project.images,
+      files: this.state.project.files
+    });
   }
 
   pickDocument() {
@@ -116,10 +190,15 @@ class ProjectEditThirdScreen extends Component {
     );
   }
 
-  deleteItem(data) {
-    let allItems = [...this.state.documents];
-    let filteredItems = allItems.filter(item => item.index != data.index);
-    this.setState({ documents: filteredItems });
+  deleteItem(index) {
+    let newDocuments = [];
+    for (let document of this.state.documents) {
+      if (this.state.documents.indexOf(document) != index - 1) {
+        console.log("passed");
+        newDocuments.push(document);
+      }
+    }
+    this.setState({ documents: newDocuments });
   }
 
   render() {
@@ -157,20 +236,19 @@ class ProjectEditThirdScreen extends Component {
               </Text>
               <FlatList
                 data={this.state.documents}
+                keyExtractor={(item, index) => item.id}
                 renderItem={({ item, index }) => (
-                  <View style={{ flexDirection: "row" }}>
+                  <View key={item.id} style={{ flexDirection: "row" }}>
                     <Text numberOfLines={1} style={styles.documentName}>
-                      {++index +
-                        " -  " +
-                        item.split("/")[item.split("/").length - 1]}
+                      {++index + " -  " + item.name}
                     </Text>
 
                     <Icon
                       name="close-circle"
                       size={24}
                       color="#f44336"
-                      onPress={item => {
-                        this.deleteItem(item);
+                      onPress={() => {
+                        this.deleteItem(index);
                       }}
                     />
                   </View>
@@ -187,11 +265,14 @@ class ProjectEditThirdScreen extends Component {
         >
           <TouchableOpacity
             style={styles.buttonStyle}
-            onPress={() => this.goToNextPart()}
+            onPress={() => this.saveChanges()}
           >
-            <Text style={styles.buttonTextStyle}>Maak project</Text>
+            <Text style={styles.buttonTextStyle}>Opslaan</Text>
           </TouchableOpacity>
         </View>
+        {this.state.editing && (
+          <ActivityIndicator size="large" color="#0000ff" />
+        )}
       </SafeAreaView>
     );
   }
@@ -254,7 +335,7 @@ const styles = StyleSheet.create({
   documentName: {
     color: "#4a6572",
     fontWeight: "200",
-    width: "60%",
+    width: "90%",
     fontSize: 18
   },
   documentSize: {
