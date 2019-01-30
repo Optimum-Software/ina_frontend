@@ -8,11 +8,11 @@ import User from "../helpers/User";
 export const RootNav = isLoggedIn => {
   return createSwitchNavigator(
     {
-      LoggedIn: {
-        screen: RootNavigatorLoggedIn
-      },
       LoggedOut: {
         screen: RootNavigatorLoggedOut
+      },
+      LoggedIn: {
+        screen: RootNavigatorLoggedIn
       },
       ProfileEdit: {
         screen: ProfileEditScreen

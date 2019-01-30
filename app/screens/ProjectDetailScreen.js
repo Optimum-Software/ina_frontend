@@ -97,6 +97,8 @@ export default class ProjectDetail extends Component {
         files: this.props.navigation.getParam("files", "")
       }
     };
+    console.log(this.props.navigation)
+    //Router.switchLogout(this.props.navigation)
   }
 
   followProject(projectId, userId) {
@@ -104,10 +106,8 @@ export default class ProjectDetail extends Component {
       this.resetErrors();
       if (result["ntwFail"]) {
         //network error
-        alert(result["msg"]);
       } else {
         if (result["bool"]) {
-          alert("liked");
           this.setState({
             liked: true
           });
@@ -121,10 +121,8 @@ export default class ProjectDetail extends Component {
       this.resetErrors();
       if (result["ntwFail"]) {
         //network error
-        alert(result["msg"]);
       } else {
         if (result["bool"]) {
-          alert("liked");
           this.setState({
             liked: true
           });
