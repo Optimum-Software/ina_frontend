@@ -32,8 +32,8 @@ class ProjectCreateThirdScreen extends Component {
     this.state = {
       documents: [],
 
-      thumbnail: this.props.navigation.getParam("thumbnail", ""),
-      imgUri: this.props.navigation.getParam("imgUri", ""),
+      thumbnailUri: this.props.navigation.getParam("thumbnailUri", ""),
+      thumbnailName: this.props.navigation.getParam("thumbnailName", ""),
       name: this.props.navigation.getParam("name", ""),
       desc: this.props.navigation.getParam("desc", ""),
       location: this.props.navigation.getParam("location", ""),
@@ -52,8 +52,8 @@ class ProjectCreateThirdScreen extends Component {
       "ProjectCreateFourthScreen",
       {
         documents: this.state.documents,
-        thumbnail: this.state.thumbnail,
-        imgUri: this.state.imgUri,
+        thumbnailUri: this.state.thumbnailUri,
+        thumbnailName: this.state.thumbnailName,
         name: this.state.name,
         desc: this.state.desc,
         location: this.state.location,
@@ -93,10 +93,15 @@ class ProjectCreateThirdScreen extends Component {
     );
   }
 
-  deleteItem(data) {
-    let allItems = [...this.state.documents];
-    let filteredItems = allItems.filter(item => item.index != data.index);
-    this.setState({ documents: filteredItems });
+  deleteItem(index) {
+    let newDocuments = [];
+    for (let document of this.state.documents) {
+      if (this.state.documents.indexOf(document) != index - 1) {
+        console.log("passed");
+        newDocuments.push(document);
+      }
+    }
+    this.setState({ documents: newDocuments });
   }
 
   render() {
@@ -134,6 +139,7 @@ class ProjectCreateThirdScreen extends Component {
               </Text>
               <FlatList
                 data={this.state.documents}
+                keyExtractor={(item, index) => item.id}
                 renderItem={({ item, index }) => (
                   <View style={{ flexDirection: "row" }}>
                     <Text numberOfLines={1} style={styles.documentName}>
@@ -147,7 +153,7 @@ class ProjectCreateThirdScreen extends Component {
                       size={24}
                       color="#f44336"
                       onPress={item => {
-                        this.deleteItem(item);
+                        this.deleteItem(index);
                       }}
                     />
                   </View>

@@ -31,8 +31,8 @@ class ProjectCreateFourthScreen extends Component {
       location: this.props.navigation.getParam("location", ""),
       beginDate: this.props.navigation.getParam("beginDate", ""),
       endDate: this.props.navigation.getParam("endDate", ""),
-      thumbnail: this.props.navigation.getParam("thumbnail", ""),
-      imgUri: this.props.navigation.getParam("imgUri", ""),
+      thumbnailUri: this.props.navigation.getParam("thumbnailUri", ""),
+      thumbnailName: this.props.navigation.getParam("thumbnailName", ""),
       documents: this.props.navigation.getParam("documents", ""),
       tags: this.props.navigation.getParam("tags", "")
     };
@@ -54,7 +54,8 @@ class ProjectCreateFourthScreen extends Component {
         this.state.location,
         this.state.beginDate,
         this.state.endDate,
-        this.state.imgUri,
+        this.state.thumbnailUri,
+        this.state.thumbnailName,
         this.state.documents,
         this.state.tags
       ).then(result => {

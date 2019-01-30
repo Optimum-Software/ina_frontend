@@ -38,7 +38,8 @@ class ProjectEditSecondScreen extends Component {
       start_date: this.props.navigation.getParam("start_date", ""),
       end_date: this.props.navigation.getParam("end_date", ""),
       location: this.props.navigation.getParam("location", ""),
-      thumbnail: this.props.navigation.getParam("thumbnail", ""),
+      thumbnailUri: this.props.navigation.getParam("thumbnailUri", ""),
+      thumbnailName: this.props.navigation.getParam("thumbnailName", ""),
       images: this.props.navigation.getParam("images", ""),
       files: this.props.navigation.getParam("files", "")
     };
@@ -59,6 +60,7 @@ class ProjectEditSecondScreen extends Component {
       }
       //  });
     });
+    console.log(this.state.images);
   }
 
   handleDelete = index => {
@@ -102,7 +104,8 @@ class ProjectEditSecondScreen extends Component {
         start_date: this.state.start_date,
         end_date: this.state.end_date,
         location: this.state.location,
-        thumbnail: this.state.thumbnail,
+        thumbnailUri: this.state.thumbnailUri,
+        thumbnailName: this.state.thumbnailName,
         images: this.state.images,
         files: this.state.files,
         tags: this.state.tagsSelected

@@ -36,8 +36,8 @@ class ProjectCreateSecondScreen extends Component {
       suggestions: [],
       tagsSelected: [],
 
-      thumbnail: this.props.navigation.getParam("thumbnail", ""),
-      imgUri: this.props.navigation.getParam("imgUri", ""),
+      thumbnailUri: this.props.navigation.getParam("thumbnailUri", ""),
+      thumbnailName: this.props.navigation.getParam("thumbnailName", ""),
       name: this.props.navigation.getParam("name", ""),
       desc: this.props.navigation.getParam("desc", "")
     };
@@ -95,7 +95,8 @@ class ProjectCreateSecondScreen extends Component {
       "ProjectStack",
       "ProjectCreateThirdScreen",
       {
-        thumbnail: this.state.thumbnail,
+        thumbnailUri: this.state.thumbnailUri,
+        thumbnailName: this.state.thumbnailName,
         imgUri: this.state.imgUri,
         name: this.state.name,
         desc: this.state.desc,

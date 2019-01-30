@@ -28,8 +28,8 @@ class ProjectEditFirstScreen extends Component {
     super(props);
 
     this.state = {
-      imgPicked: true,
-
+      thumbnailName: "",
+      imgPicked: false,
       nameError: "",
       descError: "",
       thumbnailError: "",
@@ -42,25 +42,47 @@ class ProjectEditFirstScreen extends Component {
       start_date: this.props.navigation.getParam("start_date", ""),
       end_date: this.props.navigation.getParam("end_date", ""),
       location: this.props.navigation.getParam("location", ""),
-      thumbnail: this.props.navigation.getParam("thumbnail", ""),
+      thumbnailUri: this.props.navigation.getParam("thumbnail", ""),
       images: this.props.navigation.getParam("images", ""),
       files: this.props.navigation.getParam("files", ""),
-      tags: this.props.navigation.getParam("tags", "")
+      tags: this.props.navigation.getParam("tags", ""),
+
+      imagesWithoutThumbnail: []
     };
+  }
+
+  removeThumbnailFromImages() {
+    let imagesWithoutThumbnail = [];
+    console.log(this.state.images);
+    console.log(this.state.thumbnailUri);
+
+    for (let image of this.state.images) {
+      let splitImage = image.split("/");
+      console.log(splitImage);
+      if (splitImage[3] != "thumbnail") {
+        imagesWithoutThumbnail.push(image);
+      }
+    }
+    console.log(imagesWithoutThumbnail);
+
+    this.setState({ imagesWithoutThumbnail: imagesWithoutThumbnail });
+    console.log(this.state.imagesWithoutThumbnail);
   }
 
   pickImageHandler() {
     ImagePicker.showImagePicker(
       { title: "Kies een omslagfoto voor het project" },
       res => {
+        console.log(res);
         if (res.didCancel) {
           console.log("User cancelled!");
         } else if (res.error) {
           console.log("Error", res.error);
         } else {
           this.setState({
-            thumbnail: res.uri,
             imgPicked: true,
+            thumbnailUri: res.uri,
+            thumbnailName: res.fileName,
             thumbnailError: ""
           });
         }
@@ -69,8 +91,27 @@ class ProjectEditFirstScreen extends Component {
   }
 
   goToNextPart() {
+    let imagesWithoutThumbnail = [];
+
+    for (let image of this.state.images) {
+      let splitImage = image.split("/");
+      if (splitImage[3] != "thumbnail") {
+        imagesWithoutThumbnail.push(image);
+      }
+    }
+    console.log(this.state.images);
+    console.log(imagesWithoutThumbnail);
+
+    let thumbnailName = "";
+    if (!this.state.imgPicked) {
+      thumbnailName = this.state.thumbnailUri.split("/")[7];
+    } else {
+      thumbnailName = this.state.thumbnailName;
+    }
+    console.log(thumbnailName);
+
     if (
-      this.state.thumbnail != null &&
+      this.state.thumbnailUri != null &&
       this.state.name != "" &&
       this.state.desc != ""
     ) {
@@ -90,13 +131,14 @@ class ProjectEditFirstScreen extends Component {
           start_date: this.state.start_date,
           end_date: this.state.end_date,
           location: this.state.location,
-          thumbnail: this.state.thumbnail,
-          images: this.state.images,
+          thumbnailUri: this.state.thumbnailUri,
+          thumbnailName: thumbnailName,
+          images: imagesWithoutThumbnail,
           files: this.state.files,
           tags: this.state.tags
         }
       );
-    } else if (this.state.thumbnail == null) {
+    } else if (this.state.thumbnailUri == null) {
       this.setState({
         thumbnailError: "Kies een omslagfoto voor het project.",
         nameError: "",
@@ -149,18 +191,8 @@ class ProjectEditFirstScreen extends Component {
                   height: 150
                 }}
                 style={styles.imgBackground}
-                source={{ uri: this.state.thumbnail }}
-              >
-                {!this.state.imgPicked && (
-                  <Icon
-                    name="image-plus"
-                    type="material-community"
-                    size={50}
-                    color="#FFFFFF"
-                    underlayColor="#FFFFFF"
-                  />
-                )}
-              </ImageBackground>
+                source={{ uri: this.state.thumbnailUri }}
+              />
             </TouchableOpacity>
 
             <Text style={styles.thumbnailLabelStyle}>OMSLAGFOTO</Text>
