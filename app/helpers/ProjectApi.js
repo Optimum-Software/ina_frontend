@@ -52,6 +52,10 @@ class ProjectApi {
     return Api.callApiGet("getAllProjectsMostFollowsFirst");
   }
 
+  getSwipeProjects(userId) {
+    return Api.callApiGet("getSwipeProjects/"+ userId);
+  }
+
   createProject(
     creatorId,
     name,

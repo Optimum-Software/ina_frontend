@@ -21,8 +21,8 @@ import sha256 from "crypto-js/sha256";
 var SHA256 = require("crypto-js/sha256");
 
 export default class RegistrationScreenStart extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       firstName: "",
       firstNameError: "",
@@ -41,6 +41,7 @@ export default class RegistrationScreenStart extends Component {
 
       loading: false
     };
+    console.log(this.props.navigation)
   }
 
   goToRegisterPhone() {

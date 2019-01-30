@@ -20,6 +20,7 @@ export default class Chat extends Component {
   constructor() {
     super();
     this.state = {
+      chatId: null,
       uid: null,
       messages: [],
       currentUser: FirebaseApi.getCurrentUser()
@@ -28,17 +29,19 @@ export default class Chat extends Component {
 
   componentDidMount() {
     this.setState({
-      uid: this.props.navigation.state.params.uid,
-      title: this.props.navigation.state.params.title
+      chatId: this.props.navigation.getParam("chatId", ""),
+      uid: this.props.navigation.getParam("uid", ""),
+      title: this.props.navigation.getParam("title", "")
     });
     this.getMessages();
   }
 
   getMessages() {
     var count = 0;
-    FirebaseApi.getMsgsRef(this.props.navigation.state.params.uid).on(
+    FirebaseApi.getMsgsRef(this.props.navigation.getParam("uid", "")).on(
       "value",
       snapshot => {
+        console.log("hallo")
         // gets around Redux panicking about actions in reducers
         setTimeout(() => {
           var items = [];
@@ -75,7 +78,7 @@ export default class Chat extends Component {
   }
 
   onSend(messages = []) {
-    FirebaseApi.sendMessage(this.state.currentUser, this.state.uid, messages);
+    FirebaseApi.sendMessage(this.state.currentUser, this.state.uid, this.state.chatId, messages);
   }
 
   getColor(username) {

@@ -1,4 +1,4 @@
-import { NavigationActions } from "react-navigation";
+import { NavigationActions, StackActions} from "react-navigation";
 let instance = null;
 class Router {
 
