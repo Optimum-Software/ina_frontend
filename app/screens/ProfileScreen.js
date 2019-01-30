@@ -86,7 +86,7 @@ export default class ProfileScreen extends Component {
             leftElement={"chevron-left"}
             style={{container: {"backgroundColor": "#009EF2"}}}
             onLeftElementPress={() => {
-              Router.goTo(this.props.navigation, 'Tabs', 'Home');
+              Router.goTo(this.props.navigation, 'LoggedIn', 'LoggedIn');
             }}
           />
         </View>

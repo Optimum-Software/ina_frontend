@@ -110,7 +110,7 @@ export default class ProfileEditScreen extends Component {
             	leftElement={"chevron-left"}
             	style={{container: {"backgroundColor": "#009EF2"}}}
             	onLeftElementPress={() => {
-            	  Router.goTo(this.props.navigation, 'Tabs', 'Home');
+            	  Router.goTo(this.props.navigation, 'ProfileScreen', 'ProfileScreen');
             	}}
             />
           </View>
