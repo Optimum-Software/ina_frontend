@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 import { ListItem } from "react-native-elements";
+import ProfileParameters from "../helpers/ProfileParameters";
 
 export default class GroupMembersScreen extends Component {
   constructor() {
@@ -41,7 +42,7 @@ export default class GroupMembersScreen extends Component {
       <View style={styles.container}>
         <Toolbar
           leftElement={"chevron-left"}
-          onLeftElementPress={() => Router.goBack(this.props.navigation)}
+          onLeftElementPress={() => Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))}
           centerElement="Leden"
         />
         <ScrollView>
@@ -60,7 +61,10 @@ export default class GroupMembersScreen extends Component {
                   chevronColor="white"
                   chevron
                   onPress={() =>
-                    alert("Ga naar " + item.firstName + "'s profiel")
+                   {
+                    ProfileParameters.storeUserId(item.id)
+                    Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
+                  }
                   }
                 />
               )}

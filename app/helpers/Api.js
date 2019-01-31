@@ -36,7 +36,6 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      console.log("RESPONSE ERROR: " + error)
       return {
         ntwFail: true,
         msg: "Kon geen verbinding met de server maken"

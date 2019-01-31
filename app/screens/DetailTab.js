@@ -48,7 +48,6 @@ export default class DetailTab extends Component {
       });
     });
     this.tags(this.state.project.id);
-
     this.getMembers();
   }
 
@@ -58,7 +57,6 @@ export default class DetailTab extends Component {
         this.setState({
           projectMembers: result["members"],
         });
-        console.log(this.state.projectMembers);
       } else {
         alert("Er zijn geen deelnemers aan dit project");
       }
@@ -91,10 +89,7 @@ export default class DetailTab extends Component {
       Router.goTo(this.props.navigation, "ChatStack", "Chat", {
         uid: uid,
         title: title,
-        routing: {
-          stackName: "ProjectStack",
-          screenName: "ProjectDetailScreen"
-        }
+        differentStack: true
       });
     });
   }
@@ -238,7 +233,7 @@ export default class DetailTab extends Component {
                 this.props.navigation,
                 "ProjectStack",
                 "ProjectMembersScreen",
-                { persons: this.state.projectMembers }
+                { persons: this.state.projectMembers, differentStack: true }
               )
             }
           >
