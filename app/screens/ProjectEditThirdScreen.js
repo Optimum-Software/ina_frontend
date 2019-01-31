@@ -130,7 +130,7 @@ class ProjectEditThirdScreen extends Component {
               projectEdited: true,
               project: result["project"]
             });
-            this.goToProject();
+            //this.goToProject();
           }
         });
       } else {
