@@ -22,8 +22,8 @@ class Router {
 		)      		
 	}
 
-	goBack(dispatcher) {
-		dispatcher.dispatch(NavigationActions.back())
+	goBack(dispatcher, stackName, screenName) {
+		this.goTo(dispatcher, stackName, screenName, {})
 	}
 
 	switchLogin(dispatcher) {
