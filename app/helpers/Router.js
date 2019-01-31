@@ -22,7 +22,11 @@ class Router {
 		)      		
 	}
 
-	goBack(dispatcher, stackName, screenName) {
+	goBack(dispatcher) {
+		dispatcher.dispatch(NavigationActions.back())
+	}
+
+	goBack2(dispatcher, stackName, screenName) {
 		this.goTo(dispatcher, stackName, screenName, {})
 	}
 

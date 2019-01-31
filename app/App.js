@@ -6,7 +6,7 @@
  * @flow
  */
 import React, { Component } from "react";
-import { Text, View, SafeAreaView, StyleSheet } from "react-native";
+import { Text, View, SafeAreaView, StyleSheet, Platform, Linking } from "react-native";
 import { RootNavigation } from "./config/CreateRootNavigation";
 import firebaseApi from "./helpers/FirebaseApi";
 import User from "./helpers/User";
@@ -43,6 +43,9 @@ export default class App extends React.Component {
                 this.setState({loggedIn: false})
             }
         });
+
+        
+
     }
 
     componentWillUnmount() {
@@ -52,7 +55,6 @@ export default class App extends React.Component {
     onIds(device) {
         User.storeDeviceId(device.userId);
     }
-
 
     render() {
         const { checkedLoggedIn, loggedIn } = this.state

@@ -157,7 +157,7 @@ const CustomDrawerContentComponent = props => (
                   props.navigation.closeDrawer();
                   Router.switchLogout(props.navigation);
                   props.navigation.navigate("DrawerClose");
-                  
+
                 }}
                 delayPressIn={0}
               >
@@ -294,7 +294,7 @@ export const Drawer = createDrawerNavigator(
         )
       }
     },
-    Chats: {
+    ChatStack: {
       screen: ChatStack,
       navigationOptions: {
         drawerLabel: "Chat",

@@ -11,7 +11,8 @@ import {
   ScrollView,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  Share
 } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
@@ -240,6 +241,10 @@ export default class ProjectDetail extends Component {
             iconSet="MaterialCommunityIcons"
             leftElement={"arrow-left"}
             rightElement="share-variant"
+            onRightElementPress={() => {Share.share({
+        message:
+          '"' + this.state.project.name + '", bekijk meer in de app: https://app.ina-app.nl/?id=' + this.state.project.id,
+      })}}
             onLeftElementPress={() => {
               Router.goBack(this.props.navigation);
             }}

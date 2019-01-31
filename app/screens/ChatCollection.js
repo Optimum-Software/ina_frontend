@@ -90,6 +90,7 @@ export default class ChatCollection extends Component {
   }
 
   render() {
+    console.log(this.props.navigation.getParam("routing", ""))
     return (
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />

@@ -2,7 +2,7 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http://136.144.186.136"
+  ip = "http://145.37.145.79:8000"
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -36,6 +36,7 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
+      console.log("RESPONSE ERROR: " + error)
       return {
         ntwFail: true,
         msg: "Kon geen verbinding met de server maken"
@@ -138,7 +139,7 @@ class Api {
     } catch (error) {
       return {
         ntwFail: true,
-        msg: "Kon geen verbinding met de server maken"
+        msg: "Kon geen HUPELDEPUP met de server maken"
       };
     }
   }
