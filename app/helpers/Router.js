@@ -1,5 +1,6 @@
 import { NavigationActions, StackActions} from "react-navigation";
 let instance = null;
+let dispatcherDeeplink = null;
 class Router {
 
 	constructor() {
@@ -8,7 +9,11 @@ class Router {
 	  	}
     	return instance;
   	}
-  	
+
+	setDispatcher(dispatcher){
+		dispatcherDeeplink = dispatcher;
+	}
+
 	goTo(dispatcher, stackName, screenName, parameters) {
 		dispatcher.dispatch(
       		NavigationActions.navigate({
@@ -19,7 +24,21 @@ class Router {
 
   		  		})
       		})
-		)      		
+		)
+	}
+
+
+	goToDeeplink(stackName, screenName, parameters) {
+		dispatcherDeeplink.dispatch(
+      		NavigationActions.navigate({
+  		  		routeName: stackName,
+  		  		action: NavigationActions.navigate({
+  		  	  		routeName: screenName,
+  		  	  		params: parameters
+
+  		  		})
+      		})
+		)
 	}
 
 	goBack(dispatcher) {

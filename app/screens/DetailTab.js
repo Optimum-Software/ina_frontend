@@ -9,7 +9,8 @@ import {
   Linking,
   FlatList,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
+  TouchableHighlight
 } from "react-native";
 import {
   NavigationActions,
@@ -21,6 +22,8 @@ import Api from "../helpers/Api";
 import ProjectApi from "../helpers/ProjectApi";
 import User from "../helpers/User";
 import Router from "../helpers/Router";
+import Ripple from "react-native-material-ripple";
+import FirebaseApi from "../helpers/FirebaseApi";
 
 export default class DetailTab extends Component {
   constructor(props) {
@@ -28,12 +31,39 @@ export default class DetailTab extends Component {
     this.state = {
       project: props.project.project,
       tags: [],
-      userId: null
+      userId: null,
+      projectMembers: [],
+      likeCount: props.project.project.like_count,
+      followCount: props.project.project.follower_count,
+      liked: false
     };
+    console.log(props.project.project.follower_count)
     User.getUserId().then(userId => {
       this.setState({ userId: userId });
+      ProjectApi.checkIfMember(userId, this.state.project.id).then(result => {
+        if (result["bool"]) {
+          this.setState({ member: true });
+        } else {
+          this.setState({ member: false });
+        }
+      });
     });
     this.tags(this.state.project.id);
+
+    this.getMembers();
+  }
+
+  getMembers(){
+    ProjectApi.getProjectMembersById(this.state.project.id).then(result => {
+      if (result["bool"]) {
+        this.setState({
+          projectMembers: result["members"],
+        });
+        console.log(this.state.projectMembers);
+      } else {
+        alert("Er zijn geen deelnemers aan dit project");
+      }
+    });
   }
 
   tags(id) {
@@ -43,6 +73,56 @@ export default class DetailTab extends Component {
           tags: result["tags"]
         });
       }
+    });
+  }
+  startChat() {
+    console.log('Starting chat');
+
+    User.getUserId().then(id => {
+      let creatorId = this.state.project.creator.id;
+      let uid = "";
+      if (creatorId > id) {
+        uid = id + ":" + creatorId;
+      } else {
+        uid = creatorId + ":" + id;
+      }
+      let title =
+        this.state.project.creator.firstName +
+        " " +
+        this.state.project.creator.lastName;
+      FirebaseApi.createChat(uid);
+      Router.goTo(this.props.navigation, "ChatStack", "Chat", {
+        uid: uid,
+        title: title
+      });
+    });
+  }
+
+
+  joinProject() {
+    User.getUserId().then(id => {
+      ProjectApi.joinProject(id, this.state.project.id).then(result => {
+        console.log(result);
+        if (result["bool"]) {
+          this.setState({ member: true,   });
+          this.getMembers();
+        } else {
+          alert(result["msg"]);
+        }
+      });
+    });
+  }
+
+  leaveProject() {
+    User.getUserId().then(id => {
+      ProjectApi.leaveProject(id, this.state.project.id).then(result => {
+        if (result["bool"]) {
+          this.setState({ member: false, });
+this.getMembers();
+        } else {
+          alert(result["msg"]);
+        }
+      });
     });
   }
 
@@ -62,6 +142,7 @@ export default class DetailTab extends Component {
               }}
               resizeMode="cover"
               style={{
+                marginRight: 10,
                 width: 40,
                 height: 40,
                 borderRadius: 100,
@@ -73,7 +154,7 @@ export default class DetailTab extends Component {
                 borderRadius: 200
               }}
             />
-            <View style={{ paddingLeft: 15 }}>
+            <View style={{ paddingLeft: 0 }}>
               <Text style={{ fontSize: 18, fontWeight: "bold" }}>
                 {this.state.project.name}
               </Text>
@@ -110,8 +191,81 @@ export default class DetailTab extends Component {
             />
           )}
           {this.state.userId != this.state.project.creator.id && (
-            <Icon name="heart-outline" size={36} color={"red"} />
+            <Ripple
+              rippleColor="#fff"
+              onPress={() =>
+                User.getUserId().then(id => {
+                  ProjectApi.likeProject(this.state.project.id, id).then(res =>
+                    this.setState({ likeCount: res["likedCount"], liked: true })
+                  );
+                })
+              }
+            >
+              {this.state.liked && <Icon name="heart" size={36} color={"red"} />}
+              {!this.state.liked && <Icon name="heart-outline" size={36} color={"red"} />}
+            </Ripple>
           )}
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingLeft: 65,
+            paddingBottom: this.state.projectMembers.length > 0 ? 0 : 15
+          }}
+        >
+          <Icon name="heart-outline" color="grey" size={16} />
+          <Text>{this.state.likeCount} likes</Text>
+
+          <Icon
+            style={{ paddingLeft: 5 }}
+            name="account-outline"
+            color="grey"
+            size={16}
+          />
+          <Text>{this.state.followCount} volgers</Text>
+        </View>
+        {this.state.projectMembers.length > 0 && (
+          <Text style={{ paddingLeft: 65, paddingBottom: 15, paddingTop: 5 }}>
+            Deelnemers:
+          </Text>
+        )}
+        <View>
+          <TouchableOpacity
+            style={{ paddingLeft: 60 }}
+            onPress={() =>
+              Router.goTo(
+                this.props.navigation,
+                "ProjectStack",
+                "ProjectMembersScreen",
+                { persons: this.state.projectMembers }
+              )
+            }
+          >
+            <FlatList
+              data={this.state.projectMembers}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <View
+                  style={{ paddingLeft: 5, paddingBottom: 15, elevation: 5 }}
+                >
+                  <Image
+                    source={{
+                      uri: Api.getFileUrl(item.profilePhotoPath)
+                    }}
+                    resizeMode="cover"
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 100,
+                      elevation: 5
+                    }}
+                  />
+                </View>
+              )}
+            />
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -207,21 +361,31 @@ export default class DetailTab extends Component {
         >
           <TouchableOpacity
             style={styles.buttonStyle}
-            onPress={() => this.login()}
+            onPress={() => this.startChat()}
           >
             <Text style={styles.textStyle}>Verstuur een bericht</Text>
           </TouchableOpacity>
+          {!this.state.member == true && (
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={() => this.joinProject()}
+            >
+              <Text style={styles.textStyle}>Deelnemen</Text>
+            </TouchableOpacity>
+          )}
+          {this.state.member == true && (
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={() => this.leaveProject()}
+            >
+              <Text style={styles.textStyle}>Verlaten</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => this.login()}
           >
-            <Text style={styles.textStyle}>Deelnemen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.login()}
-          >
-            <Text style={styles.textStyle}>Project opslaan</Text>
+            <Text style={styles.textStyle}>Volgen</Text>
           </TouchableOpacity>
         </View>
         {this.state.tags.length > 0 && (
@@ -286,8 +450,9 @@ const styles = StyleSheet.create({
   personCard: {
     marginLeft: 15,
     marginRight: 15,
+    marginTop: 15,
     width: Dimensions.get("window").width - 45,
-    height: Dimensions.get("window").height * 0.1,
+    height: Dimensions.get("window").height * 0.07,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"

@@ -15,7 +15,8 @@ import {
   TouchableHighlight,
   RefreshControl,
   Animated,
-  Easing
+  Easing,
+  Linking
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -34,6 +35,7 @@ import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
 import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 import line2 from "../assets/images/line3.png";
+ import RNFetchBlob from 'react-native-fetch-blob';
 
 const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
 
@@ -52,12 +54,22 @@ export default class Home extends Component {
       search: false,
       unRead: 0
     };
+    console.log(this.props)
     this.animatedValue = new Animated.Value(0);
-    console.log(this.props.navigation)
+    Router.setDispatcher(this.props.navigation);
   }
 
   componentDidMount() {
-    this.props.navigation.addListener("willFocus", this.onLoad); 
+    this.props.navigation.addListener("willFocus", this.onLoad);
+    Linking.addEventListener('url', this._handleOpenURL);
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        ProjectApi.getProjectById(url.substring(Platform.OS === 'android' ? 27 : 6, url.length)).then(result => {
+          Router.goTo(this.props.navigation, "ProjectStack", "ProjectDetailScreen", result["project"]);
+        });
+
+      }
+    }).catch(err => console.error('An error occurred', err));
   }
 
   onLoad = () => {
@@ -82,6 +94,17 @@ export default class Home extends Component {
       })
     })
   }
+
+  componentWillUnmount() {
+  Linking.removeEventListener('url', this._handleOpenURL);
+}
+_handleOpenURL(event) {
+  ProjectApi.getProjectById(event.url.substring(Platform.OS === 'android' ? 27 : 6, event.url.length)).then(result => {
+    console.log(Router);
+    console.log(this.props);
+    Router.goToDeeplink("ProjectStack", "ProjectDetailScreen", result["project"]);
+  });
+}
 
   animate() {
     this.setState({ search: true });
@@ -425,7 +448,7 @@ export default class Home extends Component {
                             {item.name}
                           </Text>
                       </View>
-                    )}  
+                    )}
                     </Ripple>
                     )}}
               />
