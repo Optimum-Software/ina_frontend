@@ -55,9 +55,12 @@ export default class ProjectMembersScreen extends Component {
                 <ListItem
                   title={item.firstName + " " + item.lastName}
                   subtitle={item.organisation}
-                  leftAvatar={{
+                  leftAvatar={item.profilePhotoPath != "" ? {
                     source: { uri: Api.getFileUrl(item.profilePhotoPath) }
-                  }}
+                  } : <Icon
+                    name="account-circle"
+                    size={45}
+                    />}
                   chevronColor="white"
                   chevron
                   onPress={() =>

@@ -24,6 +24,7 @@ import User from "../helpers/User";
 import Router from "../helpers/Router";
 import Ripple from "react-native-material-ripple";
 import FirebaseApi from "../helpers/FirebaseApi";
+import { CachedImage } from "react-native-cached-image";
 
 export default class DetailTab extends Component {
   constructor(props) {
@@ -37,7 +38,6 @@ export default class DetailTab extends Component {
       followCount: props.project.project.follower_count,
       liked: false
     };
-    console.log(props.project.project.follower_count)
     User.getUserId().then(userId => {
       this.setState({ userId: userId });
       ProjectApi.checkIfMember(userId, this.state.project.id).then(result => {
@@ -49,7 +49,6 @@ export default class DetailTab extends Component {
       });
     });
     this.tags(this.state.project.id);
-
     this.getMembers();
   }
 
@@ -136,7 +135,8 @@ this.getMembers();
               alignItems: "center"
             }}
           >
-            <Image
+          {this.state.project.creator.profilePhotoPath != "" && (
+            <CachedImage
               source={{
                 uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
               }}
@@ -153,9 +153,17 @@ this.getMembers();
                 height: "100%",
                 borderRadius: 200
               }}
-            />
-            <View style={{ paddingLeft: 0 }}>
-              <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            />)}
+            {this.state.project.creator.profilePhotoPath == "" && (<Icon
+              name="account-circle"
+              size={45}
+              style={{
+                marginRight: 10,
+
+              }} />)}
+
+            <View style={{ paddingLeft: 0, width: Dimensions.get('window').width * 0.7 }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold", }}>
                 {this.state.project.name}
               </Text>
               <Text>
@@ -250,6 +258,7 @@ this.getMembers();
                 <View
                   style={{ paddingLeft: 5, paddingBottom: 15, elevation: 5 }}
                 >
+                {item.profilePhotoPath != "" && (
                   <Image
                     source={{
                       uri: Api.getFileUrl(item.profilePhotoPath)
@@ -261,7 +270,15 @@ this.getMembers();
                       borderRadius: 100,
                       elevation: 5
                     }}
-                  />
+                  />)}
+                {item.profilePhotoPath == "" && (
+                  <Icon
+                    name="account-circle"
+                    size={45}
+                    style={{
+                      marginRight: 10,
+
+                    }} />)}
                 </View>
               )}
             />
@@ -452,7 +469,6 @@ const styles = StyleSheet.create({
     marginRight: 15,
     marginTop: 15,
     width: Dimensions.get("window").width - 45,
-    height: Dimensions.get("window").height * 0.07,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"

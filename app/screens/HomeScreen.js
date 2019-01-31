@@ -500,7 +500,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: '#4a6572'
   },
-
   card: {
     backgroundColor: "#FFFFFF",
     marginLeft: Dimensions.get("window").width * 0.024,
@@ -525,12 +524,13 @@ const styles = StyleSheet.create({
   cardUneven: {
     backgroundColor: "#FFFFFF",
     margin: 10,
-    width: "100%",
-    height: (Dimensions.get("window").height - 90) * 0.2,
+    marginLeft: Dimensions.get("window").width * 0.024,
+    marginRight: Dimensions.get("window").width * 0.024,
+    width: Dimensions.get("window").width * 0.9,
+    height: (Dimensions.get("window").height - 90) * 0.35,
     ...ifIphoneX({
-      height: (Dimensions.get("window").height - 150) * 0.17
+      height: (Dimensions.get("window").height - 150) * 0.24
     }),
-    marginBottom: 10,
     elevation: 3,
     borderRadius: 4
   },
