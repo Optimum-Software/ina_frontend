@@ -23,7 +23,7 @@ export default class RegistrationScreenPhone extends Component {
     super();
     this.state = {
       registerInfo: {},
-      phoneNumber: "+31611735849",
+      phoneNumber: "+31647781634",
       phoneNumberError: "",
       confirmResult: null
     };

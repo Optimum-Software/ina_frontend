@@ -34,10 +34,10 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "jelmer.haarman@xs4all.nl",
+      email: "",
       emailError: "",
 
-      pw: "123456",
+      pw: "",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
@@ -220,7 +220,7 @@ class LoginScreen extends Component {
                     Router.goTo(
                       this.props.navigation,
                       "LoginStack",
-                      "RegisterStart",
+                      "RegisterStart", //change back to RegisterStart
                       null
                     )
                   }
