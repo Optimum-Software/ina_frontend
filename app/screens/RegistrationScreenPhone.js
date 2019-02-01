@@ -100,65 +100,68 @@ export default class RegistrationScreenPhone extends Component {
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
-        <StatusBar
-          backgroundColor={Platform.OS == "android" ? "white" : "#00a6ff"}
-          barStyle="dark-content"
-        />
-      <ImageBackground
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-        justifyContent: "flex-start"
-      }}
-        source={require("../assets/images/bluewavebg.png")}
-        resizeMode="stretch"
-      >
-      <Toolbar
-      leftElement="arrow-back"
-                    onLeftElementPress={() => this.props.navigation.goBack()}
-    centerElement="Registreren"
-    style={{container: {backgroundColor: 'transparent'}, titleText:{color: '#00a6ff'}, leftElement:{color: '#00a6ff'}}}
-  />
-        <View>
-          <View style={styles.inputFieldContainer}>
-            <Input
-              placeholder="Mobiel nummer"
-              placeholderTextColor="#FFFFFF"
-              containerStyle={styles.inputContainer}
-              inputContainerStyle={styles.inputContainerStyle}
-              inputStyle={styles.inputStyle}
-              value={this.state.phoneNumber}
-              leftIcon={{
-                type: "font-awesome",
-                name: "mobile-phone",
-                color: "#FFFFFF"
-              }}
-              errorStyle={styles.errorStyle}
-              errorMessage={this.state.phoneNumberError}
-              onChangeText={phoneNumber => this.setState({ phoneNumber })}
-              onSubmitEditing={() => this.verifyPhone()}
-              keyboardType="phone-pad"
-              maxLength={12}
-            />
-            <View
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "white" : "#00a6ff"}
+            barStyle="dark-content"
+          />
+          <ImageBackground
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              justifyContent: "flex-start"
+            }}
+            source={require("../assets/images/bluewavebg.png")}
+            resizeMode="stretch"
+          >
+            <Toolbar
+              leftElement="arrow-back"
+              onLeftElementPress={() => this.props.navigation.goBack()}
+              centerElement="Registreren"
               style={{
-                paddingLeft: "10%",
-                paddingRight: "10%",
-                justifyContent: "center"
+                container: { backgroundColor: "transparent" },
+                titleText: { color: "#00a6ff" },
+                leftElement: { color: "#00a6ff" }
               }}
-            >
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => this.verifyPhone()}
-              >
-                <Text style={styles.textStyle}>Verder</Text>
-              </TouchableOpacity>
+            />
+            <View>
+              <View style={styles.inputFieldContainer}>
+                <Input
+                  placeholder="Mobiel nummer"
+                  placeholderTextColor="#FFFFFF"
+                  containerStyle={styles.inputContainer}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  inputStyle={styles.inputStyle}
+                  value={this.state.phoneNumber}
+                  leftIcon={{
+                    type: "font-awesome",
+                    name: "mobile-phone",
+                    color: "#FFFFFF"
+                  }}
+                  errorStyle={styles.errorStyle}
+                  errorMessage={this.state.phoneNumberError}
+                  onChangeText={phoneNumber => this.setState({ phoneNumber })}
+                  onSubmitEditing={() => this.verifyPhone()}
+                  keyboardType="phone-pad"
+                  maxLength={12}
+                />
+                <View
+                  style={{
+                    paddingLeft: "10%",
+                    paddingRight: "10%",
+                    justifyContent: "center"
+                  }}
+                >
+                  <TouchableOpacity
+                    style={styles.buttonStyle}
+                    onPress={() => this.verifyPhone()}
+                  >
+                    <Text style={styles.textStyle}>Verder</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-          </View>
-
-        </View>
-      </ImageBackground>
-      </SafeAreaView>
+          </ImageBackground>
+        </SafeAreaView>
       </Fragment>
     );
   }
@@ -183,11 +186,10 @@ const styles = StyleSheet.create({
   },
 
   inputFieldContainer: {
-    height: '100%',
+    height: "100%",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "center"
   },
-
 
   infoTextTitle: {
     color: "#00A6FF",
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    marginTop: '10%',
+    marginTop: "10%",
     padding: "4%",
     backgroundColor: "#ffffff",
     borderRadius: 25

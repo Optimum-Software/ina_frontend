@@ -9,7 +9,7 @@ import {
   Platform,
   ActivityIndicator,
   SafeAreaView,
-  StatusBar,
+  StatusBar
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -122,80 +122,88 @@ export default class RegistrationScreenStart extends Component {
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
-        <StatusBar
-          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-          barStyle="dark-content"
-        />
-        <ImageBackground
-          style={styles.container}
-          source={require("../assets/images/bluewavebg.png")}
-          resizeMode="stretch"
-        >
-        <Toolbar
-        leftElement="arrow-back"
-                      onLeftElementPress={() => this.props.navigation.goBack()}
-      centerElement="Verificatie"
-      style={{container: {backgroundColor: '#fff'}, titleText:{color: '#00a6ff'}, leftElement:{color: '#00a6ff'}}}
-    />
-          {this.state.android && (
-            <View
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "white" : "#00a6ff"}
+            barStyle="dark-content"
+          />
+          <ImageBackground
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              justifyContent: "flex-start"
+            }}
+            source={require("../assets/images/bluewavebg.png")}
+            resizeMode="stretch"
+          >
+            <Toolbar
+              leftElement="arrow-back"
+              onLeftElementPress={() => this.props.navigation.goBack()}
+              centerElement="Verificatie"
               style={{
-                alignSelf: "center",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-                width: "100%"
+                container: { backgroundColor: "transparent" },
+                titleText: { color: "#00a6ff" },
+                leftElement: { color: "#00a6ff" }
               }}
-            >
-              <ActivityIndicator size="large" color="#ffffff" />
-            </View>
-          )}
-          {!this.state.android && (
-            <View style={{ padding: "10%" }}>
-              <View style={{ flexDirection: "row" }}>
-                <View
-                  style={{
-                    flex: 2,
-                    width: "90%",
-                    marginTop: "5%"
-                  }}
-                >
-                  <Text style={styles.infoText}>
-                    Vul alle velden in om je een account aan te maken.
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.inputFieldContainer}>
-                <Input
-                  placeholder="verificatiecode"
-                  placeholderTextColor="#FFFFFF"
-                  containerStyle={styles.inputContainer}
-                  inputContainerStyle={styles.inputContainerStyle}
-                  inputStyle={styles.inputStyle}
-                  value={this.state.code}
-                  leftIcon={{
-                    type: "font-awesome",
-                    name: "lock",
-                    color: "#FFFFFF"
-                  }}
-                  errorStyle={styles.errorStyle}
-                  errorMessage={this.state.phoneNumberError}
-                  onChangeText={code => this.setState({ code })}
-                  onSubmitEditing={() => this.checkCode()}
-                  keyboardType="numeric"
-                  maxLength={6}
-                />
-              </View>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => this.checkCode()}
+            />
+            {this.state.android && (
+              <View
+                style={{
+                  alignSelf: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
+                  width: "100%"
+                }}
               >
-                <Text style={styles.textStyle}>Verder</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </ImageBackground>
-      </SafeAreaView>
+                <ActivityIndicator size="large" color="#ffffff" />
+              </View>
+            )}
+            {!this.state.android && (
+              <View style={{ padding: "10%" }}>
+                <View style={{ flexDirection: "row" }}>
+                  <View
+                    style={{
+                      flex: 2,
+                      width: "90%",
+                      marginTop: "5%"
+                    }}
+                  >
+                    <Text style={styles.infoText}>
+                      Vul alle velden in om je een account aan te maken.
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.inputFieldContainer}>
+                  <Input
+                    placeholder="verificatiecode"
+                    placeholderTextColor="#FFFFFF"
+                    containerStyle={styles.inputContainer}
+                    inputContainerStyle={styles.inputContainerStyle}
+                    inputStyle={styles.inputStyle}
+                    value={this.state.code}
+                    leftIcon={{
+                      type: "font-awesome",
+                      name: "lock",
+                      color: "#FFFFFF"
+                    }}
+                    errorStyle={styles.errorStyle}
+                    errorMessage={this.state.phoneNumberError}
+                    onChangeText={code => this.setState({ code })}
+                    onSubmitEditing={() => this.checkCode()}
+                    keyboardType="numeric"
+                    maxLength={6}
+                  />
+                </View>
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  onPress={() => this.checkCode()}
+                >
+                  <Text style={styles.textStyle}>Verder</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </ImageBackground>
+        </SafeAreaView>
       </Fragment>
     );
   }

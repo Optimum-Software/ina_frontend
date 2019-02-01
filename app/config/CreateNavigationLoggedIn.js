@@ -46,6 +46,8 @@ import ProfileParameters from "../helpers/ProfileParameters";
 import Api from "../helpers/Api";
 import ExploreNavigateButton from "./ExploreNavigateButton";
 
+import DrawerContentComponent from "../components/DrawerContentComponent";
+
 let screen = Dimensions.get("window");
 let firstName = "";
 let lastName = "";
@@ -86,7 +88,11 @@ const CustomDrawerContentComponent = props => (
             >
               <TouchableOpacity
                 onPress={() => {
-                  Router.goTo(props.navigation, 'ProfileScreen', 'ProfileScreen')
+                  Router.goTo(
+                    props.navigation,
+                    "ProfileScreen",
+                    "ProfileScreen"
+                  );
                 }}
               >
                 <CachedImage
@@ -132,8 +138,8 @@ const CustomDrawerContentComponent = props => (
                     marginBottom: 10
                   }}
                 >
-                {organisation}
-              </Text>
+                  {organisation}
+                </Text>
               </View>
             </View>
             <View
@@ -157,7 +163,6 @@ const CustomDrawerContentComponent = props => (
                   props.navigation.closeDrawer();
                   Router.switchLogout(props.navigation);
                   props.navigation.navigate("DrawerClose");
-
                 }}
                 delayPressIn={0}
               >
@@ -335,7 +340,7 @@ export const Drawer = createDrawerNavigator(
     drawerPosition: "left",
     initialRouteName: "Tabs",
     drawerWidth: Dimensions.get("window").width,
-    contentComponent: CustomDrawerContentComponent,
+    contentComponent: DrawerContentComponent,
     drawerBackgroundColor: "transparent",
 
     contentOptions: {
