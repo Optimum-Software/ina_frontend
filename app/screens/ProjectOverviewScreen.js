@@ -300,23 +300,31 @@ const styles = StyleSheet.create({
     marginRight: Dimensions.get("window").width * 0.024,
     marginTop: Dimensions.get("window").width * 0.05,
     width: Dimensions.get("window").width * 0.43,
-    height: (Dimensions.get("window").height - 90) * 0.2,
+    height: (Dimensions.get("window").height - 90) * 0.35,
     ...ifIphoneX({
-      height: (Dimensions.get("window").height - 150) * 0.17
+      height: (Dimensions.get("window").height - 150) * 0.24
     }),
     elevation: 3,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
     borderRadius: 4
   },
 
   cardUneven: {
     backgroundColor: "#FFFFFF",
     margin: 10,
-    width: "100%",
-    height: (Dimensions.get("window").height - 90) * 0.2,
+    width: Dimensions.get("window").width * 0.9,
+    marginLeft: Dimensions.get("window").width * 0.024,
+    marginRight: Dimensions.get("window").width * 0.024,
+    height: (Dimensions.get("window").height - 90) * 0.35,
     ...ifIphoneX({
-      height: (Dimensions.get("window").height - 150) * 0.17
+      height: (Dimensions.get("window").height - 150) * 0.24
     }),
-    marginBottom: 10,
     elevation: 3,
     shadowColor: "#000000",
     shadowOffset: {
