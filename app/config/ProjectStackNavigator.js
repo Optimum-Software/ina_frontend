@@ -20,14 +20,12 @@ export default createStackNavigator(
         gesturesEnabled: false
       })
     },
-
     ProjectDetailScreen: {
       screen: ProjectDetailScreen,
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })
     },
-
     ProjectCreateFirstScreen: {
       screen: ProjectCreateFirstScreen,
       navigationOptions: ({ navigation }) => ({
