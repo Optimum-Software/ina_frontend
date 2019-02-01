@@ -2,7 +2,9 @@ import React from "react";
 import { NetInfo } from "react-native";
 let instance = null;
 class Api {
-  ip = "http://145.37.145.79:8000"
+  ip = "http://145.37.152.106:8000";
+  //ip = "http://136.144.186.136";
+
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -126,7 +128,7 @@ class Api {
 
   async callApiPostForm(action, data) {
     try {
-      console.log(this.url + action)
+      console.log(this.url + action);
       let response = await fetch(this.url + action, {
         method: "POST",
         headers: {
@@ -137,7 +139,7 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return {
         ntwFail: true,
         msg: "Kon geen verbinding met de server maken"
