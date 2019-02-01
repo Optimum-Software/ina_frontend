@@ -41,7 +41,9 @@ class ProjectCreateSecondScreen extends Component {
       name: this.props.navigation.getParam("name", ""),
       desc: this.props.navigation.getParam("desc", "")
     };
+  }
 
+  componentDidMount() {
     ProjectApi.getAllTag().then(result => {
       console.log(result);
       if (result["bool"]) {
@@ -56,7 +58,6 @@ class ProjectCreateSecondScreen extends Component {
       } else {
         alert(result["msg"]);
       }
-      //  });
     });
   }
 

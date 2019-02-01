@@ -6,13 +6,15 @@ import {
   ScrollView,
   FlatList,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  BackHandler
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 import { ListItem } from "react-native-elements";
 import Api from "../helpers/Api";
+import ProfileParameters from "../helpers/ProfileParameters";
 
 export default class ProjectMembersScreen extends Component {
   constructor() {
@@ -20,6 +22,19 @@ export default class ProjectMembersScreen extends Component {
     this.state = {
       enableScrollViewScroll: false
     };
+  }
+
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBack.bind(this))
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBack.bind(this))
+  }
+
+  handleBack() {
+    Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))
+    return true
   }
 
   renderSeparator = () => {
@@ -36,13 +51,12 @@ export default class ProjectMembersScreen extends Component {
   };
 
   render() {
-    const { navigation } = this.props;
-    const personList = navigation.getParam("persons", "");
+    const personList = this.props.navigation.getParam("persons", "");
     return (
       <View style={styles.container}>
         <Toolbar
           leftElement={"chevron-left"}
-          onLeftElementPress={() => Router.goBack(this.props.navigation)}
+          onLeftElementPress={() => Router.goBack(this.props.navigation , this.props.navigation.getParam("differentStack", false))}
           centerElement="Leden"
         />
         <ScrollView>
@@ -64,7 +78,10 @@ export default class ProjectMembersScreen extends Component {
                   chevronColor="white"
                   chevron
                   onPress={() =>
-                    alert("Ga naar " + item.firstName + "'s profiel")
+                    {
+                      ProfileParameters.storeUserId(item.id)
+                      Router.goTo(this.props.navigation, 'ProfileScreen', 'ProfileScreen')
+                    }
                   }
                 />
               )}

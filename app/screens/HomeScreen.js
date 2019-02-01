@@ -35,7 +35,7 @@ import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
 import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 import line2 from "../assets/images/line3.png";
- import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from "react-native-fetch-blob";
 
 const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
 
@@ -54,22 +54,30 @@ export default class Home extends Component {
       search: false,
       unRead: 0
     };
-    console.log(this.props)
+    console.log(this.props);
     this.animatedValue = new Animated.Value(0);
     Router.setDispatcher(this.props.navigation);
   }
 
   componentDidMount() {
     this.props.navigation.addListener("willFocus", this.onLoad);
-    Linking.addEventListener('url', this._handleOpenURL);
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        ProjectApi.getProjectById(url.substring(Platform.OS === 'android' ? 27 : 6, url.length)).then(result => {
-          Router.goTo(this.props.navigation, "ProjectStack", "ProjectDetailScreen", result["project"]);
-        });
-
-      }
-    }).catch(err => console.error('An error occurred', err));
+    Linking.addEventListener("url", this._handleOpenURL);
+    Linking.getInitialURL()
+      .then(url => {
+        if (url) {
+          ProjectApi.getProjectById(
+            url.substring(Platform.OS === "android" ? 27 : 6, url.length)
+          ).then(result => {
+            Router.goTo(
+              this.props.navigation,
+              "ProjectStack",
+              "ProjectDetailScreen",
+              result["project"]
+            );
+          });
+        }
+      })
+      .catch(err => console.error("An error occurred", err));
   }
 
   onLoad = () => {
@@ -77,34 +85,39 @@ export default class Home extends Component {
     this.getTrendingProjects();
     this.getUserIfLoggedIn();
     this.getNotificationCount();
-  }
+  };
 
   getNotificationCount() {
-    let unRead = 0
+    let unRead = 0;
     User.getUserId().then(id => {
       UserApi.getNotifications(id).then(res => {
-        if(res['bool']) {
-          for(noti of res['notifications']) {
-            if(!noti['read']) {
-              unRead++
+        if (res["bool"]) {
+          for (noti of res["notifications"]) {
+            if (!noti["read"]) {
+              unRead++;
             }
-            this.setState({unRead: unRead})
+            this.setState({ unRead: unRead });
           }
         }
-      })
-    })
+      });
+    });
   }
 
   componentWillUnmount() {
-  Linking.removeEventListener('url', this._handleOpenURL);
-}
-_handleOpenURL(event) {
-  ProjectApi.getProjectById(event.url.substring(Platform.OS === 'android' ? 27 : 6, event.url.length)).then(result => {
-    console.log(Router);
-    console.log(this.props);
-    Router.goToDeeplink("ProjectStack", "ProjectDetailScreen", result["project"]);
-  });
-}
+    Linking.removeEventListener("url", this._handleOpenURL);
+  }
+
+  _handleOpenURL(event) {
+    ProjectApi.getProjectById(
+      event.url.substring(Platform.OS === "android" ? 27 : 6, event.url.length)
+    ).then(result => {
+      Router.goToDeeplink(
+        "ProjectStack",
+        "ProjectDetailScreen",
+        result["project"]
+      );
+    });
+  }
 
   animate() {
     this.setState({ search: true });
@@ -195,7 +208,7 @@ _handleOpenURL(event) {
 
   onRefresh = () => {
     this.setState({ refreshing: true, searchTerm: "" });
-    this.onLoad()
+    this.onLoad();
     this.setState({ refreshing: false });
   };
 
@@ -267,7 +280,7 @@ _handleOpenURL(event) {
                       )}
                       {this.state.unRead == 0 && (
                         <Text style={styles.textSubTitle}>
-                          Er is geen nieuwe meldingen
+                          Er zijn geen nieuwe meldingen
                         </Text>
                       )}
                     </View>
@@ -389,68 +402,71 @@ _handleOpenURL(event) {
                         )
                       }
                     >
-                    {index != (this.state.projects.length - 1) &&(
-                      //not last card
-                      <View style={styles.card}>
-                        <View style={styles.cardImage}>
-                          <CachedImage
-                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
-                          resizeMode="cover"
-                          style={styles.image}
-                        />
-                        </View>
-                        <Image
-                          source={line2}
-                          resizeMode="stretch"
-                          style={{ width: "100%", height: "2%" }}
-                        />
-                          <Text numberOfLines={2} style={styles.cardTitle}>
-                            {item.name}
-                          </Text>
-                      </View>
-                    )}
-                    {index == (this.state.projects.length - 1) && (index+1) % 2 == 0 &&(
-                      //last card but even index
-                      <View style={styles.card}>
-                        <View style={styles.cardImage}>
-                          <CachedImage
-                            source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                            resizeMode="cover"
-                            style={styles.image}
+                      {index != this.state.projects.length - 1 && (
+                        //not last card
+                        <View style={styles.card}>
+                          <View style={styles.cardImage}>
+                            <CachedImage
+                              source={{ uri: Api.getFileUrl(item.thumbnail) }}
+                              resizeMode="cover"
+                              style={styles.image}
+                            />
+                          </View>
+                          <Image
+                            source={line2}
+                            resizeMode="stretch"
+                            style={{ width: "100%", height: "2%" }}
                           />
-                        </View>
-                        <Image
-                          source={line2}
-                          resizeMode="stretch"
-                          style={{ width: "100%", height: "2%" }}
-                        />
-                        <Text numberOfLines={2} style={styles.cardTitle}>
-                          {item.name}
-                        </Text>
-                      </View>
-                    )}
-                    {index == (this.state.projects.length - 1) && (index+1) % 2 != 0 && (
-                      //last card but uneven index
-                      <View style={styles.cardUneven}>
-                        <View style={styles.cardImage}>
-                          <CachedImage
-                          source={{ uri: Api.getFileUrl(item.thumbnail)}}
-                          resizeMode="cover"
-                          style={styles.image}
-                        />
-                        </View>
-                        <Image
-                          source={line2}
-                          resizeMode="stretch"
-                          style={{ width: "100%", height: "2%" }}
-                        />
                           <Text numberOfLines={2} style={styles.cardTitle}>
                             {item.name}
                           </Text>
-                      </View>
-                    )}
+                        </View>
+                      )}
+                      {index == this.state.projects.length - 1 &&
+                        (index + 1) % 2 == 0 && (
+                          //last card but even index
+                          <View style={styles.card}>
+                            <View style={styles.cardImage}>
+                              <CachedImage
+                                source={{ uri: Api.getFileUrl(item.thumbnail) }}
+                                resizeMode="cover"
+                                style={styles.image}
+                              />
+                            </View>
+                            <Image
+                              source={line2}
+                              resizeMode="stretch"
+                              style={{ width: "100%", height: "2%" }}
+                            />
+                            <Text numberOfLines={2} style={styles.cardTitle}>
+                              {item.name}
+                            </Text>
+                          </View>
+                        )}
+                      {index == this.state.projects.length - 1 &&
+                        (index + 1) % 2 != 0 && (
+                          //last card but uneven index
+                          <View style={styles.cardUneven}>
+                            <View style={styles.cardImage}>
+                              <CachedImage
+                                source={{ uri: Api.getFileUrl(item.thumbnail) }}
+                                resizeMode="cover"
+                                style={styles.image}
+                              />
+                            </View>
+                            <Image
+                              source={line2}
+                              resizeMode="stretch"
+                              style={{ width: "100%", height: "2%" }}
+                            />
+                            <Text numberOfLines={2} style={styles.cardTitle}>
+                              {item.name}
+                            </Text>
+                          </View>
+                        )}
                     </Ripple>
-                    )}}
+                  );
+                }}
               />
             </View>
           </ScrollView>
@@ -498,7 +514,7 @@ const styles = StyleSheet.create({
     margin: 5,
     fontSize: 16,
     fontWeight: "bold",
-    color: '#4a6572'
+    color: "#4a6572"
   },
   card: {
     backgroundColor: "#FFFFFF",

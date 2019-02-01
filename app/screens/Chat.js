@@ -6,7 +6,8 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  BackHandler
 } from "react-native";
 import { ListItem } from "react-native-elements";
 import { GiftedChat, Bubble } from "react-native-gifted-chat";
@@ -34,6 +35,16 @@ export default class Chat extends Component {
       title: this.props.navigation.getParam("title", "")
     });
     this.getMessages();
+    BackHandler.addEventListener('hardwareBackPress', this.handleBack.bind(this))
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBack.bind(this))
+  }
+
+  handleBack() {
+    Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))
+    return true
   }
 
   getMessages() {
@@ -41,7 +52,6 @@ export default class Chat extends Component {
     FirebaseApi.getMsgsRef(this.props.navigation.getParam("uid", "")).on(
       "value",
       snapshot => {
-        console.log("hallo")
         // gets around Redux panicking about actions in reducers
         setTimeout(() => {
           var items = [];
@@ -111,7 +121,7 @@ export default class Chat extends Component {
           iconSet="MaterialCommunityIcons"
           leftElement={"arrow-left"}
           onLeftElementPress={() => {
-            Router.goBack(this.props.navigation);
+            Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false));
           }}
         />
         <View style={styles.container}>

@@ -14,6 +14,7 @@ import Router from "../helpers/Router";
 import User from "../helpers/User";
 import UserApi from "../helpers/UserApi";
 import ImagePicker from "react-native-image-picker";
+import { CachedImage } from "react-native-cached-image";
 
 export default class RegistrationScreenOptional extends Component {
   constructor() {
@@ -43,40 +44,21 @@ export default class RegistrationScreenOptional extends Component {
   editOptionalInfo() {
     this.resetErrors();
     User.getUserId().then(id => {
-      if (this.state.imgPicked) {
-        file = {
-          uri: this.state.profilePhoto.uri,
-          name: this.state.profilePhoto.fileName,
-          type: "multipart/form-data"
-        };
-        UserApi.uploadProfilePhoto(id, file).then(res => {
-          if (res["bool"]) {
-            this.setState({
-              profilePhoto: null,
-              pickedImgUri: { uri: "" },
-              imgPicked: false
-            });
-          } else {
-            alert(res["msg"]);
+      if(this.state.imgPicked) {
+        UserApi.updateUser(id, "", "", this.state.bio, this.state.organisation, this.state.jobFunction, this.state.pickedImgUri.uri).then(res => {
+          if(res['bool']) {
+            Router.switchLogin(this.props.navigation)
           }
+          this.setState({loading: false})
+        });
+      } else {
+        UserApi.editOptionalInfo(id, this.state.bio, this.state.organisation, this.state.jobFunction).then(res => {
+          if(res['bool']) {
+            Router.switchLogin(this.props.navigation)
+          }
+          this.setState({loading: false})
         });
       }
-      UserApi.editOptionalInfo(
-        id,
-        this.state.organisation,
-        this.state.jobFunction,
-        this.state.bio
-      ).then(res => {
-        if (res["bool"]) {
-          this.setState({
-            organisation: "",
-            jobFunction: "",
-            bio: ""
-          });
-        } else {
-          alert(res["msg"]);
-        }
-      });
     });
   }
 
@@ -122,10 +104,11 @@ export default class RegistrationScreenOptional extends Component {
           </View>
         </View>
         <View style={styles.inputFieldContainer}>
-          <ImageBackground
+          <CachedImage
             style={styles.imgPickContainer}
-            imageStyle={{ borderRadius: 100, width: "100%", height: "100%" }}
             source={this.state.pickedImgUri}
+            imageStyle={{borderRadius: 200}}
+            resizeMode="cover"
           >
             <TouchableOpacity
               style={styles.imgPickBtn}
@@ -134,12 +117,13 @@ export default class RegistrationScreenOptional extends Component {
               <Icon
                 name="image-plus"
                 type="material-community"
+                style={{alignSelf: 'center'}}
                 size={50}
                 color="#00A6FF"
                 underlayColor="#c1efff"
               />
             </TouchableOpacity>
-          </ImageBackground>
+          </CachedImage>
           <Input
             placeholder="Organisatie"
             placeholderTextColor="#FFFFFF"
@@ -189,7 +173,7 @@ export default class RegistrationScreenOptional extends Component {
             }}
             leftIconContainerStyle={{ alignSelf: "flex-start" }}
             multiline={true}
-            numberOfLines={5}
+            numberOfLines={6}
             maxLength={2000}
             textAlignVertical={"top"}
             onChangeText={bio => this.setState({ bio })}
@@ -239,20 +223,21 @@ const styles = StyleSheet.create({
   },
 
   imgPickContainer: {
-    height: "95%",
-    width: "24%",
-    borderRadius: 100,
+    height: 150,
+    width: 150,
+    borderRadius: 200,
     alignSelf: "center",
     marginBottom: "5%",
+    marginTop: "5%",
     backgroundColor: "#FFFFFF"
   },
 
   imgPickBtn: {
-    height: "95%",
-    width: "55%",
-    borderRadius: 100,
+    height: 150,
+    width: 150,
+    borderRadius: 200,
     justifyContent: "center",
-    alignSelf: "center"
+    alignSelf: "center",
   },
 
   containerStyle: {
@@ -293,13 +278,13 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: "3%",
     marginTop: "10%",
-    paddingTop: "1.5%",
-    paddingBottom: "1.5%"
+    padding: 3
   },
 
   buttonText: {
     color: "#01A6FF",
     alignSelf: "center",
     fontSize: 20
-  }
+  },
+
 });

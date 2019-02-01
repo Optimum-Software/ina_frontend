@@ -1,57 +1,65 @@
-import { NavigationActions, StackActions} from "react-navigation";
+import { NavigationActions, StackActions } from "react-navigation";
 let instance = null;
 let dispatcherDeeplink = null;
 class Router {
+  constructor() {
+    if (!instance) {
+      instance = this;
+    }
+    return instance;
+  }
 
-	constructor() {
-    	if (!instance) {
-	  		instance = this
-	  	}
-    	return instance;
-  	}
+  setDispatcher(dispatcher) {
+    dispatcherDeeplink = dispatcher;
+  }
 
-	setDispatcher(dispatcher){
-		dispatcherDeeplink = dispatcher;
-	}
+  goTo(dispatcher, stackName, screenName, parameters) {
+    dispatcher.dispatch(
+      NavigationActions.navigate({
+        routeName: stackName,
+        action: NavigationActions.navigate({
+          routeName: screenName,
+          params: parameters
+        })
+      })
+    );
+  }
 
-	goTo(dispatcher, stackName, screenName, parameters) {
-		dispatcher.dispatch(
-      		NavigationActions.navigate({
-  		  		routeName: stackName,
-  		  		action: NavigationActions.navigate({
-  		  	  		routeName: screenName,
-  		  	  		params: parameters
+  popToTop(dispatcher) {
+    dispatcher.dispatch(StackActions.popToTop());
+  }
 
-  		  		})
-      		})
-		)
-	}
+  goBack(dispatcher, diffStack = false, popTop = false) {
+    dispatcher.setParams({ differentStack: null });
+    if (diffStack) {
+      dispatcher.popToTop();
+      dispatcher.dismiss();
+    } else if (!diffStack && popTop) {
+      dispatcher.popToTop();
+    } else {
+      dispatcher.goBack(null);
+    }
+  }
 
+  goToDeeplink(stackName, screenName, parameters) {
+    dispatcherDeeplink.dispatch(
+      NavigationActions.navigate({
+        routeName: stackName,
+        action: NavigationActions.navigate({
+          routeName: screenName,
+          params: parameters
+        })
+      })
+    );
+  }
 
-	goToDeeplink(stackName, screenName, parameters) {
-		dispatcherDeeplink.dispatch(
-      		NavigationActions.navigate({
-  		  		routeName: stackName,
-  		  		action: NavigationActions.navigate({
-  		  	  		routeName: screenName,
-  		  	  		params: parameters
+  switchLogin(dispatcher) {
+    dispatcher.navigate("LoggedIn");
+  }
 
-  		  		})
-      		})
-		)
-	}
-
-	goBack(dispatcher) {
-		dispatcher.dispatch(NavigationActions.back())
-	}
-
-	switchLogin(dispatcher) {
-		dispatcher.navigate("LoggedIn")
-	}
-
-	switchLogout(dispatcher) {
-		dispatcher.navigate("LoggedOut")
-	}
+  switchLogout(dispatcher) {
+    dispatcher.navigate("LoggedOut");
+  }
 }
 
 const router = new Router();
