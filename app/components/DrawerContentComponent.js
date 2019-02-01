@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import {
   View,
-  Dimensions,
-  Platform,
   Text,
   ScrollView,
   Image,
@@ -13,15 +11,7 @@ import {
   StatusBar
 } from "react-native";
 import { Fragment } from "react";
-import {
-  StackNavigator,
-  createStackNavigator,
-  createBottomTabNavigator,
-  createDrawerNavigator,
-  createAppContainer,
-  DrawerItems,
-  NavigationActions
-} from "react-navigation";
+import { DrawerItems } from "react-navigation";
 import ProfileParameters from "../helpers/ProfileParameters";
 import { CachedImage } from "react-native-cached-image";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
