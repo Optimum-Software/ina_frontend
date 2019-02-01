@@ -1,4 +1,4 @@
-package com.ina_frontend;
+package com.innovatie.netwerk.app;
 
 import com.facebook.react.ReactActivity;
 
