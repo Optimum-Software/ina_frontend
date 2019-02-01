@@ -265,7 +265,7 @@ _handleOpenURL(event) {
                       )}
                       {this.state.unRead == 0 && (
                         <Text style={styles.textSubTitle}>
-                          Er is geen nieuwe meldingen
+                          Er zijn geen nieuwe meldingen
                         </Text>
                       )}
                     </View>
