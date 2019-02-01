@@ -12,7 +12,8 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -24,6 +25,7 @@ import User from "../helpers/User";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
+import { Icon } from "react-native-elements";
 
 export default class SavedProjects extends Component {
   constructor() {
@@ -37,7 +39,11 @@ export default class SavedProjects extends Component {
         ],
         memberedProjects: [],
         followedProjects: [],
-        likedProjects: []
+        likedProjects: [],
+        loading: true,
+        refreshingMembered: false,
+        refreshingFollowed: false,
+        refreshingLiked: false
      };
   }
 
@@ -56,11 +62,11 @@ export default class SavedProjects extends Component {
       SavedApi.getAllMembered(userId).then(res => {
         if(res['bool']) {
           if(res['found']) {
+            console.log(res['projects'])
             this.setState({memberedProjects: res['projects']})
           } else {
             alert(res['msg'])
           }
-          
         }
       });
       SavedApi.getAllLiked(userId).then(res => {
@@ -73,6 +79,7 @@ export default class SavedProjects extends Component {
           
         }
       });
+      this.setState({loading: false})
     });
   }
 
@@ -125,33 +132,196 @@ export default class SavedProjects extends Component {
     </Ripple>
   )
 
+  onRefreshMembered() {
+    this.setState({loading: true})
+    User.getUserId().then(id => {
+      SavedApi.getAllMembered(id).then(res => {
+        if(res['bool']) {
+          if(res['found']) {
+            this.setState({memberedProjects: res['projects']})
+          } else {
+            alert(res['msg'])
+          }  
+        }
+        this.setState({loading: false})
+      });
+    })
+  }
+
+  onRefreshFollowed() {
+    this.setState({loading: true})
+    User.getUserId().then(id => {
+      SavedApi.getAllFollows(id).then(res => {
+        console.log(res)
+        if(res['bool']) {
+          if(res['found']) {
+            this.setState({followedProjects: res['projects']})
+          } else {
+            alert(res['msg'])
+          }
+        }
+        this.setState({loading: false})
+      });
+    })
+  }
+
+  onRefreshLiked() {
+    this.setState({loading: true})
+    User.getUserId().then(id => {
+      SavedApi.getAllLiked(id).then(res => {
+        if(res['bool']) {
+          if(res['found']) {
+            this.setState({likedProjects: res['projects']})
+          } else {
+            alert(res['msg'])
+          }
+        }
+        this.setState({loading: false})
+      });
+    })
+  }
+
   render() {
-    const membersRoute = () => (
-      <FlatList
-        data={this.state.memberedProjects}
-        onEndReached={() => this.handelEnd()}
-        numColumns={2}
-        renderItem={this._renderItem}
-      />
-    )
-
-    const followedRoute = () => (
-      <FlatList
-        data={this.state.followedProjects}
-        onEndReached={() => this.handelEnd()}
-        numColumns={2}
-        renderItem={this._renderItem}
-      />
-    )
-
-    const likedRoute = () => (
-      <FlatList
-        data={this.state.likedProjects}
-        onEndReached={() => this.handelEnd()}
-        numColumns={2}
-        renderItem={this._renderItem}
-      />
-    )
+    const membersRoute = () => {
+      return (
+        <View>
+        {this.state.memberedProjects.length > 0 && !this.state.loading && (
+          <FlatList
+            data={this.state.memberedProjects}
+            onEndReached={() => this.handelEnd()}
+            refreshing={this.state.refreshingMembered}
+            onRefresh={() => this.onRefreshMembered()}
+            numColumns={2}
+            renderItem={this._renderItem}
+          />
+        )}
+        {this.state.memberedProjects.length == 0 && !this.state.loading && (
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyText}>
+              Er zijn geen projecten gevonden waar jij aan deelneemt
+            </Text>
+            <Ripple
+              rippleColor="#00a6ff"
+              style={styles.refreshButton}
+              onPress={() => this.onRefreshMembered()}
+            >
+              <Icon
+                name="refresh"
+                type="font-awesome"
+                size={25}
+                color="#FFF"
+              />
+            </Ripple>
+          </View>
+        )}
+        {this.state.loading && (
+          <View
+            style={{
+              height: "92.5%",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <ActivityIndicator size="large" color="#00A6FF" />
+          </View>
+        )}
+        </View>
+      )
+    }
+      
+    const followedRoute = () => {
+      return (
+        <View>
+        {this.state.followedProjects.length > 0 && !this.state.loading && (
+          <FlatList
+            data={this.state.followedProjects}
+            onEndReached={() => this.handelEnd()}
+            refreshing={this.state.refreshingFollowed}
+            onRefresh={() => this.onRefreshFollowed()}
+            numColumns={2}
+            renderItem={this._renderItem}
+          />
+        )}
+        {this.state.followedProjects.length == 0 && !this.state.loading && (
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyText}>
+              Er zijn geen projecten gevonden die jij volgt
+            </Text>
+            <Ripple
+              rippleColor="#00a6ff"
+              style={styles.refreshButton}
+              onPress={() => this.onRefreshFollowed()}
+            >
+              <Icon
+                name="refresh"
+                type="font-awesome"
+                size={25}
+                color="#FFF"
+              />
+            </Ripple>
+          </View>
+        )}
+        {this.state.loading && (
+          <View
+            style={{
+              height: "92.5%",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <ActivityIndicator size="large" color="#00A6FF" />
+          </View>
+        )}
+        </View>
+      )
+    }
+    
+    const likedRoute = () => {
+      return (
+        <View>
+        {this.state.likedProjects.length > 0 && !this.state.loading && (
+          <FlatList
+            data={this.state.likedProjects}
+            onEndReached={() => this.handelEnd()}
+            refreshing={this.state.refreshingLiked}
+            onRefresh={() => this.onRefreshLiked()}
+            numColumns={2}
+            renderItem={this._renderItem}
+          />
+        )}
+        {this.state.likedProjects.length == 0 && !this.state.loading && (
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyText}>
+              Er zijn geen projecten gevonden die jij leuk vindt
+            </Text>
+            <Ripple
+              rippleColor="#00a6ff"
+              style={styles.refreshButton}
+              onPress={() => this.onRefreshLiked()}
+            >
+              <Icon
+                name="refresh"
+                type="font-awesome"
+                size={25}
+                color="#FFF"
+              />
+            </Ripple>
+          </View>
+        )}
+        {this.state.loading && (
+          <View
+            style={{
+              height: "92.5%",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <ActivityIndicator size="large" color="#00A6FF" />
+          </View>
+        )}
+        </View>
+      )
+    } 
 
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -234,5 +404,28 @@ const styles = StyleSheet.create({
 
   indicator: {
     backgroundColor: '#00a6ff'
+  },
+
+  emptyBox: {
+    alignItems: "center",
+    marginTop: "25%",
+    paddingHorizontal: "5%"
+  },
+
+  emptyText: {
+    color: "#4a6572",
+    width: '95%',
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+
+  refreshButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 100,
+    backgroundColor: "#009ef2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30
   }
 });

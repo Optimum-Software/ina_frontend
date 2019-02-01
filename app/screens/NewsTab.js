@@ -7,7 +7,8 @@ import {
 	StyleSheet,
 	FlatList,
 	RefreshControl,
-	Image
+	Image,
+  ActivityIndicator
 } from 'react-native';
 import Router from "../helpers/Router";
 import { Icon } from "react-native-elements";
@@ -15,7 +16,7 @@ import User from "../helpers/User";
 import ProjectApi from "../helpers/ProjectApi";
 import moment from "moment/min/moment-with-locales";
 import line from "../assets/images/Line.png";
-
+import Ripple from "react-native-material-ripple";
 import { decode, encode } from 'he';
 
 export default class NewsTab extends Component{
@@ -24,13 +25,14 @@ export default class NewsTab extends Component{
     this.state = {
     	admin: false,
     	project: null,
-    	updateList: null,
-    	refreshing: false
+    	updateList: [],
+    	refreshing: false,
+      loading: false
     }
   }
 
   componentDidMount() {
-    console.log(this.props)
+    this.setState({loading: true})
   	ProjectApi.getUpdatesForProject(this.props.project.project.id).then(res => {
   		if(res['bool']) {
   			this.setState({updateList: res['updates']})
@@ -41,54 +43,85 @@ export default class NewsTab extends Component{
   			this.setState({admin: true})
   		}
   	});
-  	this.setState({project: this.props.project})
+  	this.setState({project: this.props.project, loading: false})
   }
 
   handelEnd() {}
 
   onRefresh() {
-  	this.setState({refreshing: true}, function() {
-  		ProjectApi.getUpdatesForProject(this.props.project.id).then(res => {
-  			if(res['bool']) {
-  				this.setState({updateList: res['updates']})
-  			}
-  			this.setState({refreshing: false})
-  		})
-  	})
+    this.setState({loading: true})
+  	ProjectApi.getUpdatesForProject(this.props.project.project.id).then(res => {
+      if(res['bool']) {
+        this.setState({updateList: res['updates']})
+      }
+      this.setState({refreshing: false, loading: false})
+    })
   }
 
   render(){
     return(
       <View style={styles.container}>
-        	<FlatList
-        	  data={this.state.updateList}
-        	  keyExtractor={item => "" + item.id}
-        	  onEndReached={() => this.handelEnd()}
-        	  refreshing={this.state.refreshing}
-        	  onRefresh={() => this.onRefresh()}
-        	  renderItem={({ item }) => {
-        	  	moment.locale('nl');
-        	    return (
-        	    	<View style={styles.box}>
-        	    		<View style={styles.boxTitle}>
-        	    			<Text style={styles.titleStyle}>{decode(item.title)}</Text>
-        	    		</View>
-        	    		<View style={styles.separator}/>
-        	    		<View style={styles.boxContent}>
-        	    			<Text>{decode(item.content)}</Text>
-        	    		</View>
-        	    		<Image
-              		  source={line}
-              		  resizeMode="stretch"
-              		  style={{ width: "100%", height: 2 }}
-              		/>
-        	    		<View style={styles.boxDate}>
-        	    			<Text>{moment(item.created_at).fromNow()}</Text>
-        	    		</View>
-        	    	</View>
-        	    );
-        	  }}
-        	/>
+        {this.state.updateList.length > 0 && !this.state.loading && (
+          <FlatList
+            data={this.state.updateList}
+            keyExtractor={item => "" + item.id}
+            onEndReached={() => this.handelEnd()}
+            refreshing={this.state.refreshing}
+            onRefresh={() => this.onRefresh()}
+            renderItem={({ item }) => {
+              moment.locale('nl');
+              return (
+                <View style={styles.box}>
+                  <View style={styles.boxTitle}>
+                    <Text style={styles.titleStyle}>{decode(item.title)}</Text>
+                  </View>
+                  <View style={styles.separator}/>
+                  <View style={styles.boxContent}>
+                    <Text>{decode(item.content)}</Text>
+                  </View>
+                  <Image
+                    source={line}
+                    resizeMode="stretch"
+                    style={{ width: "100%", height: 2 }}
+                  />
+                  <View style={styles.boxDate}>
+                    <Text>{moment(item.created_at).fromNow()}</Text>
+                  </View>
+                </View>
+              );
+            }}
+          />
+        )}
+        {this.state.updateList.length == 0 && !this.state.loading && (
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyText}>
+              Er zijn geen updates gevonden
+            </Text>
+            <Ripple
+              rippleColor="#00a6ff"
+              style={styles.refreshButton}
+              onPress={() => this.onRefresh()}
+            >
+              <Icon
+                name="refresh"
+                type="font-awesome"
+                size={25}
+                color="#FFF"
+              />
+            </Ripple>
+          </View>
+        )}
+        {this.state.loading && (
+          <View
+            style={{
+              height: "92.5%",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <ActivityIndicator size="large" color="#00A6FF" />
+          </View>
+        )}
         { this.state.admin && (
         	<TouchableHighlight
         		underlayColor="#009ef2"
@@ -178,4 +211,25 @@ const styles = StyleSheet.create({
     width: "80%",
     alignSelf: "center"
   },
+
+  emptyBox: {
+    alignItems: "center",
+    marginTop: "25%"
+  },
+
+  emptyText: {
+    color: "#4a6572",
+    fontSize: 24,
+    fontWeight: "bold"
+  },
+
+  refreshButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 100,
+    backgroundColor: "#009ef2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30
+  }
 })

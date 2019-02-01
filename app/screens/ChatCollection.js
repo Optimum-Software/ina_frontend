@@ -17,6 +17,7 @@ import Api from "../helpers/Api";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
 import { Fragment } from "react";
+import Ripple from "react-native-material-ripple";
 
 export default class ChatCollection extends Component {
     constructor() {
@@ -39,6 +40,7 @@ export default class ChatCollection extends Component {
     }
 
     getChats() {
+      this.setState({loading: true})
       User.getUserId().then(id => {
         FirebaseApi.getChats(id).then(res => {
           chats = []
@@ -110,7 +112,7 @@ export default class ChatCollection extends Component {
             />
           </View>
         <View style={styles.containerMargin}>
-          {!this.state.loading && (
+          {this.state.chats.length > 0 && !this.state.loading && (
             <FlatList
               data={this.state.chats}
               refreshing={this.state.refreshing}
@@ -136,6 +138,25 @@ export default class ChatCollection extends Component {
                 />
               )}
             />
+          )}
+          {this.state.chats.length == 0 && !this.state.loading && (
+            <View style={styles.emptyBox}>
+              <Text style={styles.emptyText}>
+                Er zijn geen chats gevonden
+              </Text>
+              <Ripple
+                rippleColor="#00a6ff"
+                style={styles.refreshButton}
+                onPress={() => this.refreshList()}
+              >
+                <Icon
+                  name="refresh"
+                  type="font-awesome"
+                  size={25}
+                  color="#FFF"
+                />
+              </Ripple>
+          </View>
           )}
           {this.state.loading && (
             <View
@@ -189,5 +210,26 @@ const styles = StyleSheet.create({
   separator: {
     height: 2,
     backgroundColor: '#1497DD'
+  },
+
+  emptyBox: {
+    alignItems: "center",
+    marginTop: "25%"
+  },
+
+  emptyText: {
+    color: "#4a6572",
+    fontSize: 24,
+    fontWeight: "bold"
+  },
+
+  refreshButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 100,
+    backgroundColor: "#009ef2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30
   }
 });
