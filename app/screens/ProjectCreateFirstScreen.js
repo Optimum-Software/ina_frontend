@@ -77,7 +77,7 @@ class ProjectCreateFirstScreen extends Component {
       });
       Router.goTo(
         this.props.navigation,
-        "ProjectCreateStackNavigator",
+        "ProjectStack",
         "ProjectCreateSecondScreen",
         {
           thumbnailUri: this.state.thumbnailUri,
