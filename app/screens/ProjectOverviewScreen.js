@@ -64,7 +64,7 @@ export default class ProjectOverview extends Component {
       this.setState({ refreshing: false, loading: false });
     });
 
-    tagToFilter = this.props.navigation.getParam("tag", "");
+    tagToFilter = this.props.navigation.getParam("tag", null);
     if (tagToFilter != null) {
       ProjectApi.getProjectByTag(tagToFilter).then(res => {
         if (res["bool"]) {

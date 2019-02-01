@@ -130,7 +130,7 @@ class ProjectEditThirdScreen extends Component {
               projectEdited: true,
               project: result["project"]
             });
-            //this.goToProject();
+            this.goToProject();
           }
         });
       } else {
@@ -157,7 +157,8 @@ class ProjectEditThirdScreen extends Component {
       thumbnail: this.state.project.thumbnail,
       creator: this.state.project.creator,
       images: this.state.project.images,
-      files: this.state.project.files
+      files: this.state.project.files,
+      prevRoute: "ProjectEdit"
     });
   }
 

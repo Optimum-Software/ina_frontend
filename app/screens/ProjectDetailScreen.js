@@ -78,6 +78,7 @@ export default class ProjectDetail extends Component {
       liked: false,
       isModalVisible: false,
       tags: [],
+      prevRoute: this.props.navigation.getParam("prevRoute", ""),
       routes: [
         { key: "detail", title: "Details" },
         { key: "news", title: "Nieuws" }
@@ -98,8 +99,23 @@ export default class ProjectDetail extends Component {
         files: this.props.navigation.getParam("files", "")
       }
     };
-    console.log(this.props.navigation)
-    //Router.switchLogout(this.props.navigation)
+  }
+
+  componentDidMount() {
+    this.refreshProject();
+  }
+
+  refreshProject() {
+    ProjectApi.getProjectById(this.state.project.id).then(result => {
+      if (result["bool"]) {
+        result["project"].thumbnail = Api.getFileUrl(
+          result["project"].thumbnail
+        );
+        this.setState({
+          project: result["project"]
+        });
+      }
+    });
   }
 
   followProject(projectId, userId) {
@@ -201,6 +217,11 @@ export default class ProjectDetail extends Component {
       style={styles.tabbar}
       tabStyle={styles.tab}
       labelStyle={styles.label}
+      layout={{
+        height: 44,
+        width: Dimensions.get("window").width,
+        measured: null
+      }}
       renderIcon={props => getTabBarIcon(props)}
     />
   );
@@ -223,6 +244,18 @@ export default class ProjectDetail extends Component {
     }
   };
 
+  goBack() {
+    if (
+      this.state.prevRoute == "ProjectCreate" ||
+      this.state.prevRoute == "ProjectEdit"
+    ) {
+      console.log("KOMT VAN EDIT OF CREATE");
+      Router.popToTop(this.props.navigation);
+    } else {
+      Router.goBack(this.props.navigation);
+    }
+  }
+
   render() {
     let { width, height } = Dimensions.get("window");
     const sliderWidth = width;
@@ -241,12 +274,17 @@ export default class ProjectDetail extends Component {
             iconSet="MaterialCommunityIcons"
             leftElement={"arrow-left"}
             rightElement="share-variant"
-            onRightElementPress={() => {Share.share({
-        message:
-          '"' + this.state.project.name + '", bekijk meer in de app: https://app.ina-app.nl/?id=' + this.state.project.id,
-      })}}
+            onRightElementPress={() => {
+              Share.share({
+                message:
+                  '"' +
+                  this.state.project.name +
+                  '", bekijk meer in de app: https://app.ina-app.nl/?id=' +
+                  this.state.project.id
+              });
+            }}
             onLeftElementPress={() => {
-              Router.goBack(this.props.navigation);
+              this.goBack();
             }}
           />
           <ScrollView scrollEnabled={false}>
@@ -283,7 +321,10 @@ export default class ProjectDetail extends Component {
                   navigationState={this.state}
                   renderScene={this.renderScene}
                   onIndexChange={index => this.setState({ index })}
-                  initialLayout={{ width: Dimensions.get("window").width }}
+                  initialLayout={{
+                    width: Dimensions.get("window").width,
+                    height: 44
+                  }}
                   renderTabBar={this._renderTabBar}
                   labelStyle={styles.label}
                 />

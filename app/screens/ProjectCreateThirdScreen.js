@@ -13,7 +13,8 @@ import {
   FlatList,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  BackHandler
 } from "react-native";
 import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";

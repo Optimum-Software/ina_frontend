@@ -38,7 +38,6 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
-      console.log("RESPONSE ERROR: " + error);
       return {
         ntwFail: true,
         msg: "Kon geen verbinding met de server maken"
@@ -129,6 +128,7 @@ class Api {
 
   async callApiPostForm(action, data) {
     try {
+      console.log(this.url + action);
       let response = await fetch(this.url + action, {
         method: "POST",
         headers: {
@@ -139,9 +139,10 @@ class Api {
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
+      console.log(error);
       return {
         ntwFail: true,
-        msg: "Kon geen HUPELDEPUP met de server maken"
+        msg: "Kon geen verbinding met de server maken"
       };
     }
   }

@@ -54,16 +54,6 @@ class UserApi {
     return Api.callApiUploadProfilePhoto(userId, "ProfilePhoto", file);
   }
 
-  editOptionalInfo(userId, organisation, jobFunction, bio) {
-    userData = {
-      userId: userId,
-      organisation: organisation,
-      function: jobFunction,
-      bio: bio
-    };
-    return Api.callApiPost("editOptionalInfo", userData);
-  }
-
   createDeviceId(userId, deviceId) {
     userData = {
       userId: userId,
@@ -113,6 +103,17 @@ class UserApi {
     };
     data.append("thumbnail", photoFile);
     return Api.callApiPostForm("updateUser", data);
+  }
+
+  editOptionalInfo(id, bio, organisation, _function) {
+    userData = {
+      userId: id,
+      bio: bio,
+      organisation: organisation,
+      function: _function
+    }
+    console.log(userData)
+    return Api.callApiPost("editOptionalInfo", userData)
   }
 
   getNotifications(id) {

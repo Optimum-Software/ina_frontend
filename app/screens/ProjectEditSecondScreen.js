@@ -43,7 +43,9 @@ class ProjectEditSecondScreen extends Component {
       images: this.props.navigation.getParam("images", ""),
       files: this.props.navigation.getParam("files", "")
     };
+  }
 
+  componentDidMount() {
     ProjectApi.getAllTag().then(result => {
       console.log(result);
       if (result["bool"]) {
@@ -58,7 +60,6 @@ class ProjectEditSecondScreen extends Component {
       } else {
         alert(result["msg"]);
       }
-      //  });
     });
     console.log(this.state.images);
   }
