@@ -104,11 +104,12 @@ android {
 
 
     defaultConfig {
-        applicationId "com.ina_frontend"
+        applicationId "com.innovatie.netwerk.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        multiDexEnabled true
+        versionCode 2
+        versionName "1.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -154,7 +155,6 @@ android {
 }
 
 dependencies {
-    compile project(':rn-fetch-blob')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-video')
     compile project(':react-native-document-picker')
