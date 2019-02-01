@@ -2,7 +2,6 @@ import { NavigationActions, StackActions} from "react-navigation";
 let instance = null;
 let dispatcherDeeplink = null;
 class Router {
-
 	constructor() {
     	if (!instance) {
 	  		instance = this
@@ -10,10 +9,10 @@ class Router {
     	return instance;
   	}
 
-	setDispatcher(dispatcher){
+  	setDispatcher(dispatcher){
 		dispatcherDeeplink = dispatcher;
 	}
-
+  	
 	goTo(dispatcher, stackName, screenName, parameters) {
 		dispatcher.dispatch(
       		NavigationActions.navigate({
@@ -24,7 +23,17 @@ class Router {
 
   		  		})
       		})
-		)
+		)      		
+	}
+
+	goBack(dispatcher, diffStack=false) {
+		dispatcher.setParams({"differentStack": null})
+		if(diffStack) {
+			dispatcher.popToTop()
+			dispatcher.dismiss()
+		} else {
+			dispatcher.goBack(null)
+		}
 	}
 
 
@@ -39,10 +48,6 @@ class Router {
   		  		})
       		})
 		)
-	}
-
-	goBack(dispatcher) {
-		dispatcher.dispatch(NavigationActions.back())
 	}
 
 	switchLogin(dispatcher) {

@@ -137,8 +137,6 @@ class ProjectApi {
       name: thumbnailName,
       type: "multipart/form-data"
     };
-    console.log("THUMBNAIL");
-    console.log(projectThumbnail);
     data.append("thumbnail", projectThumbnail);
 
     for (i in documents) {

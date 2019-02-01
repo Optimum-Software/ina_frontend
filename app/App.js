@@ -10,6 +10,7 @@ import { Text, View, SafeAreaView, StyleSheet, Platform, Linking } from "react-n
 import { RootNavigation } from "./config/CreateRootNavigation";
 import firebaseApi from "./helpers/FirebaseApi";
 import User from "./helpers/User";
+import Router from "./helpers/Router";
 import OneSignal from "react-native-onesignal";
 import { COLOR, ThemeContext, getTheme } from "react-native-material-ui";
 
@@ -43,13 +44,6 @@ export default class App extends React.Component {
                 this.setState({loggedIn: false})
             }
         });
-
-        
-
-    }
-
-    componentWillUnmount() {
-        OneSignal.removeEventListener("ids", this.onIds);
     }
 
     onIds(device) {

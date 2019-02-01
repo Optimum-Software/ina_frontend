@@ -37,7 +37,6 @@ export default class DetailTab extends Component {
       followCount: props.project.project.follower_count,
       liked: false
     };
-    console.log(props.project.project.follower_count)
     User.getUserId().then(userId => {
       this.setState({ userId: userId });
       ProjectApi.checkIfMember(userId, this.state.project.id).then(result => {
@@ -49,7 +48,6 @@ export default class DetailTab extends Component {
       });
     });
     this.tags(this.state.project.id);
-
     this.getMembers();
   }
 
@@ -59,7 +57,6 @@ export default class DetailTab extends Component {
         this.setState({
           projectMembers: result["members"],
         });
-        console.log(this.state.projectMembers);
       } else {
         alert("Er zijn geen deelnemers aan dit project");
       }
@@ -76,8 +73,6 @@ export default class DetailTab extends Component {
     });
   }
   startChat() {
-    console.log('Starting chat');
-
     User.getUserId().then(id => {
       let creatorId = this.state.project.creator.id;
       let uid = "";
@@ -93,7 +88,8 @@ export default class DetailTab extends Component {
       FirebaseApi.createChat(uid);
       Router.goTo(this.props.navigation, "ChatStack", "Chat", {
         uid: uid,
-        title: title
+        title: title,
+        differentStack: true
       });
     });
   }
@@ -102,7 +98,6 @@ export default class DetailTab extends Component {
   joinProject() {
     User.getUserId().then(id => {
       ProjectApi.joinProject(id, this.state.project.id).then(result => {
-        console.log(result);
         if (result["bool"]) {
           this.setState({ member: true,   });
           this.getMembers();
@@ -118,7 +113,7 @@ export default class DetailTab extends Component {
       ProjectApi.leaveProject(id, this.state.project.id).then(result => {
         if (result["bool"]) {
           this.setState({ member: false, });
-this.getMembers();
+        this.getMembers();
         } else {
           alert(result["msg"]);
         }
@@ -238,7 +233,7 @@ this.getMembers();
                 this.props.navigation,
                 "ProjectStack",
                 "ProjectMembersScreen",
-                { persons: this.state.projectMembers }
+                { persons: this.state.projectMembers, differentStack: true }
               )
             }
           >

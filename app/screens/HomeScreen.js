@@ -100,8 +100,6 @@ export default class Home extends Component {
 }
 _handleOpenURL(event) {
   ProjectApi.getProjectById(event.url.substring(Platform.OS === 'android' ? 27 : 6, event.url.length)).then(result => {
-    console.log(Router);
-    console.log(this.props);
     Router.goToDeeplink("ProjectStack", "ProjectDetailScreen", result["project"]);
   });
 }
@@ -384,7 +382,7 @@ _handleOpenURL(event) {
                             thumbnail: Api.getFileUrl(item.thumbnail),
                             creator: item.creator,
                             images: item.images,
-                            files: item.files
+                            files: item.files,
                           }
                         )
                       }

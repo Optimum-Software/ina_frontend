@@ -98,8 +98,6 @@ export default class ProjectDetail extends Component {
         files: this.props.navigation.getParam("files", "")
       }
     };
-    console.log(this.props.navigation)
-    //Router.switchLogout(this.props.navigation)
   }
 
   followProject(projectId, userId) {
