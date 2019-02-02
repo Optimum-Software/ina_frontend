@@ -83,7 +83,8 @@ export default class ExploreScreen extends React.Component {
       FirebaseApi.createChat(uid);
       Router.goTo(this.props.navigation, "ChatStack", "Chat", {
         uid: uid,
-        title: title
+        title: title,
+        differentStack: true
       });
     });
   }

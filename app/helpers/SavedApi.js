@@ -12,15 +12,21 @@ class SavedApi {
   }
 
   getAllFollows(id) {
-    return (Api.callApiGet("getAllFollowedProjectsByUserId/" + id))
+    User.getToken().then(token => {
+      return (Api.callApiGetSafe("getAllFollowedProjectsByUserId/" + id, token))
+    })
   }
 
   getAllMembered(id) {
-  	return (Api.callApiGet("getMembersByUserId/" + id))
+    User.getToken().then(token => {
+      return (Api.callApiGetSafe("getMembersByUserId/" + id, token))
+    })
   }
 
   getAllLiked(id) {
-    return (Api.callApiGet("getLikedProjectsByUserId/" + id))
+    User.getToken().then(token => {
+      return (Api.callApiGetSafe("getLikedProjectsByUserId/" + id, token))
+    })
   }
 
 }

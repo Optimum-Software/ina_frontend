@@ -62,6 +62,8 @@ export default class NewsTab extends Component{
     return(
       <View style={styles.container}>
         {this.state.updateList.length > 0 && !this.state.loading && (
+          <View>
+          <View style={styles.separator}/>
           <FlatList
             data={this.state.updateList}
             keyExtractor={item => "" + item.id}
@@ -71,26 +73,35 @@ export default class NewsTab extends Component{
             renderItem={({ item }) => {
               moment.locale('nl');
               return (
-                <View style={styles.box}>
-                  <View style={styles.boxTitle}>
-                    <Text style={styles.titleStyle}>{decode(item.title)}</Text>
+                <View>
+                  <View style={{flexDirection: "row"}}>
+                    <View style={styles.iconContainer}>
+                      <Icon
+                        name="caret-right"
+                        type="font-awesome"
+                        style={{alignSelf: 'flex-start'}}
+                        size={25}
+                        color="#009ef2"
+                      />
+                    </View>
+                    <View style={styles.box}>
+                      <View style={styles.boxDate}>
+                        <Text style={styles.dateStyle}>{moment(item.created_at).fromNow()}</Text>
+                      </View>
+                      <View style={styles.boxTitle}>
+                        <Text style={styles.titleStyle}>{decode(item.title)}</Text>
+                      </View>
+                      <View style={styles.boxContent}>
+                        <Text>{decode(item.content)}</Text>
+                      </View>
+                    </View>
                   </View>
                   <View style={styles.separator}/>
-                  <View style={styles.boxContent}>
-                    <Text>{decode(item.content)}</Text>
-                  </View>
-                  <Image
-                    source={line}
-                    resizeMode="stretch"
-                    style={{ width: "100%", height: 2 }}
-                  />
-                  <View style={styles.boxDate}>
-                    <Text>{moment(item.created_at).fromNow()}</Text>
-                  </View>
                 </View>
               );
             }}
           />
+          </View>
         )}
         {this.state.updateList.length == 0 && !this.state.loading && (
           <View style={styles.emptyBox}>
@@ -164,23 +175,24 @@ const styles = StyleSheet.create({
 	},
 
 	contentStyle: {
-		fontSize: 16,
+		fontSize: 18,
 		color: '#4a6572'
 	},
 
 	dateStyle: {
-		fontSize: 12,
-		color: '#4a6572'
+		fontSize: 16,
+		color: '#009ef2'
 	},
 
 	box: {
 		marginVertical: 5,
-		marginHorizontal: 10,
-		borderWidth: 1,
-		borderColor: '#000',
-		borderRadius: 10,
-		elevation: 1
+		marginLeft: "7.5%",
 	},
+
+  iconContainer: {
+    marginLeft: "7.5%",
+    paddingTop: 5
+  },
 
 	boxTitle: {
 		borderTopLeftRadius: 10,
@@ -191,10 +203,8 @@ const styles = StyleSheet.create({
 	boxContent: {
 		paddingLeft: '2.5%',
 		paddingBottom: 10,
-		backgroundColor: '#dee5e8',
 		marginHorizontal: '2.5%',
 		marginBottom: '2.5%',
-		borderRadius: 5
 	},
 
 	boxDate: {
