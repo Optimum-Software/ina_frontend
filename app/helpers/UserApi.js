@@ -16,7 +16,9 @@ class UserApi {
   }
 
   getUserSettings(id) {
-    return Api.callApiGet("getUserSettings/" + id)
+    User.getToken().then(token => {
+      return Api.callApiGetSafe("getUserSettings/" + id, token)
+    })
   }
 
   login(username, password) {
@@ -47,11 +49,16 @@ class UserApi {
       userId: id,
       canNotificate: canNotificate
     }
-    return Api.callApiPost('saveUserSettings', userData);
+    User.getToken().then(token => {
+      return Api.callApiPostSafe('saveUserSettings', token, userData);
+    })
   }
 
   uploadProfilePhoto(userId, file) {
-    return Api.callApiUploadProfilePhoto(userId, "ProfilePhoto", file);
+    User.getToken().then(token => {
+      return Api.callApiUploadProfilePhoto(userId, token, "ProfilePhoto", file);
+    })
+    
   }
 
   createDeviceId(userId, deviceId) {
@@ -59,8 +66,9 @@ class UserApi {
       userId: userId,
       deviceId: deviceId
     };
-
-    return Api.callApiPost("createDevice", userData);
+    User.getToken().then(token => {
+      return Api.callApiPostSafe("createDevice", token, userData);
+    })
   }
 
   notifyUser(userId, chatId) {
@@ -68,8 +76,9 @@ class UserApi {
       userId: userId,
       chatId: chatId
     };
-
-    return Api.callApiPost("sendMessageToUserById", userData);
+    User.getToken().then(token => {
+      return Api.callApiPostSafe("sendMessageToUserById", token, userData);
+    })
   }
 
   requestNewPassword(email) {
@@ -102,7 +111,9 @@ class UserApi {
       type: "multipart/form-data"
     };
     data.append("thumbnail", photoFile);
-    return Api.callApiPostForm("updateUser", data);
+    User.getToken().then(token => {
+      return Api.callApiPostFormSafe("updateUser", data, token);
+    })
   }
 
   editOptionalInfo(id, bio, organisation, _function) {
@@ -112,16 +123,21 @@ class UserApi {
       organisation: organisation,
       function: _function
     }
-    console.log(userData)
-    return Api.callApiPost("editOptionalInfo", userData)
+    User.getToken().then(token => {
+      return Api.callApiPost("editOptionalInfo", userData, token)
+    })
   }
 
   getNotifications(id) {
-    return Api.callApiGet("getNotificationByUser/"+id);
+    User.getToken().then(token => {
+      return Api.callApiGetSafe("getNotificationByUser/"+id, token);
+    })
   }
 
   markAsRead(id) {
-    return Api.callApiGet("markAsRead/" + id);
+    User.getToken().then(token => {
+      return Api.callApiGetSafe("markAsRead/" + id, token);
+    })
   }
 }
 

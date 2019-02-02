@@ -267,7 +267,7 @@ export default class ProjectOverview extends Component {
                   alignItems: "center"
                 }}
               >
-                <ActivityIndicator size="large" color="#000" />
+                <ActivityIndicator size="large" color="#00A6FF" />
               </View>
             )}
           </View>
