@@ -23,7 +23,7 @@ export default class RegistrationScreenPhone extends Component {
     super();
     this.state = {
       registerInfo: {},
-      phoneNumber: "+31647781634",
+      phoneNumber: "+31",
       phoneNumberError: "",
       confirmResult: null
     };
@@ -79,7 +79,10 @@ export default class RegistrationScreenPhone extends Component {
   checkInputLength() {
     msg = "Vul alstublieft een volledig telefoonnummer in";
     returnBool = true;
-    if (this.state.phoneNumber.length < 10) {
+    numbersInString = this.state.phoneNumber.match(/\d/g);
+    numbersInString = numbersInString.join("");
+    console.log(numbersInString);
+    if (numbersInString.length < 11) {
       this.setState({ phoneNumberError: msg });
       returnBool = false;
     }

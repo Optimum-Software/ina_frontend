@@ -41,13 +41,16 @@ export default class ExploreScreen extends React.Component {
       swipedAllCards: false,
       swipeDirection: "",
       cardIndex: 0,
-      showDetails: false
+      showDetails: false,
+      left: false,
+      right: false
     };
     User.getUserId().then(id => {
       ProjectApi.getSwipeProjects(id).then(response => {
+        console.log(response);
         this.setState({ cards: response["projects"] });
       });
-    })
+    });
     this.animatedValue = new Animated.Value(0);
   }
 
@@ -81,18 +84,20 @@ export default class ExploreScreen extends React.Component {
       FirebaseApi.createChat(uid);
       Router.goTo(this.props.navigation, "ChatStack", "Chat", {
         uid: uid,
-        title: title
+        title: title,
+        differentStack: true
       });
     });
   }
 
   addLike(index) {
     User.getUserId().then(id => {
-      ProjectApi.likeProject(this.state.cards[index].id, id).then(res => console.log(res))
-    })
-    
-    this.setState({ swipeDirection: "right" });
+      ProjectApi.likeProject(this.state.cards[index].id, id).then(res =>
+        console.log(res)
+      );
+    });
 
+    this.setState({ swipeDirection: "right" });
   }
 
   dislike(index) {
@@ -211,6 +216,8 @@ export default class ExploreScreen extends React.Component {
         <CardStack
           style={styles.container}
           verticalSwipe={false}
+          onSwipeStart={e => console.log(e)}
+          swipeRight={() => this.setState({ right: true })}
           horizontalSwipe={!this.state.showDetails ? true : false}
           renderNoMoreCards={() => (
             <View
@@ -243,6 +250,7 @@ export default class ExploreScreen extends React.Component {
             return (
               <TouchableWithoutFeedback
                 key={card.id}
+                style={{ backgroundColor: "black" }}
                 onPress={() => (this.state.showDetails ? null : this.animate())}
               >
                 <Animated.View style={{ marginTop: marginTop }}>
@@ -269,6 +277,33 @@ export default class ExploreScreen extends React.Component {
                       })
                     }}
                   >
+                    {this.state.left && (
+                      <View
+                        style={{
+                          position: "absolute",
+                          top: 10,
+                          left: 10,
+                          elevation: 5,
+                          width: 150,
+                          height: 150,
+                          backgroundColor: "red"
+                        }}
+                      />
+                    )}
+                    {this.state.right && (
+                      <View
+                        style={{
+                          position: "absolute",
+                          top: 10,
+                          right: 10,
+                          elevation: 5,
+                          width: 150,
+                          height: 150,
+                          backgroundColor: "green"
+                        }}
+                      />
+                    )}
+
                     <Animated.Image
                       style={{
                         height: height,

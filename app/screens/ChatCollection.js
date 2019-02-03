@@ -17,6 +17,7 @@ import Api from "../helpers/Api";
 import Router from "../helpers/Router";
 import User from "../helpers/User";
 import { Fragment } from "react";
+import Ripple from "react-native-material-ripple";
 
 export default class ChatCollection extends Component {
   constructor() {
@@ -39,6 +40,7 @@ export default class ChatCollection extends Component {
   }
 
   getChats() {
+    this.setState({ loading: true });
     User.getUserId().then(id => {
       FirebaseApi.getChats(id).then(res => {
         chats = [];
@@ -124,42 +126,65 @@ export default class ChatCollection extends Component {
               }}
             />
           </View>
-          <View style={styles.containerMargin}>
-            {!this.state.loading && (
-              <FlatList
-                data={this.state.chats}
-                refreshing={this.state.refreshing}
-                onRefresh={() => this.refreshList()}
-                ItemSeparatorComponent={this.renderSeparator}
-                renderItem={({ item }) => (
-                  <ListItem
-                    key={item.uid}
-                    title={item.title}
-                    titleStyle={styles.chatTitle}
-                    subtitle={"Het laatste chatbericht..."}
-                    subtitleStyle={styles.chatSubTitle}
-                    leftAvatar={{ rounded: true, source: { uri: item.photo } }}
-                    chevron={
-                      <Icon
-                        name="chevron-right"
-                        type="font-awesome"
-                        size={20}
-                        color="#4a6572"
-                      />
-                    }
-                    badge={{
-                      value: 4,
-                      textStyle: { color: "#fff" }
-                    }}
-                    onPress={() => {
-                      console.log(item.photo);
 
-                      this.goToChat(item.chatId, item.uid, item.title);
-                    }}
-                  />
-                )}
-              />
-            )}
+          <View style={styles.containerMargin}>
+            {this.state.chats.length > 0 &&
+              !this.state.loading && (
+                <FlatList
+                  data={this.state.chats}
+                  refreshing={this.state.refreshing}
+                  onRefresh={() => this.refreshList()}
+                  ItemSeparatorComponent={() => this.renderItemSeparator()}
+                  renderItem={({ item }) => (
+                    <ListItem
+                      key={item.uid}
+                      title={item.title}
+                      titleStyle={styles.chatTitle}
+                      subtitle={"Het laatste chatbericht..."}
+                      subtitleStyle={styles.chatSubTitle}
+                      leftAvatar={{
+                        rounded: true,
+                        source: { uri: item.photo }
+                      }}
+                      chevron={
+                        <Icon
+                          name="chevron-right"
+                          type="font-awesome"
+                          size={20}
+                          color="#4a6572"
+                        />
+                      }
+                      badge={{
+                        value: 4,
+                        textStyle: { color: "#fff" }
+                      }}
+                      onPress={() =>
+                        this.goToChat(item.chatId, item.uid, item.title)
+                      }
+                    />
+                  )}
+                />
+              )}
+            {this.state.chats.length == 0 &&
+              !this.state.loading && (
+                <View style={styles.emptyBox}>
+                  <Text style={styles.emptyText}>
+                    Er zijn geen chats gevonden
+                  </Text>
+                  <Ripple
+                    rippleColor="#00a6ff"
+                    style={styles.refreshButton}
+                    onPress={() => this.refreshList()}
+                  >
+                    <Icon
+                      name="refresh"
+                      type="font-awesome"
+                      size={25}
+                      color="#FFF"
+                    />
+                  </Ripple>
+                </View>
+              )}
             {this.state.loading && (
               <View
                 style={{
@@ -212,5 +237,25 @@ const styles = StyleSheet.create({
   separator: {
     height: 2,
     backgroundColor: "#4a6572"
+  },
+  emptyBox: {
+    alignItems: "center",
+    marginTop: "25%"
+  },
+
+  emptyText: {
+    color: "#4a6572",
+    fontSize: 24,
+    fontWeight: "bold"
+  },
+
+  refreshButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 100,
+    backgroundColor: "#009ef2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30
   }
 });

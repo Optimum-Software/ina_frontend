@@ -7,7 +7,8 @@ import {
   StyleSheet,
   FlatList,
   RefreshControl,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native';
 import Router from "../helpers/Router";
 import { Icon } from "react-native-elements";
@@ -15,7 +16,7 @@ import User from "../helpers/User";
 import UserApi from "../helpers/UserApi";
 import Api from "../helpers/Api";
 import moment from "moment/min/moment-with-locales";
-import { Toolbar } from "react-native-material-ui"
+import { Toolbar } from "react-native-material-ui";
 import Ripple from "react-native-material-ripple";
 import { decode, encode } from 'he';
 import { CachedImage } from "react-native-cached-image";
@@ -24,18 +25,21 @@ export default class NotificationScreen extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      notificationList: null,
-      refreshing: false
+      notificationList: [],
+      refreshing: false,
+      loading: false
     }
   }
 
   componentDidMount() {
     this.props.navigation.addListener("willFocus", this.onLoad);
+    this.setState({loading: true})
     User.getUserId().then(id => {
       UserApi.getNotifications(id).then(res => {
         if(res['bool']) {
           this.setState({notificationList: res['notifications']})
         }
+        this.setState({loading: false})
       })
     });
   }
@@ -47,11 +51,13 @@ export default class NotificationScreen extends Component{
   handelEnd() {}
 
   onRefresh() {
+    this.setState({loading: true})
     User.getUserId().then(id => {
       UserApi.getNotifications(id).then(res => {
         if(res['bool']) {
           this.setState({notificationList: res['notifications']})
         }
+        this.setState({loading: false})
       })
     });
   }
@@ -67,6 +73,7 @@ export default class NotificationScreen extends Component{
             this.props.navigation.openDrawer();
           }}
         />
+        {this.state.notificationList.length > 0 && !this.state.loading && (
           <FlatList
             data={this.state.notificationList}
             onEndReached={() => this.handelEnd()}
@@ -204,6 +211,37 @@ export default class NotificationScreen extends Component{
               }       
             }}
           />
+        )}
+        {this.state.notificationList.length == 0 && !this.state.loading && (
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyText}>
+              Er zijn geen meldingen gevonden
+            </Text>
+            <Ripple
+              rippleColor="#00a6ff"
+              style={styles.refreshButton}
+              onPress={() => this.onRefresh()}
+            >
+              <Icon
+                name="refresh"
+                type="font-awesome"
+                size={25}
+                color="#FFF"
+              />
+            </Ripple>
+          </View>
+        )}
+        {this.state.loading && (
+          <View
+            style={{
+              height: "92.5%",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <ActivityIndicator size="large" color="#00A6FF" />
+          </View>
+        )}
       </View>
     );
   }
@@ -263,5 +301,26 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center"
   },
+
+  emptyBox: {
+    alignItems: "center",
+    marginTop: "25%"
+  },
+
+  emptyText: {
+    color: "#4a6572",
+    fontSize: 24,
+    fontWeight: "bold"
+  },
+
+  refreshButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 100,
+    backgroundColor: "#009ef2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30
+  }
 })
 

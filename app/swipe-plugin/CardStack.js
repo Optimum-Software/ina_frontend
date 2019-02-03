@@ -66,16 +66,18 @@ export default class CardStack extends Component {
         );
       }, //(parseInt(gestureState.dx) !== 0 && parseInt(gestureState.dy) !== 0),
       onPanResponderGrant: (evt, gestureState) => {
-        this.props.onSwipeStart();
+        this.props.onSwipeStart(gestureState);
         this.setState({ touchStart: new Date().getTime() });
       },
       onPanResponderMove: (evt, gestureState) => {
+
         const { verticalSwipe, horizontalSwipe } = this.props;
         const { verticalThreshold, horizontalThreshold } = this.props;
         const dragDistance = this.distance(
           horizontalSwipe ? gestureState.dx : 0,
           verticalSwipe ? gestureState.dy : 0
         );
+        console.log(horizontalSwipe ? gestureState.dx : 0)
         this.state.dragDistance.setValue(dragDistance);
         this.state.drag.setValue({
           x: horizontalSwipe ? gestureState.dx : 0,
@@ -211,6 +213,11 @@ export default class CardStack extends Component {
       toValue: { x: 0, y: 0 },
       duration: this.props.duration
     }).start();
+  }
+
+  getDistance(){
+    console.log(this.state.dragDistance)
+    return this.state.dragDistance;
   }
 
   goBackFromTop() {

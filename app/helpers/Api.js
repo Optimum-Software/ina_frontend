@@ -1,9 +1,10 @@
 import React from "react";
 import { NetInfo } from "react-native";
+import User from "./User";
 let instance = null;
 class Api {
-  ip = "http://192.168.2.97:8000";
-  //ip = "http://136.144.186.136";
+  //ip = "http://192.168.2.97:8000";
+  ip = "http://136.144.186.136";
 
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
@@ -31,6 +32,28 @@ class Api {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
+  }
+
+  async callApiPostSafe(action, token, data) {
+    try {
+      let response = await fetch(this.url + action, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Token " + token
         },
         body: JSON.stringify(data)
       });
@@ -128,11 +151,31 @@ class Api {
 
   async callApiPostForm(action, data) {
     try {
-      console.log(this.url + action);
       let response = await fetch(this.url + action, {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data"
+        },
+        body: data
+      });
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      console.log(error);
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
+  }
+
+  async callApiPostFormSafe(action, data, token) {
+    try {
+      let response = await fetch(this.url + action, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Token " + token
         },
         body: data
       });
@@ -171,14 +214,15 @@ class Api {
     }
   }
 
-  async callApiUploadProfilePhoto(userId, name, file) {
+  async callApiUploadProfilePhoto(userId, token, name, file) {
     const data = new FormData();
     data.append(userId + "_" + name, file);
     try {
       let response = await fetch(this.url + "uploadFileForUser", {
         method: "POST",
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
+          Authorization: "Token " + token
         },
         body: data
       });
@@ -204,7 +248,9 @@ class Api {
 
   createDevice(id) {
     userData = { id: id };
-    return this.callApiPost("createDevice", userData);
+    User.getToken().then(token => {
+      return this.callApiPostSafe("createDevice", token, userData);
+    });
   }
 
   deleteDeviceById(id) {

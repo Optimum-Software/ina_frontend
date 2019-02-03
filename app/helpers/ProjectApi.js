@@ -1,5 +1,6 @@
 import React from "react";
 import Api from "./Api";
+import User from "./User";
 
 let instance = null;
 
@@ -28,12 +29,16 @@ class ProjectApi {
   }
   likeProject(id, userId) {
     userData = { id: id, userId: userId };
-    return Api.callApiPost("likeProjectById", userData);
+    User.getToken().then(token => {
+      return Api.callApiPostSafe("likeProjectById", token, userData);
+    });
   }
 
   followProject(id, userId) {
     userData = { id: id, userId: userId };
-    return Api.callApiPost("followProjectById", userData);
+    User.getToken().then(token => {
+      return Api.callApiPostSafe("followProjectById", token, userData);
+    });
   }
 
   newestProjects() {
@@ -53,7 +58,10 @@ class ProjectApi {
   }
 
   getSwipeProjects(userId) {
-    return Api.callApiGet("getSwipeProjects/"+ userId);
+    User.getToken().then(token => {
+      console.log(token);
+      return Api.callApiGetSafe("getSwipeProjects/" + userId, token);
+    });
   }
 
   createProject(
@@ -76,8 +84,6 @@ class ProjectApi {
     data.append("location", location);
     data.append("beginDate", beginDate);
     data.append("endDate", endDate);
-    console.log("TAGS VOOR HET AANMAKEN VAN PROJECT");
-    console.log(tags);
     let count = 0;
     tags.forEach(tag => {
       data.append("#" + count, tag.name);
@@ -93,7 +99,6 @@ class ProjectApi {
 
     for (i in documents) {
       document = documents[i];
-      console.log(document);
       newDoc = {
         uri: document.uri,
         name: document.name,
@@ -102,7 +107,9 @@ class ProjectApi {
       };
       data.append("" + newDoc.name, newDoc);
     }
-    return Api.callApiPostForm("createProject", data);
+    User.getToken().then(token => {
+      return Api.callApiPostFormSafe("createProject", data, token);
+    });
   }
 
   editProject(
@@ -147,11 +154,12 @@ class ProjectApi {
         type: "multipart/form-data",
         size: document.size
       };
-      console.log(newDoc);
 
       data.append("" + newDoc.name, newDoc);
     }
-    return Api.callApiPostForm("editProject", data);
+    User.getToken().then(token => {
+      return Api.callApiPostFormSafe("editProject", data, token);
+    });
   }
 
   getProjectMembersById(id) {
@@ -189,7 +197,9 @@ class ProjectApi {
       title: title,
       content: content
     };
-    return Api.callApiPost("addProjectUpdate", userData);
+    User.getToken().then(token => {
+      return Api.callApiPostSafe("addProjectUpdate", token, userData);
+    });
   }
 
   getUpdatesForProject(projectId) {
