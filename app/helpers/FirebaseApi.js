@@ -98,9 +98,7 @@ class FirebaseService {
     }
 
     async getChats(userId) {
-      User.getToken().then(token => {
-        return(Api.callApiGetSafe("getChatsForUser/" + userId, token))
-      })   
+        return(Api.callApiGetSafe("getChatsForUser/" + userId))  
     }
 
     notifyUser(uid, chatId) {
@@ -114,7 +112,7 @@ class FirebaseService {
             } else {
                 resId = ids[0];
             }
-            UserApi.notifyUser(parseInt(resId), token, chatId);
+            UserApi.notifyUser(parseInt(resId), chatId);
         });
     }
 
@@ -129,12 +127,9 @@ class FirebaseService {
         user2Id: user2,
         chatUid: uid
       }
-      User.getToken().then(token => {
-        Api.callApiPostSafe("createChat", token, userData).then(res => {
+        Api.callApiPostSafe("createChat", userData).then(res => {
           console.log(res);
-        })
-      })
-      
+        })   
     }
 
     getMsgsRef(uid) {

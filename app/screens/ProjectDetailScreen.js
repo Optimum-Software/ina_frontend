@@ -134,18 +134,11 @@ export default class ProjectDetail extends Component {
     });
   }
 
-  likedProject(projectId, userId) {
-    let like = ProjectApi.likeProject(projectId, userId).then(result => {
-      this.resetErrors();
-      if (result["ntwFail"]) {
-        //network error
-      } else {
-        if (result["bool"]) {
-          this.setState({
-            liked: true
-          });
-        }
-      }
+  likedProject() {
+    User.getUserId().then(id => {
+      ProjectApi.likeProject(this.state.project.id, id).then(res =>
+        console.log(res)
+      );
     });
   }
 
@@ -456,19 +449,7 @@ export default class ProjectDetail extends Component {
                           flexDirection: "row"
                         }}
                         rippleColor="#fff"
-                        onPress={() =>
-                          User.getUserId().then(id => {
-                            ProjectApi.likeProject(
-                              this.state.project.id,
-                              id
-                            ).then(res =>
-                              this.setState({
-                                likeCount: res["likedCount"],
-                                liked: true
-                              })
-                            );
-                          })
-                        }
+                        onPress={() => this.likedProject()}
                       >
                         {this.state.liked && (
                           <Icon name="heart" size={24} color={"red"} />
