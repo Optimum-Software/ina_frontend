@@ -72,11 +72,10 @@ class LoginScreen extends Component {
     if (this.checkInputEmpty() && this.checkEmail()) {
       let hashedPw = SHA256(this.state.pw).toString();
       UserApi.login(this.state.email, hashedPw).then(result => {
-        console.log(result);
         if (result.bool) {
           FirebaseApi.login(this.state.email, hashedPw);
           User.getDeviceId().then(deviceId => {
-            UserApi.createDeviceId(result.userId, deviceId).then(result => {});
+            UserApi.createDeviceId(result.userId, result.token, deviceId).then(result => {});
           });
           User.storeUserId(result.userId);
           User.storeToken(result.token);
