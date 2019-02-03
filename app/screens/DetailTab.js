@@ -74,61 +74,77 @@ export default class DetailTab extends Component {
   }
   startChat() {
     User.getUserId().then(id => {
-      let creatorId = this.state.project.creator.id;
-      let uid = "";
-      if (creatorId > id) {
-        uid = id + ":" + creatorId;
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
       } else {
-        uid = creatorId + ":" + id;
+        let creatorId = this.state.project.creator.id;
+        let uid = "";
+        if (creatorId > id) {
+          uid = id + ":" + creatorId;
+        } else {
+          uid = creatorId + ":" + id;
+        }
+        let title =
+          this.state.project.creator.firstName +
+          " " +
+          this.state.project.creator.lastName;
+        FirebaseApi.createChat(uid);
+        Router.goTo(this.props.navigation, "ChatStack", "Chat", {
+          uid: uid,
+          title: title,
+          differentStack: true
+        });
       }
-      let title =
-        this.state.project.creator.firstName +
-        " " +
-        this.state.project.creator.lastName;
-      FirebaseApi.createChat(uid);
-      Router.goTo(this.props.navigation, "ChatStack", "Chat", {
-        uid: uid,
-        title: title,
-        differentStack: true
-      });
     });
   }
 
   followProject() {
     User.getUserId().then(id => {
-      ProjectApi.followProject(this.state.project.id, id).then(res => {
-        if (res["bool"]) {
-          this.setState({ followed: res["bool"] });
-        } else {
-          console.log(res);
-        }
-      });
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.followProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            this.setState({ followed: res["bool"] });
+          } else {
+            console.log(res);
+          }
+        });
+      }
     });
   }
 
   joinProject() {
     User.getUserId().then(id => {
-      ProjectApi.joinProject(id, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          this.setState({ member: true });
-          this.getMembers();
-        } else {
-          alert(result["msg"]);
-        }
-      });
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.joinProject(id, this.state.project.id).then(result => {
+          if (result["bool"]) {
+            this.setState({ member: true });
+            this.getMembers();
+          } else {
+            alert(result["msg"]);
+          }
+        });
+      }
     });
   }
 
   leaveProject() {
     User.getUserId().then(id => {
-      ProjectApi.leaveProject(id, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          this.setState({ member: false });
-          this.getMembers();
-        } else {
-          alert(result["msg"]);
-        }
-      });
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.leaveProject(id, this.state.project.id).then(result => {
+          if (result["bool"]) {
+            this.setState({ member: false });
+            this.getMembers();
+          } else {
+            alert(result["msg"]);
+          }
+        });
+      }
     });
   }
 

@@ -136,14 +136,18 @@ export default class ProjectDetail extends Component {
 
   likedProject() {
     User.getUserId().then(id => {
-      ProjectApi.likeProject(this.state.project.id, id).then(res => {
-        if (res["bool"]) {
-          console.log("yay");
-          this.setState({ liked: true, like_count: res["likedCount"] });
-        } else {
-          console.log(res);
-        }
-      });
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.likeProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            console.log("yay");
+            this.setState({ liked: true, like_count: res["likedCount"] });
+          } else {
+            console.log(res);
+          }
+        });
+      }
     });
   }
 
