@@ -39,6 +39,7 @@ import Ripple from "react-native-material-ripple";
 import line from "../assets/images/Line.png";
 import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 import { Fragment } from "react";
+import { ImageColorPicker } from "react-native-image-color-picker";
 
 const FirstRoute = props => (
   <View style={[styles.scene, { backgroundColor: "white" }]}>
@@ -55,9 +56,9 @@ const getTabBarIcon = props => {
   const { route } = props;
 
   if (route.key === "detail") {
-    return <Icon name="information-outline" size={18} color={"black"} />;
+    return <Icon name="information-outline" size={18} color={"white"} />;
   } else {
-    return <Icon name="newspaper" size={18} color={"black"} />;
+    return <Icon name="newspaper" size={18} color={"white"} />;
   }
 };
 
@@ -256,6 +257,12 @@ export default class ProjectDetail extends Component {
     }
   }
 
+  pickerCallback = message => {
+    if (message && message.nativeEvent && message.nativeEvent.data) {
+      console.log(message.nativeEvent.data); // response from ImageColorPicker
+    }
+  };
+
   render() {
     let { width, height } = Dimensions.get("window");
     const sliderWidth = width;
@@ -269,33 +276,37 @@ export default class ProjectDetail extends Component {
             backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
             barStyle="light-content"
           />
-          <Toolbar
-            centerElement={this.state.project.name}
-            iconSet="MaterialCommunityIcons"
-            leftElement={"arrow-left"}
-            rightElement="share-variant"
-            onRightElementPress={() => {
-              Share.share({
-                message:
-                  '"' +
-                  this.state.project.name +
-                  '", bekijk meer in de app: https://app.ina-app.nl/?id=' +
-                  this.state.project.id
-              });
+          <LinearGradient
+            colors={["#00000099", "#00000000"]}
+            style={{
+              width: "100%",
+              position: "absolute",
+              top: 0,
+              zIndex: 3,
+              height: 65
             }}
-            onLeftElementPress={() => {
-              this.goBack();
-            }}
-          />
+          >
+            <Toolbar
+              style={{
+                container: { backgroundColor: "transparent", elevation: 0 }
+              }}
+              iconSet="MaterialCommunityIcons"
+              leftElement={"arrow-left"}
+              rightElement={["bell-outline", "share-variant"]}
+              onLeftElementPress={() => {
+                Router.goBack(this.props.navigation);
+              }}
+            />
+          </LinearGradient>
           <ScrollView scrollEnabled={false}>
             <View style={styles.container}>
               <View style={styles.card}>
                 <View
                   style={{
                     width: "100%",
-                    height: (Dimensions.get("window").height - 90) * 0.35,
+                    height: (Dimensions.get("window").height - 90) * 0.25,
                     ...ifIphoneX({
-                      height: (Dimensions.get("window").height - 150) * 0.3
+                      height: (Dimensions.get("window").height - 150) * 0.2
                     })
                   }}
                 >
@@ -312,11 +323,165 @@ export default class ProjectDetail extends Component {
                     loop={true}
                   />
                 </View>
-                <Image
-                  source={line}
-                  resizeMode="stretch"
-                  style={{ width: "100%", height: 2 }}
-                />
+                <View
+                  style={{
+                    paddingHorizontal: 15,
+                    paddingVertical: 25,
+                    flexDirection: "column",
+                    backgroundColor: "#00a6ff",
+                    width: Dimensions.get("window").width
+                  }}
+                >
+                  <Text
+                    style={{ fontSize: 22, color: "white", paddingBottom: 10 }}
+                  >
+                    {this.state.project.name}
+                  </Text>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingBottom: 10
+                    }}
+                  >
+                    <View style={{ flexDirection: "column" }}>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Icon
+                          name="heart-outline"
+                          color="white"
+                          size={15}
+                          style={{ marginRight: 5 }}
+                        />
+                        <Text style={{ color: "white" }}>
+                          {this.state.project.like_count} likes
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: "column" }}>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Icon
+                          name="account-outline"
+                          color="white"
+                          size={15}
+                          style={{ marginRight: 5, marginLeft: 15 }}
+                        />
+                        <Text style={{ color: "white" }}>
+                          {this.state.project.follower_count} volgers
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    {this.state.project.creator.profilePhotoPath != "" && (
+                      <CachedImage
+                        source={{
+                          uri: Api.getFileUrl(
+                            this.state.project.creator.profilePhotoPath
+                          )
+                        }}
+                        resizeMode="cover"
+                        style={{
+                          marginRight: 10,
+                          width: 30,
+                          height: 30,
+                          borderRadius: 100,
+                          backgroundColor: "white"
+                        }}
+                        imageStyle={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: 200
+                        }}
+                      />
+                    )}
+                    {this.state.project.creator.profilePhotoPath == "" && (
+                      <Icon
+                        name="account-circle"
+                        size={35}
+                        style={{
+                          marginRight: 10
+                        }}
+                      />
+                    )}
+                    <View style={{ flexDirection: "column" }}>
+                      <Text style={{ fontSize: 18, color: "white" }}>
+                        {this.state.project.creator.firstName +
+                          " " +
+                          this.state.project.creator.lastName}
+                      </Text>
+
+                      <View />
+                    </View>
+                  </View>
+                  <View style={{ position: "absolute", bottom: 25, right: 15 }}>
+                    {this.state.userId == this.state.project.creator.id && (
+                      <Icon
+                        name="square-edit-outline"
+                        size={36}
+                        onPress={() => {
+                          Router.goTo(
+                            this.props.navigation,
+                            "ProjectStack",
+                            "ProjectEditFirstScreen",
+                            {
+                              id: this.state.project.id,
+                              name: this.state.project.name,
+                              desc: this.state.project.desc,
+                              start_date: this.state.project.start_date,
+                              end_date: this.state.project.end_date,
+                              location: this.state.project.location,
+                              thumbnail: this.state.project.thumbnail,
+                              images: this.state.project.images,
+                              files: this.state.project.files,
+                              tags: this.state.tags
+                            }
+                          );
+                        }}
+                      />
+                    )}
+                    {this.state.userId != this.state.project.creator.id && (
+                      <Ripple
+                        style={{
+                          backgroundColor: "white",
+                          borderRadius: 100,
+                          height: 30,
+                          width: 70,
+                          justifyContent: "space-evenly",
+                          alignItems: "center",
+                          flexDirection: "row"
+                        }}
+                        rippleColor="#fff"
+                        onPress={() =>
+                          User.getUserId().then(id => {
+                            ProjectApi.likeProject(
+                              this.state.project.id,
+                              id
+                            ).then(res =>
+                              this.setState({
+                                likeCount: res["likedCount"],
+                                liked: true
+                              })
+                            );
+                          })
+                        }
+                      >
+                        {this.state.liked && (
+                          <Icon name="heart" size={24} color={"red"} />
+                        )}
+                        {!this.state.liked && (
+                          <Icon name="heart-outline" size={24} color={"red"} />
+                        )}
+                        <Text>Like{this.state.liked ? "d" : ""}</Text>
+                      </Ripple>
+                    )}
+                  </View>
+                </View>
+
                 <TabView
                   navigationState={this.state}
                   renderScene={this.renderScene}
@@ -348,7 +513,7 @@ const styles = StyleSheet.create({
     height: isIphoneX()
       ? Dimensions.get("window").height -
         (Header.HEIGHT + getStatusBarHeight() + 25)
-      : Dimensions.get("window").height - (Header.HEIGHT + getStatusBarHeight())
+      : Dimensions.get("window").height - getStatusBarHeight()
   },
 
   title: {
@@ -375,7 +540,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   tabbar: {
-    backgroundColor: "#dee5e8",
+    backgroundColor: "#0085cc",
     height: 44
   },
   tab: {
@@ -386,10 +551,10 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   indicator: {
-    backgroundColor: "#00a6ff"
+    backgroundColor: "white"
   },
   label: {
-    color: "black"
+    color: "white"
   },
 
   modalContainer: {}
