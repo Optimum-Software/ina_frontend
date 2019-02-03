@@ -2,9 +2,9 @@ import React from "react";
 import { NetInfo } from "react-native";
 import User from "./User";
 let instance = null;
-let token = null;
+let userToken = null;
 class Api {
-  ip = "http://192.168.65.19:8000"
+  ip = "http://136.144.186.136"
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -17,8 +17,10 @@ class Api {
 
   saveToken() {
     User.getToken().then(token => {
-      token = token
+      console.log(token)
+      userToken = token
     });
+    console.log(userToken)
   }
 
   timeout(ms, promise) {
@@ -58,7 +60,7 @@ class Api {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: "Token " + token
+          Authorization: "Token " + userToken
         },
         body: JSON.stringify(data)
       });
@@ -93,12 +95,13 @@ class Api {
   }
 
   async callApiGetSafe(action) {
+    console.log(userToken)
     try {
       let response = await fetch(this.url + action, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Token " + token
+          Authorization: "Token " + userToken
         }
       });
 
@@ -180,7 +183,7 @@ class Api {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: "Token " + token
+          Authorization: "Token " + userToken
         },
         body: data
       });
@@ -228,7 +231,7 @@ class Api {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: "Token " + token
+          Authorization: "Token " + userToken
         },
         body: data
       });
