@@ -54,7 +54,7 @@ class ProjectApi {
   }
 
   getSwipeProjects(userId) {
-    return Api.callApiGetSafe("getSwipeProjects/"+ userId);
+    return Api.callApiGetSafe("getSwipeProjects/" + userId);
   }
 
   createProject(

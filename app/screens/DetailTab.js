@@ -52,11 +52,11 @@ export default class DetailTab extends Component {
     this.getMembers();
   }
 
-  getMembers(){
+  getMembers() {
     ProjectApi.getProjectMembersById(this.state.project.id).then(result => {
       if (result["bool"]) {
         this.setState({
-          projectMembers: result["members"],
+          projectMembers: result["members"]
         });
       } else {
         alert("Er zijn geen deelnemers aan dit project");
@@ -95,12 +95,11 @@ export default class DetailTab extends Component {
     });
   }
 
-
   joinProject() {
     User.getUserId().then(id => {
       ProjectApi.joinProject(id, this.state.project.id).then(result => {
         if (result["bool"]) {
-          this.setState({ member: true,   });
+          this.setState({ member: true });
           this.getMembers();
         } else {
           alert(result["msg"]);
@@ -113,8 +112,8 @@ export default class DetailTab extends Component {
     User.getUserId().then(id => {
       ProjectApi.leaveProject(id, this.state.project.id).then(result => {
         if (result["bool"]) {
-          this.setState({ member: false, });
-        this.getMembers();
+          this.setState({ member: false });
+          this.getMembers();
         } else {
           alert(result["msg"]);
         }
@@ -206,8 +205,12 @@ export default class DetailTab extends Component {
                 })
               }
             >
-              {this.state.liked && <Icon name="heart" size={36} color={"red"} />}
-              {!this.state.liked && <Icon name="heart-outline" size={36} color={"red"} />}
+              {this.state.liked && (
+                <Icon name="heart" size={36} color={"red"} />
+              )}
+              {!this.state.liked && (
+                <Icon name="heart-outline" size={36} color={"red"} />
+              )}
             </Ripple>
           )}
         </View>
