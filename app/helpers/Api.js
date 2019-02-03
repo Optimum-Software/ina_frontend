@@ -2,8 +2,9 @@ import React from "react";
 import { NetInfo } from "react-native";
 import User from "./User";
 let instance = null;
+let token = null;
 class Api {
-  ip = "http://145.37.144.130:8000"
+  ip = "http://192.168.65.19:8000"
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -12,6 +13,12 @@ class Api {
       instance = this;
     }
     return instance;
+  }
+
+  saveToken() {
+    User.getToken().then(token => {
+      token = token
+    });
   }
 
   timeout(ms, promise) {
@@ -44,7 +51,7 @@ class Api {
     }
   }
 
-  async callApiPostSafe(action, token, data) {
+  async callApiPostSafe(action, data) {
     try {
       let response = await fetch(this.url + action, {
         method: "POST",
@@ -85,7 +92,7 @@ class Api {
     }
   }
 
-  async callApiGetSafe(action, token) {
+  async callApiGetSafe(action) {
     try {
       let response = await fetch(this.url + action, {
         method: "GET",
@@ -167,7 +174,7 @@ class Api {
     }
   }
 
-  async callApiPostFormSafe(action, data, token) {
+  async callApiPostFormSafe(action, data) {
     try {
       let response = await fetch(this.url + action, {
         method: "POST",
@@ -213,14 +220,14 @@ class Api {
     }
   }
 
-  async callApiUploadProfilePhoto(userId, token, name, file) {
+  async callApiUploadProfilePhoto(userId, name, file) {
     const data = new FormData();
     data.append(userId + "_" + name, file);
     try {
       let response = await fetch(this.url + "uploadFileForUser", {
         method: "POST",
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
           Authorization: "Token " + token
         },
         body: data
@@ -247,9 +254,7 @@ class Api {
 
   createDevice(id) {
     userData = { id: id };
-    User.getToken().then(token => {
-      return this.callApiPostSafe("createDevice", token userData);
-    })
+    return this.callApiPostSafe("createDevice", userData);
   }
 
   deleteDeviceById(id) {

@@ -29,16 +29,12 @@ class ProjectApi {
   }
   likeProject(id, userId) {
     userData = { id: id, userId: userId };
-    User.getToken().then(token => {
-      return Api.callApiPostSafe("likeProjectById", token, userData);
-    })
+    return Api.callApiPostSafe("likeProjectById", userData);
   }
 
   followProject(id, userId) {
     userData = { id: id, userId: userId };
-    User.getToken().then(token => {
-      return Api.callApiPostSafe("followProjectById", token, userData);
-    })
+    return Api.callApiPostSafe("followProjectById", userData);
   }
 
   newestProjects() {
@@ -58,9 +54,7 @@ class ProjectApi {
   }
 
   getSwipeProjects(userId) {
-    User.getToken().then(token => {
-      return Api.callApiGetSafe("getSwipeProjects/"+ userId, token);
-    })
+    return Api.callApiGetSafe("getSwipeProjects/"+ userId);
   }
 
   createProject(
@@ -106,10 +100,7 @@ class ProjectApi {
       };
       data.append("" + newDoc.name, newDoc);
     }
-    User.getToken().then(token => {
-      return Api.callApiPostFormSafe("createProject", data, token);
-    })
-    
+    return Api.callApiPostFormSafe("createProject", data);
   }
 
   editProject(
@@ -157,9 +148,7 @@ class ProjectApi {
 
       data.append("" + newDoc.name, newDoc);
     }
-    User.getToken().then(token => {
-      return Api.callApiPostFormSafe("editProject", data, token);
-    })
+    return Api.callApiPostFormSafe("editProject", data);
   }
 
   getProjectMembersById(id) {
@@ -197,9 +186,7 @@ class ProjectApi {
       title: title,
       content: content
     };
-    User.getToken().then(token => {
-      return Api.callApiPostSafe("addProjectUpdate", token, userData);
-    })
+    return Api.callApiPostSafe("addProjectUpdate", userData);
   }
 
   getUpdatesForProject(projectId) {
