@@ -76,6 +76,8 @@ export default class ProjectDetail extends Component {
       bookmarked: "bookmark",
       id: "",
       index: 0,
+      like_count: this.props.navigation.getParam("like_count", ""),
+
       liked: false,
       isModalVisible: false,
       tags: [],
@@ -91,7 +93,6 @@ export default class ProjectDetail extends Component {
         start_date: this.props.navigation.getParam("start_date", ""),
         end_date: this.props.navigation.getParam("end_date", ""),
         created_at: this.props.navigation.getParam("created_at", ""),
-        like_count: this.props.navigation.getParam("like_count", ""),
         follower_count: this.props.navigation.getParam("follower_count", ""),
         location: this.props.navigation.getParam("location", ""),
         thumbnail: this.props.navigation.getParam("thumbnail", ""),
@@ -102,11 +103,13 @@ export default class ProjectDetail extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.refreshProject();
   }
 
   refreshProject() {
+    this.checkIfLiked();
+
     ProjectApi.getProjectById(this.state.project.id).then(result => {
       if (result["bool"]) {
         result["project"].thumbnail = Api.getFileUrl(
@@ -119,26 +122,28 @@ export default class ProjectDetail extends Component {
     });
   }
 
-  followProject(projectId, userId) {
-    let like = ProjectApi.followProject(projectId, userId).then(result => {
-      this.resetErrors();
-      if (result["ntwFail"]) {
-        //network error
-      } else {
-        if (result["bool"]) {
-          this.setState({
-            liked: true
-          });
+  checkIfLiked() {
+    User.getUserId().then(id => {
+      ProjectApi.checkIfLiked(this.state.project.id, id).then(res => {
+        if (res["bool"]) {
+          this.setState({ liked: res["liked"] });
+        } else {
+          console.log(res);
         }
-      }
+      });
     });
   }
 
   likedProject() {
     User.getUserId().then(id => {
-      ProjectApi.likeProject(this.state.project.id, id).then(res =>
-        console.log(res)
-      );
+      ProjectApi.likeProject(this.state.project.id, id).then(res => {
+        if (res["bool"]) {
+          console.log("yay");
+          this.setState({ liked: true, like_count: res["likedCount"] });
+        } else {
+          console.log(res);
+        }
+      });
     });
   }
 
@@ -349,7 +354,7 @@ export default class ProjectDetail extends Component {
                           style={{ marginRight: 5 }}
                         />
                         <Text style={{ color: "white" }}>
-                          {this.state.project.like_count} likes
+                          {this.state.like_count} likes
                         </Text>
                       </View>
                     </View>

@@ -34,9 +34,8 @@ export default class DetailTab extends Component {
       tags: [],
       userId: null,
       projectMembers: [],
-      likeCount: props.project.project.like_count,
-      followCount: props.project.project.follower_count,
-      liked: false
+      liked: false,
+      followed: false
     };
     User.getUserId().then(userId => {
       this.setState({ userId: userId });
@@ -91,6 +90,18 @@ export default class DetailTab extends Component {
         uid: uid,
         title: title,
         differentStack: true
+      });
+    });
+  }
+
+  followProject() {
+    User.getUserId().then(id => {
+      ProjectApi.followProject(this.state.project.id, id).then(res => {
+        if (res["bool"]) {
+          this.setState({ followed: res["bool"] });
+        } else {
+          console.log(res);
+        }
       });
     });
   }
@@ -371,7 +382,7 @@ export default class DetailTab extends Component {
                 justifyContent: "center",
                 alignItems: "center"
               }}
-              onPress={() => this.startChat()}
+              onPress={() => this.followProject()}
             >
               <Icon name="bookmark-plus-outline" size={24} color={"white"} />
             </TouchableOpacity>
