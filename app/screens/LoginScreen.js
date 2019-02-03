@@ -34,10 +34,10 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "",
+      email: "jelmer.haarman@xs4all.nl",
       emailError: "",
 
-      pw: "",
+      pw: "123456",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
@@ -72,6 +72,7 @@ class LoginScreen extends Component {
     if (this.checkInputEmpty() && this.checkEmail()) {
       let hashedPw = SHA256(this.state.pw).toString();
       UserApi.login(this.state.email, hashedPw).then(result => {
+        console.log(result)
         if (result.bool) {
           FirebaseApi.login(this.state.email, hashedPw);
           User.getDeviceId().then(deviceId => {

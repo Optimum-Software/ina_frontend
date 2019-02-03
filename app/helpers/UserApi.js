@@ -16,9 +16,7 @@ class UserApi {
   }
 
   getUserSettings(id) {
-    User.getToken().then(token => {
-      return Api.callApiGetSafe("getUserSettings/" + id, token)
-    })
+    return Api.callApiGetSafe("getUserSettings/" + id)
   }
 
   login(username, password) {
@@ -27,9 +25,7 @@ class UserApi {
   }
 
   logout() {
-    User.getToken().then(token => {
-      return Api.callApiGetSafe("logout", token);
-    });
+    return Api.callApiGetSafe("logout");
   }
 
   registerUser(firstName, lastName, email, password, mobile) {
@@ -49,16 +45,11 @@ class UserApi {
       userId: id,
       canNotificate: canNotificate
     }
-    User.getToken().then(token => {
-      return Api.callApiPostSafe('saveUserSettings', token, userData);
-    })
+    return Api.callApiPostSafe('saveUserSettings', userData);
   }
 
   uploadProfilePhoto(userId, file) {
-    User.getToken().then(token => {
-      return Api.callApiUploadProfilePhoto(userId, token, "ProfilePhoto", file);
-    })
-    
+    return Api.callApiUploadProfilePhoto(userId, "ProfilePhoto", file);    
   }
 
   createDeviceId(userId, deviceId) {
@@ -66,9 +57,7 @@ class UserApi {
       userId: userId,
       deviceId: deviceId
     };
-    User.getToken().then(token => {
-      return Api.callApiPostSafe("createDevice", token, userData);
-    })
+    return Api.callApiPostSafe("createDevice", userData);
   }
 
   notifyUser(userId, chatId) {
@@ -76,9 +65,7 @@ class UserApi {
       userId: userId,
       chatId: chatId
     };
-    User.getToken().then(token => {
-      return Api.callApiPostSafe("sendMessageToUserById", token, userData);
-    })
+    return Api.callApiPostSafe("sendMessageToUserById", userData);
   }
 
   requestNewPassword(email) {
@@ -111,9 +98,7 @@ class UserApi {
       type: "multipart/form-data"
     };
     data.append("thumbnail", photoFile);
-    User.getToken().then(token => {
-      return Api.callApiPostFormSafe("updateUser", data, token);
-    })
+    return Api.callApiPostFormSafe("updateUser", data);
   }
 
   editOptionalInfo(id, bio, organisation, _function) {
@@ -123,21 +108,15 @@ class UserApi {
       organisation: organisation,
       function: _function
     }
-    User.getToken().then(token => {
-      return Api.callApiPost("editOptionalInfo", userData, token)
-    })
+    return Api.callApiPost("editOptionalInfo", userData)
   }
 
   getNotifications(id) {
-    User.getToken().then(token => {
-      return Api.callApiGetSafe("getNotificationByUser/"+id, token);
-    })
+    return Api.callApiGetSafe("getNotificationByUser/"+id);
   }
 
   markAsRead(id) {
-    User.getToken().then(token => {
-      return Api.callApiGetSafe("markAsRead/" + id, token);
-    })
+    return Api.callApiGetSafe("markAsRead/" + id);
   }
 }
 

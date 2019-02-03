@@ -93,7 +93,7 @@ export default class ChatCollection extends Component {
     });
   }
 
-  renderSeparator = () => {
+  renderSeparator() {
     return (
       <View
         style={{
@@ -104,7 +104,7 @@ export default class ChatCollection extends Component {
         }}
       />
     );
-  };
+  }
 
   render() {
     return (
@@ -134,7 +134,7 @@ export default class ChatCollection extends Component {
                   data={this.state.chats}
                   refreshing={this.state.refreshing}
                   onRefresh={() => this.refreshList()}
-                  ItemSeparatorComponent={() => this.renderItemSeparator()}
+                  ItemSeparatorComponent={() => this.renderSeparator()}
                   renderItem={({ item }) => (
                     <ListItem
                       key={item.uid}

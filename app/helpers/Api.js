@@ -2,6 +2,7 @@ import React from "react";
 import { NetInfo } from "react-native";
 import User from "./User";
 let instance = null;
+let userToken = null;
 class Api {
   //ip = "http://192.168.2.97:8000";
   ip = "http://136.144.186.136";
@@ -14,6 +15,14 @@ class Api {
       instance = this;
     }
     return instance;
+  }
+
+  saveToken() {
+    User.getToken().then(token => {
+      console.log(token);
+      userToken = token;
+    });
+    console.log(userToken);
   }
 
   timeout(ms, promise) {
@@ -46,14 +55,14 @@ class Api {
     }
   }
 
-  async callApiPostSafe(action, token, data) {
+  async callApiPostSafe(action, data) {
     try {
       let response = await fetch(this.url + action, {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: "Token " + token
+          Authorization: "Token " + userToken
         },
         body: JSON.stringify(data)
       });
@@ -87,13 +96,14 @@ class Api {
     }
   }
 
-  async callApiGetSafe(action, token) {
+  async callApiGetSafe(action) {
+    console.log(userToken);
     try {
       let response = await fetch(this.url + action, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Token " + token
+          Authorization: "Token " + userToken
         }
       });
 
@@ -169,13 +179,13 @@ class Api {
     }
   }
 
-  async callApiPostFormSafe(action, data, token) {
+  async callApiPostFormSafe(action, data) {
     try {
       let response = await fetch(this.url + action, {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: "Token " + token
+          Authorization: "Token " + userToken
         },
         body: data
       });
@@ -214,7 +224,7 @@ class Api {
     }
   }
 
-  async callApiUploadProfilePhoto(userId, token, name, file) {
+  async callApiUploadProfilePhoto(userId, name, file) {
     const data = new FormData();
     data.append(userId + "_" + name, file);
     try {
@@ -222,7 +232,8 @@ class Api {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: "Token " + token
+
+          Authorization: "Token " + userToken
         },
         body: data
       });
@@ -248,9 +259,8 @@ class Api {
 
   createDevice(id) {
     userData = { id: id };
-    User.getToken().then(token => {
-      return this.callApiPostSafe("createDevice", token, userData);
-    });
+
+    return this.callApiPostSafe("createDevice", userData);
   }
 
   deleteDeviceById(id) {

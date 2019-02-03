@@ -9,6 +9,7 @@ import React, { Component } from "react";
 import { Text, View, SafeAreaView, StyleSheet, Platform, Linking } from "react-native";
 import { RootNavigation } from "./config/CreateRootNavigation";
 import firebaseApi from "./helpers/FirebaseApi";
+import Api from "./helpers/Api";
 import User from "./helpers/User";
 import Router from "./helpers/Router";
 import OneSignal from "react-native-onesignal";
@@ -26,6 +27,7 @@ export default class App extends React.Component {
         super();
         console.disableYellowBox = true;
         firebaseApi.checkUser();
+        Api.saveToken();
         this.state = {
             loggedIn: false,
             checkedLoggedIn: false
