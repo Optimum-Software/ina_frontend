@@ -47,6 +47,7 @@ export default class ExploreScreen extends React.Component {
     };
     User.getUserId().then(id => {
       ProjectApi.getSwipeProjects(id).then(response => {
+        console.log(response);
         this.setState({ cards: response["projects"] });
       });
     });

@@ -231,6 +231,7 @@ class Api {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
+
           Authorization: "Token " + userToken
         },
         body: data
@@ -257,6 +258,7 @@ class Api {
 
   createDevice(id) {
     userData = { id: id };
+
     return this.callApiPostSafe("createDevice", userData);
   }
 
