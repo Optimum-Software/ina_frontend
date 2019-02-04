@@ -4,7 +4,7 @@ import User from "./User";
 let instance = null;
 let userToken = null;
 class Api {
-  ip = "http://145.37.144.182:8000"
+  ip = "http://136.144.186.136"
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -17,7 +17,7 @@ class Api {
 
   saveToken() {
     User.getToken().then(token => {
-      console.log(token);
+      console.log(token)
       userToken = token;
     });
   }
@@ -104,6 +104,7 @@ class Api {
       });
 
       let responseJson = await response.json();
+      console.log(responseJson)
       return responseJson;
     } catch (error) {
       return {

@@ -34,10 +34,10 @@ class LoginScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "jelmer.haarman@xs4all.nl",
+      email: "",
       emailError: "",
 
-      pw: "123456",
+      pw: "",
       pwError: ""
     };
     this.spinValue = new Animated.Value(0);
@@ -72,7 +72,6 @@ class LoginScreen extends Component {
     if (this.checkInputEmpty() && this.checkEmail()) {
       let hashedPw = SHA256(this.state.pw).toString();
       UserApi.login(this.state.email, hashedPw).then(result => {
-        console.log(result)
         if (result.bool) {
           FirebaseApi.login(this.state.email, hashedPw);
           User.getDeviceId().then(deviceId => {
@@ -80,9 +79,9 @@ class LoginScreen extends Component {
               result => {}
             );
           });
-          User.storeUserId(result.userId);
-          console.log(result.token);
+          User.storeUserId(result.userId); 
           User.storeToken(result.token);
+          Api.saveToken()
           Router.switchLogin(this.props.navigation);
           Router.goTo(this.props.navigation, "Tabs", "HomeScreen");
         } else {
