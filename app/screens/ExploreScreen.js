@@ -235,7 +235,7 @@ export default class ExploreScreen extends React.Component {
                   alignSelf: "center"
                 }}
               >
-                No more cards :(
+                Er zijn geen nieuwe projecten
               </Text>
             </View>
           )}
@@ -501,6 +501,7 @@ export default class ExploreScreen extends React.Component {
             );
           })}
         </CardStack>
+
         {this.state.showDetails && (
           <TouchableOpacity
             style={{
@@ -558,8 +559,10 @@ export default class ExploreScreen extends React.Component {
                   { backgroundColor: "#efc137" }
                 ]}
                 onPress={() =>
-                  this.state.swipeDirection == "left"
-                    ? this.swiper.goBackFromRight()
+                  this.state.swipeDirection == "right"
+                    ? this.swiper.goBackFromRight(
+                        this.state.cards[this.state.cardIndex].id - 1
+                      )
                     : this.swiper.goBackFromLeft()
                 }
               >
