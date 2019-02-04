@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "949213820980",
-    "firebase_url": "https://inaapp-8f14f.firebaseio.com",
-    "project_id": "inaapp-8f14f",
-    "storage_bucket": "inaapp-8f14f.appspot.com"
+    "project_number": "838244637510",
+    "firebase_url": "https://ina-app.firebaseio.com",
+    "project_id": "ina-app",
+    "storage_bucket": "ina-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:949213820980:android:8d09bad9d25078fa",
+        "mobilesdk_app_id": "1:838244637510:android:8d09bad9d25078fa",
         "android_client_info": {
           "package_name": "com.innovatie.netwerk.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "949213820980-nj795ecu6jhg0np7oslt26o1072a6g46.apps.googleusercontent.com",
+          "client_id": "838244637510-8e6up4bb8mt4c2mtnig853je50ce7q9r.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAF-TAJ-c2wB112LBx-ASPGzBagaE-yyiQ"
+          "current_key": "AIzaSyCcnm3XdAFtOa_ipZQTaOL6Qhm7X_8i-Ag"
         }
       ],
       "services": {
