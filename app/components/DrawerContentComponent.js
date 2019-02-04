@@ -36,7 +36,7 @@ export default class DrawerContentComponent extends Component {
     User.getUserId().then(id => {
       if (id != null) {
         Api.callApiGetSafe("getUserById/" + id).then(res => {
-          console.log(res);
+          console.log(Api.getFileUrl(res["user"].profilePhotoPath));
           this.setState({
             firstName: res["user"].firstName,
             lastName: res["user"].lastName,

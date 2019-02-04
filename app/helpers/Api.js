@@ -22,7 +22,6 @@ class Api {
       console.log(token);
       userToken = token;
     });
-    console.log(userToken);
   }
 
   timeout(ms, promise) {
@@ -97,7 +96,6 @@ class Api {
   }
 
   async callApiGetSafe(action) {
-    console.log(userToken);
     try {
       let response = await fetch(this.url + action, {
         method: "GET",

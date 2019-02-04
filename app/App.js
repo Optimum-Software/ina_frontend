@@ -35,7 +35,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        OneSignal.init("33abe35a-5325-45cc-bbee-074d6cc1d558");
+        OneSignal.init("491e8289-1ec1-4977-8820-03a3ba6c3269");
         OneSignal.addEventListener("ids", this.onIds);
         OneSignal.configure();
         User.getUserId().then( id => {
