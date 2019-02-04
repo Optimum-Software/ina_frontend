@@ -279,6 +279,7 @@ export const Tabs = createBottomTabNavigator(
   },
   {
     headerMode: "none",
+    gesturesEnabled: true,
     tabBarOptions: { showLabel: false }
   }
 );
@@ -337,7 +338,6 @@ export const Drawer = createDrawerNavigator(
     drawerWidth: Dimensions.get("window").width,
     contentComponent: CustomDrawerContentComponent,
     drawerBackgroundColor: "transparent",
-
     contentOptions: {
       activeTintColor: "black",
       activeBackgroundColor: "transparent",

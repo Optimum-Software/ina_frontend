@@ -62,7 +62,6 @@ export default class SavedProjects extends Component {
       SavedApi.getAllMembered(userId).then(res => {
         if(res['bool']) {
           if(res['found']) {
-            console.log(res['projects'])
             this.setState({memberedProjects: res['projects']})
           } else {
             alert(res['msg'])
