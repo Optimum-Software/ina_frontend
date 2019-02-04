@@ -9,6 +9,8 @@ import {
   Text,
   Platform
 } from "react-native";
+import ProjectApi from "../helpers/ProjectApi";
+import User from "../helpers/User";
 
 const { height, width } = Dimensions.get("window");
 
@@ -25,6 +27,7 @@ export default class CardStack extends Component {
     this.state = {
       drag: new Animated.ValueXY({ x: 0, y: 0 }),
       dragDistance: new Animated.Value(0),
+      dragDirection: 0,
       sindex: 0, // index to the next card to be renderd mod card.length
       cardA: null,
       cardB: null,
@@ -70,14 +73,13 @@ export default class CardStack extends Component {
         this.setState({ touchStart: new Date().getTime() });
       },
       onPanResponderMove: (evt, gestureState) => {
-
         const { verticalSwipe, horizontalSwipe } = this.props;
         const { verticalThreshold, horizontalThreshold } = this.props;
         const dragDistance = this.distance(
           horizontalSwipe ? gestureState.dx : 0,
           verticalSwipe ? gestureState.dy : 0
         );
-        console.log(horizontalSwipe ? gestureState.dx : 0)
+        this.setState({ dragDirection: horizontalSwipe ? gestureState.dx : 0 });
         this.state.dragDistance.setValue(dragDistance);
         this.state.drag.setValue({
           x: horizontalSwipe ? gestureState.dx : 0,
@@ -213,10 +215,11 @@ export default class CardStack extends Component {
       toValue: { x: 0, y: 0 },
       duration: this.props.duration
     }).start();
+    this.setState({ dragDirection: 0 });
   }
 
-  getDistance(){
-    console.log(this.state.dragDistance)
+  getDistance() {
+    console.log(this.state.dragDistance);
     return this.state.dragDistance;
   }
 
@@ -224,8 +227,14 @@ export default class CardStack extends Component {
     this._goBack("top");
   }
 
-  goBackFromRight() {
+  goBackFromRight(projectId) {
+    console.log("YOOOO");
+    console.log(projectId);
     this._goBack("right");
+    User.getUserId().then(id => {
+      console.log("HALLLOOOOOOOOOO");
+      ProjectApi.unlikeProject(projectId, id).then(res => console.log(res));
+    });
   }
 
   goBackFromLeft() {
@@ -274,10 +283,13 @@ export default class CardStack extends Component {
           case "left":
             this.state.drag.setValue({ x: -width, y: 0 });
             this.state.dragDistance.setValue(width);
+            this.setState({ dragDirection: -width });
             break;
           case "right":
             this.state.drag.setValue({ x: width, y: 0 });
             this.state.dragDistance.setValue(width);
+            this.setState({ dragDirection: width });
+
             break;
           case "bottom":
             this.state.drag.setValue({ x: 0, y: height });
@@ -375,6 +387,8 @@ export default class CardStack extends Component {
           };
         }
         this.state.drag.setValue({ x: 0, y: 0 });
+        this.setState({ dragDirection: 0 });
+
         this.state.dragDistance.setValue(0);
         this.setState({
           ...update,
@@ -385,9 +399,12 @@ export default class CardStack extends Component {
         this.props.onSwiped(index);
         switch (direction) {
           case "left":
+            this.setState({ dragDirection: 0 });
             this.props.onSwipedLeft(index);
             break;
           case "right":
+            this.setState({ dragDirection: 0 });
+
             this.props.onSwipedRight(index);
             break;
           case "top":
@@ -453,6 +470,57 @@ export default class CardStack extends Component {
           }}
         >
           {cardB}
+          <View
+            style={{
+              width: 200,
+              height: 200,
+              opacity: topCard === "cardB" ? this.state.dragDirection / 200 : 0,
+              borderWidth: 25,
+              borderColor: "green",
+              position: "absolute",
+              top: 35,
+              left: 25,
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <Text
+              style={{
+                color: "green",
+                opacity:
+                  topCard === "cardB" ? this.state.dragDirection / 200 : 0,
+                fontSize: 48
+              }}
+            >
+              LIKE
+            </Text>
+          </View>
+          <View
+            style={{
+              width: 200,
+              height: 200,
+              opacity:
+                topCard === "cardB" ? -this.state.dragDirection / 200 : 0,
+              borderWidth: 25,
+              borderColor: "red",
+              position: "absolute",
+              top: 35,
+              right: 25,
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <Text
+              style={{
+                color: "red",
+                opacity:
+                  topCard === "cardB" ? -this.state.dragDirection / 200 : 0,
+                fontSize: 48
+              }}
+            >
+              NOPE
+            </Text>
+          </View>
         </Animated.View>
         <Animated.View
           {...this._setPointerEvents(topCard, "cardA")}
@@ -473,6 +541,57 @@ export default class CardStack extends Component {
           }}
         >
           {cardA}
+          <View
+            style={{
+              width: 200,
+              height: 200,
+              opacity: topCard === "cardA" ? this.state.dragDirection / 200 : 0,
+              borderWidth: 25,
+              borderColor: "green",
+              position: "absolute",
+              top: 35,
+              left: 25,
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <Text
+              style={{
+                color: "green",
+                opacity:
+                  topCard === "cardA" ? this.state.dragDirection / 200 : 0,
+                fontSize: 48
+              }}
+            >
+              LIKE
+            </Text>
+          </View>
+          <View
+            style={{
+              width: 200,
+              height: 200,
+              opacity:
+                topCard === "cardA" ? -this.state.dragDirection / 200 : 0,
+              borderWidth: 25,
+              borderColor: "red",
+              position: "absolute",
+              top: 35,
+              right: 25,
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <Text
+              style={{
+                color: "red",
+                opacity:
+                  topCard === "cardA" ? -this.state.dragDirection / 200 : 0,
+                fontSize: 48
+              }}
+            >
+              NOPE
+            </Text>
+          </View>
         </Animated.View>
       </View>
     );

@@ -1,4 +1,8 @@
 rootProject.name = 'ina_frontend'
+include ':react-native-dominant-color'
+project(':react-native-dominant-color').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-dominant-color/android')
+include ':image-color-picker'
+project(':image-color-picker').projectDir = new File(rootProject.projectDir, '../node_modules/image-color-picker/android')
 
 include ':rn-fetch-blob'
 project(':rn-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/rn-fetch-blob/android')

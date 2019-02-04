@@ -103,6 +103,7 @@
 		E7BCDC2359C448BA8DACB31D /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A6093FC477E64FF2B7281C4D /* Montserrat-Regular.ttf */; };
 		FE01527D05449D27516C18A5 /* libPods-ina_frontendTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA56A57A30257538DA251967 /* libPods-ina_frontendTests.a */; };
 		FED4FFF1EB2D4122B7E57DED /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 645CC01F54A548F2ACD853B3 /* libRNImagePicker.a */; };
+		89AC29005593448DAF5671D8 /* libRNImageColorPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F13369FE34CD4B248684164B /* libRNImageColorPicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -555,6 +556,8 @@
 		FBC58DAAEC7171A40FF6F9F4 /* Pods-ina_frontendTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ina_frontendTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ina_frontendTests/Pods-ina_frontendTests.release.xcconfig"; sourceTree = "<group>"; };
 		FC54E7380F57442EB517A831 /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBold.ttf"; path = "../assets/fonts/Montserrat/Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
 		FD7A28389E4545A5A78A37F7 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Medium.ttf"; path = "../assets/fonts/Montserrat/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
+		0DE5216D05674CB4A00A2662 /* RNImageColorPicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImageColorPicker.xcodeproj"; path = "../node_modules/image-color-picker/ios/RNImageColorPicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		F13369FE34CD4B248684164B /* libRNImageColorPicker.a */ = {isa = PBXFileReference; name = "libRNImageColorPicker.a"; path = "libRNImageColorPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -592,6 +595,7 @@
 				1E1360826CB549EDB4C3CC2B /* libRCTOneSignal.a in Frameworks */,
 				FED4FFF1EB2D4122B7E57DED /* libRNImagePicker.a in Frameworks */,
 				51861AF586FAD078EAE26511 /* libPods-ina_frontend.a in Frameworks */,
+				89AC29005593448DAF5671D8 /* libRNImageColorPicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -886,6 +890,7 @@
 				917A812D7CDF428ABC71292E /* RNVectorIcons.xcodeproj */,
 				CD78BE79122849E58F8CF85A /* RCTOneSignal.xcodeproj */,
 				07CA044BD52040C8B1467898 /* RNImagePicker.xcodeproj */,
+				0DE5216D05674CB4A00A2662 /* RNImageColorPicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1820,12 +1825,14 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-onesignalios/**",
 					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
+					"$(SRCROOT)/../node_modules/image-color-picker/ios",
 				);
 				INFOPLIST_FILE = ina_frontendTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1856,12 +1863,14 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-onesignalios/**",
 					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
+					"$(SRCROOT)/../node_modules/image-color-picker/ios",
 				);
 				INFOPLIST_FILE = ina_frontendTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1892,6 +1901,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-onesignalios/**",
 					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
+					"$(SRCROOT)/../node_modules/image-color-picker/ios",
 				);
 				INFOPLIST_FILE = ina_frontend/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1923,6 +1933,7 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-onesignalios/**",
 					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
+					"$(SRCROOT)/../node_modules/image-color-picker/ios",
 				);
 				INFOPLIST_FILE = ina_frontend/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1959,11 +1970,13 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-onesignalios/**",
 					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
+					"$(SRCROOT)/../node_modules/image-color-picker/ios",
 				);
 				INFOPLIST_FILE = "ina_frontend-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -1999,11 +2012,13 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-onesignalios/**",
 					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
+					"$(SRCROOT)/../node_modules/image-color-picker/ios",
 				);
 				INFOPLIST_FILE = "ina_frontend-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -2038,11 +2053,13 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-onesignalios/**",
 					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
+					"$(SRCROOT)/../node_modules/image-color-picker/ios",
 				);
 				INFOPLIST_FILE = "ina_frontend-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
@@ -2077,11 +2094,13 @@
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
 					"$(SRCROOT)..\node_modules\neact-native-onesignalios/**",
 					"$(SRCROOT)..\node_modules\neact-native-image-pickerios",
+					"$(SRCROOT)/../node_modules/image-color-picker/ios",
 				);
 				INFOPLIST_FILE = "ina_frontend-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (

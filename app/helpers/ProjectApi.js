@@ -32,7 +32,7 @@ class ProjectApi {
     return Api.callApiPostSafe("likeProjectById", userData);
   }
 
-  ulikeProject(id, userId) {
+  unlikeProject(id, userId) {
     userData = { id: id, userId: userId };
     return Api.callApiPostSafe("unlikeProjectById", userData);
   }
@@ -182,6 +182,16 @@ class ProjectApi {
       projectId: projectId
     };
     return Api.callApiPost("getMember", userData);
+  }
+
+  checkIfLiked(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiGetSafe(
+      "checkIfProjectLiked/" + projectId + "/" + userId
+    );
   }
 
   updateProject(projectId, userId, title, content) {

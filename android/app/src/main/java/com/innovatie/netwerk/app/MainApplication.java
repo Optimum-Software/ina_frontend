@@ -3,6 +3,8 @@ package com.innovatie.netwerk.app;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import cl.hasaezs.rndominantcolor.RNDominantColorPackage;
+import com.reactlibrary.imagecolorpicker.RNImageColorPickerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 
 import com.brentvatne.react.ReactVideoPackage;
@@ -34,6 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new RNDominantColorPackage(),
+            new RNImageColorPickerPackage(),
             new RNFetchBlobPackage(),
             new ReactVideoPackage(),
             new ReactNativeDocumentPicker(),
