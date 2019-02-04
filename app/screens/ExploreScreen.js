@@ -135,6 +135,15 @@ export default class ExploreScreen extends React.Component {
     this.setState({ showDetails: !this.showDetails });
   }
 
+  goBackFromRight() {
+    this.swiper.goBackFromRight();
+    User.getUserId().then(id => {
+      ProjectApi.unlikeProject(this.state.cards[index].id, id).then(res =>
+        console.log(res)
+      );
+    });
+  }
+
   render() {
     const height = this.animatedValue.interpolate({
       inputRange: [0, 0.5, 1],
@@ -236,7 +245,7 @@ export default class ExploreScreen extends React.Component {
                   alignSelf: "center"
                 }}
               >
-                No more cards :(
+                Er zijn geen nieuwe projecten
               </Text>
             </View>
           )}
@@ -524,7 +533,7 @@ export default class ExploreScreen extends React.Component {
               style={[styles.mediumButtonStyle, { backgroundColor: "#efc137" }]}
               onPress={() =>
                 this.state.swipeDirection == "left"
-                  ? this.swiper.goBackFromRight()
+                  ? this.goBackFromRight()
                   : this.swiper.goBackFromLeft()
               }
             >

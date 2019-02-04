@@ -32,6 +32,11 @@ class ProjectApi {
     return Api.callApiPostSafe("likeProjectById", userData);
   }
 
+  ulikeProject(id, userId) {
+    userData = { id: id, userId: userId };
+    return Api.callApiPostSafe("unlikeProjectById", userData);
+  }
+
   followProject(id, userId) {
     userData = { id: id, userId: userId };
     return Api.callApiPostSafe("followProjectById", userData);
