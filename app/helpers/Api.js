@@ -4,8 +4,7 @@ import User from "./User";
 let instance = null;
 let userToken = null;
 class Api {
-  ip = "http://136.144.186.136";
-
+  ip = "http://145.37.144.182:8000"
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -21,7 +20,6 @@ class Api {
       console.log(token);
       userToken = token;
     });
-    console.log(userToken);
   }
 
   timeout(ms, promise) {
@@ -96,7 +94,6 @@ class Api {
   }
 
   async callApiGetSafe(action) {
-    console.log(userToken);
     try {
       let response = await fetch(this.url + action, {
         method: "GET",
