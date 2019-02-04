@@ -9,6 +9,8 @@ import {
   Text,
   Platform
 } from "react-native";
+import ProjectApi from "../helpers/ProjectApi";
+import User from "../helpers/User";
 
 const { height, width } = Dimensions.get("window");
 
@@ -225,8 +227,14 @@ export default class CardStack extends Component {
     this._goBack("top");
   }
 
-  goBackFromRight() {
+  goBackFromRight(projectId) {
+    console.log("YOOOO");
+    console.log(projectId);
     this._goBack("right");
+    User.getUserId().then(id => {
+      console.log("HALLLOOOOOOOOOO");
+      ProjectApi.unlikeProject(projectId, id).then(res => console.log(res));
+    });
   }
 
   goBackFromLeft() {
