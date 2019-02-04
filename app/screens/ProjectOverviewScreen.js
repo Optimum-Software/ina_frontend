@@ -111,7 +111,7 @@ export default class ProjectOverview extends Component {
                   Router.goTo(
                     this.props.navigation,
                     "ProjectStack",
-                    "ProjectCreateStackNavigator",
+                    "ProjectCreateFirstScreen",
                     {}
                   );
                 }}
