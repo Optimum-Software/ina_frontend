@@ -338,15 +338,19 @@ export default class GroupHomeScreen extends Component {
                       "ProjectStack",
                       "ProjectDetailScreen",
                       {
+                        id: item.id,
                         name: item.name,
-                        url: item.url,
                         desc: item.desc,
                         start_date: item.start_date,
                         end_date: item.end_date,
                         created_at: item.created_at,
                         like_count: item.like_count,
                         follower_count: item.follower_count,
-                        location: item.location
+                        location: item.location,
+                        thumbnail: Api.getFileUrl(item.thumbnail),
+                        creator: item.creator,
+                        images: item.images,
+                        files: item.files
                       }
                     )
                   }

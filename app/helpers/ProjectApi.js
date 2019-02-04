@@ -179,6 +179,16 @@ class ProjectApi {
     return Api.callApiPost("getMember", userData);
   }
 
+  checkIfLiked(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiGetSafe(
+      "checkIfProjectLiked/" + projectId + "/" + userId
+    );
+  }
+
   updateProject(projectId, userId, title, content) {
     userData = {
       project: projectId,
