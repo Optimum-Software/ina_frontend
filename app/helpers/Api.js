@@ -17,8 +17,8 @@ class Api {
 
   saveToken() {
     User.getToken().then(token => {
-      console.log(token)
-      userToken = token
+      console.log(token);
+      userToken = token;
     });
   }
 
@@ -206,7 +206,6 @@ class Api {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data"
-
         },
         body: data
       });
@@ -229,6 +228,7 @@ class Api {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
+
           Authorization: "Token " + userToken
         },
         body: data
@@ -255,6 +255,7 @@ class Api {
 
   createDevice(id) {
     userData = { id: id };
+
     return this.callApiPostSafe("createDevice", userData);
   }
 
