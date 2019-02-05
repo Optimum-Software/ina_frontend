@@ -79,7 +79,9 @@ export default class ProjectDetail extends Component {
       like_count: this.props.navigation.getParam("like_count", ""),
       userId: null,
 
+      followed: false,
       liked: false,
+      member: false,
       isModalVisible: false,
       tags: [],
       prevRoute: this.props.navigation.getParam("prevRoute", ""),
@@ -107,13 +109,13 @@ export default class ProjectDetail extends Component {
     });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refreshProject();
+    console.log(this.state.followed);
   }
 
   refreshProject() {
     this.checkIfLiked();
-
     ProjectApi.getProjectById(this.state.project.id).then(result => {
       if (result["bool"]) {
         result["project"].thumbnail = Api.getFileUrl(
@@ -256,6 +258,7 @@ export default class ProjectDetail extends Component {
         return (
           <FirstRoute project={this.state} navigation={this.props.navigation} />
         );
+
       case "news":
         return (
           <SecondRoute

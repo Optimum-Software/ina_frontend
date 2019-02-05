@@ -12,8 +12,14 @@ class ProjectApi {
     return instance;
   }
 
-  getAllProjects() {
-    return Api.callApiGet("getAllProjects");
+  getProjects(userId, filterNumber) {
+    if (userId != null) {
+      return Api.callApiGetSafe(
+        "getProjectsForUser/" + userId + "/" + filterNumber
+      );
+    } else {
+      return Api.callApiGet("getAllProjectsNotLoggedIn/" + filterNumber);
+    }
   }
 
   getAllTag() {
@@ -40,6 +46,11 @@ class ProjectApi {
   followProject(id, userId) {
     userData = { id: id, userId: userId };
     return Api.callApiPostSafe("followProjectById", userData);
+  }
+
+  unfollowProject(id, userId) {
+    userData = { id: id, userId: userId };
+    return Api.callApiPostSafe("unfollowProjectById", userData);
   }
 
   newestProjects() {
@@ -176,13 +187,13 @@ class ProjectApi {
     return Api.callApiDelete("deleteMember", userData);
   }
 
-  checkIfMember(userId, projectId) {
-    userData = {
-      userId: userId,
-      projectId: projectId
-    };
-    return Api.callApiPost("getMember", userData);
-  }
+  // checkIfMember(userId, projectId) {
+  //   userData = {
+  //     userId: userId,
+  //     projectId: projectId
+  //   };
+  //   return Api.callApiPost("getMember", userData);
+  // }
 
   checkIfLiked(userId, projectId) {
     userData = {
@@ -194,6 +205,24 @@ class ProjectApi {
     );
   }
 
+  checkIfFollowed(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiGetSafe(
+      "checkIfProjectFollowed/" + projectId + "/" + userId
+    );
+  }
+  checkIfMember(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiGetSafe(
+      "checkIfProjectMember/" + projectId + "/" + userId
+    );
+  }
   updateProject(projectId, userId, title, content) {
     userData = {
       project: projectId,

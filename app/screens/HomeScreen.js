@@ -52,7 +52,8 @@ export default class Home extends Component {
       dateNow: null,
       refreshing: false,
       search: false,
-      unRead: 0
+      unRead: 0,
+      userId: null
     };
     console.log(this.props);
     this.animatedValue = new Animated.Value(0);
@@ -60,6 +61,9 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    User.getUserId().then(id => {
+      this.setState({ userId: id });
+    });
     this.props.navigation.addListener("willFocus", this.onLoad);
     Linking.addEventListener("url", this._handleOpenURL);
     Linking.getInitialURL()
@@ -150,34 +154,33 @@ export default class Home extends Component {
   }
 
   getTrendingProjects() {
-    ProjectApi.mostLikedProjects().then(response => {
+    ProjectApi.getProjects(this.state.userId, 3).then(response => {
       if (response["bool"]) {
         this.setState({ projects: response["projects"] });
+        console.log(response);
       }
     });
   }
 
   getUserIfLoggedIn() {
-    User.getUserId().then(id => {
-      if (id != null) {
-        dateNow = new Date().toLocaleDateString("nl-NL", {
-          weekday: "long",
-          day: "numeric",
-          month: "long"
-        });
-        Api.callApiGet("getUserById/" + id).then(res => {
-          if (res["bool"]) {
-            this.setState({
-              user: res["user"],
-              loggedIn: true,
-              dateNow: dateNow
-            });
-          }
-        });
-      } else {
-        this.setState({ loggedIn: false, user: null, dateNow: null });
-      }
-    });
+    if (this.state.userId != null) {
+      dateNow = new Date().toLocaleDateString("nl-NL", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      });
+      Api.callApiGet("getUserById/" + this.state.userId).then(res => {
+        if (res["bool"]) {
+          this.setState({
+            user: res["user"],
+            loggedIn: true,
+            dateNow: dateNow
+          });
+        }
+      });
+    } else {
+      this.setState({ loggedIn: false, user: null, dateNow: null });
+    }
   }
 
   goToProjectFilterByTag(tag) {

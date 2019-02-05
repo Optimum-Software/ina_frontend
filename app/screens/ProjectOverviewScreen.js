@@ -33,15 +33,14 @@ export default class ProjectOverview extends Component {
       data: [],
       refreshing: false,
       loading: false,
-      loggedIn: false
+      userId: null,
+      user: []
     };
+  }
 
-    ProjectApi.getAllProjects().then(result => {
-      if (result["bool"]) {
-        this.setState({
-          data: result["projects"]
-        });
-      }
+  componentWillMount() {
+    User.getUserId().then(id => {
+      this.setState({ userId: id });
     });
   }
 
@@ -55,14 +54,14 @@ export default class ProjectOverview extends Component {
   onLoad = () => {
     this.setState({ refreshing: true, loading: true });
 
-    User.getUserId().then(id => {
-      if (id != null) {
-        this.setState({ loggedIn: true });
-      } else {
-        this.setState({ loggedIn: false });
-      }
-      this.setState({ refreshing: false, loading: false });
-    });
+    // User.getUserId().then(id => {
+    //   if (id != null) {
+    //     this.setState({ loggedIn: true });
+    //   } else {
+    //     this.setState({ loggedIn: false });
+    //   }
+    //   this.setState({ refreshing: false, loading: false, userId: id });
+    // });
 
     tagToFilter = this.props.navigation.getParam("tag", null);
     if (tagToFilter != null) {
@@ -74,7 +73,7 @@ export default class ProjectOverview extends Component {
         this.setState({ refreshing: false, loading: false });
       });
     } else {
-      ProjectApi.getAllProjects().then(result => {
+      ProjectApi.getProjects(this.state.userId, 0).then(result => {
         if (result["bool"]) {
           this.setState({
             data: result["projects"]
@@ -98,7 +97,7 @@ export default class ProjectOverview extends Component {
         />
         <View style={styles.container}>
           <View style={{ height: Header.HEIGHT }}>
-            {this.state.loggedIn && (
+            {this.state.userId != null && (
               <Toolbar
                 centerElement="Projecten"
                 iconSet="MaterialCommunityIcons"
@@ -117,7 +116,7 @@ export default class ProjectOverview extends Component {
                 }}
               />
             )}
-            {!this.state.loggedIn && (
+            {this.state.userId == null && (
               <Toolbar
                 centerElement="Projecten"
                 iconSet="MaterialCommunityIcons"
@@ -129,73 +128,51 @@ export default class ProjectOverview extends Component {
             )}
           </View>
           <View>
-            {this.state.data.length > 0 && !this.state.refreshing && (
-              <FlatList
-                data={this.state.data}
-                onEndReached={() => this.handelEnd()}
-                numColumns={2}
-                refreshing={this.state.refreshing}
-                onRefresh={() => this.onRefresh()}
-                keyExtractor={item => item.id}
-                contentContainerStyle={{ paddingLeft: 10, paddingRight: 10 }}
-                renderItem={({ item, index }) => {
-                  return (
-                    <Ripple
-                      rippleColor="#FFF"
-                      style={styles.cardContainer}
-                      key={item.id}
-                      onPress={() =>
-                        Router.goTo(
-                          this.props.navigation,
-                          "ProjectStack",
-                          "ProjectDetailScreen",
-                          {
-                            id: item.id,
-                            name: item.name,
-                            desc: item.desc,
-                            start_date: item.start_date,
-                            end_date: item.end_date,
-                            created_at: item.created_at,
-                            like_count: item.like_count,
-                            follower_count: item.follower_count,
-                            location: item.location,
-                            thumbnail: Api.getFileUrl(item.thumbnail),
-                            creator: item.creator,
-                            images: item.images,
-                            files: item.files
-                          }
-                        )
-                      }
-                    >
-                      {index != this.state.data.length - 1 && (
-                        //not last card
-                        <View style={styles.card}>
-                          <View style={styles.cardImage}>
-                            <CachedImage
-                              source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                              resizeMode="cover"
-                              style={styles.image}
-                            />
-                          </View>
-                          <Image
-                            source={line}
-                            resizeMode="stretch"
-                            style={{ width: "100%", height: "2%" }}
-                          />
-                          <Text numberOfLines={2} style={styles.cardTitle}>
-                            {item.name}
-                          </Text>
-                        </View>
-                      )}
-                      {index == this.state.data.length - 1 &&
-                        (index + 1) % 2 == 0 && (
-                          //last card but even index
+            {this.state.data.length > 0 &&
+              !this.state.refreshing && (
+                <FlatList
+                  data={this.state.data}
+                  onEndReached={() => this.handelEnd()}
+                  numColumns={2}
+                  refreshing={this.state.refreshing}
+                  onRefresh={() => this.onRefresh()}
+                  keyExtractor={item => item.id}
+                  contentContainerStyle={{ paddingLeft: 10, paddingRight: 10 }}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <Ripple
+                        rippleColor="#FFF"
+                        style={styles.cardContainer}
+                        key={item.id}
+                        onPress={() =>
+                          Router.goTo(
+                            this.props.navigation,
+                            "ProjectStack",
+                            "ProjectDetailScreen",
+                            {
+                              id: item.id,
+                              name: item.name,
+                              desc: item.desc,
+                              start_date: item.start_date,
+                              end_date: item.end_date,
+                              created_at: item.created_at,
+                              like_count: item.like_count,
+                              follower_count: item.follower_count,
+                              location: item.location,
+                              thumbnail: Api.getFileUrl(item.thumbnail),
+                              creator: item.creator,
+                              images: item.images,
+                              files: item.files
+                            }
+                          )
+                        }
+                      >
+                        {index != this.state.data.length - 1 && (
+                          //not last card
                           <View style={styles.card}>
                             <View style={styles.cardImage}>
                               <CachedImage
-                                source={{
-                                  uri: Api.getFileUrl(item.thumbnail)
-                                }}
+                                source={{ uri: Api.getFileUrl(item.thumbnail) }}
                                 resizeMode="cover"
                                 style={styles.image}
                               />
@@ -210,53 +187,77 @@ export default class ProjectOverview extends Component {
                             </Text>
                           </View>
                         )}
-                      {index == this.state.data.length - 1 &&
-                        (index + 1) % 2 != 0 && (
-                          //last card but uneven index
-                          <View style={styles.cardUneven}>
-                            <View style={styles.cardImage}>
-                              <CachedImage
-                                source={{
-                                  uri: Api.getFileUrl(item.thumbnail)
-                                }}
-                                resizeMode="cover"
-                                style={styles.image}
+                        {index == this.state.data.length - 1 &&
+                          (index + 1) % 2 == 0 && (
+                            //last card but even index
+                            <View style={styles.card}>
+                              <View style={styles.cardImage}>
+                                <CachedImage
+                                  source={{
+                                    uri: Api.getFileUrl(item.thumbnail)
+                                  }}
+                                  resizeMode="cover"
+                                  style={styles.image}
+                                />
+                              </View>
+                              <Image
+                                source={line}
+                                resizeMode="stretch"
+                                style={{ width: "100%", height: "2%" }}
                               />
+                              <Text numberOfLines={2} style={styles.cardTitle}>
+                                {item.name}
+                              </Text>
                             </View>
-                            <Image
-                              source={line}
-                              resizeMode="stretch"
-                              style={{ width: "100%", height: "2%" }}
-                            />
-                            <Text numberOfLines={2} style={styles.cardTitle}>
-                              {item.name}
-                            </Text>
-                          </View>
-                        )}
-                    </Ripple>
-                  );
-                }}
-              />
-            )}
-            {this.state.data.length == 0 && !this.state.loading && (
-              <View style={styles.emptyBox}>
-                <Text style={styles.emptyText}>
-                  Er zijn geen projecten gevonden
-                </Text>
-                <Ripple
-                  rippleColor="#00a6ff"
-                  style={styles.refreshButton}
-                  onPress={() => this.onRefresh()}
-                >
-                  <Icon
-                    name="refresh"
-                    type="font-awesome"
-                    size={25}
-                    color="#FFF"
-                  />
-                </Ripple>
-              </View>
-            )}
+                          )}
+                        {index == this.state.data.length - 1 &&
+                          (index + 1) % 2 != 0 && (
+                            //last card but uneven index
+                            <View style={styles.cardUneven}>
+                              <View style={styles.cardImage}>
+                                <CachedImage
+                                  source={{
+                                    uri: Api.getFileUrl(item.thumbnail)
+                                  }}
+                                  resizeMode="cover"
+                                  style={styles.image}
+                                />
+                              </View>
+                              <Image
+                                source={line}
+                                resizeMode="stretch"
+                                style={{ width: "100%", height: "2%" }}
+                              />
+                              <Text numberOfLines={2} style={styles.cardTitle}>
+                                {item.name}
+                              </Text>
+                            </View>
+                          )}
+                      </Ripple>
+                    );
+                  }}
+                />
+              )}
+            {this.state.data.length == 0 &&
+              !this.state.loading && (
+                <View style={styles.emptyBox}>
+                  <Text style={styles.emptyText}>
+                    Er zijn geen projecten gevonden
+                  </Text>
+                  <Ripple
+                    rippleColor="#00a6ff"
+                    style={styles.refreshButton}
+                    onPress={() => this.onRefresh()}
+                  >
+                    <Icon
+                      name="refresh"
+                      type="font-awesome"
+                      size={25}
+                      color="#FFF"
+                    />
+                  </Ripple>
+                </View>
+              )}
             {this.state.loading && (
               <View
                 style={{

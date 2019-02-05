@@ -34,21 +34,40 @@ export default class DetailTab extends Component {
       tags: [],
       userId: null,
       projectMembers: [],
-      liked: false,
+      member: false,
       followed: false
     };
-    User.getUserId().then(userId => {
-      this.setState({ userId: userId });
-      ProjectApi.checkIfMember(userId, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          this.setState({ member: true });
+
+    this.checkIfFollowed();
+    this.checkIfMember();
+    this.getMembers();
+    this.tags(this.state.project.id);
+  }
+
+  checkIfFollowed() {
+    User.getUserId().then(id => {
+      ProjectApi.checkIfFollowed(this.state.project.id, id).then(res => {
+        console.log(res);
+
+        if (res["bool"]) {
+          this.setState({ followed: res["followed"] });
         } else {
-          this.setState({ member: false });
+          console.log(res);
         }
       });
     });
-    this.tags(this.state.project.id);
-    this.getMembers();
+  }
+
+  checkIfMember() {
+    User.getUserId().then(id => {
+      ProjectApi.checkIfMember(this.state.project.id, id).then(res => {
+        if (res["bool"]) {
+          this.setState({ member: res["member"] });
+        } else {
+          console.log(res);
+        }
+      });
+    });
   }
 
   getMembers() {
@@ -105,7 +124,23 @@ export default class DetailTab extends Component {
       } else {
         ProjectApi.followProject(this.state.project.id, id).then(res => {
           if (res["bool"]) {
-            this.setState({ followed: res["bool"] });
+            this.setState({ followed: true });
+          } else {
+            console.log(res);
+          }
+        });
+      }
+    });
+  }
+
+  unfollowProject() {
+    User.getUserId().then(id => {
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.unfollowProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            this.setState({ followed: false });
           } else {
             console.log(res);
           }
@@ -371,7 +406,7 @@ export default class DetailTab extends Component {
             </TouchableOpacity>
             <Text style={{ paddingTop: 10 }}>Contact</Text>
           </View>
-          {!this.state.member == true && (
+          {this.state.member == false && (
             <View
               style={{
                 flexDirection: "column",
@@ -419,28 +454,54 @@ export default class DetailTab extends Component {
               <Text style={{ paddingTop: 10 }}>Verlaten</Text>
             </View>
           )}
-          <View
-            style={{
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <TouchableOpacity
+          {this.state.followed == false && (
+            <View
               style={{
-                borderRadius: 100,
-                backgroundColor: "#00a6ff",
-                height: 60,
-                width: 60,
+                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center"
               }}
-              onPress={() => this.followProject()}
             >
-              <Icon name="bookmark-plus-outline" size={24} color={"white"} />
-            </TouchableOpacity>
-            <Text style={{ paddingTop: 10 }}>Volgen</Text>
-          </View>
+              <TouchableOpacity
+                style={{
+                  borderRadius: 100,
+                  backgroundColor: "#00a6ff",
+                  height: 60,
+                  width: 60,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+                onPress={() => this.followProject()}
+              >
+                <Icon name="bookmark-plus-outline" size={24} color={"white"} />
+              </TouchableOpacity>
+              <Text style={{ paddingTop: 10 }}>Volgen</Text>
+            </View>
+          )}
+          {this.state.followed == true && (
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  borderRadius: 100,
+                  backgroundColor: "#00a6ff",
+                  height: 60,
+                  width: 60,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+                onPress={() => this.unfollowProject()}
+              >
+                <Icon name="bookmark-plus-outline" size={24} color={"white"} />
+              </TouchableOpacity>
+              <Text style={{ paddingTop: 10 }}>Ontvolgen</Text>
+            </View>
+          )}
         </View>
         {this.state.tags.length > 0 && (
           <View

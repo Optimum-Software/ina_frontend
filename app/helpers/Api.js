@@ -4,7 +4,7 @@ import User from "./User";
 let instance = null;
 let userToken = null;
 class Api {
-  ip = "http://145.37.152.213:8000";
+  ip = "http://145.37.152.150:8000";
   //ip = "http://136.144.186.136";
 
   url = this.ip + "/api/";
