@@ -215,16 +215,21 @@ export default class DetailTab extends Component {
           style={{ flexGrow: 0 }}
           renderItem={({ item }) => (
             <TouchableOpacity
+              key={item}
               onPress={() =>
-                Linking.canOpenURL(Api.getFileUrl(item)).then(supported => {
+                {
+                  console.log(item)
+                  console.log("https://file.ina-app.nl/?id=" + item.id)
+                Linking.canOpenURL("https://file.ina-app.nl/?id=" + item.id).then(supported => {
                   if (supported) {
-                    Linking.openURL(Api.getFileUrl(item));
+                    Linking.openURL("https://file.ina-app.nl/?id=" + item.id);
                   } else {
                     console.log(
                       "Don't know how to open URI: " + Api.getFileUrl(item)
                     );
                   }
                 })
+              }
               }
               style={{
                 width: "90%",
@@ -236,7 +241,7 @@ export default class DetailTab extends Component {
             >
               <Icon name="file-document-outline" size={48} color={"#4C6873"} />
               <View style={{ flexDirection: "column" }}>
-                <Text>{item.split("/")[item.split("/").length - 1]}</Text>
+                <Text>{item.path.split("/")[item.path.split("/").length - 1]}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -289,24 +294,61 @@ export default class DetailTab extends Component {
             </Text>
           </View>
 
-          {this.state.project.start_date != null && (
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                width: Dimensions.get("window").width
-              }}
-            >
-              <Icon name="calendar-range" size={24} color={"#4C6873"} />
-              <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
-                {this.state.project.start_date.substring(0, 10) +
-                  " / " +
-                  this.state.project.end_date.substring(0, 10)}
-              </Text>
-            </View>
-          )}
+          {this.state.project.start_date != null &&
+            this.state.project.end_date != null && (
+              <View
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="calendar-range" size={24} color={"#4C6873"} />
+                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                  {this.state.project.start_date.substring(0, 10) +
+                    " / " +
+                    this.state.project.end_date.substring(0, 10)}
+                </Text>
+              </View>
+            )}
+          {this.state.project.start_date == null &&
+            this.state.project.end_date != null && (
+              <View
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="calendar-range" size={24} color={"#4C6873"} />
+                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                  {"Eind datum: " +
+                    this.state.project.end_date.substring(0, 10)}
+                </Text>
+              </View>
+            )}
+          {this.state.project.start_date != null &&
+            this.state.project.end_date == null && (
+              <View
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="calendar-range" size={24} color={"#4C6873"} />
+                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                  {"Begin datum: " +
+                    this.state.project.start_date.substring(0, 10)}
+                </Text>
+              </View>
+            )}
         </View>
         <View
           style={{

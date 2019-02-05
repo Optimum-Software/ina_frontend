@@ -10,7 +10,6 @@ import {
 } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
@@ -21,6 +20,7 @@ import GroupStack from "./GroupStackNavigator";
 import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
 import ProjectStack from "./ProjectStackNavigator";
+import SavedProjectStack from "./SavedProjectStack";
 
 import ExploreNavigateButton from "./ExploreNavigateButton";
 
@@ -127,8 +127,8 @@ export const Drawer = createDrawerNavigator(
         )
       }
     },
-    SavedProjectScreen: {
-      screen: SavedProjectScreen,
+    SavedProjectStack: {
+      screen: SavedProjectStack,
       navigationOptions: {
         drawerLabel: "Mijn projecten",
         drawerIcon: ({ tintColor }) => (

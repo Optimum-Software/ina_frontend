@@ -12,7 +12,8 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
-  Share
+  Share,
+  BackHandler
 } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
@@ -77,8 +78,10 @@ export default class ProjectDetail extends Component {
       id: "",
       index: 0,
       like_count: this.props.navigation.getParam("like_count", ""),
+      userId: null,
 
       liked: false,
+      followed: false,
       isModalVisible: false,
       tags: [],
       prevRoute: this.props.navigation.getParam("prevRoute", ""),
@@ -99,17 +102,33 @@ export default class ProjectDetail extends Component {
         creator: this.props.navigation.getParam("creator", ""),
         images: this.props.navigation.getParam("images", ""),
         files: this.props.navigation.getParam("files", "")
-      }
+      },
+
+      notiIcon: "bell-outline",
+      canNotificate: false
     };
+    User.getUserId().then(userId => {
+      this.setState({ userId: userId });
+    });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.refreshProject();
+    BackHandler.addEventListener('hardwareBackPress', this.handleBack.bind(this))
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBack.bind(this))
+  }
+
+  handleBack() {
+    Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))
+    return true
   }
 
   refreshProject() {
     this.checkIfLiked();
-
+    this.checkIfFollowed();
     ProjectApi.getProjectById(this.state.project.id).then(result => {
       if (result["bool"]) {
         result["project"].thumbnail = Api.getFileUrl(
@@ -124,15 +143,29 @@ export default class ProjectDetail extends Component {
 
   checkIfLiked() {
     User.getUserId().then(id => {
-      ProjectApi.checkIfLiked(this.state.project.id, id).then(res => {
+      ProjectApi.checkIfLiked(id, this.state.project.id).then(res => {
         if (res["bool"]) {
           this.setState({ liked: res["liked"] });
-        } else {
-          console.log(res);
         }
       });
     });
   }
+
+  checkIfFollowed() {
+    User.getUserId().then(id => {
+      ProjectApi.checkIfFollowed(id, this.state.project.id).then(res => {
+        if (res['bool']) {
+          this.setState({ followed: res['followed']})
+          if(res['canNotificate']) {
+            this.setState({notiIcon: "bell-ring-outline"})
+          } else {
+            this.setState({notiIcon: "bell-outline"})
+          }
+        }
+      })
+    })
+  }
+
 
   likedProject() {
     User.getUserId().then(id => {
@@ -141,10 +174,36 @@ export default class ProjectDetail extends Component {
       } else {
         ProjectApi.likeProject(this.state.project.id, id).then(res => {
           if (res["bool"]) {
-            console.log("yay");
             this.setState({ liked: true, like_count: res["likedCount"] });
+          }
+        });
+      }
+    });
+  }
+
+  setCanNotificate() {
+    User.getUserId().then(id => {
+      ProjectApi.setCanNotificate(!this.state.canNotificate, id, this.state.project.id).then(res => {
+        if(res['bool']) {
+          if(!this.state.canNotificate) {
+            this.setState({notiIcon: "bell-ring-outline"})
           } else {
-            console.log(res);
+            this.setState({notiIcon: "bell-outline"})
+          }
+          this.setState({canNotificate: !this.state.canNotificate})
+        }
+      })
+    })
+  }
+
+  unlikeProject() {
+    User.getUserId().then(id => {
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.unlikeProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            this.setState({ liked: false, like_count: res["likedCount"] });
           }
         });
       }
@@ -162,8 +221,9 @@ export default class ProjectDetail extends Component {
         {!item.includes("videoThumbnail_") && (
           <Ripple
             onPress={() =>
-              Router.goTo(this.props.navigation, "HomeStack", "Imageviewer", {
-                url: Api.getFileUrl(item.substring(0, item.length))
+              Router.goTo(this.props.navigation, "ProjectStack", "Imageviewer", {
+                url: Api.getFileUrl(item.substring(0, item.length)),
+                differentStack: this.props.navigation.getParam("differentStack", false)
               })
             }
             rippleColor="#fff"
@@ -178,8 +238,9 @@ export default class ProjectDetail extends Component {
         {item.includes("videoThumbnail_") && (
           <Ripple
             onPress={() =>
-              Router.goTo(this.props.navigation, "HomeStack", "Videoplayer", {
-                url: Api.getFileUrl(item.substring(0, item.length - 4))
+              Router.goTo(this.props.navigation, "ProjectStack", "Videoplayer", {
+                url: Api.getFileUrl(item.substring(0, item.length - 4)),
+                differentStack: this.props.navigation.getParam("differentStack", false)
               })
             }
             rippleColor="#fff"
@@ -252,7 +313,6 @@ export default class ProjectDetail extends Component {
       this.state.prevRoute == "ProjectCreate" ||
       this.state.prevRoute == "ProjectEdit"
     ) {
-      console.log("KOMT VAN EDIT OF CREATE");
       Router.popToTop(this.props.navigation);
     } else {
       Router.goBack(this.props.navigation);
@@ -288,17 +348,44 @@ export default class ProjectDetail extends Component {
               height: 65
             }}
           >
-            <Toolbar
-              style={{
-                container: { backgroundColor: "transparent", elevation: 0 }
-              }}
-              iconSet="MaterialCommunityIcons"
-              leftElement={"arrow-left"}
-              rightElement={["bell-outline", "share-variant"]}
-              onLeftElementPress={() => {
-                Router.goBack(this.props.navigation);
-              }}
-            />
+            {this.state.followed && (
+              <Toolbar
+                style={{
+                  container: { backgroundColor: "transparent", elevation: 0 }
+                }}
+                iconSet="MaterialCommunityIcons"
+                leftElement={"arrow-left"}
+                rightElement={[this.state.notiIcon, "share-variant"]}
+                onLeftElementPress={() => {
+                  Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))
+                }}
+                onRightElementPress={(action) => {
+                  if(action.action == "share-variant") {
+                    //share
+                    console.log("share")
+                  } else {
+                    this.setCanNotificate()
+                  }
+                  
+                }}
+              />
+            )}
+            {!this.state.followed && (
+              <Toolbar
+                style={{
+                  container: { backgroundColor: "transparent", elevation: 0 }
+                }}
+                iconSet="MaterialCommunityIcons"
+                leftElement={"arrow-left"}
+                rightElement={"share-variant"}
+                onLeftElementPress={() => {
+                  Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))
+                }}
+                onRightElementPress={() => {
+                  //share
+                }}
+              />
+            )}
           </LinearGradient>
           <ScrollView scrollEnabled={false}>
             <View style={styles.container}>
@@ -379,37 +466,27 @@ export default class ProjectDetail extends Component {
                     </View>
                   </View>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    {this.state.project.creator.profilePhotoPath != "" && (
-                      <CachedImage
-                        source={{
-                          uri: Api.getFileUrl(
-                            this.state.project.creator.profilePhotoPath
-                          )
-                        }}
-                        resizeMode="cover"
-                        style={{
-                          marginRight: 10,
-                          width: 30,
-                          height: 30,
-                          borderRadius: 100,
-                          backgroundColor: "white"
-                        }}
-                        imageStyle={{
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: 200
-                        }}
-                      />
-                    )}
-                    {this.state.project.creator.profilePhotoPath == "" && (
-                      <Icon
-                        name="account-circle"
-                        size={35}
-                        style={{
-                          marginRight: 10
-                        }}
-                      />
-                    )}
+                    <CachedImage
+                      source={{
+                        uri: Api.getFileUrl(
+                          this.state.project.creator.profilePhotoPath
+                        )
+                      }}
+                      resizeMode="cover"
+                      style={{
+                        marginRight: 10,
+                        width: 30,
+                        height: 30,
+                        borderRadius: 100,
+                        backgroundColor: "white"
+                      }}
+                      imageStyle={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: 200
+                      }}
+                    />
+
                     <View style={{ flexDirection: "column" }}>
                       <Text style={{ fontSize: 18, color: "white" }}>
                         {this.state.project.creator.firstName +
@@ -424,6 +501,7 @@ export default class ProjectDetail extends Component {
                     {this.state.userId == this.state.project.creator.id && (
                       <Icon
                         name="square-edit-outline"
+                        color="#fff"
                         size={36}
                         onPress={() => {
                           Router.goTo(
@@ -458,7 +536,11 @@ export default class ProjectDetail extends Component {
                           flexDirection: "row"
                         }}
                         rippleColor="#fff"
-                        onPress={() => this.likedProject()}
+                        onPress={() =>
+                          this.state.liked
+                            ? this.unlikeProject()
+                            : this.likedProject()
+                        }
                       >
                         {this.state.liked && (
                           <Icon name="heart" size={24} color={"red"} />

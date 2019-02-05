@@ -58,8 +58,11 @@
 		51861AF586FAD078EAE26511 /* libPods-ina_frontend.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E0AEE42BF8C293B9058BB178 /* libPods-ina_frontend.a */; };
 		5CB1600D8F0A4E59878E4387 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 02869229D3364B678F477E61 /* FontAwesome.ttf */; };
 		600F6E4D3034442686952C88 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D2E02564C7C4177A040DCF5 /* Montserrat-Bold.ttf */; };
+		651D8CA32209DF30003A3C42 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 651D8CA22209DF30003A3C42 /* GoogleService-Info.plist */; };
+		651D8CA42209DF30003A3C42 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 651D8CA22209DF30003A3C42 /* GoogleService-Info.plist */; };
+		651D8CA52209DF30003A3C42 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 651D8CA22209DF30003A3C42 /* GoogleService-Info.plist */; };
+		651D8CA62209DF30003A3C42 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 651D8CA22209DF30003A3C42 /* GoogleService-Info.plist */; };
 		653CE53121E61AE2005C6653 /* libfishhook.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6841FA4F8DC00B85C8A /* libfishhook.a */; };
-		655CA15421C8F942009FC9F8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 655CA15321C8F942009FC9F8 /* GoogleService-Info.plist */; };
 		658177AF21C9038E0008F2BF /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6581777121C903860008F2BF /* Roboto-ThinItalic.ttf */; };
 		658177B021C9038E0008F2BF /* RobotoCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6581779D21C903860008F2BF /* RobotoCondensed-Regular.ttf */; };
 		658177B121C9038E0008F2BF /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6581779E21C903870008F2BF /* Roboto-BoldItalic.ttf */; };
@@ -499,10 +502,10 @@
 		607130371D1542F19B4E547D /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		61DCA6B6F5064091A88B4F38 /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBoldItalic.ttf"; path = "../assets/fonts/Montserrat/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		645CC01F54A548F2ACD853B3 /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
+		651D8CA22209DF30003A3C42 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		653CE59121E622F6005C6653 /* libDoubleConversion.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libDoubleConversion.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		653CE59321E622FF005C6653 /* libFolly.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFolly.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		653CE59521E62304005C6653 /* libglog.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libglog.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		655CA15321C8F942009FC9F8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6581777121C903860008F2BF /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 		6581779D21C903860008F2BF /* RobotoCondensed-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RobotoCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		6581779E21C903870008F2BF /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
@@ -719,13 +722,13 @@
 		13B07FAE1A68108700A75B9A /* ina_frontend */ = {
 			isa = PBXGroup;
 			children = (
+				651D8CA22209DF30003A3C42 /* GoogleService-Info.plist */,
 				6598184521E3953100FCAB28 /* ina_frontend.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				655CA15321C8F942009FC9F8 /* GoogleService-Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
@@ -1570,6 +1573,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				651D8CA42209DF30003A3C42 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1596,7 +1600,6 @@
 				7DE1DB27566645869F9EC77B /* Foundation.ttf in Resources */,
 				658177B821C9038E0008F2BF /* RobotoCondensed-BoldItalic.ttf in Resources */,
 				658177B721C9038E0008F2BF /* Roboto-LightItalic.ttf in Resources */,
-				655CA15421C8F942009FC9F8 /* GoogleService-Info.plist in Resources */,
 				658177B121C9038E0008F2BF /* Roboto-BoldItalic.ttf in Resources */,
 				658177B921C9038E0008F2BF /* Roboto-MediumItalic.ttf in Resources */,
 				658177BB21C9038E0008F2BF /* RobotoCondensed-LightItalic.ttf in Resources */,
@@ -1630,6 +1633,7 @@
 				E7BCDC2359C448BA8DACB31D /* Montserrat-Regular.ttf in Resources */,
 				5101D3D2066F403DB0912F60 /* Montserrat-SemiBold.ttf in Resources */,
 				02423E1B9D21495F9CA2286C /* Montserrat-SemiBoldItalic.ttf in Resources */,
+				651D8CA32209DF30003A3C42 /* GoogleService-Info.plist in Resources */,
 				BA77B88A441645C4AB22783E /* Montserrat-Thin.ttf in Resources */,
 				D86ABB2BA5A14DD7B3F984C4 /* Montserrat-ThinItalic.ttf in Resources */,
 			);
@@ -1640,6 +1644,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
+				651D8CA52209DF30003A3C42 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1647,6 +1652,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				651D8CA62209DF30003A3C42 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

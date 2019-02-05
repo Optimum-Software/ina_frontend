@@ -84,7 +84,6 @@ export default class RegistrationScreenStart extends Component {
       this.state.verifyId,
       this.state.code
     );
-    console.log(credential);
     firebaseApi
       .loginPhone(credential)
       .then(result => this.register(result.user));
@@ -102,12 +101,11 @@ export default class RegistrationScreenStart extends Component {
       this.state.registerPhoneInfo.registerInfo.hashedPw,
       this.state.registerPhoneInfo.phoneNumber
     ).then(result => {
-      console.log(result);
       if (!result["bool"]) {
         firebaseApi.deleteUser(emailAccount);
       } else {
         userId = result["id"];
-        User.storeUserId(result["id"]);
+        //User.storeUserId(result["id"]);
         Router.goTo(
           this.props.navigation,
           "LoginStack",

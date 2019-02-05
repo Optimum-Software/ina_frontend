@@ -69,12 +69,6 @@ class RegistrationScreenVerifySuccessfull extends Component {
             <View style={styles.actionContainer}>
               <TouchableOpacity
                 style={styles.buttonStyle}
-                onPress={() => Router.switchLogin(this.props.navigation)}
-              >
-                <Text style={styles.textStyle}>Verder</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonStyle}
                 onPress={() =>
                   Router.goTo(
                     this.props.navigation,
@@ -85,8 +79,19 @@ class RegistrationScreenVerifySuccessfull extends Component {
                 }
               >
                 <Text style={styles.textStyle}>
-                  Optionele informatie invullen
+                  Verder met optionele informatie invullen
                 </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => Router.goTo(
+                    this.props.navigation,
+                    "LoginStack",
+                    "LoginScreen",
+                    null
+                  )}
+              >
+                <Text style={styles.textStyle}>Overslaan</Text>
               </TouchableOpacity>
             </View>
           </ImageBackground>

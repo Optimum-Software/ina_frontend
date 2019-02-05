@@ -11,6 +11,8 @@ import ProjectEditFirstScreen from "../screens/ProjectEditFirstScreen";
 import ProjectEditSecondScreen from "../screens/ProjectEditSecondScreen";
 import ProjectEditThirdScreen from "../screens/ProjectEditThirdScreen";
 import ExploreScreen from "../screens/ExploreScreen";
+import Videoplayer from "../screens/Videoplayer";
+import Imageviewer from "../screens/Imageviewer";
 
 export default createStackNavigator(
   {
@@ -76,6 +78,18 @@ export default createStackNavigator(
     },
     ProjectEditThirdScreen: {
       screen: ProjectEditThirdScreen,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    Videoplayer: {
+      screen: Videoplayer,
+      navigationOptions: ({ navigation }) => ({
+        gesturesEnabled: false
+      })
+    },
+    Imageviewer: {
+      screen: Imageviewer,
       navigationOptions: ({ navigation }) => ({
         gesturesEnabled: false
       })
