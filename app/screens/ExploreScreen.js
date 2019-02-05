@@ -47,7 +47,6 @@ export default class ExploreScreen extends React.Component {
     };
     User.getUserId().then(id => {
       ProjectApi.getSwipeProjects(id).then(response => {
-        console.log(response);
         this.setState({ cards: response["projects"] });
       });
     });
@@ -70,7 +69,7 @@ export default class ExploreScreen extends React.Component {
 
   startChat() {
     User.getUserId().then(id => {
-      let creatorId = this.state.cards[this.state.cardIndex].creator.id;
+      let creatorId = this.state.cards[this.swiper.state.sindex - 2].creator.id;
       let uid = "";
       if (creatorId > id) {
         uid = id + ":" + creatorId;
@@ -78,9 +77,9 @@ export default class ExploreScreen extends React.Component {
         uid = creatorId + ":" + id;
       }
       let title =
-        this.state.cards[this.state.cardIndex].creator.firstName +
+        this.state.cards[this.swiper.state.sindex - 2].creator.firstName +
         " " +
-        this.state.cards[this.state.cardIndex].creator.lastName;
+        this.state.cards[this.swiper.state.sindex - 2].creator.lastName;
       FirebaseApi.createChat(uid);
       Router.goTo(this.props.navigation, "ChatStack", "Chat", {
         uid: uid,
@@ -517,22 +516,22 @@ export default class ExploreScreen extends React.Component {
                 "HomeStack",
                 "ProjectDetailScreen",
                 {
-                  id: this.state.cards[this.state.cardIndex].id,
-                  name: this.state.cards[this.state.cardIndex].name,
-                  desc: this.state.cards[this.state.cardIndex].desc,
-                  start_date: this.state.cards[this.state.cardIndex].start_date,
-                  end_date: this.state.cards[this.state.cardIndex].end_date,
-                  created_at: this.state.cards[this.state.cardIndex].created_at,
-                  like_count: this.state.cards[this.state.cardIndex].like_count,
-                  follower_count: this.state.cards[this.state.cardIndex]
+                  id: this.state.cards[this.swiper.state.sindex - 2].id,
+                  name: this.state.cards[this.swiper.state.sindex - 2].name,
+                  desc: this.state.cards[this.swiper.state.sindex - 2].desc,
+                  start_date: this.state.cards[this.swiper.state.sindex - 2].start_date,
+                  end_date: this.state.cards[this.swiper.state.sindex - 2].end_date,
+                  created_at: this.state.cards[this.swiper.state.sindex - 2].created_at,
+                  like_count: this.state.cards[this.swiper.state.sindex - 2].like_count,
+                  follower_count: this.state.cards[this.swiper.state.sindex - 2]
                     .follower_count,
-                  location: this.state.cards[this.state.cardIndex].location,
+                  location: this.state.cards[this.swiper.state.sindex - 2].location,
                   thumbnail: Api.getFileUrl(
-                    this.state.cards[this.state.cardIndex].thumbnail
+                    this.state.cards[this.swiper.state.sindex - 2].thumbnail
                   ),
-                  creator: this.state.cards[this.state.cardIndex].creator,
-                  images: this.state.cards[this.state.cardIndex].images,
-                  files: this.state.cards[this.state.cardIndex].files
+                  creator: this.state.cards[this.swiper.state.sindex - 2].creator,
+                  images: this.state.cards[this.swiper.state.sindex - 2].images,
+                  files: this.state.cards[this.swiper.state.sindex - 2].files
                 }
               )
             }
