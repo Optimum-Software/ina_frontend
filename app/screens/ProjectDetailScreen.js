@@ -181,7 +181,6 @@ export default class ProjectDetail extends Component {
   setCanNotificate() {
     User.getUserId().then(id => {
       ProjectApi.setCanNotificate(!this.state.canNotificate, id, this.state.project.id).then(res => {
-        console.log(res)
         if(res['bool']) {
           if(!this.state.canNotificate) {
             this.setState({notiIcon: "bell-ring-outline"})
