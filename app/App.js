@@ -38,7 +38,6 @@ export default class App extends React.Component {
         OneSignal.inFocusDisplaying(2)
         OneSignal.init("491e8289-1ec1-4977-8820-03a3ba6c3269");
         OneSignal.addEventListener("ids", this.onIds);
-        OneSignal.addEventListener('opened', this.onOpened);
         OneSignal.configure();
         User.getUserId().then( id => {
             this.setState({checkedLoggedIn: true})
@@ -52,14 +51,6 @@ export default class App extends React.Component {
 
     onIds(device) {
         User.storeDeviceId(device.userId);
-    }
-
-    onOpened(openResult) {
-        console.log(openResult.notification)
-        if(openResult.notification.payload.additionalData['type'] == 0) {
-            //go to chat
-            Router.goTo(this.props.navigation, "ChatStack", "ChatStack")
-        }
     }
 
     render() {

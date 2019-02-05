@@ -217,15 +217,19 @@ export default class DetailTab extends Component {
             <TouchableOpacity
               key={item}
               onPress={() =>
-                Linking.canOpenURL(Api.getFileUrl(item)).then(supported => {
+                {
+                  console.log(item)
+                  console.log("https://file.ina-app.nl/?id=" + item.id)
+                Linking.canOpenURL("https://file.ina-app.nl/?id=" + item.id).then(supported => {
                   if (supported) {
-                    Linking.openURL(Api.getFileUrl(item));
+                    Linking.openURL("https://file.ina-app.nl/?id=" + item.id);
                   } else {
                     console.log(
                       "Don't know how to open URI: " + Api.getFileUrl(item)
                     );
                   }
                 })
+              }
               }
               style={{
                 width: "90%",
@@ -237,7 +241,7 @@ export default class DetailTab extends Component {
             >
               <Icon name="file-document-outline" size={48} color={"#4C6873"} />
               <View style={{ flexDirection: "column" }}>
-                <Text>{item.split("/")[item.split("/").length - 1]}</Text>
+                <Text>{item.path.split("/")[item.path.split("/").length - 1]}</Text>
               </View>
             </TouchableOpacity>
           )}
