@@ -43,13 +43,14 @@ export default class ExploreScreen extends React.Component {
       cardIndex: 0,
       showDetails: false,
       left: false,
-      right: false,
+      right: false
     };
     User.getUserId().then(id => {
       ProjectApi.getSwipeProjects(id).then(response => {
+        console.log(response);
         this.setState({ cards: response["projects"] });
       });
-    })
+    });
     this.animatedValue = new Animated.Value(0);
   }
 
@@ -83,22 +84,23 @@ export default class ExploreScreen extends React.Component {
       FirebaseApi.createChat(uid);
       Router.goTo(this.props.navigation, "ChatStack", "Chat", {
         uid: uid,
-        title: title
+        title: title,
+        differentStack: true
       });
     });
   }
 
   addLike(index) {
     User.getUserId().then(id => {
-      ProjectApi.likeProject(this.state.cards[index].id, id).then(res => console.log(res))
-    })
-
-    this.setState({ swipeDirection: "right" });
-
+      ProjectApi.likeProject(this.state.cards[index].id, id).then(res =>
+        console.log(res)
+      );
+    });
+    this.setState({ swipeDirection: "right", cardIndex: index + 1 });
   }
 
   dislike(index) {
-    this.setState({ swipeDirection: "left" });
+    this.setState({ swipeDirection: "left", cardIndex: index + 1 });
   }
 
   animate() {
@@ -213,8 +215,8 @@ export default class ExploreScreen extends React.Component {
         <CardStack
           style={styles.container}
           verticalSwipe={false}
-          onSwipeStart={(e)=> console.log(e)}
-          swipeRight={()=> this.setState({right: true})}
+          onSwipeStart={e => console.log(e)}
+          swipeRight={() => this.setState({ right: true })}
           horizontalSwipe={!this.state.showDetails ? true : false}
           renderNoMoreCards={() => (
             <View
@@ -233,7 +235,7 @@ export default class ExploreScreen extends React.Component {
                   alignSelf: "center"
                 }}
               >
-                No more cards :(
+                Er zijn geen nieuwe projecten
               </Text>
             </View>
           )}
@@ -247,11 +249,10 @@ export default class ExploreScreen extends React.Component {
             return (
               <TouchableWithoutFeedback
                 key={card.id}
-                style={{backgroundColor: 'black'}}
+                style={{ backgroundColor: "black" }}
                 onPress={() => (this.state.showDetails ? null : this.animate())}
               >
                 <Animated.View style={{ marginTop: marginTop }}>
-
                   <Card
                     elevation={5}
                     style={{
@@ -275,10 +276,32 @@ export default class ExploreScreen extends React.Component {
                       })
                     }}
                   >
-                  {this.state.left &&
-                  <View style={{position: 'absolute', top: 10, left: 10, elevation: 5, width: 150, height: 150, backgroundColor: 'red'}}/>}
-                  {this.state.right &&
-                  <View style={{position: 'absolute', top: 10, right: 10, elevation: 5, width: 150, height: 150, backgroundColor: 'green'}}/>}
+                    {this.state.left && (
+                      <View
+                        style={{
+                          position: "absolute",
+                          top: 10,
+                          left: 10,
+                          elevation: 5,
+                          width: 150,
+                          height: 150,
+                          backgroundColor: "red"
+                        }}
+                      />
+                    )}
+                    {this.state.right && (
+                      <View
+                        style={{
+                          position: "absolute",
+                          top: 10,
+                          right: 10,
+                          elevation: 5,
+                          width: 150,
+                          height: 150,
+                          backgroundColor: "green"
+                        }}
+                      />
+                    )}
 
                     <Animated.Image
                       style={{
@@ -438,14 +461,15 @@ export default class ExploreScreen extends React.Component {
                       />
                       <Text
                         style={{
-                          width: Dimensions.get("window").width - 75
+                          width: Dimensions.get("window").width - 75,
+                          height: Dimensions.get("window").height
                         }}
                       >
                       {card.desc}
                       </Text>
                       <TouchableOpacity onPress={() =>
                       alert('hey')
-                        
+
                       }>
                       <Text
                         style={{
@@ -488,71 +512,128 @@ export default class ExploreScreen extends React.Component {
           })}
         </CardStack>
 
-        <View style={styles.footer}>
-          <Animated.View style={{ opacity: opacityRev }}>
-            <TouchableHighlight
-              underlayColor="#efc137ad"
-              style={[styles.mediumButtonStyle, { backgroundColor: "#efc137" }]}
-              onPress={() =>
-                this.state.swipeDirection == "left"
-                  ? this.swiper.goBackFromRight()
-                  : this.swiper.goBackFromLeft()
-              }
+        {this.state.showDetails && (
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              width: "100%",
+              bottom: 50,
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+            onPress={() =>
+              Router.goTo(
+                this.props.navigation,
+                "HomeStack",
+                "ProjectDetailScreen",
+                {
+                  id: this.state.cards[this.state.cardIndex].id,
+                  name: this.state.cards[this.state.cardIndex].name,
+                  desc: this.state.cards[this.state.cardIndex].desc,
+                  start_date: this.state.cards[this.state.cardIndex].start_date,
+                  end_date: this.state.cards[this.state.cardIndex].end_date,
+                  created_at: this.state.cards[this.state.cardIndex].created_at,
+                  like_count: this.state.cards[this.state.cardIndex].like_count,
+                  follower_count: this.state.cards[this.state.cardIndex]
+                    .follower_count,
+                  location: this.state.cards[this.state.cardIndex].location,
+                  thumbnail: Api.getFileUrl(
+                    this.state.cards[this.state.cardIndex].thumbnail
+                  ),
+                  creator: this.state.cards[this.state.cardIndex].creator,
+                  images: this.state.cards[this.state.cardIndex].images,
+                  files: this.state.cards[this.state.cardIndex].files
+                }
+              )
+            }
+          >
+            <Text
+              style={{
+                paddingTop: 25,
+                fontSize: 18,
+                fontWeight: "bold",
+                color: "#00a6ff"
+              }}
             >
-              <Icon
-                name="undo"
-                type="font-awesome"
-                iconStyle={{ padding: 5 }}
-                size={25}
-                color="white"
-              />
-            </TouchableHighlight>
-          </Animated.View>
-          <Animated.View style={{ opacity: opacityRev }}>
-            <TouchableHighlight
-              underlayColor="#f44336ad"
-              style={[styles.bigButtonStyle, { backgroundColor: "#f44336" }]}
-              onPress={() => this.swiper.swipeLeft()}
-            >
-              <Icon
-                name="close"
-                type="font-awesome"
-                iconStyle={{ padding: 5 }}
-                size={35}
-                color="white"
-              />
-            </TouchableHighlight>
-          </Animated.View>
-          <Animated.View style={{ opacity: opacityRev }}>
-            <TouchableHighlight
-              underlayColor="#64dd17ad"
-              style={[styles.bigButtonStyle, { backgroundColor: "#64dd17" }]}
-              onPress={() => this.swiper.swipeRight()}
-            >
-              <Icon
-                name="heart-outline"
-                size={35}
-                iconStyle={{ padding: 5 }}
-                type="font-awesome"
-                color="white"
-              />
-            </TouchableHighlight>
-          </Animated.View>
-          <Animated.View style={{ opacity: opacityRev }}>
-            <TouchableHighlight
-              underlayColor="#03a9f4ad"
-              style={[styles.mediumButtonStyle, { backgroundColor: "#03a9f4" }]}
-              onPress={() => this.startChat()}
-            >
-              <Icon
-                name="message-outline"
-                size={25}
-                iconStyle={{ padding: 5 }}
-                color="white"
-              />
-            </TouchableHighlight>
-          </Animated.View>
-        </View>
+              Meer informatie
+            </Text>
+          </TouchableOpacity>
+        )}
+        {!this.state.showDetails && (
+          <View style={styles.footer}>
+            <Animated.View style={{ opacity: opacityRev }}>
+              <TouchableHighlight
+                underlayColor="#efc137ad"
+                style={[
+                  styles.mediumButtonStyle,
+                  { backgroundColor: "#efc137" }
+                ]}
+                onPress={() =>
+                  this.state.swipeDirection == "right"
+                    ? this.swiper.goBackFromRight(
+                        this.state.cards[this.state.cardIndex].id - 1
+                      )
+                    : this.swiper.goBackFromLeft()
+                }
+              >
+                <Icon
+                  name="undo"
+                  type="font-awesome"
+                  iconStyle={{ padding: 5 }}
+                  size={25}
+                  color="white"
+                />
+              </TouchableHighlight>
+            </Animated.View>
+            <Animated.View style={{ opacity: opacityRev }}>
+              <TouchableHighlight
+                underlayColor="#f44336ad"
+                style={[styles.bigButtonStyle, { backgroundColor: "#f44336" }]}
+                onPress={() => this.swiper.swipeLeft()}
+              >
+                <Icon
+                  name="close"
+                  type="font-awesome"
+                  iconStyle={{ padding: 5 }}
+                  size={35}
+                  color="white"
+                />
+              </TouchableHighlight>
+            </Animated.View>
+            <Animated.View style={{ opacity: opacityRev }}>
+              <TouchableHighlight
+                underlayColor="#64dd17ad"
+                style={[styles.bigButtonStyle, { backgroundColor: "#64dd17" }]}
+                onPress={() => this.swiper.swipeRight()}
+              >
+                <Icon
+                  name="heart-outline"
+                  size={35}
+                  iconStyle={{ padding: 5 }}
+                  type="font-awesome"
+                  color="white"
+                />
+              </TouchableHighlight>
+            </Animated.View>
+            <Animated.View style={{ opacity: opacityRev }}>
+              <TouchableHighlight
+                underlayColor="#03a9f4ad"
+                style={[
+                  styles.mediumButtonStyle,
+                  { backgroundColor: "#03a9f4" }
+                ]}
+                onPress={() => this.startChat()}
+              >
+                <Icon
+                  name="message-outline"
+                  size={25}
+                  iconStyle={{ padding: 5 }}
+                  color="white"
+                />
+              </TouchableHighlight>
+            </Animated.View>
+          </View>
+        )}
       </SafeAreaView>
     );
   }

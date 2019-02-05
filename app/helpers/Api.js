@@ -1,9 +1,10 @@
 import React from "react";
 import { NetInfo } from "react-native";
+import User from "./User";
 let instance = null;
+let userToken = null;
 class Api {
   ip = "http://136.144.186.136";
-
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -12,6 +13,13 @@ class Api {
       instance = this;
     }
     return instance;
+  }
+
+  saveToken() {
+    User.getToken().then(token => {
+      console.log(token);
+      userToken = token;
+    });
   }
 
   timeout(ms, promise) {
@@ -30,6 +38,28 @@ class Api {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
+  }
+
+  async callApiPostSafe(action, data) {
+    try {
+      let response = await fetch(this.url + action, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Token " + userToken
         },
         body: JSON.stringify(data)
       });
@@ -63,13 +93,13 @@ class Api {
     }
   }
 
-  async callApiGetSafe(action, token) {
+  async callApiGetSafe(action) {
     try {
       let response = await fetch(this.url + action, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Token " + token
+          Authorization: "Token " + userToken
         }
       });
 
@@ -127,11 +157,31 @@ class Api {
 
   async callApiPostForm(action, data) {
     try {
-      console.log(this.url + action);
       let response = await fetch(this.url + action, {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data"
+        },
+        body: data
+      });
+      let responseJson = await response.json();
+      return responseJson;
+    } catch (error) {
+      console.log(error);
+      return {
+        ntwFail: true,
+        msg: "Kon geen verbinding met de server maken"
+      };
+    }
+  }
+
+  async callApiPostFormSafe(action, data) {
+    try {
+      let response = await fetch(this.url + action, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: "Token " + userToken
         },
         body: data
       });
@@ -177,7 +227,9 @@ class Api {
       let response = await fetch(this.url + "uploadFileForUser", {
         method: "POST",
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
+
+          Authorization: "Token " + userToken
         },
         body: data
       });
@@ -203,7 +255,8 @@ class Api {
 
   createDevice(id) {
     userData = { id: id };
-    return this.callApiPost("createDevice", userData);
+
+    return this.callApiPostSafe("createDevice", userData);
   }
 
   deleteDeviceById(id) {

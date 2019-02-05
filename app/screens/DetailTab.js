@@ -34,9 +34,8 @@ export default class DetailTab extends Component {
       tags: [],
       userId: null,
       projectMembers: [],
-      likeCount: props.project.project.like_count,
-      followCount: props.project.project.follower_count,
-      liked: false
+      liked: false,
+      followed: false
     };
     User.getUserId().then(userId => {
       this.setState({ userId: userId });
@@ -52,11 +51,11 @@ export default class DetailTab extends Component {
     this.getMembers();
   }
 
-  getMembers(){
+  getMembers() {
     ProjectApi.getProjectMembersById(this.state.project.id).then(result => {
       if (result["bool"]) {
         this.setState({
-          projectMembers: result["members"],
+          projectMembers: result["members"]
         });
       } else {
         alert("Er zijn geen deelnemers aan dit project");
@@ -75,228 +74,106 @@ export default class DetailTab extends Component {
   }
   startChat() {
     User.getUserId().then(id => {
-      let creatorId = this.state.project.creator.id;
-      let uid = "";
-      if (creatorId > id) {
-        uid = id + ":" + creatorId;
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
       } else {
-        uid = creatorId + ":" + id;
+        let creatorId = this.state.project.creator.id;
+        let uid = "";
+        if (creatorId > id) {
+          uid = id + ":" + creatorId;
+        } else {
+          uid = creatorId + ":" + id;
+        }
+        let title =
+          this.state.project.creator.firstName +
+          " " +
+          this.state.project.creator.lastName;
+        FirebaseApi.createChat(uid);
+        Router.goTo(this.props.navigation, "ChatStack", "Chat", {
+          uid: uid,
+          title: title,
+          differentStack: true
+        });
       }
-      let title =
-        this.state.project.creator.firstName +
-        " " +
-        this.state.project.creator.lastName;
-      FirebaseApi.createChat(uid);
-      Router.goTo(this.props.navigation, "ChatStack", "Chat", {
-        uid: uid,
-        title: title,
-        differentStack: true
-      });
     });
   }
 
+  followProject() {
+    User.getUserId().then(id => {
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.followProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            this.setState({ followed: res["bool"] });
+          } else {
+            console.log(res);
+          }
+        });
+      }
+    });
+  }
 
   joinProject() {
     User.getUserId().then(id => {
-      ProjectApi.joinProject(id, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          this.setState({ member: true,   });
-          this.getMembers();
-        } else {
-          alert(result["msg"]);
-        }
-      });
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.joinProject(id, this.state.project.id).then(result => {
+          if (result["bool"]) {
+            this.setState({ member: true });
+            this.getMembers();
+          } else {
+            alert(result["msg"]);
+          }
+        });
+      }
     });
   }
 
   leaveProject() {
     User.getUserId().then(id => {
-      ProjectApi.leaveProject(id, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          this.setState({ member: false, });
-        this.getMembers();
-        } else {
-          alert(result["msg"]);
-        }
-      });
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.leaveProject(id, this.state.project.id).then(result => {
+          if (result["bool"]) {
+            this.setState({ member: false });
+            this.getMembers();
+          } else {
+            alert(result["msg"]);
+          }
+        });
+      }
     });
   }
 
   render() {
     return (
       <ScrollView>
-        <View style={styles.personCard}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-          {this.state.project.creator.profilePhotoPath != "" && (
-            <CachedImage
-              source={{
-                uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
-              }}
-              resizeMode="cover"
-              style={{
-                marginRight: 10,
-                width: 40,
-                height: 40,
-                borderRadius: 100,
-                backgroundColor: "white"
-              }}
-              imageStyle={{
-                width: "100%",
-                height: "100%",
-                borderRadius: 200
-              }}
-            />)}
-            {this.state.project.creator.profilePhotoPath == "" && (<Icon
-              name="account-circle"
-              size={45}
-              style={{
-                marginRight: 10,
-
-              }} />)}
-
-            <View style={{ paddingLeft: 0, width: Dimensions.get('window').width * 0.7 }}>
-              <Text style={{ fontSize: 18, fontWeight: "bold", }}>
-                {this.state.project.name}
-              </Text>
-              <Text>
-                {this.state.project.creator.firstName +
-                  " " +
-                  this.state.project.creator.lastName}
-              </Text>
-            </View>
-          </View>
-          {this.state.userId == this.state.project.creator.id && (
-            <Icon
-              name="square-edit-outline"
-              size={36}
-              onPress={() => {
-                Router.goTo(
-                  this.props.navigation,
-                  "ProjectStack",
-                  "ProjectEditFirstScreen",
-                  {
-                    id: this.state.project.id,
-                    name: this.state.project.name,
-                    desc: this.state.project.desc,
-                    start_date: this.state.project.start_date,
-                    end_date: this.state.project.end_date,
-                    location: this.state.project.location,
-                    thumbnail: this.state.project.thumbnail,
-                    images: this.state.project.images,
-                    files: this.state.project.files,
-                    tags: this.state.tags
-                  }
-                );
-              }}
-            />
-          )}
-          {this.state.userId != this.state.project.creator.id && (
-            <Ripple
-              rippleColor="#fff"
-              onPress={() =>
-                User.getUserId().then(id => {
-                  ProjectApi.likeProject(this.state.project.id, id).then(res =>
-                    this.setState({ likeCount: res["likedCount"], liked: true })
-                  );
-                })
-              }
-            >
-              {this.state.liked && <Icon name="heart" size={36} color={"red"} />}
-              {!this.state.liked && <Icon name="heart-outline" size={36} color={"red"} />}
-            </Ripple>
-          )}
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingLeft: 65,
-            paddingBottom: this.state.projectMembers.length > 0 ? 0 : 15
-          }}
-        >
-          <Icon name="heart-outline" color="grey" size={16} />
-          <Text>{this.state.likeCount} likes</Text>
-
-          <Icon
-            style={{ paddingLeft: 5 }}
-            name="account-outline"
-            color="grey"
-            size={16}
-          />
-          <Text>{this.state.followCount} volgers</Text>
-        </View>
         {this.state.projectMembers.length > 0 && (
-          <Text style={{ paddingLeft: 65, paddingBottom: 15, paddingTop: 5 }}>
-            Deelnemers:
-          </Text>
+          <FlatList
+            data={this.state.projectMembers}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View style={styles.personCard}>
+                <Image
+                  source={{
+                    uri: Api.getFileUrl(item.profilePhotoPath)
+                  }}
+                  resizeMode="cover"
+                  style={{ width: 35, height: 35, borderRadius: 100 }}
+                />
+              </View>
+            )}
+          />
         )}
-        <View>
-          <TouchableOpacity
-            style={{ paddingLeft: 60 }}
-            onPress={() =>
-              Router.goTo(
-                this.props.navigation,
-                "ProjectStack",
-                "ProjectMembersScreen",
-                { persons: this.state.projectMembers, differentStack: true }
-              )
-            }
-          >
-            <FlatList
-              data={this.state.projectMembers}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item }) => (
-                <View
-                  style={{ paddingLeft: 5, paddingBottom: 15, elevation: 5 }}
-                >
-                {item.profilePhotoPath != "" && (
-                  <Image
-                    source={{
-                      uri: Api.getFileUrl(item.profilePhotoPath)
-                    }}
-                    resizeMode="cover"
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 100,
-                      elevation: 5
-                    }}
-                  />)}
-                {item.profilePhotoPath == "" && (
-                  <Icon
-                    name="account-circle"
-                    size={45}
-                    style={{
-                      marginRight: 10,
-
-                    }} />)}
-                </View>
-              )}
-            />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            height: 1,
-            opacity: 0.3,
-            backgroundColor: "#b5babf",
-            marginBottom: 15,
-            marginLeft: 15,
-            marginRight: 15,
-            width: "90%",
-            alignSelf: "center"
-          }}
-        />
         <Text
           style={{
             marginLeft: 15,
-            marginRight: 15
+            marginRight: 15,
+            marginTop: 15
           }}
         >
           {this.state.project.desc}
@@ -315,6 +192,24 @@ export default class DetailTab extends Component {
             alignSelf: "center"
           }}
         />
+        {this.state.project.files.length > 0 && (
+          <View
+            style={{
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              width: Dimensions.get("window").width
+            }}
+          >
+            <Icon name="file" size={24} color={"#4C6873"} />
+            <Text
+              style={{ paddingLeft: 5, color: "#4C6873", fontWeight: "bold" }}
+            >
+              Bestanden
+            </Text>
+          </View>
+        )}
         <FlatList
           data={this.state.project.files}
           style={{ flexGrow: 0 }}
@@ -335,16 +230,13 @@ export default class DetailTab extends Component {
                 width: "90%",
                 flexDirection: "row",
                 alignItems: "center",
-                paddingLeft: 15,
-                paddingRight: 15,
+                paddingHorizontal: 40,
                 paddingBottom: 10
               }}
             >
-              <Icon name="file-document-outline" size={48} color={"grey"} />
+              <Icon name="file-document-outline" size={48} color={"#4C6873"} />
               <View style={{ flexDirection: "column" }}>
-                <Text style={{ fontWeight: "bold" }}>
-                  {item.split("/")[item.split("/").length - 1]}
-                </Text>
+                <Text>{item.split("/")[item.split("/").length - 1]}</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -366,41 +258,170 @@ export default class DetailTab extends Component {
         )}
         <View
           style={{
-            flexDirection: "column",
-            justifyContent: "space-evenly",
+            paddingHorizontal: 15,
+            paddingVertical: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            width: Dimensions.get("window").width
+          }}
+        >
+          <Icon name="information-outline" size={24} color={"#4C6873"} />
+          <Text
+            style={{ paddingLeft: 5, color: "#4C6873", fontWeight: "bold" }}
+          >
+            Extra info
+          </Text>
+        </View>
+
+        <View style={{ paddingHorizontal: 40 }}>
+          <View
+            style={{
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              width: Dimensions.get("window").width
+            }}
+          >
+            <Icon name="map-marker" size={24} color={"#4C6873"} />
+            <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+              {this.state.project.location}
+            </Text>
+          </View>
+
+          {this.state.project.start_date != null && (
+            <View
+              style={{
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                width: Dimensions.get("window").width
+              }}
+            >
+              <Icon name="calendar-range" size={24} color={"#4C6873"} />
+              <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                {this.state.project.start_date.substring(0, 10) +
+                  " / " +
+                  this.state.project.end_date.substring(0, 10)}
+              </Text>
+            </View>
+          )}
+        </View>
+        <View
+          style={{
+            height: 1,
+            opacity: 0.3,
+            backgroundColor: "#b5babf",
+            marginTop: 15,
+            marginBottom: 15,
+            marginLeft: 15,
+            marginRight: 15,
+            width: "90%",
+            alignSelf: "center"
+          }}
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
             margin: 10,
             marginLeft: 35,
             marginRight: 35
           }}
         >
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.startChat()}
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
           >
-            <Text style={styles.textStyle}>Verstuur een bericht</Text>
-          </TouchableOpacity>
-          {!this.state.member == true && (
             <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => this.joinProject()}
+              style={{
+                borderRadius: 100,
+                backgroundColor: "#00a6ff",
+                height: 60,
+                width: 60,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+              onPress={() => this.startChat()}
             >
-              <Text style={styles.textStyle}>Deelnemen</Text>
+              <Icon name="message-outline" size={24} color={"white"} />
             </TouchableOpacity>
+            <Text style={{ paddingTop: 10 }}>Contact</Text>
+          </View>
+          {!this.state.member == true && (
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  borderRadius: 100,
+                  backgroundColor: "#00a6ff",
+                  height: 60,
+                  width: 60,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+                onPress={() => this.joinProject()}
+              >
+                <Icon name="account-multiple-plus" size={24} color={"white"} />
+              </TouchableOpacity>
+              <Text style={{ paddingTop: 10 }}>Deelnemen</Text>
+            </View>
           )}
           {this.state.member == true && (
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => this.leaveProject()}
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
             >
-              <Text style={styles.textStyle}>Verlaten</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  borderRadius: 100,
+                  backgroundColor: "#00a6ff",
+                  height: 60,
+                  width: 60,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+                onPress={() => this.leaveProject()}
+              >
+                <Icon name="account-multiple-minus" size={24} color={"white"} />
+              </TouchableOpacity>
+              <Text style={{ paddingTop: 10 }}>Verlaten</Text>
+            </View>
           )}
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.login()}
+          <View
+            style={{
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
           >
-            <Text style={styles.textStyle}>Volgen</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                borderRadius: 100,
+                backgroundColor: "#00a6ff",
+                height: 60,
+                width: 60,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+              onPress={() => this.followProject()}
+            >
+              <Icon name="bookmark-plus-outline" size={24} color={"white"} />
+            </TouchableOpacity>
+            <Text style={{ paddingTop: 10 }}>Volgen</Text>
+          </View>
         </View>
         {this.state.tags.length > 0 && (
           <View
@@ -420,17 +441,34 @@ export default class DetailTab extends Component {
         {this.state.tags.length > 0 && (
           <View
             style={{
-              flexDirection: "row",
+              flexDirection: "column",
               alignItems: "flex-start",
-              paddingTop: 10,
-              paddingBottom: 10,
-              marginLeft: 15,
-              marginRight: 15
+              paddingBottom: 10
             }}
           >
-            <Icon name="tag" size={24} color={"grey"} />
             <View
-              style={{ flexDirection: "row", flexGrow: 0, flexWrap: "wrap" }}
+              style={{
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                width: Dimensions.get("window").width
+              }}
+            >
+              <Icon name="tag" size={24} color={"#4C6873"} />
+              <Text
+                style={{ paddingLeft: 5, color: "#4C6873", fontWeight: "bold" }}
+              >
+                Tags
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flexGrow: 0,
+                flexWrap: "wrap",
+                paddingHorizontal: 35
+              }}
             >
               {this.state.tags.map(tag => {
                 return (
@@ -443,7 +481,7 @@ export default class DetailTab extends Component {
                       paddingRight: 10,
                       borderRadius: 5,
                       marginLeft: 10,
-                      backgroundColor: "grey"
+                      backgroundColor: "#4C6873"
                     }}
                   >
                     <Text style={{ fontSize: 12, color: "white" }}>

@@ -42,11 +42,6 @@ class FirebaseService {
     }
 
     verifyPhoneNumber(phoneNumber) {
-        // console.log("VERIFY PHONE SHITZLE");
-        // console.log(confirmResult);
-        // return await confirmResult
-        //     .confirm(codeInput)
-        //     .catch(error => console.log(error));
         return this.app.auth().verifyPhoneNumber(phoneNumber, 100, false);
     }
 
@@ -103,7 +98,7 @@ class FirebaseService {
     }
 
     async getChats(userId) {
-      return(Api.callApiGet("getChatsForUser/" + userId))
+        return(Api.callApiGetSafe("getChatsForUser/" + userId))  
     }
 
     notifyUser(uid, chatId) {
@@ -132,13 +127,12 @@ class FirebaseService {
         user2Id: user2,
         chatUid: uid
       }
-      Api.callApiPost("createChat", userData).then(res => {
-        console.log(res);
-      })
+        Api.callApiPostSafe("createChat", userData).then(res => {
+          console.log(res);
+        })   
     }
 
     getMsgsRef(uid) {
-        console.log(this.app.database().ref("Chats").child(uid))
         return this.app
             .database()
             .ref("Chats")

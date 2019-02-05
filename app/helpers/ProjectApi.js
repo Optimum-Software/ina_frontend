@@ -1,5 +1,6 @@
 import React from "react";
 import Api from "./Api";
+import User from "./User";
 
 let instance = null;
 
@@ -28,12 +29,17 @@ class ProjectApi {
   }
   likeProject(id, userId) {
     userData = { id: id, userId: userId };
-    return Api.callApiPost("likeProjectById", userData);
+    return Api.callApiPostSafe("likeProjectById", userData);
+  }
+
+  unlikeProject(id, userId) {
+    userData = { id: id, userId: userId };
+    return Api.callApiPostSafe("unlikeProjectById", userData);
   }
 
   followProject(id, userId) {
     userData = { id: id, userId: userId };
-    return Api.callApiPost("followProjectById", userData);
+    return Api.callApiPostSafe("followProjectById", userData);
   }
 
   newestProjects() {
@@ -53,7 +59,7 @@ class ProjectApi {
   }
 
   getSwipeProjects(userId) {
-    return Api.callApiGet("getSwipeProjects/"+ userId);
+    return Api.callApiGetSafe("getSwipeProjects/" + userId);
   }
 
   createProject(
@@ -76,8 +82,6 @@ class ProjectApi {
     data.append("location", location);
     data.append("beginDate", beginDate);
     data.append("endDate", endDate);
-    console.log("TAGS VOOR HET AANMAKEN VAN PROJECT");
-    console.log(tags);
     let count = 0;
     tags.forEach(tag => {
       data.append("#" + count, tag.name);
@@ -93,7 +97,6 @@ class ProjectApi {
 
     for (i in documents) {
       document = documents[i];
-      console.log(document);
       newDoc = {
         uri: document.uri,
         name: document.name,
@@ -102,7 +105,7 @@ class ProjectApi {
       };
       data.append("" + newDoc.name, newDoc);
     }
-    return Api.callApiPostForm("createProject", data);
+    return Api.callApiPostFormSafe("createProject", data);
   }
 
   editProject(
@@ -147,11 +150,10 @@ class ProjectApi {
         type: "multipart/form-data",
         size: document.size
       };
-      console.log(newDoc);
 
       data.append("" + newDoc.name, newDoc);
     }
-    return Api.callApiPostForm("editProject", data);
+    return Api.callApiPostFormSafe("editProject", data);
   }
 
   getProjectMembersById(id) {
@@ -182,6 +184,16 @@ class ProjectApi {
     return Api.callApiPost("getMember", userData);
   }
 
+  checkIfLiked(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiGetSafe(
+      "checkIfProjectLiked/" + projectId + "/" + userId
+    );
+  }
+
   updateProject(projectId, userId, title, content) {
     userData = {
       project: projectId,
@@ -189,7 +201,7 @@ class ProjectApi {
       title: title,
       content: content
     };
-    return Api.callApiPost("addProjectUpdate", userData);
+    return Api.callApiPostSafe("addProjectUpdate", userData);
   }
 
   getUpdatesForProject(projectId) {

@@ -12,15 +12,15 @@ class SavedApi {
   }
 
   getAllFollows(id) {
-    return (Api.callApiGet("getAllFollowedProjectsByUserId/" + id))
+    return (Api.callApiGetSafe("getAllFollowedProjectsByUserId/" + id))
   }
 
   getAllMembered(id) {
-  	return (Api.callApiGet("getMembersByUserId/" + id))
+    return (Api.callApiGetSafe("getMembersByUserId/" + id))
   }
 
   getAllLiked(id) {
-    return (Api.callApiGet("getLikedProjectsByUserId/" + id))
+    return (Api.callApiGetSafe("getLikedProjectsByUserId/" + id))
   }
 
 }

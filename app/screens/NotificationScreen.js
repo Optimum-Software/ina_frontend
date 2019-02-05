@@ -1,63 +1,69 @@
-import React, {Component}  from 'react';
+import React, { Component } from "react";
 import {
-  Text, 
+  Text,
   View,
   ScrollView,
   TouchableHighlight,
   StyleSheet,
   FlatList,
   RefreshControl,
-  Image
-} from 'react-native';
+  Image,
+  ActivityIndicator
+} from "react-native";
 import Router from "../helpers/Router";
 import { Icon } from "react-native-elements";
 import User from "../helpers/User";
 import UserApi from "../helpers/UserApi";
 import Api from "../helpers/Api";
 import moment from "moment/min/moment-with-locales";
-import { Toolbar } from "react-native-material-ui"
+import { Toolbar } from "react-native-material-ui";
 import Ripple from "react-native-material-ripple";
-import { decode, encode } from 'he';
+import { decode, encode } from "he";
 import { CachedImage } from "react-native-cached-image";
 
-export default class NotificationScreen extends Component{
+export default class NotificationScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notificationList: null,
-      refreshing: false
-    }
+      notificationList: [],
+      refreshing: false,
+      loading: false
+    };
   }
 
   componentDidMount() {
     this.props.navigation.addListener("willFocus", this.onLoad);
+    this.setState({ loading: true });
     User.getUserId().then(id => {
       UserApi.getNotifications(id).then(res => {
-        if(res['bool']) {
-          this.setState({notificationList: res['notifications']})
+        if (res["bool"]) {
+          this.setState({ notificationList: res["notifications"] });
         }
-      })
+        this.setState({ loading: false });
+      });
     });
   }
 
   onLoad = () => {
-    this.onRefresh()
-  }
+    this.onRefresh();
+  };
 
   handelEnd() {}
 
   onRefresh() {
+    this.setState({ loading: true });
     User.getUserId().then(id => {
       UserApi.getNotifications(id).then(res => {
-        if(res['bool']) {
-          this.setState({notificationList: res['notifications']})
+        if (res["bool"]) {
+          this.setState({ notificationList: res["notifications"] });
         }
-      })
+        this.setState({ loading: false });
+      });
     });
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <View style={styles.container}>
         <Toolbar
           centerElement="Meldingen"
@@ -67,143 +73,201 @@ export default class NotificationScreen extends Component{
             this.props.navigation.openDrawer();
           }}
         />
+        {this.state.notificationList.length > 0 && !this.state.loading && (
           <FlatList
             data={this.state.notificationList}
             onEndReached={() => this.handelEnd()}
             refreshing={this.state.refreshing}
             onRefresh={() => this.onRefresh()}
             renderItem={({ item }) => {
-              moment.locale('nl');
-              if(item.type==0) {
-                let sender = null
-                if(item.user.id == item.chat.user1.id) {
-                  sender = item.chat.user2
+              moment.locale("nl");
+              if (item.type == 0) {
+                let sender = null;
+                if (item.user.id == item.chat.user1.id) {
+                  sender = item.chat.user2;
                 } else {
-                  sender = item.chat.user1
+                  sender = item.chat.user1;
                 }
                 return (
                   <View key={item.id}>
-                  {item.read && (
-                    <Ripple
-                      onPress={() => {
-                          Router.goTo(this.props.navigation, 'ChatStack', 'Chat', 
+                    {item.read && (
+                      <Ripple
+                        onPress={() => {
+                          Router.goTo(
+                            this.props.navigation,
+                            "ChatStack",
+                            "Chat",
                             {
                               uid: item.chat.chatUid,
                               title: sender.firstName,
                               chatId: item.chat.id
                             }
                           );
-                      }}
-                      style={styles.box}>
-                      <CachedImage 
-                        source={{uri: Api.getFileUrl(sender.profilePhotoPath)}}
-                        resizeMode="cover"
-                        style={styles.image}
-                        imageStyle={styles.imageStyle}
-                      />
-                      <Text style={[styles.textStyle, {color: '#4a6572'}]}>Nieuw bericht van {sender.firstName}</Text>
-                    </Ripple>
-                  )}
-                  {!item.read && (
-                    <Ripple
-                      onPress={() => {
-                        UserApi.markAsRead(item.id).then(res => {
-                          Router.goTo(this.props.navigation, 'ChatStack', 'Chat', 
-                            {
-                              uid: item.chat.chatUid,
-                              title: sender.firstName,
-                              chatId: item.chat.id
-                            }
-                          );
-                        }
-                        );
-                      }}
-                      style={[styles.box, {backgroundColor: '#00a6ff'}]}>
-                      <CachedImage 
-                        source={{uri: Api.getFileUrl(sender.profilePhotoPath)}}
-                        resizeMode="cover"
-                        style={styles.image}
-                        imageStyle={styles.imageStyle}
-                      />
-                      <Text style={[styles.textStyle, {color: '#4a6572'}]}>Nieuw bericht van {sender.firstName}</Text>
-                    </Ripple>
-                  )} 
-                    <View style={styles.separator}/>
+                        }}
+                        style={styles.box}
+                      >
+                        <CachedImage
+                          source={{
+                            uri: Api.getFileUrl(sender.profilePhotoPath)
+                          }}
+                          resizeMode="cover"
+                          style={styles.image}
+                          imageStyle={styles.imageStyle}
+                        />
+                        <Text style={[styles.textStyle, { color: "#4a6572" }]}>
+                          Nieuw bericht van {sender.firstName}
+                        </Text>
+                      </Ripple>
+                    )}
+                    {!item.read && (
+                      <Ripple
+                        onPress={() => {
+                          UserApi.markAsRead(item.id).then(res => {
+                            Router.goTo(
+                              this.props.navigation,
+                              "ChatStack",
+                              "Chat",
+                              {
+                                uid: item.chat.chatUid,
+                                title: sender.firstName,
+                                chatId: item.chat.id
+                              }
+                            );
+                          });
+                        }}
+                        style={[styles.box, { backgroundColor: "#00a6ff" }]}
+                      >
+                        <CachedImage
+                          source={{
+                            uri: Api.getFileUrl(sender.profilePhotoPath)
+                          }}
+                          resizeMode="cover"
+                          style={styles.image}
+                          imageStyle={styles.imageStyle}
+                        />
+                        <Text style={[styles.textStyle, { color: "#4a6572" }]}>
+                          Nieuw bericht van {sender.firstName}
+                        </Text>
+                      </Ripple>
+                    )}
+                    <View style={styles.separator} />
                   </View>
                 );
-              } else if(item.type==1) {
+              } else if (item.type == 1) {
                 return (
                   <View key={item.id}>
-                  {item.read && (
-                    <Ripple 
-                      onPress={() => {
-                        Router.goTo(this.props.navigation, "ProjectStack","ProjectDetailScreen",
-                          {
-                            id: item.project.id,
-                            name: item.project.name,
-                            desc: item.project.desc,
-                            start_date: item.project.startDate,
-                            end_date: item.project.endDate,
-                            created_at: item.project.createdAt,
-                            like_count: item.project.likeCount,
-                            follower_count: item.project.followerCount,
-                            location: item.project.location,
-                            thumbnail: item.project.thumbnail,
-                            creator: item.project.creator,
-                            images: item.project.images,
-                            files: item.project.files
-                          }
-                        );
-                      }}
-                      style={styles.box}>
-                      <CachedImage 
-                        source={{uri: Api.getFileUrl(item.project.thumbnail)}}
-                        resizeMode="cover"
-                        style={styles.projectImage}
-                        imageStyle={styles.projectImageStyle}
-                      />
-                      <Text style={[styles.textStyle, {color: '#4a6572'}]}>Update voor project: {item.project.name}</Text>
-                    </Ripple>
-                  )}
-                  {!item.read && (
-                    <Ripple 
-                      onPress={() => {
-                        UserApi.markAsRead(item.id).then(res => {
-                          Router.goTo(this.props.navigation, "ProjectStack","ProjectDetailScreen",
+                    {item.read && (
+                      <Ripple
+                        onPress={() => {
+                          Router.goTo(
+                            this.props.navigation,
+                            "ProjectStack",
+                            "ProjectDetailScreen",
                             {
-                              id: item.project.id,
-                              name: item.project.name,
-                              desc: item.project.desc,
-                              start_date: item.project.startDate,
-                              end_date: item.project.endDate,
-                              created_at: item.project.createdAt,
-                              like_count: item.project.likeCount,
-                              follower_count: item.project.followerCount,
-                              location: item.project.location,
-                              thumbnail: item.project.thumbnail,
-                              creator: item.project.creator,
-                              images: item.project.images,
-                              files: item.project.files
+                              id: item.id,
+                              name: item.name,
+                              desc: item.desc,
+                              start_date: item.start_date,
+                              end_date: item.end_date,
+                              created_at: item.created_at,
+                              like_count: item.like_count,
+                              follower_count: item.follower_count,
+                              location: item.location,
+                              thumbnail: Api.getFileUrl(item.thumbnail),
+                              creator: item.creator,
+                              images: item.images,
+                              files: item.files
                             }
-                          )
-                        })
-                      }}
-                      style={[styles.box, {backgroundColor: '#00a6ff'}]}>
-                      <CachedImage 
-                        source={{uri: Api.getFileUrl(item.project.thumbnail)}}
-                        resizeMode="cover"
-                        style={styles.projectImage}
-                        imageStyle={styles.projectImageStyle}
-                      />
-                      <Text style={[styles.textStyle, {color: '#4a6572'}]}>Update voor project: {item.project.name}</Text>
-                    </Ripple>
-                  )}
-                    <View style={styles.separator}/>
+                          );
+                        }}
+                        style={styles.box}
+                      >
+                        <CachedImage
+                          source={{
+                            uri: Api.getFileUrl(item.project.thumbnail)
+                          }}
+                          resizeMode="cover"
+                          style={styles.projectImage}
+                          imageStyle={styles.projectImageStyle}
+                        />
+                        <Text style={[styles.textStyle, { color: "#4a6572" }]}>
+                          Update voor project: {item.project.name}
+                        </Text>
+                      </Ripple>
+                    )}
+                    {!item.read && (
+                      <Ripple
+                        onPress={() => {
+                          UserApi.markAsRead(item.id).then(res => {
+                            Router.goTo(
+                              this.props.navigation,
+                              "ProjectStack",
+                              "ProjectDetailScreen",
+                              {
+                                id: item.project.id,
+                                name: item.project.name,
+                                desc: item.project.desc,
+                                start_date: item.project.startDate,
+                                end_date: item.project.endDate,
+                                created_at: item.project.createdAt,
+                                like_count: item.project.likeCount,
+                                follower_count: item.project.followerCount,
+                                location: item.project.location,
+                                thumbnail: item.project.thumbnail,
+                                creator: item.project.creator,
+                                images: item.project.images,
+                                files: item.project.files
+                              }
+                            );
+                          });
+                        }}
+                        style={[styles.box, { backgroundColor: "#00a6ff" }]}
+                      >
+                        <CachedImage
+                          source={{
+                            uri: Api.getFileUrl(item.project.thumbnail)
+                          }}
+                          resizeMode="cover"
+                          style={styles.projectImage}
+                          imageStyle={styles.projectImageStyle}
+                        />
+                        <Text style={[styles.textStyle, { color: "#4a6572" }]}>
+                          Update voor project: {item.project.name}
+                        </Text>
+                      </Ripple>
+                    )}
+                    <View style={styles.separator} />
                   </View>
                 );
-              }       
+              }
             }}
           />
+        )}
+        {this.state.notificationList.length == 0 && !this.state.loading && (
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyText}>
+              Er zijn geen meldingen gevonden
+            </Text>
+            <Ripple
+              rippleColor="#00a6ff"
+              style={styles.refreshButton}
+              onPress={() => this.onRefresh()}
+            >
+              <Icon name="refresh" type="font-awesome" size={25} color="#FFF" />
+            </Ripple>
+          </View>
+        )}
+        {this.state.loading && (
+          <View
+            style={{
+              height: "92.5%",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <ActivityIndicator size="large" color="#00A6FF" />
+          </View>
+        )}
       </View>
     );
   }
@@ -216,7 +280,7 @@ const styles = StyleSheet.create({
 
   box: {
     height: 90,
-    flexDirection: 'row',
+    flexDirection: "row"
   },
 
   image: {
@@ -252,9 +316,9 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    alignSelf: 'center',
-    paddingVertical: '5%',
-    fontSize: 16,
+    alignSelf: "center",
+    paddingVertical: "5%",
+    fontSize: 16
   },
 
   separator: {
@@ -263,5 +327,25 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center"
   },
-})
 
+  emptyBox: {
+    alignItems: "center",
+    marginTop: "25%"
+  },
+
+  emptyText: {
+    color: "#4a6572",
+    fontSize: 24,
+    fontWeight: "bold"
+  },
+
+  refreshButton: {
+    height: 50,
+    width: 50,
+    borderRadius: 100,
+    backgroundColor: "#009ef2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30
+  }
+});

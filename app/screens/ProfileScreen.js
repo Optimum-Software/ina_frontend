@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-	SafeAreaView,
+  SafeAreaView,
   StyleSheet,
   StatusBar,
   Platform,
@@ -26,23 +26,22 @@ export default class ProfileScreen extends Component {
   constructor() {
     super();
     this.state = {
-      profilePhoto: {uri: ''},
+      profilePhoto: { uri: "" },
       id: null,
-      firstName: '',
-      lastName: '',
-      organisation: '',
-      _function: '',
-      bio: '',
+      firstName: "",
+      lastName: "",
+      organisation: "",
+      _function: "",
+      bio: "",
       admin: false
     };
-
   }
 
   componentDidMount() {
     ProfileParameters.getUserId().then(id => {
-      if(id != null) {
-        ProfileParameters.storeUserId(null)
-        Api.callApiGetSafe('getUserById/' + id).then(res => {
+      if (id != null) {
+        ProfileParameters.storeUserId(null);
+        Api.callApiGetSafe("getUserById/" + id).then(res => {
           this.setState({
             id: res.user.id,
             firstName: res.user.firstName,
@@ -50,12 +49,12 @@ export default class ProfileScreen extends Component {
             organisation: res.user.organisation,
             _function: res.user.function,
             bio: res.user.bio,
-            profilePhoto: {uri: Api.getFileUrl(res.user.profilePhotoPath)},
-          })
-        })
+            profilePhoto: { uri: Api.getFileUrl(res.user.profilePhotoPath) }
+          });
+        });
       } else {
         User.getUserId().then(id => {
-          Api.callApiGetSafe('getUserById/' + id).then(res => {
+          Api.callApiGetSafe("getUserById/" + id).then(res => {
             this.setState({
               id: res.user.id,
               firstName: res.user.firstName,
@@ -63,13 +62,13 @@ export default class ProfileScreen extends Component {
               organisation: res.user.organisation,
               _function: res.user.function,
               bio: res.user.bio,
-              profilePhoto: {uri: Api.getFileUrl(res.user.profilePhotoPath)},
+              profilePhoto: { uri: Api.getFileUrl(res.user.profilePhotoPath) },
               admin: true
-            })
-          })
-        })
+            });
+          });
+        });
       }
-    })
+    });
   }
 
   render() {
@@ -84,58 +83,61 @@ export default class ProfileScreen extends Component {
             centerElement="Profiel"
             iconSet="MaterialCommunityIcons"
             leftElement={"chevron-left"}
-            style={{container: {"backgroundColor": "#009EF2"}}}
+            style={{ container: { backgroundColor: "#009EF2" } }}
             onLeftElementPress={() => {
-              Router.goTo(this.props.navigation, 'LoggedIn', 'LoggedIn');
+              Router.goTo(this.props.navigation, "LoggedIn", "LoggedIn");
             }}
           />
         </View>
-        <ScrollView >
-          <CachedImage
-            source={this.state.profilePhoto}
-            resizeMode="cover"
-            style={styles.profilePhoto}
-          />
-          <View style={{height: Dimensions.get("window").height * 0.7}}>
+        <View style={{ height: "100%" }}>
+          <ScrollView>
             <CachedImage
-              source={line}
-              resizeMode="stretch"
-              style={{width: "100%", height: 3}}
+              source={this.state.profilePhoto}
+              resizeMode="cover"
+              style={styles.profilePhoto}
             />
-            <View style={styles.personalInfoBox}>
-              <View style={styles.labels}>
-                <Text style={styles.label}>Naam</Text>
-                <Text style={styles.label}>Organisatie</Text>
-                <Text style={styles.label}>Functie</Text>
+            <View style={{ height: Dimensions.get("window").height * 0.7 }}>
+              <CachedImage
+                source={line}
+                resizeMode="cover"
+                style={{ width: "100%", height: 3 }}
+              />
+              <View style={styles.personalInfoBox}>
+                <View style={styles.labels}>
+                  <Text style={styles.label}>Naam</Text>
+                  <Text style={styles.label}>Organisatie</Text>
+                  <Text style={styles.label}>Functie</Text>
+                </View>
+                <View style={styles.items}>
+                  <Text>
+                    {this.state.firstName + " " + this.state.lastName}
+                  </Text>
+                  <Text>{this.state.organisation}</Text>
+                  <Text>{this.state._function}</Text>
+                </View>
               </View>
-              <View style={styles.items}>
-                <Text>{this.state.firstName + ' ' + this.state.lastName}</Text>
-                <Text>{this.state.organisation}</Text>
-                <Text>{this.state._function}</Text>
+              <View style={styles.separator} />
+              <View style={{ paddingLeft: "10%", paddingRight: "10%" }}>
+                <Text>{this.state.bio}</Text>
               </View>
             </View>
-            <View style={styles.separator}/>
-            <View style={{paddingLeft: '10%', paddingRight: '10%'}}>
-              <Text>{this.state.bio}</Text>
-            </View>
-          </View>
-        </ScrollView>
-        { this.state.admin && (
-          <TouchableHighlight
-            underlayColor="#009ef2"
-            style={styles.buttonStyle}
-            onPress={() => {
-              Router.goTo(this.props.navigation, "ProfileEdit", "ProfileEditScreen")
-            }}
-          >
-            <Icon
-              name="edit"
-              type="entypo"
-              size={30}
-              color="#FFF"
-            />
-          </TouchableHighlight>
-        )}
+          </ScrollView>
+          {this.state.admin && (
+            <TouchableHighlight
+              underlayColor="#009ef2"
+              style={styles.buttonStyle}
+              onPress={() => {
+                Router.goTo(
+                  this.props.navigation,
+                  "ProfileEdit",
+                  "ProfileEditScreen"
+                );
+              }}
+            >
+              <Icon name="edit" type="entypo" size={30} color="#FFF" />
+            </TouchableHighlight>
+          )}
+        </View>
       </SafeAreaView>
     );
   }
@@ -150,48 +152,48 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     borderRadius: 100,
-    backgroundColor: '#00a6ff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
+    backgroundColor: "#00a6ff",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
     top: 200,
     right: 15
   },
 
   profilePhoto: {
-    width: '100%',
+    width: "100%",
     height: Dimensions.get("window").height * 0.3
   },
   personalInfoBox: {
     marginTop: 30,
-    paddingLeft: '10%',
-    flexDirection: 'row',
-    alignItems: 'flex-start'
+    paddingLeft: "10%",
+    flexDirection: "row",
+    alignItems: "flex-start"
   },
   labels: {
-    width: '30%',
-    height: '100%',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start'
+    width: "30%",
+    height: "100%",
+    alignItems: "flex-start",
+    justifyContent: "flex-start"
   },
 
   label: {
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
 
   items: {
-    width: '70%',
-    height: '100%',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start'
+    width: "70%",
+    height: "100%",
+    alignItems: "flex-start",
+    justifyContent: "flex-start"
   },
 
   separator: {
     height: 1,
-    backgroundColor: '#b5babf',
+    backgroundColor: "#b5babf",
     marginTop: 15,
     marginBottom: 15,
-    width: '80%',
-    alignSelf: 'center'
-  },
-})
+    width: "80%",
+    alignSelf: "center"
+  }
+});

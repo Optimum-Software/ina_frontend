@@ -41,7 +41,7 @@ export default class RegistrationScreenStart extends Component {
 
       loading: false
     };
-    console.log(this.props.navigation)
+    console.log(this.props.navigation);
   }
 
   goToRegisterPhone() {

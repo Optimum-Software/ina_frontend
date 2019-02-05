@@ -59,8 +59,6 @@ class ProjectCreateFourthScreen extends Component {
         this.state.documents,
         this.state.tags
       ).then(result => {
-        console.log("RESPONSE");
-        console.log(result);
         if (result["bool"]) {
           ProjectApi.getProjectById(result["id"]).then(result => {
             this.setState({

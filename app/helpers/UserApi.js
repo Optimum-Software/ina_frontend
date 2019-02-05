@@ -16,7 +16,7 @@ class UserApi {
   }
 
   getUserSettings(id) {
-    return Api.callApiGet("getUserSettings/" + id)
+    return Api.callApiGetSafe("getUserSettings/" + id)
   }
 
   login(username, password) {
@@ -25,9 +25,7 @@ class UserApi {
   }
 
   logout() {
-    User.getToken().then(token => {
-      return Api.callApiGetSafe("logout", token);
-    });
+    return Api.callApiGetSafe("logout");
   }
 
   registerUser(firstName, lastName, email, password, mobile) {
@@ -47,11 +45,11 @@ class UserApi {
       userId: id,
       canNotificate: canNotificate
     }
-    return Api.callApiPost('saveUserSettings', userData);
+    return Api.callApiPostSafe('saveUserSettings', userData);
   }
 
   uploadProfilePhoto(userId, file) {
-    return Api.callApiUploadProfilePhoto(userId, "ProfilePhoto", file);
+    return Api.callApiUploadProfilePhoto(userId, "ProfilePhoto", file);    
   }
 
   createDeviceId(userId, deviceId) {
@@ -59,8 +57,7 @@ class UserApi {
       userId: userId,
       deviceId: deviceId
     };
-
-    return Api.callApiPost("createDevice", userData);
+    return Api.callApiPostSafe("createDevice", userData);
   }
 
   notifyUser(userId, chatId) {
@@ -68,8 +65,7 @@ class UserApi {
       userId: userId,
       chatId: chatId
     };
-
-    return Api.callApiPost("sendMessageToUserById", userData);
+    return Api.callApiPostSafe("sendMessageToUserById", userData);
   }
 
   requestNewPassword(email) {
@@ -102,7 +98,7 @@ class UserApi {
       type: "multipart/form-data"
     };
     data.append("thumbnail", photoFile);
-    return Api.callApiPostForm("updateUser", data);
+    return Api.callApiPostFormSafe("updateUser", data);
   }
 
   editOptionalInfo(id, bio, organisation, _function) {
@@ -112,16 +108,15 @@ class UserApi {
       organisation: organisation,
       function: _function
     }
-    console.log(userData)
     return Api.callApiPost("editOptionalInfo", userData)
   }
 
   getNotifications(id) {
-    return Api.callApiGet("getNotificationByUser/"+id);
+    return Api.callApiGetSafe("getNotificationByUser/"+id);
   }
 
   markAsRead(id) {
-    return Api.callApiGet("markAsRead/" + id);
+    return Api.callApiGetSafe("markAsRead/" + id);
   }
 }
 
