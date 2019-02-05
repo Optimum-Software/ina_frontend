@@ -35,6 +35,7 @@ export default class Chat extends Component {
       title: this.props.navigation.getParam("title", "")
     });
     this.getMessages();
+    console.log(FirebaseApi.getFireBase())
     BackHandler.addEventListener('hardwareBackPress', this.handleBack.bind(this))
   }
 

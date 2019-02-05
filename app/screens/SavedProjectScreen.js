@@ -149,7 +149,6 @@ export default class SavedProjects extends Component {
     this.setState({ loading: true });
     User.getUserId().then(id => {
       SavedApi.getAllFollows(id).then(res => {
-        console.log(res);
         if (res["bool"]) {
           if (res["found"]) {
             this.setState({ followedProjects: res["projects"] });

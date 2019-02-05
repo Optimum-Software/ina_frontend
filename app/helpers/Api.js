@@ -1,10 +1,11 @@
 import React from "react";
 import { NetInfo } from "react-native";
 import User from "./User";
+import Router from "./Router";
 let instance = null;
 let userToken = null;
 class Api {
-  ip = "http://136.144.186.136"
+  ip = "http://145.37.144.182:8000"
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
@@ -17,7 +18,6 @@ class Api {
 
   saveToken() {
     User.getToken().then(token => {
-      console.log(token)
       userToken = token;
     });
   }
@@ -63,7 +63,9 @@ class Api {
         },
         body: JSON.stringify(data)
       });
-
+      if(response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      }
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -102,9 +104,10 @@ class Api {
           Authorization: "Token " + userToken
         }
       });
-
+      if(response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      }
       let responseJson = await response.json();
-      console.log(responseJson)
       return responseJson;
     } catch (error) {
       return {
@@ -186,6 +189,9 @@ class Api {
         },
         body: data
       });
+      if(response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      }
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -229,12 +235,13 @@ class Api {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
-
           Authorization: "Token " + userToken
         },
         body: data
       });
-
+      if(response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      }
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {

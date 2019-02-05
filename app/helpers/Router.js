@@ -25,6 +25,18 @@ class Router {
     );
   }
 
+  goFromApi(stackName, screenName, parameters) {
+    dispatcherDeeplink.dispatch(
+      NavigationActions.navigate({
+        routeName: stackName,
+        action: NavigationActions.navigate({
+          routeName: screenName,
+          params: parameters
+        })
+      })
+    );
+  }
+
   popToTop(dispatcher) {
     dispatcher.dispatch(StackActions.popToTop());
   }

@@ -74,14 +74,14 @@ class LoginScreen extends Component {
       UserApi.login(this.state.email, hashedPw).then(result => {
         if (result.bool) {
           FirebaseApi.login(this.state.email, hashedPw);
+          User.storeToken(result.token);
+          Api.saveToken()
           User.getDeviceId().then(deviceId => {
-            UserApi.createDeviceId(result.userId, result.token, deviceId).then(
+            UserApi.createDeviceId(result.userId, deviceId).then(
               result => {}
             );
           });
           User.storeUserId(result.userId); 
-          User.storeToken(result.token);
-          Api.saveToken()
           Router.switchLogin(this.props.navigation);
           Router.goTo(this.props.navigation, "Tabs", "HomeScreen");
         } else {
