@@ -151,6 +151,24 @@ export default class DetailTab extends Component {
   render() {
     return (
       <ScrollView>
+        {this.state.projectMembers.length > 0 && (
+          <FlatList
+            data={this.state.projectMembers}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View style={styles.personCard}>
+                <Image
+                  source={{
+                    uri: Api.getFileUrl(item.profilePhotoPath)
+                  }}
+                  resizeMode="cover"
+                  style={{ width: 35, height: 35, borderRadius: 100 }}
+                />
+              </View>
+            )}
+          />
+        )}
         <Text
           style={{
             marginLeft: 15,
@@ -272,24 +290,61 @@ export default class DetailTab extends Component {
             </Text>
           </View>
 
-          {this.state.project.start_date != null && (
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                width: Dimensions.get("window").width
-              }}
-            >
-              <Icon name="calendar-range" size={24} color={"#4C6873"} />
-              <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
-                {this.state.project.start_date.substring(0, 10) +
-                  " / " +
-                  this.state.project.end_date.substring(0, 10)}
-              </Text>
-            </View>
-          )}
+          {this.state.project.start_date != null &&
+            this.state.project.end_date != null && (
+              <View
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="calendar-range" size={24} color={"#4C6873"} />
+                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                  {this.state.project.start_date.substring(0, 10) +
+                    " / " +
+                    this.state.project.end_date.substring(0, 10)}
+                </Text>
+              </View>
+            )}
+          {this.state.project.start_date == null &&
+            this.state.project.end_date != null && (
+              <View
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="calendar-range" size={24} color={"#4C6873"} />
+                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                  {"Eind datum: " +
+                    this.state.project.end_date.substring(0, 10)}
+                </Text>
+              </View>
+            )}
+          {this.state.project.start_date != null &&
+            this.state.project.end_date == null && (
+              <View
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="calendar-range" size={24} color={"#4C6873"} />
+                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                  {"Begin datum: " +
+                    this.state.project.start_date.substring(0, 10)}
+                </Text>
+              </View>
+            )}
         </View>
         <View
           style={{

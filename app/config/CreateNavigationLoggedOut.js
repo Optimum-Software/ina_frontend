@@ -10,7 +10,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   SafeAreaView,
-  StatusBar,
+  StatusBar
 } from "react-native";
 import { Fragment } from "react";
 
@@ -37,77 +37,88 @@ import GroupStack from "./GroupStackNavigator";
 
 let screen = Dimensions.get("window");
 
+const tabbarVisible = navigation => {
+  const { routes } = navigation.state;
+
+  let showTabbar = true;
+  routes.forEach(route => {
+    if (route.routeName === "ProjectDetailScreen") {
+      showTabbar = false;
+    }
+  });
+
+  return showTabbar;
+};
+
 const CustomDrawerContentComponent = props => (
   <Fragment>
     <SafeAreaView style={{ flex: 0, backgroundColor: "00a6ff" }} />
     <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-  <View>
-    <View style={{ height: "90%" }}>
-      <ImageBackground
-        source={require("../assets/images/drawer.png")}
-        resizeMode="stretch"
-        style={{
-          flex: 1
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            width: '100%',
-            flexDirection: "row"
-          }}
-        >
-          <View
+      <View>
+        <View style={{ height: "90%" }}>
+          <ImageBackground
+            source={require("../assets/images/drawer.png")}
+            resizeMode="stretch"
             style={{
-              flexDirection: "column",
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
+              flex: 1
             }}
           >
-            <Text
+            <View
               style={{
-                color: "#fff",
-                fontWeight: "bold",
-                alignSelf: 'center'
+                flex: 1,
+                width: "100%",
+                flexDirection: "row"
               }}
             >
-              Log in voor meer opties
-            </Text>
-          </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%"
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontWeight: "bold",
+                    alignSelf: "center"
+                  }}
+                >
+                  Log in voor meer opties
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                backgroundColor: "#fff",
+                width: "90%",
+                height: 1,
+                alignSelf: "center"
+              }}
+            />
+            <View style={{ flex: 3, paddingLeft: "5%", paddingTop: "5%" }}>
+              <DrawerItems {...props} />
+            </View>
+          </ImageBackground>
         </View>
-        <View
+        <TouchableOpacity
+          onPress={() => props.navigation.closeDrawer()}
           style={{
-            backgroundColor: "#fff",
-            width: "90%",
-            height: 1,
             alignSelf: "center",
+            alignItems: "center",
+            justifyContent: "center",
 
+            width: 50,
+            height: 50,
+            backgroundColor: "#01a6ff",
+            borderRadius: 100
           }}
-        />
-        <View style={{ flex: 3, paddingLeft: "5%", paddingTop: '5%' }}>
-
-          <DrawerItems {...props} />
-        </View>
-      </ImageBackground>
-    </View>
-    <TouchableOpacity
-      onPress={() => props.navigation.closeDrawer()}
-      style={{
-        alignSelf: "center",
-        alignItems: "center",
-        justifyContent: "center",
-
-        width: 50,
-        height: 50,
-        backgroundColor: "#01a6ff",
-        borderRadius: 100
-      }}
-    >
-      <Icon name={"close"} size={25} color="#fff" />
-    </TouchableOpacity>
-  </View>
-  </SafeAreaView>
+        >
+          <Icon name={"close"} size={25} color="#fff" />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   </Fragment>
 );
 
@@ -115,21 +126,23 @@ export const Tabs = createBottomTabNavigator(
   {
     HomeStack: {
       screen: HomeStack,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         tabBarLabel: "Home",
+        tabBarVisible: tabbarVisible(navigation),
         tabBarIcon: ({ tintColor }) => (
           <Icon name="home-outline" size={28} color={tintColor} />
         )
-      }
+      })
     },
     ProjectStack: {
       screen: ProjectStack,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         tabBarLabel: "Projecten",
+        tabBarVisible: tabbarVisible(navigation),
         tabBarIcon: ({ tintColor }) => (
           <Icon name="lightbulb-on-outline" size={28} color={tintColor} />
         )
-      }
+      })
     }
   },
   {
@@ -156,7 +169,7 @@ export const Drawer = createDrawerNavigator(
           <Icon name="account" size={25} color={tintColor} />
         )
       }
-    },
+    }
   },
   {
     drawerPosition: "left",

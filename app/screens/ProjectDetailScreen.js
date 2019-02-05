@@ -78,6 +78,7 @@ export default class ProjectDetail extends Component {
       id: "",
       index: 0,
       like_count: this.props.navigation.getParam("like_count", ""),
+      userId: null,
 
       liked: false,
       followed: false,
@@ -106,6 +107,9 @@ export default class ProjectDetail extends Component {
       notiIcon: "bell-outline",
       canNotificate: false
     };
+    User.getUserId().then(userId => {
+      this.setState({ userId: userId });
+    });
   }
 
   componentDidMount() {
@@ -190,6 +194,20 @@ export default class ProjectDetail extends Component {
         }
       })
     })
+  }
+
+  unlikeProject() {
+    User.getUserId().then(id => {
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.unlikeProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            this.setState({ liked: false, like_count: res["likedCount"] });
+          }
+        });
+      }
+    });
   }
 
   _renderItem({ item, index }) {
@@ -448,37 +466,27 @@ export default class ProjectDetail extends Component {
                     </View>
                   </View>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    {this.state.project.creator.profilePhotoPath != "" && (
-                      <CachedImage
-                        source={{
-                          uri: Api.getFileUrl(
-                            this.state.project.creator.profilePhotoPath
-                          )
-                        }}
-                        resizeMode="cover"
-                        style={{
-                          marginRight: 10,
-                          width: 30,
-                          height: 30,
-                          borderRadius: 100,
-                          backgroundColor: "white"
-                        }}
-                        imageStyle={{
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: 200
-                        }}
-                      />
-                    )}
-                    {this.state.project.creator.profilePhotoPath == "" && (
-                      <Icon
-                        name="account-circle"
-                        size={35}
-                        style={{
-                          marginRight: 10
-                        }}
-                      />
-                    )}
+                    <CachedImage
+                      source={{
+                        uri: Api.getFileUrl(
+                          this.state.project.creator.profilePhotoPath
+                        )
+                      }}
+                      resizeMode="cover"
+                      style={{
+                        marginRight: 10,
+                        width: 30,
+                        height: 30,
+                        borderRadius: 100,
+                        backgroundColor: "white"
+                      }}
+                      imageStyle={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: 200
+                      }}
+                    />
+
                     <View style={{ flexDirection: "column" }}>
                       <Text style={{ fontSize: 18, color: "white" }}>
                         {this.state.project.creator.firstName +
@@ -493,6 +501,7 @@ export default class ProjectDetail extends Component {
                     {this.state.userId == this.state.project.creator.id && (
                       <Icon
                         name="square-edit-outline"
+                        color="#fff"
                         size={36}
                         onPress={() => {
                           Router.goTo(
@@ -527,7 +536,11 @@ export default class ProjectDetail extends Component {
                           flexDirection: "row"
                         }}
                         rippleColor="#fff"
-                        onPress={() => this.likedProject()}
+                        onPress={() =>
+                          this.state.liked
+                            ? this.unlikeProject()
+                            : this.likedProject()
+                        }
                       >
                         {this.state.liked && (
                           <Icon name="heart" size={24} color={"red"} />
