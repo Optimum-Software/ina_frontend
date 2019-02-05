@@ -87,7 +87,6 @@ export default class SavedProjects extends Component {
       style={styles.cardContainer}
       key={item.id}
       onPress={() => {
-        console.log(item)
         Router.goTo(
           this.props.navigation,
           "ProjectStack",
@@ -107,7 +106,7 @@ export default class SavedProjects extends Component {
             images: item.images,
             files: item.files,
 
-            differentStack: true
+            differentStack: true,
           }
         )}
       }

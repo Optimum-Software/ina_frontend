@@ -170,7 +170,6 @@ export default class ProjectDetail extends Component {
       } else {
         ProjectApi.likeProject(this.state.project.id, id).then(res => {
           if (res["bool"]) {
-            console.log("yay");
             this.setState({ liked: true, like_count: res["likedCount"] });
           }
         });
