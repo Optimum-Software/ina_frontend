@@ -26,6 +26,7 @@ import Api from "../helpers/Api";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 import ProjectApi from "../helpers/ProjectApi";
+import User from "../helpers/User";
 
 class ProjectEditThirdScreen extends Component {
   constructor(props) {
@@ -108,38 +109,40 @@ class ProjectEditThirdScreen extends Component {
     this.setState({
       editing: true
     });
-    ProjectApi.editProject(
-      this.state.id,
-      this.state.name,
-      this.state.desc,
-      this.state.location,
-      this.state.start_date,
-      this.state.end_date,
-      this.state.thumbnailUri,
-      this.state.thumbnailName,
-      this.state.documents,
-      this.state.tags
-    ).then(result => {
-      console.log("RESPONSE");
-      console.log(result);
-      if (result["bool"]) {
-        ProjectApi.getProjectById(result["id"]).then(result => {
-          if (result["bool"]) {
-            this.setState({
-              editing: false,
-              projectEdited: true,
-              project: result["project"]
-            });
-            this.goToProject();
-          }
-        });
-      } else {
-        this.setState({
-          editing: false,
-          projectEdited: false
-        });
-        alert(result["msg"]);
-      }
+    User.getUserId().then(id => {
+      ProjectApi.editProject(
+        this.state.id,
+        this.state.name,
+        this.state.desc,
+        this.state.location,
+        this.state.start_date,
+        this.state.end_date,
+        this.state.thumbnailUri,
+        this.state.thumbnailName,
+        this.state.documents,
+        this.state.tags
+      ).then(result => {
+        console.log("RESPONSE");
+        console.log(result);
+        if (result["bool"]) {
+          ProjectApi.getProjectById(id, result["id"]).then(result => {
+            if (result["bool"]) {
+              this.setState({
+                editing: false,
+                projectEdited: true,
+                project: result["project"]
+              });
+              this.goToProject();
+            }
+          });
+        } else {
+          this.setState({
+            editing: false,
+            projectEdited: false
+          });
+          alert(result["msg"]);
+        }
+      });
     });
   }
 

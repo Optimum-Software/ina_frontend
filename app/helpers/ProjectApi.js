@@ -12,20 +12,43 @@ class ProjectApi {
     return instance;
   }
 
-  getAllProjects() {
-    return Api.callApiGet("getAllProjects");
+  getProjects(userId, filter, optional = null) {
+    if (userId != null) {
+      console.log("Type of projects");
+      console.log(filter);
+      console.log("USER ID");
+      console.log(userId);
+      console.log(optional);
+      userData = { userId: userId, filter: filter };
+      if (filter == "search") {
+        userData["searchTerm"] = optional;
+      }
+      if (filter == "tag") {
+        userData["tagName"] = optional;
+      }
+      return Api.callApiPostSafe("getProjects", userData);
+    } else {
+      userData = { filter: filter };
+      if (filter == "search") {
+        userData["searchTerm"] = optional;
+      }
+      if (filter == "tag") {
+        userData["tagName"] = optional;
+      }
+      return Api.callApiPost("getProjectsNotLoggedIn", userData);
+    }
   }
 
-  getAllTag() {
+  getAllTags() {
     return Api.callApiGet("getAllTags");
   }
 
-  getAllTags(id) {
-    return Api.callApiGet("getAllProjectTagsById/" + id);
-  }
-
-  getProjectById(id) {
-    return Api.callApiGet("getProjectById/" + id);
+  getProjectById(userId, projectId) {
+    if (userId != null) {
+      return Api.callApiGetSafe("getProjectById/" + userId + "/" + projectId);
+    } else {
+      return Api.callApiGet("getProjectByIdNotLoggedIn/" + projectId);
+    }
   }
 
   likeProject(id, userId) {
@@ -34,10 +57,14 @@ class ProjectApi {
   }
 
   setCanNotificate(canNotificate, userId, projectId) {
-    userData = { canNotificate: canNotificate, userId: userId, projectId: projectId };
-    return Api.callApiPostSafe("setCanNotificate", userData)
+    userData = {
+      canNotificate: canNotificate,
+      userId: userId,
+      projectId: projectId
+    };
+    return Api.callApiPostSafe("setCanNotificate", userData);
   }
-  
+
   unlikeProject(id, userId) {
     userData = { id: id, userId: userId };
     return Api.callApiPostSafe("unlikeProjectById", userData);
@@ -46,6 +73,11 @@ class ProjectApi {
   followProject(id, userId) {
     userData = { id: id, userId: userId };
     return Api.callApiPostSafe("followProjectById", userData);
+  }
+
+  unfollowProject(id, userId) {
+    userData = { id: id, userId: userId };
+    return Api.callApiPostSafe("unfollowProjectById", userData);
   }
 
   newestProjects() {
@@ -182,12 +214,22 @@ class ProjectApi {
     return Api.callApiDelete("deleteMember", userData);
   }
 
-  checkIfMember(userId, projectId) {
+  // checkIfMember(userId, projectId) {
+  //   userData = {
+  //     userId: userId,
+  //     projectId: projectId
+  //   };
+  //   return Api.callApiPost("getMember", userData);
+  // }
+
+  checkIfLiked(userId, projectId) {
     userData = {
       userId: userId,
       projectId: projectId
     };
-    return Api.callApiPost("getMember", userData);
+    return Api.callApiGetSafe(
+      "checkIfProjectLiked/" + projectId + "/" + userId
+    );
   }
 
   checkIfLiked(userId, projectId) {
@@ -197,11 +239,8 @@ class ProjectApi {
   }
 
   checkIfFollowed(userId, projectId) {
-    return Api.callApiGetSafe(
-      "checkIfFollowed/" + userId + "/" + projectId
-    );
+    return Api.callApiGetSafe("checkIfFollowed/" + userId + "/" + projectId);
   }
-
   updateProject(projectId, userId, title, content) {
     userData = {
       project: projectId,
