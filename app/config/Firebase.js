@@ -1,8 +1,8 @@
 export const firebaseConfig = {
-    apiKey: "AIzaSyDjjRkYCKS_uNoWJYmqLK-hY30Gi2EqqDo",
-    authDomain: "inaapp-8f14f.firebaseapp.com",
-    databaseURL: "https://inaapp-8f14f.firebaseio.com",
-    projectId: "inaapp-8f14f",
-    storageBucket: "inaapp-8f14f.appspot.com",
-    messagingSenderId: "949213820980"
+    apiKey: " AIzaSyCp5EVXJd8yTA0ZQ1fdIrNI8OPdT_W7QzA",
+    authDomain: "ina-app.firebaseapp.com",
+    databaseURL: "https://ina-app.firebaseio.com",
+    projectId: "ina-app",
+    storageBucket: "ina-app.appspot.com",
+    messagingSenderId: "838244637510"
 };

@@ -35,6 +35,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
+        OneSignal.inFocusDisplaying(2)
         OneSignal.init("491e8289-1ec1-4977-8820-03a3ba6c3269");
         OneSignal.addEventListener("ids", this.onIds);
         OneSignal.configure();

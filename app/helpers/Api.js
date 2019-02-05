@@ -1,6 +1,7 @@
 import React from "react";
 import { NetInfo } from "react-native";
 import User from "./User";
+import Router from "./Router";
 let instance = null;
 let userToken = null;
 class Api {
@@ -19,7 +20,6 @@ class Api {
 
   saveToken() {
     User.getToken().then(token => {
-      console.log(token);
       userToken = token;
     });
   }
@@ -65,7 +65,9 @@ class Api {
         },
         body: JSON.stringify(data)
       });
-
+      if(response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      }
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -104,7 +106,9 @@ class Api {
           Authorization: "Token " + userToken
         }
       });
-
+      if(response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      }
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -187,6 +191,9 @@ class Api {
         },
         body: data
       });
+      if(response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      }
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {
@@ -230,12 +237,13 @@ class Api {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
-
           Authorization: "Token " + userToken
         },
         body: data
       });
-
+      if(response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      }
       let responseJson = await response.json();
       return responseJson;
     } catch (error) {

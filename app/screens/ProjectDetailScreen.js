@@ -12,7 +12,8 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
-  Share
+  Share,
+  BackHandler
 } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
@@ -79,9 +80,8 @@ export default class ProjectDetail extends Component {
       like_count: this.props.navigation.getParam("like_count", ""),
       userId: null,
 
-      followed: false,
-      liked: false,
-      member: false,
+      followed: this.props.navigation.getParam("followed", ""),
+
       isModalVisible: false,
       tags: [],
       prevRoute: this.props.navigation.getParam("prevRoute", ""),
@@ -106,30 +106,76 @@ export default class ProjectDetail extends Component {
         liked: this.props.navigation.getParam("liked", ""),
         member: this.props.navigation.getParam("member", ""),
         followed: this.props.navigation.getParam("followed", "")
-      }
+      },
+      notiIcon: "bell-outline",
+      canNotificate: false
     };
     User.getUserId().then(userId => {
       this.setState({ userId: userId });
     });
+    this.followHandler = this.followHandler.bind(this);
   }
 
   componentDidMount() {
     this.refreshProject();
-    console.log(this.state.project.liked);
-    console.log(this.state.project.member);
-    console.log(this.state.project.followed);
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.handleBack.bind(this)
+    );
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBack.bind(this)
+    );
+  }
+
+  handleBack() {
+    Router.goBack(
+      this.props.navigation,
+      this.props.navigation.getParam("differentStack", false)
+    );
+    return true;
+  }
+
+  followHandler(followed) {
+    this.setState({
+      followed: followed
+    });
   }
 
   refreshProject() {
-    ProjectApi.getProjectById(this.state.project.id).then(result => {
-      if (result["bool"]) {
-        result["project"].thumbnail = Api.getFileUrl(
-          result["project"].thumbnail
-        );
-        this.setState({
-          project: result["project"]
-        });
-      }
+    User.getUserId().then(userId => {
+      ProjectApi.getProjectById(userId, this.state.project.id).then(result => {
+        if (result["bool"]) {
+          result["project"].thumbnail = Api.getFileUrl(
+            result["project"].thumbnail
+          );
+          this.setState({
+            project: result["project"]
+          });
+        }
+      });
+    });
+  }
+
+  setCanNotificate() {
+    User.getUserId().then(id => {
+      ProjectApi.setCanNotificate(
+        !this.state.canNotificate,
+        id,
+        this.state.project.id
+      ).then(res => {
+        if (res["bool"]) {
+          if (!this.state.canNotificate) {
+            this.setState({ notiIcon: "bell-ring-outline" });
+          } else {
+            this.setState({ notiIcon: "bell-outline" });
+          }
+          this.setState({ canNotificate: !this.state.canNotificate });
+        }
+      });
     });
   }
 
@@ -144,9 +190,18 @@ export default class ProjectDetail extends Component {
         {!item.includes("videoThumbnail_") && (
           <Ripple
             onPress={() =>
-              Router.goTo(this.props.navigation, "HomeStack", "Imageviewer", {
-                url: Api.getFileUrl(item.substring(0, item.length))
-              })
+              Router.goTo(
+                this.props.navigation,
+                "ProjectStack",
+                "Imageviewer",
+                {
+                  url: Api.getFileUrl(item.substring(0, item.length)),
+                  differentStack: this.props.navigation.getParam(
+                    "differentStack",
+                    false
+                  )
+                }
+              )
             }
             rippleColor="#fff"
           >
@@ -160,9 +215,18 @@ export default class ProjectDetail extends Component {
         {item.includes("videoThumbnail_") && (
           <Ripple
             onPress={() =>
-              Router.goTo(this.props.navigation, "HomeStack", "Videoplayer", {
-                url: Api.getFileUrl(item.substring(0, item.length - 4))
-              })
+              Router.goTo(
+                this.props.navigation,
+                "ProjectStack",
+                "Videoplayer",
+                {
+                  url: Api.getFileUrl(item.substring(0, item.length - 4)),
+                  differentStack: this.props.navigation.getParam(
+                    "differentStack",
+                    false
+                  )
+                }
+              )
             }
             rippleColor="#fff"
           >
@@ -215,7 +279,11 @@ export default class ProjectDetail extends Component {
     switch (route.key) {
       case "detail":
         return (
-          <FirstRoute project={this.state} navigation={this.props.navigation} />
+          <FirstRoute
+            project={this.state}
+            navigation={this.props.navigation}
+            followHandler={this.followHandler}
+          />
         );
 
       case "news":
@@ -235,7 +303,6 @@ export default class ProjectDetail extends Component {
       this.state.prevRoute == "ProjectCreate" ||
       this.state.prevRoute == "ProjectEdit"
     ) {
-      console.log("KOMT VAN EDIT OF CREATE");
       Router.popToTop(this.props.navigation);
     } else {
       Router.goBack(this.props.navigation);
@@ -271,17 +338,49 @@ export default class ProjectDetail extends Component {
               height: 65
             }}
           >
-            <Toolbar
-              style={{
-                container: { backgroundColor: "transparent", elevation: 0 }
-              }}
-              iconSet="MaterialCommunityIcons"
-              leftElement={"arrow-left"}
-              rightElement={["bell-outline", "share-variant"]}
-              onLeftElementPress={() => {
-                this.goBack();
-              }}
-            />
+            {this.state.followed && (
+              <Toolbar
+                style={{
+                  container: { backgroundColor: "transparent", elevation: 0 }
+                }}
+                iconSet="MaterialCommunityIcons"
+                leftElement={"arrow-left"}
+                rightElement={[this.state.notiIcon, "share-variant"]}
+                onLeftElementPress={() => {
+                  Router.goBack(
+                    this.props.navigation,
+                    this.props.navigation.getParam("differentStack", false)
+                  );
+                }}
+                onRightElementPress={action => {
+                  if (action.action == "share-variant") {
+                    //share
+                    console.log("share");
+                  } else {
+                    this.setCanNotificate();
+                  }
+                }}
+              />
+            )}
+            {!this.state.followed && (
+              <Toolbar
+                style={{
+                  container: { backgroundColor: "transparent", elevation: 0 }
+                }}
+                iconSet="MaterialCommunityIcons"
+                leftElement={"arrow-left"}
+                rightElement={"share-variant"}
+                onLeftElementPress={() => {
+                  Router.goBack(
+                    this.props.navigation,
+                    this.props.navigation.getParam("differentStack", false)
+                  );
+                }}
+                onRightElementPress={() => {
+                  //share
+                }}
+              />
+            )}
           </LinearGradient>
           <ScrollView scrollEnabled={false}>
             <View style={styles.container}>

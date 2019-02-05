@@ -29,18 +29,6 @@ export default createStackNavigator(
         gesturesEnabled: false
       })
     },
-    Videoplayer: {
-      screen: Videoplayer,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    },
-    Imageviewer: {
-      screen: Imageviewer,
-      navigationOptions: ({ navigation }) => ({
-        gesturesEnabled: false
-      })
-    }
   },
 
   {

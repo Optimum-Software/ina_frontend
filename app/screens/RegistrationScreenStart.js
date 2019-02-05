@@ -24,24 +24,23 @@ export default class RegistrationScreenStart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: "T",
+      firstName: "",
       firstNameError: "",
 
-      lastName: "T",
+      lastName: "",
       lastNameError: "",
 
-      email: "t@t.nl",
+      email: "",
       emailError: "",
 
-      pw: "123456",
+      pw: "",
       pwError: "",
 
-      pwRepeat: "123456",
+      pwRepeat: "",
       pwRepeatError: "",
 
       loading: false
     };
-    console.log(this.props.navigation);
   }
 
   goToRegisterPhone() {

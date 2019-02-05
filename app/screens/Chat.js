@@ -16,6 +16,7 @@ var CryptoJS = require("crypto-js");
 import FirebaseApi from "../helpers/FirebaseApi";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
+import OneSignal from "react-native-onesignal";
 
 export default class Chat extends Component {
   constructor() {
@@ -35,6 +36,7 @@ export default class Chat extends Component {
       title: this.props.navigation.getParam("title", "")
     });
     this.getMessages();
+    OneSignal.inFocusDisplaying(0)
     BackHandler.addEventListener('hardwareBackPress', this.handleBack.bind(this))
   }
 
@@ -43,6 +45,7 @@ export default class Chat extends Component {
   }
 
   handleBack() {
+    OneSignal.inFocusDisplaying(2)
     Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))
     return true
   }
@@ -121,6 +124,7 @@ export default class Chat extends Component {
           iconSet="MaterialCommunityIcons"
           leftElement={"arrow-left"}
           onLeftElementPress={() => {
+            OneSignal.inFocusDisplaying(2)
             Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false));
           }}
         />

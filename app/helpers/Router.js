@@ -25,12 +25,25 @@ class Router {
     );
   }
 
+  goFromApi(stackName, screenName, parameters) {
+    dispatcherDeeplink.dispatch(
+      NavigationActions.navigate({
+        routeName: stackName,
+        action: NavigationActions.navigate({
+          routeName: screenName,
+          params: parameters
+        })
+      })
+    );
+  }
+
   popToTop(dispatcher) {
     dispatcher.dispatch(StackActions.popToTop());
   }
 
   goBack(dispatcher, diffStack = false, popTop = false) {
     dispatcher.setParams({ differentStack: null });
+    dispatcher.setParams({ popTop: null });
     if (diffStack) {
       dispatcher.popToTop();
       dispatcher.dismiss();

@@ -186,6 +186,7 @@ export default class DetailTab extends Component {
       } else {
         ProjectApi.followProject(this.state.project.id, id).then(res => {
           if (res["bool"]) {
+            this.props.followHandler(true);
             this.setState({
               followed: true,
               follower_count: res["followerCount"]
@@ -205,6 +206,7 @@ export default class DetailTab extends Component {
       } else {
         ProjectApi.unfollowProject(this.state.project.id, id).then(res => {
           if (res["bool"]) {
+            this.props.followHandler(false);
             this.setState({
               followed: false,
               follower_count: res["followerCount"]
