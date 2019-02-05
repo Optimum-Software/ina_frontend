@@ -382,7 +382,7 @@ export default class Home extends Component {
                       onPress={() =>
                         Router.goTo(
                           this.props.navigation,
-                          "HomeStack",
+                          "ProjectStack",
                           "ProjectDetailScreen",
                           {
                             id: item.id,
@@ -397,7 +397,9 @@ export default class Home extends Component {
                             thumbnail: Api.getFileUrl(item.thumbnail),
                             creator: item.creator,
                             images: item.images,
-                            files: item.files
+                            files: item.files,
+
+                            differentStack: true
                           }
                         )
                       }

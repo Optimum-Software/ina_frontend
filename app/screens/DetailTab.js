@@ -197,6 +197,7 @@ export default class DetailTab extends Component {
           style={{ flexGrow: 0 }}
           renderItem={({ item }) => (
             <TouchableOpacity
+              key={item}
               onPress={() =>
                 Linking.canOpenURL(Api.getFileUrl(item)).then(supported => {
                   if (supported) {

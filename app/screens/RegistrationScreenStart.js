@@ -45,7 +45,6 @@ export default class RegistrationScreenStart extends Component {
 
   goToRegisterPhone() {
     let emailExists = UserApi.checkEmail(this.state.email).then(result => {
-      console.log(result)
       this.resetErrors();
       if (result["ntwFail"]) {
         //network error

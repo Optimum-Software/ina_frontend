@@ -43,6 +43,7 @@ class Router {
 
   goBack(dispatcher, diffStack = false, popTop = false) {
     dispatcher.setParams({ differentStack: null });
+    dispatcher.setParams({ popTop: null });
     if (diffStack) {
       dispatcher.popToTop();
       dispatcher.dismiss();
