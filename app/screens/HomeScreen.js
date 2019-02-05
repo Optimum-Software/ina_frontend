@@ -151,6 +151,7 @@ export default class Home extends Component {
 
   getTrendingProjects() {
     ProjectApi.mostLikedProjects().then(response => {
+      console.log(response);
       if (response["bool"]) {
         this.setState({ projects: response["projects"] });
       }

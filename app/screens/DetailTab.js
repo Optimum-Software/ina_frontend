@@ -151,6 +151,24 @@ export default class DetailTab extends Component {
   render() {
     return (
       <ScrollView>
+        {this.state.projectMembers.length > 0 && (
+          <FlatList
+            data={this.state.projectMembers}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View style={styles.personCard}>
+                <Image
+                  source={{
+                    uri: Api.getFileUrl(item.profilePhotoPath)
+                  }}
+                  resizeMode="cover"
+                  style={{ width: 35, height: 35, borderRadius: 100 }}
+                />
+              </View>
+            )}
+          />
+        )}
         <Text
           style={{
             marginLeft: 15,

@@ -23,18 +23,22 @@ class RegistrationScreenVerifySuccessfull extends Component {
         <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
           <StatusBar
-            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            backgroundColor={Platform.OS == "android" ? "white" : "#00a6ff"}
             barStyle="dark-content"
           />
           <ImageBackground
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              justifyContent: "flex-start"
+            }}
             source={require("../assets/images/bluewavebg.png")}
-            style={{ height: "100%", width: "100%" }}
             resizeMode="stretch"
           >
             <Toolbar
               centerElement="Verificatie"
               style={{
-                container: { backgroundColor: "#fff" },
+                container: { backgroundColor: "transparent" },
                 titleText: { color: "#00a6ff" },
                 leftElement: { color: "#00a6ff" }
               }}
@@ -65,9 +69,7 @@ class RegistrationScreenVerifySuccessfull extends Component {
             <View style={styles.actionContainer}>
               <TouchableOpacity
                 style={styles.buttonStyle}
-                onPress={() =>
-                  Router.switchLogin(this.props.navigation)
-                }
+                onPress={() => Router.switchLogin(this.props.navigation)}
               >
                 <Text style={styles.textStyle}>Verder</Text>
               </TouchableOpacity>
