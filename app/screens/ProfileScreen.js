@@ -33,7 +33,8 @@ export default class ProfileScreen extends Component {
       organisation: "",
       _function: "",
       bio: "",
-      admin: false
+      admin: false,
+      screenHeight: 0
     };
   }
 
@@ -89,55 +90,50 @@ export default class ProfileScreen extends Component {
             }}
           />
         </View>
-        <View style={{ height: "100%" }}>
-          <ScrollView>
+        <ScrollView style={{ flex: 1 }}>
+          <CachedImage
+            source={this.state.profilePhoto}
+            style={styles.profilePhoto}
+          />
+          <View>
             <CachedImage
-              source={this.state.profilePhoto}
+              source={line}
               resizeMode="cover"
-              style={styles.profilePhoto}
+              style={{ width: "100%", height: 3 }}
             />
-            <View style={{ height: Dimensions.get("window").height * 0.7 }}>
-              <CachedImage
-                source={line}
-                resizeMode="cover"
-                style={{ width: "100%", height: 3 }}
-              />
-              <View style={styles.personalInfoBox}>
-                <View style={styles.labels}>
-                  <Text style={styles.label}>Naam</Text>
-                  <Text style={styles.label}>Organisatie</Text>
-                  <Text style={styles.label}>Functie</Text>
-                </View>
-                <View style={styles.items}>
-                  <Text>
-                    {this.state.firstName + " " + this.state.lastName}
-                  </Text>
-                  <Text>{this.state.organisation}</Text>
-                  <Text>{this.state._function}</Text>
-                </View>
+            <View style={styles.personalInfoBox}>
+              <View style={styles.labels}>
+                <Text style={styles.label}>Naam</Text>
+                <Text style={styles.label}>Organisatie</Text>
+                <Text style={styles.label}>Functie</Text>
               </View>
-              <View style={styles.separator} />
-              <View style={{ paddingLeft: "10%", paddingRight: "10%" }}>
-                <Text>{this.state.bio}</Text>
+              <View style={styles.items}>
+                <Text>{this.state.firstName + " " + this.state.lastName}</Text>
+                <Text>{this.state.organisation}</Text>
+                <Text>{this.state._function}</Text>
               </View>
+              {this.state.admin && (
+                <TouchableHighlight
+                  underlayColor="#009ef2"
+                  style={styles.buttonStyle}
+                  onPress={() => {
+                    Router.goTo(
+                      this.props.navigation,
+                      "ProfileEdit",
+                      "ProfileEditScreen"
+                    );
+                  }}
+                >
+                  <Icon name="edit" type="entypo" size={30} color="#FFF" />
+                </TouchableHighlight>
+              )}
             </View>
-          </ScrollView>
-          {this.state.admin && (
-            <TouchableHighlight
-              underlayColor="#009ef2"
-              style={styles.buttonStyle}
-              onPress={() => {
-                Router.goTo(
-                  this.props.navigation,
-                  "ProfileEdit",
-                  "ProfileEditScreen"
-                );
-              }}
-            >
-              <Icon name="edit" type="entypo" size={30} color="#FFF" />
-            </TouchableHighlight>
-          )}
-        </View>
+            <View style={styles.separator} />
+            <View style={{ paddingLeft: "10%", paddingRight: "10%" }}>
+              <Text>{this.state.bio}</Text>
+            </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -149,15 +145,12 @@ const styles = StyleSheet.create({
   },
 
   buttonStyle: {
-    height: 70,
-    width: 70,
+    height: 50,
+    width: 50,
     borderRadius: 100,
     backgroundColor: "#00a6ff",
     justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    top: 200,
-    right: 15
+    alignItems: "center"
   },
 
   profilePhoto: {
@@ -182,7 +175,7 @@ const styles = StyleSheet.create({
   },
 
   items: {
-    width: "70%",
+    width: "50%",
     height: "100%",
     alignItems: "flex-start",
     justifyContent: "flex-start"

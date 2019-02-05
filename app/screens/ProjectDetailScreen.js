@@ -317,7 +317,7 @@ export default class ProjectDetail extends Component {
               leftElement={"arrow-left"}
               rightElement={["bell-outline", "share-variant"]}
               onLeftElementPress={() => {
-                Router.goBack(this.props.navigation);
+                this.goBack();
               }}
             />
           </LinearGradient>
