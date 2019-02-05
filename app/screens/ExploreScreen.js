@@ -69,6 +69,7 @@ export default class ExploreScreen extends React.Component {
   };
 
   startChat() {
+    console.log(this.state.cards[this.state.cardIndex])
     User.getUserId().then(id => {
       let creatorId = this.state.cards[this.state.cardIndex].creator.id;
       let uid = "";
@@ -88,6 +89,14 @@ export default class ExploreScreen extends React.Component {
         differentStack: true
       });
     });
+  }
+
+  undoLike(){
+    this.state.swipeDirection == "right"
+      ? this.swiper.goBackFromRight(
+          this.state.cards[this.state.cardIndex].id - 1
+        )
+      : this.swiper.goBackFromLeft()
   }
 
   addLike(index) {
@@ -198,7 +207,9 @@ export default class ExploreScreen extends React.Component {
     });
 
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
@@ -460,28 +471,20 @@ export default class ExploreScreen extends React.Component {
                         }}
                       />
                       <Text
+                      ellipsizeMode='tail'
+                      numberOfLines={ isIphoneX ? (Dimensions.get("window").height - 150)  / 65 : (Dimensions.get("window").height - 90)  / 100}
                         style={{
+                          textOverflow: 'ellipsis',
+                          overflow: 'hidden',
+
                           width: Dimensions.get("window").width - 75,
-                          height: Dimensions.get("window").height
+                          height: Dimensions.get("window").height,
+
                         }}
                       >
                       {card.desc}
                       </Text>
-                      <TouchableOpacity onPress={() =>
-                      alert('hey')
 
-                      }>
-                      <Text
-                        style={{
-                          paddingTop: 25,
-                          fontSize: 18,
-                          fontWeight: "bold",
-                          color: "#00a6ff"
-                        }}
-                      >
-                        Meer informatie
-                      </Text>
-                      </TouchableOpacity>
                     </Animated.View>
                     <Animated.View
                       style={{
@@ -517,7 +520,10 @@ export default class ExploreScreen extends React.Component {
             style={{
               position: "absolute",
               width: "100%",
-              bottom: 50,
+              bottom: 20,
+              ...ifIphoneX({
+                bottom: 50
+              }),
               justifyContent: "center",
               alignItems: "center"
             }}
@@ -549,7 +555,6 @@ export default class ExploreScreen extends React.Component {
           >
             <Text
               style={{
-                paddingTop: 25,
                 fontSize: 18,
                 fontWeight: "bold",
                 color: "#00a6ff"
@@ -568,13 +573,9 @@ export default class ExploreScreen extends React.Component {
                   styles.mediumButtonStyle,
                   { backgroundColor: "#efc137" }
                 ]}
-                onPress={() =>
-                  this.state.swipeDirection == "right"
-                    ? this.swiper.goBackFromRight(
-                        this.state.cards[this.state.cardIndex].id - 1
-                      )
-                    : this.swiper.goBackFromLeft()
-                }
+                onPress={() =>{
+                  this.undoLike()
+                }}
               >
                 <Icon
                   name="undo"
@@ -635,6 +636,7 @@ export default class ExploreScreen extends React.Component {
           </View>
         )}
       </SafeAreaView>
+      </Fragment>
     );
   }
 }

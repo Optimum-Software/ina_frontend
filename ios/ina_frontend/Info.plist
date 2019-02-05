@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>ina_frontend</string>
+	<string>INA</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -49,7 +49,7 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>136.144.186.136</key>
+			<key>localhost</key>
 			<dict>
 				<key>NSIncludesSubdomains</key>
 				<true/>
@@ -60,8 +60,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera use</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto.ttf</string>

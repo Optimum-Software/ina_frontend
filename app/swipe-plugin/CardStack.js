@@ -228,8 +228,6 @@ export default class CardStack extends Component {
   }
 
   goBackFromRight(projectId) {
-    console.log("YOOOO");
-    console.log(projectId);
     this._goBack("right");
     User.getUserId().then(id => {
       console.log("HALLLOOOOOOOOOO");
@@ -250,6 +248,7 @@ export default class CardStack extends Component {
   }
 
   _goBack(direction) {
+    () =>     this.setState({dragDirection: 0})
     const { cardA, cardB, cards, sindex, topCard } = this.state;
 
     if (sindex - 3 < 0 && !this.props.loop) return;
@@ -298,15 +297,11 @@ export default class CardStack extends Component {
           default:
         }
 
-        Animated.spring(this.state.dragDistance, {
-          toValue: 0,
-          duration: this.props.duration
-        }).start();
-
         Animated.spring(this.state.drag, {
           toValue: { x: 0, y: 0 },
           duration: this.props.duration
-        }).start();
+        }).start(() =>     this.setState({dragDirection: 0})
+);
       }
     );
   }
