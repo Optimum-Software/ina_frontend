@@ -97,11 +97,15 @@ export default class ProjectDetail extends Component {
         end_date: this.props.navigation.getParam("end_date", ""),
         created_at: this.props.navigation.getParam("created_at", ""),
         follower_count: this.props.navigation.getParam("follower_count", ""),
+        like_count: this.props.navigation.getParam("like_count", ""),
         location: this.props.navigation.getParam("location", ""),
         thumbnail: this.props.navigation.getParam("thumbnail", ""),
         creator: this.props.navigation.getParam("creator", ""),
         images: this.props.navigation.getParam("images", ""),
-        files: this.props.navigation.getParam("files", "")
+        files: this.props.navigation.getParam("files", ""),
+        liked: this.props.navigation.getParam("liked", ""),
+        member: this.props.navigation.getParam("member", ""),
+        followed: this.props.navigation.getParam("followed", "")
       }
     };
     User.getUserId().then(userId => {
@@ -111,11 +115,12 @@ export default class ProjectDetail extends Component {
 
   componentDidMount() {
     this.refreshProject();
-    console.log(this.state.followed);
+    console.log(this.state.project.liked);
+    console.log(this.state.project.member);
+    console.log(this.state.project.followed);
   }
 
   refreshProject() {
-    this.checkIfLiked();
     ProjectApi.getProjectById(this.state.project.id).then(result => {
       if (result["bool"]) {
         result["project"].thumbnail = Api.getFileUrl(
@@ -123,52 +128,6 @@ export default class ProjectDetail extends Component {
         );
         this.setState({
           project: result["project"]
-        });
-      }
-    });
-  }
-
-  checkIfLiked() {
-    User.getUserId().then(id => {
-      ProjectApi.checkIfLiked(this.state.project.id, id).then(res => {
-        if (res["bool"]) {
-          this.setState({ liked: res["liked"] });
-        } else {
-          console.log(res);
-        }
-      });
-    });
-  }
-
-  likedProject() {
-    User.getUserId().then(id => {
-      if (id == null) {
-        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
-      } else {
-        ProjectApi.likeProject(this.state.project.id, id).then(res => {
-          if (res["bool"]) {
-            console.log("yay");
-            this.setState({ liked: true, like_count: res["likedCount"] });
-          } else {
-            console.log(res);
-          }
-        });
-      }
-    });
-  }
-
-  unlikeProject() {
-    User.getUserId().then(id => {
-      if (id == null) {
-        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
-      } else {
-        ProjectApi.unlikeProject(this.state.project.id, id).then(res => {
-          if (res["bool"]) {
-            console.log("yay");
-            this.setState({ liked: false, like_count: res["likedCount"] });
-          } else {
-            console.log(res);
-          }
         });
       }
     });
@@ -330,9 +289,9 @@ export default class ProjectDetail extends Component {
                 <View
                   style={{
                     width: "100%",
-                    height: (Dimensions.get("window").height - 90) * 0.25,
+                    height: (Dimensions.get("window").height - 90) * 0.35,
                     ...ifIphoneX({
-                      height: (Dimensions.get("window").height - 150) * 0.2
+                      height: (Dimensions.get("window").height - 150) * 0.3
                     })
                   }}
                 >
@@ -348,147 +307,6 @@ export default class ProjectDetail extends Component {
                     autoplayInterval={6000}
                     loop={true}
                   />
-                </View>
-                <View
-                  style={{
-                    paddingHorizontal: 15,
-                    paddingVertical: 25,
-                    flexDirection: "column",
-                    backgroundColor: "#00a6ff",
-                    width: Dimensions.get("window").width
-                  }}
-                >
-                  <Text
-                    style={{ fontSize: 22, color: "white", paddingBottom: 10 }}
-                  >
-                    {this.state.project.name}
-                  </Text>
-
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      paddingBottom: 10
-                    }}
-                  >
-                    <View style={{ flexDirection: "column" }}>
-                      <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                      >
-                        <Icon
-                          name="heart-outline"
-                          color="white"
-                          size={15}
-                          style={{ marginRight: 5 }}
-                        />
-                        <Text style={{ color: "white" }}>
-                          {this.state.like_count} likes
-                        </Text>
-                      </View>
-                    </View>
-                    <View style={{ flexDirection: "column" }}>
-                      <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
-                      >
-                        <Icon
-                          name="account-outline"
-                          color="white"
-                          size={15}
-                          style={{ marginRight: 5, marginLeft: 15 }}
-                        />
-                        <Text style={{ color: "white" }}>
-                          {this.state.project.follower_count} volgers
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <CachedImage
-                      source={{
-                        uri: Api.getFileUrl(
-                          this.state.project.creator.profilePhotoPath
-                        )
-                      }}
-                      resizeMode="cover"
-                      style={{
-                        marginRight: 10,
-                        width: 30,
-                        height: 30,
-                        borderRadius: 100,
-                        backgroundColor: "white"
-                      }}
-                      imageStyle={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: 200
-                      }}
-                    />
-
-                    <View style={{ flexDirection: "column" }}>
-                      <Text style={{ fontSize: 18, color: "white" }}>
-                        {this.state.project.creator.firstName +
-                          " " +
-                          this.state.project.creator.lastName}
-                      </Text>
-
-                      <View />
-                    </View>
-                  </View>
-                  <View style={{ position: "absolute", bottom: 25, right: 15 }}>
-                    {this.state.userId == this.state.project.creator.id && (
-                      <Icon
-                        name="square-edit-outline"
-                        color="#fff"
-                        size={36}
-                        onPress={() => {
-                          Router.goTo(
-                            this.props.navigation,
-                            "ProjectStack",
-                            "ProjectEditFirstScreen",
-                            {
-                              id: this.state.project.id,
-                              name: this.state.project.name,
-                              desc: this.state.project.desc,
-                              start_date: this.state.project.start_date,
-                              end_date: this.state.project.end_date,
-                              location: this.state.project.location,
-                              thumbnail: this.state.project.thumbnail,
-                              images: this.state.project.images,
-                              files: this.state.project.files,
-                              tags: this.state.tags
-                            }
-                          );
-                        }}
-                      />
-                    )}
-                    {this.state.userId != this.state.project.creator.id && (
-                      <Ripple
-                        style={{
-                          backgroundColor: "white",
-                          borderRadius: 100,
-                          height: 30,
-                          width: 70,
-                          justifyContent: "space-evenly",
-                          alignItems: "center",
-                          flexDirection: "row"
-                        }}
-                        rippleColor="#fff"
-                        onPress={() =>
-                          this.state.liked
-                            ? this.unlikeProject()
-                            : this.likedProject()
-                        }
-                      >
-                        {this.state.liked && (
-                          <Icon name="heart" size={24} color={"red"} />
-                        )}
-                        {!this.state.liked && (
-                          <Icon name="heart-outline" size={24} color={"red"} />
-                        )}
-                        <Text>Like{this.state.liked ? "d" : ""}</Text>
-                      </Ripple>
-                    )}
-                  </View>
                 </View>
 
                 <TabView

@@ -12,26 +12,43 @@ class ProjectApi {
     return instance;
   }
 
-  getProjects(userId, filterNumber) {
+  getProjects(userId, filter, optional = null) {
     if (userId != null) {
-      return Api.callApiGetSafe(
-        "getProjectsForUser/" + userId + "/" + filterNumber
-      );
+      console.log("Type of projects");
+      console.log(filter);
+      console.log("USER ID");
+      console.log(userId);
+      console.log(optional);
+      userData = { userId: userId, filter: filter };
+      if (filter == "search") {
+        userData["searchTerm"] = optional;
+      }
+      if (filter == "tag") {
+        userData["tagName"] = optional;
+      }
+      return Api.callApiPostSafe("getProjects", userData);
     } else {
-      return Api.callApiGet("getAllProjectsNotLoggedIn/" + filterNumber);
+      userData = { filter: filter };
+      if (filter == "search") {
+        userData["searchTerm"] = optional;
+      }
+      if (filter == "tag") {
+        userData["tagName"] = optional;
+      }
+      return Api.callApiPost("getProjectsNotLoggedIn", userData);
     }
   }
 
-  getAllTag() {
+  getAllTags() {
     return Api.callApiGet("getAllTags");
   }
 
-  getAllTags(id) {
-    return Api.callApiGet("getAllProjectTagsById/" + id);
-  }
-
-  getProjectById(id) {
-    return Api.callApiGet("getProjectById/" + id);
+  getProjectById(userId, projectId) {
+    if (userId != null) {
+      return Api.callApiGetSafe("getProjectById/" + userId + "/" + projectId);
+    } else {
+      return Api.callApiGet("getProjectByIdNotLoggedIn/" + projectId);
+    }
   }
   likeProject(id, userId) {
     userData = { id: id, userId: userId };

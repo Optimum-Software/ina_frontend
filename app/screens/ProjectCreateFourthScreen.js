@@ -60,7 +60,7 @@ class ProjectCreateFourthScreen extends Component {
         this.state.tags
       ).then(result => {
         if (result["bool"]) {
-          ProjectApi.getProjectById(result["id"]).then(result => {
+          ProjectApi.getProjectById(id, result["id"]).then(result => {
             this.setState({
               creating: false,
               projectCreated: true,

@@ -46,7 +46,7 @@ class ProjectEditSecondScreen extends Component {
   }
 
   componentDidMount() {
-    ProjectApi.getAllTag().then(result => {
+    ProjectApi.getAllTags().then(result => {
       console.log(result);
       if (result["bool"]) {
         let tagList = [];

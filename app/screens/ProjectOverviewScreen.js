@@ -38,13 +38,10 @@ export default class ProjectOverview extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     User.getUserId().then(id => {
       this.setState({ userId: id });
     });
-  }
-
-  componentDidMount() {
     this.onLoad();
     this.props.navigation.addListener("willFocus", this.onLoad);
   }
@@ -54,32 +51,28 @@ export default class ProjectOverview extends Component {
   onLoad = () => {
     this.setState({ refreshing: true, loading: true });
 
-    // User.getUserId().then(id => {
-    //   if (id != null) {
-    //     this.setState({ loggedIn: true });
-    //   } else {
-    //     this.setState({ loggedIn: false });
-    //   }
-    //   this.setState({ refreshing: false, loading: false, userId: id });
-    // });
-
     tagToFilter = this.props.navigation.getParam("tag", null);
     if (tagToFilter != null) {
-      ProjectApi.getProjectByTag(tagToFilter).then(res => {
-        if (res["bool"]) {
-          this.setState({ data: res["projects"] });
-          this.props.navigation.setParams({ tag: null });
-        }
-        this.setState({ refreshing: false, loading: false });
+      User.getUserId().then(id => {
+        ProjectApi.getProjects(id, "tag", tagToFilter).then(res => {
+          if (res["bool"]) {
+            this.setState({ data: res["projects"] });
+            this.props.navigation.setParams({ tag: null });
+          }
+          this.setState({ refreshing: false, loading: false });
+        });
       });
     } else {
-      ProjectApi.getProjects(this.state.userId, 0).then(result => {
-        if (result["bool"]) {
-          this.setState({
-            data: result["projects"]
-          });
-        }
-        this.setState({ refreshing: false, loading: false });
+      User.getUserId().then(id => {
+        ProjectApi.getProjects(id, "all").then(result => {
+          console.log(result);
+          if (result["bool"]) {
+            this.setState({
+              data: result["projects"]
+            });
+          }
+          this.setState({ refreshing: false, loading: false });
+        });
       });
     }
   };
@@ -156,13 +149,16 @@ export default class ProjectOverview extends Component {
                               start_date: item.start_date,
                               end_date: item.end_date,
                               created_at: item.created_at,
-                              like_count: item.like_count,
-                              follower_count: item.follower_count,
+                              like_count: item.likeCount,
+                              follower_count: item.followerCount,
                               location: item.location,
                               thumbnail: Api.getFileUrl(item.thumbnail),
                               creator: item.creator,
                               images: item.images,
-                              files: item.files
+                              files: item.files,
+                              liked: item.liked,
+                              member: item.member,
+                              followed: item.followed
                             }
                           )
                         }
