@@ -372,12 +372,7 @@ export default class ExploreScreen extends React.Component {
                               paddingBottom: 15
                             }}
                           >
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Duis eleifend mauris ut sapien convallis, et
-                            aliquet libero gravida. Maecenas varius feugiat
-                            purus vitae porta. Vestibulum malesuada ultricies
-                            enim, vel elementum quam dictum ut. Nunc nec nisi
-                            pretium, cursus sem a, hendrerit ipsum.
+                            {card.desc}
                           </Text>
                         </LinearGradient>
                       </Animated.View>
@@ -446,13 +441,12 @@ export default class ExploreScreen extends React.Component {
                           width: Dimensions.get("window").width - 75
                         }}
                       >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Duis eleifend mauris ut sapien convallis, et aliquet
-                        libero gravida. Maecenas varius feugiat purus vitae
-                        porta. Vestibulum malesuada ultricies enim, vel
-                        elementum quam dictum ut. Nunc nec nisi pretium, cursus
-                        sem a, hendrerit ipsum.
+                      {card.desc}
                       </Text>
+                      <TouchableOpacity onPress={() =>
+                      alert('hey')
+                        
+                      }>
                       <Text
                         style={{
                           paddingTop: 25,
@@ -463,6 +457,7 @@ export default class ExploreScreen extends React.Component {
                       >
                         Meer informatie
                       </Text>
+                      </TouchableOpacity>
                     </Animated.View>
                     <Animated.View
                       style={{
