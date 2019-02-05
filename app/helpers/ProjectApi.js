@@ -27,11 +27,17 @@ class ProjectApi {
   getProjectById(id) {
     return Api.callApiGet("getProjectById/" + id);
   }
+
   likeProject(id, userId) {
     userData = { id: id, userId: userId };
     return Api.callApiPostSafe("likeProjectById", userData);
   }
 
+  setCanNotificate(canNotificate, userId, projectId) {
+    userData = { canNotificate: canNotificate, userId: userId, projectId: projectId };
+    return Api.callApiPostSafe("setCanNotificate", userData)
+  }
+  
   unlikeProject(id, userId) {
     userData = { id: id, userId: userId };
     return Api.callApiPostSafe("unlikeProjectById", userData);
@@ -185,12 +191,14 @@ class ProjectApi {
   }
 
   checkIfLiked(userId, projectId) {
-    userData = {
-      userId: userId,
-      projectId: projectId
-    };
     return Api.callApiGetSafe(
-      "checkIfProjectLiked/" + projectId + "/" + userId
+      "checkIfProjectLiked/" + userId + "/" + projectId
+    );
+  }
+
+  checkIfFollowed(userId, projectId) {
+    return Api.callApiGetSafe(
+      "checkIfFollowed/" + userId + "/" + projectId
     );
   }
 

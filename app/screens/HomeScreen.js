@@ -36,6 +36,7 @@ import Ripple from "react-native-material-ripple";
 import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 import line2 from "../assets/images/line3.png";
 import RNFetchBlob from "react-native-fetch-blob";
+import OneSignal from "react-native-onesignal";
 
 const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
 
@@ -54,13 +55,13 @@ export default class Home extends Component {
       search: false,
       unRead: 0
     };
-    console.log(this.props);
     this.animatedValue = new Animated.Value(0);
     Router.setDispatcher(this.props.navigation);
   }
 
   componentDidMount() {
     this.props.navigation.addListener("willFocus", this.onLoad);
+    OneSignal.addEventListener('opened', this.onOpened);
     Linking.addEventListener("url", this._handleOpenURL);
     Linking.getInitialURL()
       .then(url => {
@@ -78,6 +79,19 @@ export default class Home extends Component {
         }
       })
       .catch(err => console.error("An error occurred", err));
+  }
+
+  onOpened(openResult) {
+      console.log(openResult.notification)
+      if(openResult.notification.isAppInFocus) {
+        if(openResult.notification.payload.additionalData['type'] == 0) {
+          //go to chat
+          Router.goToDeeplink("ChatStack", "ChatStack")
+        } else if (openResult.notification.payload.additionalData['type'] == 1) {
+          //go to project overview
+          Router.goToDeeplink("ProjectStack", "ProjectOverviewScreen")
+        }
+      }
   }
 
   onLoad = () => {
@@ -383,7 +397,7 @@ export default class Home extends Component {
                       onPress={() =>
                         Router.goTo(
                           this.props.navigation,
-                          "HomeStack",
+                          "ProjectStack",
                           "ProjectDetailScreen",
                           {
                             id: item.id,
@@ -398,7 +412,9 @@ export default class Home extends Component {
                             thumbnail: Api.getFileUrl(item.thumbnail),
                             creator: item.creator,
                             images: item.images,
-                            files: item.files
+                            files: item.files,
+
+                            differentStack: true
                           }
                         )
                       }
