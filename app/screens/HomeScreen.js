@@ -260,16 +260,16 @@ export default class Home extends Component {
             }}
           />
           <ScrollView
+            style={{backgroundColor: "#00a6ff"}}
             refreshControl={
               <RefreshControl
-                style={{ backgroundColor: "#00a6ff" }}
                 colors={["#00a6ff"]}
                 refreshing={this.state.refreshing}
                 onRefresh={this.onRefresh}
               />
             }
           >
-            <View>
+            <View style={{backgroundColor: 'white'}}>
               {this.state.loggedIn && (
                 <View style={styles.welcomeContainer}>
                   <ImageBackground
@@ -306,33 +306,7 @@ export default class Home extends Component {
                   </ImageBackground>
                 </View>
               )}
-              {this.state.search && (
-                <Animated.View
-                  style={{
-                    paddingTop: 10,
-                    paddingBottom: 5,
-                    height: searchHeight,
-                    opacity: searchOpacity
-                  }}
-                >
-                  <Input
-                    placeholderTextColor="#000000"
-                    containerStyle={styles.searchBarContainerStyle}
-                    inputContainerStyle={styles.inputContainerStyle}
-                    inputStyle={styles.inputStyle}
-                    value={this.state.searchTerm}
-                    leftIcon={{
-                      type: "font-awesome",
-                      name: "search",
-                      color: "#000000"
-                    }}
-                    onChangeText={searchTerm => this.setState({ searchTerm })}
-                    onSubmitEditing={() => alert("test")}
-                    shake={true}
-                  />
-                </Animated.View>
-              )}
-              {this.state.search && <View style={styles.separator} />}
+
               {this.state.topics.length > 0 && (
                 <Text style={styles.title}>Trending Topics</Text>
               )}
@@ -381,7 +355,7 @@ export default class Home extends Component {
                 }}
               />
             </View>
-            <View>
+            <View style={{backgroundColor: 'white'}}>
               {this.state.projects.length > 0 && (
                 <Text style={[styles.title, { marginTop: 10 }]}>
                   Trending Projecten
@@ -563,17 +537,22 @@ const styles = StyleSheet.create({
   cardUneven: {
     backgroundColor: "#FFFFFF",
     margin: 10,
+    width: Dimensions.get("window").width * 0.9,
     marginLeft: Dimensions.get("window").width * 0.024,
     marginRight: Dimensions.get("window").width * 0.024,
     marginTop: Dimensions.get("window").width * 0.05,
-    marginBottom: Dimensions.get("window").width * 0.05,
-
-    width: Dimensions.get("window").width * 0.9,
     height: (Dimensions.get("window").height - 90) * 0.35,
     ...ifIphoneX({
       height: (Dimensions.get("window").height - 150) * 0.24
     }),
     elevation: 3,
+    shadowColor: "#000000",
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowRadius: 3,
+    shadowOpacity: 0.2,
     borderRadius: 4
   },
 
@@ -588,8 +567,9 @@ const styles = StyleSheet.create({
   },
 
   title: {
+    backgroundColor: 'white',
     fontSize: 20,
-    marginTop: 15,
+    padding: 15,
     margin: 10
   },
 

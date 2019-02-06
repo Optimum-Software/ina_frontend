@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>949213820980-eq3sb8a1btstsl4enha2a11a59qnta0d.apps.googleusercontent.com</string>
+	<string>838244637510-08qai6c087g5nnr54o61cge17j4l6bva.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.949213820980-eq3sb8a1btstsl4enha2a11a59qnta0d</string>
+	<string>com.googleusercontent.apps.838244637510-08qai6c087g5nnr54o61cge17j4l6bva</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD67ylkVcGTo11DdXefzbhrUa81G35J9WY</string>
+	<string>AIzaSyAXBtwuHrd8AFisL-nDD6bcQML_vezuzF4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>949213820980</string>
+	<string>838244637510</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.reactjs.native.example.ina-frontend</string>
+	<string>com.innovatie.netwerk.app</string>
 	<key>PROJECT_ID</key>
-	<string>inaapp-8f14f</string>
+	<string>ina-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>inaapp-8f14f.appspot.com</string>
+	<string>ina-app.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:949213820980:ios:52f077057b3d264e</string>
+	<string>1:838244637510:ios:8d09bad9d25078fa</string>
 	<key>DATABASE_URL</key>
-	<string>https://inaapp-8f14f.firebaseio.com</string>
+	<string>https://ina-app.firebaseio.com</string>
 </dict>
 </plist>

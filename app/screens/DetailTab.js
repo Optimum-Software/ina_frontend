@@ -426,7 +426,7 @@ export default class DetailTab extends Component {
                   color={"#4C6873"}
                 />
                 <View style={{ flexDirection: "column" }}>
-                  <Text>{item.split("/")[item.split("/").length - 1]}</Text>
+                  <Text>{item.path.split("/")[item.path.split("/").length - 1]}</Text>
                 </View>
               </TouchableOpacity>
             )}

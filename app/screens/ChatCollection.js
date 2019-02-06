@@ -18,6 +18,7 @@ import Router from "../helpers/Router";
 import User from "../helpers/User";
 import { Fragment } from "react";
 import Ripple from "react-native-material-ripple";
+import { CachedImage } from "react-native-cached-image";
 
 export default class ChatCollection extends Component {
   constructor() {
@@ -142,10 +143,14 @@ export default class ChatCollection extends Component {
                       titleStyle={styles.chatTitle}
                       subtitle={"Het laatste chatbericht..."}
                       subtitleStyle={styles.chatSubTitle}
-                      leftAvatar={{
-                        rounded: true,
-                        source: { uri: item.photo }
-                      }}
+                      leftAvatar={() => <CachedImage
+                        source={{
+                          uri: item.photo
+                        }}
+                        resizeMode="cover"
+                        style={{ width: 35, height: 35, borderRadius: 100 }}
+                      />}
+                        
                       chevron={
                         <Icon
                           name="chevron-right"

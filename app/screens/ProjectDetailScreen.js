@@ -338,7 +338,7 @@ export default class ProjectDetail extends Component {
               height: 65
             }}
           >
-            {this.state.followed && (
+            {this.state.followed == true && (
               <Toolbar
                 style={{
                   container: { backgroundColor: "transparent", elevation: 0 }
