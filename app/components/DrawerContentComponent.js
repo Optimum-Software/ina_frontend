@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Platform,
+  Dimensions
 } from "react-native";
 import { Fragment } from "react";
 import { DrawerItems } from "react-navigation";
@@ -19,6 +21,7 @@ import Router from "../helpers/Router";
 import User from "../helpers/User";
 import Api from "../helpers/Api";
 import UserApi from "../helpers/UserApi";
+import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 
 export default class DrawerContentComponent extends Component {
   constructor(props) {
@@ -52,13 +55,17 @@ export default class DrawerContentComponent extends Component {
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "00a6ff" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-          <View>
+
+          <View style={{height: Dimensions.get('window').height}}>
             <View style={{ height: "90%" }}>
               <CachedImage
                 source={require("../assets/images/drawer.png")}
                 resizeMode="stretch"
                 style={{
-                  flex: 1
+                  height: (Dimensions.get("window").height - 90) * 0.99,
+                  ...ifIphoneX({
+                    height: (Dimensions.get("window").height - 150) * 0.9
+                  })
                 }}
               >
                 <View
@@ -69,6 +76,7 @@ export default class DrawerContentComponent extends Component {
                   }}
                 >
                   <TouchableOpacity
+                    style={{marginLeft: 15}}
                     onPress={() => {
                       Router.goTo(
                         this.props.navigation,
@@ -81,17 +89,13 @@ export default class DrawerContentComponent extends Component {
                       source={this.state.profilePhoto}
                       resizeMode="cover"
                       style={{
-                        marginLeft: "20%",
                         width: 75,
                         height: 75,
-                        borderRadius: 100,
+                        borderRadius: 38,
+
                         backgroundColor: "white"
                       }}
-                      imageStyle={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: 100
-                      }}
+
                     />
                   </TouchableOpacity>
                   <View
@@ -110,7 +114,7 @@ export default class DrawerContentComponent extends Component {
                         marginBottom: "1%"
                       }}
                     >
-                      Hallo, {this.state.firstName}!
+                      {this.state.firstName}
                     </Text>
                     <Text
                       style={{
@@ -193,10 +197,15 @@ export default class DrawerContentComponent extends Component {
                 alignSelf: "center",
                 alignItems: "center",
                 justifyContent: "center",
-                width: 50,
-                height: 50,
+                width: 60,
+                height: 60,
                 backgroundColor: "#01a6ff",
-                borderRadius: 100
+                borderRadius: 100,
+                position: 'absolute',
+                bottom: (Dimensions.get("window").height - 90) * 0.055,
+                ...ifIphoneX({
+                  bottom: (Dimensions.get("window").height - 150) * 0.115
+                })
               }}
             >
               <Icon name={"close"} size={30} color="#fff" />

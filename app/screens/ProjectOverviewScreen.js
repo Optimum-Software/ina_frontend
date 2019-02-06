@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     marginLeft: Dimensions.get("window").width * 0.024,
     marginRight: Dimensions.get("window").width * 0.024,
     marginTop: Dimensions.get("window").width * 0.05,
-    marginBottom: Dimensions.get("window").width * 0.2,
+    marginBottom: 80,
     height: (Dimensions.get("window").height - 90) * 0.35,
     ...ifIphoneX({
       height: (Dimensions.get("window").height - 150) * 0.24
