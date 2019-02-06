@@ -52,51 +52,7 @@ export default class DetailTab extends Component {
     User.getUserId().then(id => {
       this.setState({ userId: id });
     });
-    console.log(this.state.project);
-
-    console.log(this.state.liked);
-    console.log(this.state.member);
-    console.log(this.state.followed);
   }
-
-  // checkIfLiked() {
-  //   User.getUserId().then(id => {
-  //     ProjectApi.checkIfLiked(this.state.project.id, id).then(res => {
-  //       if (res["bool"]) {
-  //         this.setState({ liked: res["liked"] });
-  //       } else {
-  //         console.log(res);
-  //       }
-  //     });
-  //   });
-  // }
-  //
-  // checkIfFollowed() {
-  //   User.getUserId().then(id => {
-  //     ProjectApi.checkIfFollowed(this.state.project.id, id).then(res => {
-  //       console.log(res);
-  //
-  //       if (res["bool"]) {
-  //         this.setState({ followed: res["followed"] });
-  //       } else {
-  //         console.log(res);
-  //       }
-  //     });
-  //   });
-  // }
-  //
-  //
-  // checkIfMember() {
-  //   User.getUserId().then(id => {
-  //     ProjectApi.checkIfMember(this.state.project.id, id).then(res => {
-  //       if (res["bool"]) {
-  //         this.setState({ member: res["member"] });
-  //       } else {
-  //         console.log(res);
-  //       }
-  //     });
-  //   });
-  // }
 
   likedProject() {
     User.getUserId().then(id => {

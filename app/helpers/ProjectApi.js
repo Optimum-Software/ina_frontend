@@ -38,6 +38,14 @@ class ProjectApi {
     return Api.callApiGet("getAllTags");
   }
 
+  deleteProjectById(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    }
+    return Api.callApiPostSafe("deleteProject", userData)
+  }
+
   getProjectById(userId, projectId) {
     if (userId != null) {
       return Api.callApiGetSafe("getProjectById/" + userId + "/" + projectId);
