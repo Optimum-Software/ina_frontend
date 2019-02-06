@@ -14,11 +14,6 @@ class ProjectApi {
 
   getProjects(userId, filter, optional = null) {
     if (userId != null) {
-      console.log("Type of projects");
-      console.log(filter);
-      console.log("USER ID");
-      console.log(userId);
-      console.log(optional);
       userData = { userId: userId, filter: filter };
       if (filter == "search") {
         userData["searchTerm"] = optional;
