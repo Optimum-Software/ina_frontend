@@ -34,7 +34,6 @@ export default class ProjectUpdateCreate extends Component{
 	saveUpdate() {
 		this.setState({loading: true})
 		if(this.checkInput()) {
-      console.log(this.props.navigation.getParam("project", ""))
 			User.getUserId().then(id => {
 				ProjectApi.updateProject(this.props.navigation.getParam("project", "").project.id, id, encode(this.state.title), encode(this.state.content)).then(res => {
 					if(res['bool']) {

@@ -60,10 +60,11 @@ class UserApi {
     return Api.callApiPostSafe("createDevice", userData);
   }
 
-  notifyUser(userId, chatId) {
+  notifyUser(userId, chatId, group) {
     userData = {
       userId: userId,
-      chatId: chatId
+      chatId: chatId,
+      group: group
     };
     return Api.callApiPostSafe("sendMessageToUserById", userData);
   }

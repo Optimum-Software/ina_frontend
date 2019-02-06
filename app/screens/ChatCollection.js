@@ -51,11 +51,8 @@ export default class ChatCollection extends Component {
           let photo = "";
           let uid = "";
           if (!chat.group) {
-            uid = chat.chatUid;
-            console.log(chat);
             if (chat.user1.id == id) {
               title = chat.user2.firstName + " " + chat.user2.lastName;
-              console.log(chat.user2.profilePhotoPath);
               photo = Api.getFileUrl(chat.user2.profilePhotoPath);
             } else if (chat.user2.id == id) {
               title = chat.user1.firstName + " " + chat.user1.lastName;
@@ -71,7 +68,8 @@ export default class ChatCollection extends Component {
             title: title,
             photo: photo,
             uid: uid,
-            chatId: chat.id
+            chatId: chat.id,
+            group: chat.group
           };
           chats.push(chatItem);
         }
@@ -86,11 +84,12 @@ export default class ChatCollection extends Component {
     this.setState({ refreshing: false });
   }
 
-  goToChat(chatId, uid, title) {
+  goToChat(chatId, uid, title, group) {
     Router.goTo(this.props.navigation, "ChatStack", "Chat", {
       uid: uid,
       title: title,
-      chatId: chatId
+      chatId: chatId,
+      group: group
     });
   }
 
@@ -164,7 +163,7 @@ export default class ChatCollection extends Component {
                         textStyle: { color: "#fff" }
                       }}
                       onPress={() =>
-                        this.goToChat(item.chatId, item.uid, item.title)
+                        this.goToChat(item.chatId, item.uid, item.title, item.group)
                       }
                     />
                   )}

@@ -33,7 +33,8 @@ export default class Chat extends Component {
     this.setState({
       chatId: this.props.navigation.getParam("chatId", ""),
       uid: this.props.navigation.getParam("uid", ""),
-      title: this.props.navigation.getParam("title", "")
+      title: this.props.navigation.getParam("title", ""),
+      group: this.props.navigation.getParam("group", false),
     });
     this.getMessages();
     OneSignal.inFocusDisplaying(0)
@@ -91,7 +92,7 @@ export default class Chat extends Component {
   }
 
   onSend(messages = []) {
-    FirebaseApi.sendMessage(this.state.currentUser, this.state.uid, this.state.chatId, messages);
+    FirebaseApi.sendMessage(this.state.currentUser, this.state.uid, this.state.chatId, this.state.group, messages);
   }
 
   getColor(username) {
