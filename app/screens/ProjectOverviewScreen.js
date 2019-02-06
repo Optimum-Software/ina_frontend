@@ -24,6 +24,7 @@ import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
 import { Icon } from "react-native-elements";
 import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
+import ProjectComponent from "../components/ProjectComponent";
 
 export default class ProjectOverview extends Component {
   constructor() {
@@ -65,7 +66,6 @@ export default class ProjectOverview extends Component {
     } else {
       User.getUserId().then(id => {
         ProjectApi.getProjects(id, "all").then(result => {
-          console.log(result);
           if (result["bool"]) {
             this.setState({
               data: result["projects"]
@@ -131,107 +131,15 @@ export default class ProjectOverview extends Component {
                   onRefresh={() => this.onRefresh()}
                   keyExtractor={item => item.id}
                   contentContainerStyle={{ paddingLeft: 10, paddingRight: 10 }}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <Ripple
-                        rippleColor="#FFF"
-                        style={styles.cardContainer}
-                        key={item.id}
-                        onPress={() =>
-                          Router.goTo(
-                            this.props.navigation,
-                            "ProjectStack",
-                            "ProjectDetailScreen",
-                            {
-                              id: item.id,
-                              name: item.name,
-                              desc: item.desc,
-                              start_date: item.startDate,
-                              end_date: item.endDate,
-                              created_at: item.createdAt,
-                              like_count: item.likeCount,
-                              follower_count: item.followerCount,
-                              location: item.location,
-                              thumbnail: Api.getFileUrl(item.thumbnail),
-                              creator: item.creator,
-                              images: item.images,
-                              files: item.files,
-                              liked: item.liked,
-                              member: item.member,
-                              followed: item.followed
-                            }
-                          )
-                        }
-                      >
-                        {index != this.state.data.length - 1 && (
-                          //not last card
-                          <View style={styles.card}>
-                            <View style={styles.cardImage}>
-                              <CachedImage
-                                source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                                resizeMode="cover"
-                                style={styles.image}
-                              />
-                            </View>
-                            <Image
-                              source={line}
-                              resizeMode="stretch"
-                              style={{ width: "100%", height: "2%" }}
-                            />
-                            <Text numberOfLines={2} style={styles.cardTitle}>
-                              {item.name}
-                            </Text>
-                          </View>
-                        )}
-                        {index == this.state.data.length - 1 &&
-                          (index + 1) % 2 == 0 && (
-                            //last card but even index
-                            <View style={styles.card}>
-                              <View style={styles.cardImage}>
-                                <CachedImage
-                                  source={{
-                                    uri: Api.getFileUrl(item.thumbnail)
-                                  }}
-                                  resizeMode="cover"
-                                  style={styles.image}
-                                />
-                              </View>
-                              <Image
-                                source={line}
-                                resizeMode="stretch"
-                                style={{ width: "100%", height: "2%" }}
-                              />
-                              <Text numberOfLines={2} style={styles.cardTitle}>
-                                {item.name}
-                              </Text>
-                            </View>
-                          )}
-                        {index == this.state.data.length - 1 &&
-                          (index + 1) % 2 != 0 && (
-                            //last card but uneven index
-                            <View style={styles.cardUneven}>
-                              <View style={styles.cardImage}>
-                                <CachedImage
-                                  source={{
-                                    uri: Api.getFileUrl(item.thumbnail)
-                                  }}
-                                  resizeMode="cover"
-                                  style={styles.image}
-                                />
-                              </View>
-                              <Image
-                                source={line}
-                                resizeMode="stretch"
-                                style={{ width: "100%", height: "2%" }}
-                              />
-                              <Text numberOfLines={2} style={styles.cardTitle}>
-                                {item.name}
-                              </Text>
-                            </View>
-                          )}
-                      </Ripple>
-                    );
-                  }}
+                  renderItem={({ item, index }) => 
+                    <ProjectComponent 
+                      item={item} 
+                      index={index} 
+                      projects={this.state.data} 
+                      dispatcher={this.props.navigation}
+                      differentStack={false}
+                    />
+                  }
                 />
               )}
             {this.state.data.length == 0 &&
