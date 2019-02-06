@@ -520,12 +520,12 @@ export default class ExploreScreen extends React.Component {
                   id: this.state.cards[this.state.cardIndex].id,
                   name: this.state.cards[this.state.cardIndex].name,
                   desc: this.state.cards[this.state.cardIndex].desc,
-                  start_date: this.state.cards[this.state.cardIndex].start_date,
-                  end_date: this.state.cards[this.state.cardIndex].end_date,
-                  created_at: this.state.cards[this.state.cardIndex].created_at,
-                  like_count: this.state.cards[this.state.cardIndex].like_count,
+                  start_date: this.state.cards[this.state.cardIndex].startDate,
+                  end_date: this.state.cards[this.state.cardIndex].endDate,
+                  created_at: this.state.cards[this.state.cardIndex].createdAt,
+                  like_count: this.state.cards[this.state.cardIndex].likeCount,
                   follower_count: this.state.cards[this.state.cardIndex]
-                    .follower_count,
+                    .followerCount,
                   location: this.state.cards[this.state.cardIndex].location,
                   thumbnail: Api.getFileUrl(
                     this.state.cards[this.state.cardIndex].thumbnail
