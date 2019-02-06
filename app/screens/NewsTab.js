@@ -67,7 +67,6 @@ export default class NewsTab extends Component {
         {this.state.updateList.length > 0 &&
           !this.state.loading && (
             <View>
-              <View style={styles.separator} />
               <FlatList
                 data={this.state.updateList}
                 keyExtractor={item => "" + item.id}

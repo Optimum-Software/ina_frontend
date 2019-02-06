@@ -54,6 +54,7 @@ export default class NotificationScreen extends Component {
     this.setState({ loading: true });
     User.getUserId().then(id => {
       UserApi.getNotifications(id).then(res => {
+        console.log(res)
         if (res["bool"]) {
           this.setState({ notificationList: res["notifications"] });
         }
@@ -82,26 +83,44 @@ export default class NotificationScreen extends Component {
               onRefresh={() => this.onRefresh()}
               renderItem={({ item }) => {
                 moment.locale("nl");
-                if (item.type == 0) {
+                if (item.type == 0 || item.type == 2) {
                   let sender = null;
-                  if (item.user.id == item.chat.user1.id) {
-                    sender = item.chat.user2;
-                  } else {
-                    sender = item.chat.user1;
+                  if(item.type == 0) {
+                    if (item.user.id == item.chat.user1.id) {
+                      sender = item.chat.user2;
+                    } else {
+                      sender = item.chat.user1;
+                    }
+                  } else if (item.type == 2) {
+                    sender = item.groupChat
+                    sender.profilePhotoPath = item.groupChat.thumbnail
+                    sender.firstName = item.groupChat.name
                   }
                   return (
                     <View key={item.id}>
                       {item.read && (
                         <Ripple
                           onPress={() => {
+                            let uid = null
+                            let title = null
+                            let chatId = null
+                            if(item.type == 0) {
+                              uid = item.chat.chatUid
+                              title = sender.firstName
+                              chatId = item.chat.id
+                            } else if (item.type == 2) {
+                              uid = item.groupChat.uid
+                              title = item.groupChat.title
+                              chatId = item.groupChat.chatId
+                            }
                             Router.goTo(
                               this.props.navigation,
                               "ChatStack",
                               "Chat",
                               {
-                                uid: item.chat.chatUid,
-                                title: sender.firstName,
-                                chatId: item.chat.id
+                                uid: uid,
+                                title: title,
+                                chatId: chatId
                               }
                             );
                           }}
@@ -118,7 +137,7 @@ export default class NotificationScreen extends Component {
                           <Text
                             style={[styles.textStyle, { color: "#4a6572" }]}
                           >
-                            Nieuw bericht van {sender.firstName}
+                            Nieuw bericht: {sender.firstName}
                           </Text>
                         </Ripple>
                       )}
@@ -126,14 +145,26 @@ export default class NotificationScreen extends Component {
                         <Ripple
                           onPress={() => {
                             UserApi.markAsRead(item.id).then(res => {
+                              let uid = null
+                              let title = null
+                              let chatId = null
+                              if(item.type == 0) {
+                                uid = item.chat.chatUid
+                                title = sender.firstName
+                                chatId = item.chat.id
+                              } else if (item.type == 2) {
+                                uid = item.groupChat.uid
+                                title = item.groupChat.title
+                                chatId = item.groupChat.chatId
+                              }
                               Router.goTo(
                                 this.props.navigation,
                                 "ChatStack",
                                 "Chat",
                                 {
-                                  uid: item.chat.chatUid,
-                                  title: sender.firstName,
-                                  chatId: item.chat.id
+                                  uid: uid,
+                                  title: title,
+                                  chatId: chatId
                                 }
                               );
                             });

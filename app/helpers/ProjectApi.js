@@ -14,11 +14,6 @@ class ProjectApi {
 
   getProjects(userId, filter, optional = null) {
     if (userId != null) {
-      console.log("Type of projects");
-      console.log(filter);
-      console.log("USER ID");
-      console.log(userId);
-      console.log(optional);
       userData = { userId: userId, filter: filter };
       if (filter == "search") {
         userData["searchTerm"] = optional;
@@ -45,6 +40,14 @@ class ProjectApi {
 
   getAllTags() {
     return Api.callApiGet("getAllTags");
+  }
+
+  deleteProjectById(userId, projectId) {
+    userData = {
+      userId: userId,
+      projectId: projectId
+    }
+    return Api.callApiPostSafe("deleteProject", userData)
   }
 
   getProjectById(userId, projectId) {
@@ -246,6 +249,7 @@ class ProjectApi {
     return Api.callApiGetSafe("checkIfFollowed/" + userId + "/" + projectId);
   }
   updateProject(projectId, userId, title, content) {
+    console.log(projectId)
     userData = {
       project: projectId,
       user: userId,

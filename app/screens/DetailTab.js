@@ -52,11 +52,6 @@ export default class DetailTab extends Component {
     User.getUserId().then(id => {
       this.setState({ userId: id });
     });
-    console.log(this.state.project);
-
-    console.log(this.state.liked);
-    console.log(this.state.member);
-    console.log(this.state.followed);
   }
 
   likedProject() {
