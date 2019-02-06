@@ -65,7 +65,10 @@ export default class Home extends Component {
 
   componentDidMount() {
     User.getUserId().then(id => {
-      this.setState({ userId: id });
+      if(id != null) {
+        this.setState({ userId: id, loggedIn: true });
+      }
+      
     });
     this.props.navigation.addListener("willFocus", this.onLoad);
     OneSignal.addEventListener("opened", this.onOpened);
