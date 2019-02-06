@@ -242,6 +242,7 @@ class ProjectApi {
     return Api.callApiGetSafe("checkIfFollowed/" + userId + "/" + projectId);
   }
   updateProject(projectId, userId, title, content) {
+    console.log(projectId)
     userData = {
       project: projectId,
       user: userId,

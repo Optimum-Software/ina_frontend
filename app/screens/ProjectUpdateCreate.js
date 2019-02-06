@@ -5,7 +5,8 @@ import {
 	SafeAreaView,
 	StyleSheet,
 	TouchableHighlight,
-	ActivityIndicator
+	ActivityIndicator,
+  Alert
 } from 'react-native';
 import { Input, Icon } from "react-native-elements";
 import User from "../helpers/User";
@@ -33,10 +34,12 @@ export default class ProjectUpdateCreate extends Component{
 	saveUpdate() {
 		this.setState({loading: true})
 		if(this.checkInput()) {
+      console.log(this.props.navigation.getParam("project", ""))
 			User.getUserId().then(id => {
-				ProjectApi.updateProject(this.state.project.id, id, encode(this.state.title), encode(this.state.content)).then(res => {
+				ProjectApi.updateProject(this.props.navigation.getParam("project", "").project.id, id, encode(this.state.title), encode(this.state.content)).then(res => {
 					if(res['bool']) {
 						this.setState({loading: false, title: '', content: ''})
+            Alert.alert(res['msg'], "Er is een project update aangemaakt")
 					}
 				})
 			});
@@ -148,6 +151,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
 	},
 
+  labelStyle: {
+    alignSelf: "flex-start",
+    width: "100%",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#4a6572"
+  },
+
 	safeText: {
 		color: "#fff",
     alignSelf: "center",
@@ -155,20 +166,16 @@ const styles = StyleSheet.create({
 	},
 
 	containerStyle: {
-		marginBottom: 80,
-		width: '90%'
+		width: "80%",
+    alignSelf: 'center',
+    backgroundColor: "transparent",
+    marginBottom: 20
 	},
 
 	inputStyle: {
-		backgroundColor: '#dee5e8',
-		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10
+		color: "#4a6572",
+    height: undefined
 	},
 
-
-
-	labelStyle: {
-		color: "#000"
-	}
 })
 

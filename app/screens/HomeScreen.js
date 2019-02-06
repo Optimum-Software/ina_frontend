@@ -87,7 +87,6 @@ export default class Home extends Component {
   }
 
   onOpened(openResult) {
-    console.log(openResult.notification);
     if (openResult.notification.isAppInFocus) {
       if (openResult.notification.payload.additionalData["type"] == 0) {
         //go to chat
