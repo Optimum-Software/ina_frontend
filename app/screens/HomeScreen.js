@@ -53,20 +53,25 @@ export default class Home extends Component {
       dateNow: null,
       refreshing: false,
       search: false,
-      unRead: 0
+      unRead: 0,
+      userId: null
     };
     this.animatedValue = new Animated.Value(0);
     Router.setDispatcher(this.props.navigation);
   }
 
   componentDidMount() {
+    User.getUserId().then(id => {
+      this.setState({ userId: id });
+    });
     this.props.navigation.addListener("willFocus", this.onLoad);
-    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.addEventListener("opened", this.onOpened);
     Linking.addEventListener("url", this._handleOpenURL);
     Linking.getInitialURL()
       .then(url => {
         if (url) {
           ProjectApi.getProjectById(
+            this.state.userId,
             url.substring(Platform.OS === "android" ? 27 : 6, url.length)
           ).then(result => {
             Router.goTo(
@@ -82,16 +87,16 @@ export default class Home extends Component {
   }
 
   onOpened(openResult) {
-      console.log(openResult.notification)
-      if(openResult.notification.isAppInFocus) {
-        if(openResult.notification.payload.additionalData['type'] == 0) {
-          //go to chat
-          Router.goToDeeplink("ChatStack", "ChatStack")
-        } else if (openResult.notification.payload.additionalData['type'] == 1) {
-          //go to project overview
-          Router.goToDeeplink("ProjectStack", "ProjectOverviewScreen")
-        }
+    console.log(openResult.notification);
+    if (openResult.notification.isAppInFocus) {
+      if (openResult.notification.payload.additionalData["type"] == 0) {
+        //go to chat
+        Router.goToDeeplink("ChatStack", "ChatStack");
+      } else if (openResult.notification.payload.additionalData["type"] == 1) {
+        //go to project overview
+        Router.goToDeeplink("ProjectStack", "ProjectOverviewScreen");
       }
+    }
   }
 
   onLoad = () => {
@@ -123,6 +128,7 @@ export default class Home extends Component {
 
   _handleOpenURL(event) {
     ProjectApi.getProjectById(
+      this.state.userId,
       event.url.substring(Platform.OS === "android" ? 27 : 6, event.url.length)
     ).then(result => {
       Router.goToDeeplink(
@@ -156,7 +162,7 @@ export default class Home extends Component {
   }
 
   getTags() {
-    Api.callApiGet("getAllTags").then(response => {
+    ProjectApi.getAllTags().then(response => {
       if (response["bool"]) {
         this.setState({ topics: response["tags"] });
       }
@@ -164,35 +170,33 @@ export default class Home extends Component {
   }
 
   getTrendingProjects() {
-    ProjectApi.mostLikedProjects().then(response => {
-      console.log(response);
+    ProjectApi.getProjects(this.state.userId, "most_liked").then(response => {
       if (response["bool"]) {
         this.setState({ projects: response["projects"] });
+        console.log(response);
       }
     });
   }
 
   getUserIfLoggedIn() {
-    User.getUserId().then(id => {
-      if (id != null) {
-        dateNow = new Date().toLocaleDateString("nl-NL", {
-          weekday: "long",
-          day: "numeric",
-          month: "long"
-        });
-        Api.callApiGet("getUserById/" + id).then(res => {
-          if (res["bool"]) {
-            this.setState({
-              user: res["user"],
-              loggedIn: true,
-              dateNow: dateNow
-            });
-          }
-        });
-      } else {
-        this.setState({ loggedIn: false, user: null, dateNow: null });
-      }
-    });
+    if (this.state.userId != null) {
+      dateNow = new Date().toLocaleDateString("nl-NL", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      });
+      Api.callApiGet("getUserById/" + this.state.userId).then(res => {
+        if (res["bool"]) {
+          this.setState({
+            user: res["user"],
+            loggedIn: true,
+            dateNow: dateNow
+          });
+        }
+      });
+    } else {
+      this.setState({ loggedIn: false, user: null, dateNow: null });
+    }
   }
 
   goToProjectFilterByTag(tag) {
@@ -211,7 +215,7 @@ export default class Home extends Component {
       }
     });
 
-    HomepageApi.searchProjects(term).then(res => {
+    ProjectApi.getProjects(this.state.userId, "search", term).then(res => {
       if (res["bool"]) {
         this.setState({ projects: res["projects"] });
       }
@@ -380,14 +384,16 @@ export default class Home extends Component {
                             start_date: item.start_date,
                             end_date: item.end_date,
                             created_at: item.created_at,
-                            like_count: item.like_count,
-                            follower_count: item.follower_count,
+                            like_count: item.likeCount,
+                            follower_count: item.followerCount,
                             location: item.location,
                             thumbnail: Api.getFileUrl(item.thumbnail),
                             creator: item.creator,
                             images: item.images,
                             files: item.files,
-
+                            liked: item.liked,
+                            member: item.member,
+                            followed: item.followed,
                             differentStack: true
                           }
                         )

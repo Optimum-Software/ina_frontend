@@ -32,23 +32,104 @@ export default class DetailTab extends Component {
     this.state = {
       project: props.project.project,
       tags: [],
+
       userId: null,
       projectMembers: [],
-      liked: false,
-      followed: false
+
+      liked: props.project.project.liked,
+      member: props.project.project.member,
+      followed: props.project.project.followed,
+
+      like_count: props.project.project.like_count,
+      follower_count: props.project.project.follower_count
     };
-    User.getUserId().then(userId => {
-      this.setState({ userId: userId });
-      ProjectApi.checkIfMember(userId, this.state.project.id).then(result => {
-        if (result["bool"]) {
-          this.setState({ member: true });
-        } else {
-          this.setState({ member: false });
-        }
-      });
-    });
-    this.tags(this.state.project.id);
+
     this.getMembers();
+    this.tags(this.state.project.id);
+  }
+
+  componentDidMount() {
+    User.getUserId().then(id => {
+      this.setState({ userId: id });
+    });
+    console.log(this.state.project);
+
+    console.log(this.state.liked);
+    console.log(this.state.member);
+    console.log(this.state.followed);
+  }
+
+  // checkIfLiked() {
+  //   User.getUserId().then(id => {
+  //     ProjectApi.checkIfLiked(this.state.project.id, id).then(res => {
+  //       if (res["bool"]) {
+  //         this.setState({ liked: res["liked"] });
+  //       } else {
+  //         console.log(res);
+  //       }
+  //     });
+  //   });
+  // }
+  //
+  // checkIfFollowed() {
+  //   User.getUserId().then(id => {
+  //     ProjectApi.checkIfFollowed(this.state.project.id, id).then(res => {
+  //       console.log(res);
+  //
+  //       if (res["bool"]) {
+  //         this.setState({ followed: res["followed"] });
+  //       } else {
+  //         console.log(res);
+  //       }
+  //     });
+  //   });
+  // }
+  //
+  //
+  // checkIfMember() {
+  //   User.getUserId().then(id => {
+  //     ProjectApi.checkIfMember(this.state.project.id, id).then(res => {
+  //       if (res["bool"]) {
+  //         this.setState({ member: res["member"] });
+  //       } else {
+  //         console.log(res);
+  //       }
+  //     });
+  //   });
+  // }
+
+  likedProject() {
+    User.getUserId().then(id => {
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.likeProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            console.log("yay");
+            this.setState({ liked: true, like_count: res["likedCount"] });
+          } else {
+            console.log(res);
+          }
+        });
+      }
+    });
+  }
+
+  unlikeProject() {
+    User.getUserId().then(id => {
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.unlikeProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            console.log("yay");
+            this.setState({ liked: false, like_count: res["likedCount"] });
+          } else {
+            console.log(res);
+          }
+        });
+      }
+    });
   }
 
   getMembers() {
@@ -105,7 +186,31 @@ export default class DetailTab extends Component {
       } else {
         ProjectApi.followProject(this.state.project.id, id).then(res => {
           if (res["bool"]) {
-            this.setState({ followed: res["bool"] });
+            this.props.followHandler(true);
+            this.setState({
+              followed: true,
+              follower_count: res["followerCount"]
+            });
+          } else {
+            console.log(res);
+          }
+        });
+      }
+    });
+  }
+
+  unfollowProject() {
+    User.getUserId().then(id => {
+      if (id == null) {
+        Router.goTo(this.props.navigation, "LoginStack", "LoginScreen", {});
+      } else {
+        ProjectApi.unfollowProject(this.state.project.id, id).then(res => {
+          if (res["bool"]) {
+            this.props.followHandler(false);
+            this.setState({
+              followed: false,
+              follower_count: res["followerCount"]
+            });
           } else {
             console.log(res);
           }
@@ -151,138 +256,363 @@ export default class DetailTab extends Component {
   render() {
     return (
       <ScrollView>
-        {this.state.projectMembers.length > 0 && (
-          <FlatList
-            data={this.state.projectMembers}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <View style={styles.personCard}>
-                <Image
-                  source={{
-                    uri: Api.getFileUrl(item.profilePhotoPath)
+        <View style={{ padding: "5%" }}>
+          <View style={{ flexDirection: "row", height: 100, marginBottom: 10 }}>
+            <CachedImage
+              source={{
+                uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
+              }}
+              resizeMode="cover"
+              style={{ width: 45, height: 45, top: 2, borderRadius: 100 }}
+            />
+            <View
+              style={{ flexDirection: "column", marginLeft: 10, width: "70%" }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: "#232f34"
+                }}
+              >
+                {this.state.project.name}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: "#232f34"
+                }}
+              >
+                {"Door " +
+                  this.state.project.creator.firstName +
+                  " " +
+                  this.state.project.creator.lastName}
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginTop: 5
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center"
                   }}
-                  resizeMode="cover"
-                  style={{ width: 35, height: 35, borderRadius: 100 }}
-                />
+                >
+                  <Icon name="heart-outline" size={24} color={"#4C6873"} />
+                  <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                    {this.state.like_count} likes
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginLeft: 20
+                  }}
+                >
+                  <Icon name="account-outline" size={24} color={"#4C6873"} />
+                  <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                    {this.state.follower_count} volgers
+                  </Text>
+                </View>
               </View>
+            </View>
+            <View style={{ position: "absolute", right: 0 }}>
+              {this.state.userId == this.state.project.creator.id && (
+                <Icon
+                  name="square-edit-outline"
+                  color="#00a6ff"
+                  size={46}
+                  onPress={() => {
+                    Router.goTo(
+                      this.props.navigation,
+                      "ProjectStack",
+                      "ProjectEditFirstScreen",
+                      {
+                        id: this.state.project.id,
+                        name: this.state.project.name,
+                        desc: this.state.project.desc,
+                        start_date: this.state.project.start_date,
+                        end_date: this.state.project.end_date,
+                        location: this.state.project.location,
+                        thumbnail: this.state.project.thumbnail,
+                        images: this.state.project.images,
+                        files: this.state.project.files,
+                        tags: this.state.tags
+                      }
+                    );
+                  }}
+                />
+              )}
+              {this.state.userId != this.state.project.creator.id &&
+                this.state.liked == true && (
+                  <Icon
+                    name="heart"
+                    size={46}
+                    color={"red"}
+                    onPress={() => {
+                      this.state.liked
+                        ? this.unlikeProject()
+                        : this.likedProject();
+                    }}
+                  />
+                )}
+              {this.state.userId != this.state.project.creator.id &&
+                !this.state.liked && (
+                  <Icon
+                    name="heart-outline"
+                    size={46}
+                    color={"red"}
+                    onPress={() => {
+                      this.state.liked
+                        ? this.unlikeProject()
+                        : this.likedProject();
+                    }}
+                  />
+                )}
+            </View>
+          </View>
+
+          <View style={styles.separator} />
+
+          <Text>{this.state.project.desc}</Text>
+          <View style={styles.separator} />
+          {this.state.project.files.length > 0 && (
+            <View
+              style={{
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                width: Dimensions.get("window").width
+              }}
+            >
+              <Icon name="file" size={24} color={"#4C6873"} />
+              <Text
+                style={{ paddingLeft: 5, color: "#4C6873", fontWeight: "bold" }}
+              >
+                Bestanden
+              </Text>
+            </View>
+          )}
+          <FlatList
+            data={this.state.project.files}
+            style={{ flexGrow: 0 }}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() =>
+                  Linking.canOpenURL(Api.getFileUrl(item)).then(supported => {
+                    if (supported) {
+                      Linking.openURL(Api.getFileUrl(item));
+                    } else {
+                      console.log(
+                        "Don't know how to open URI: " + Api.getFileUrl(item)
+                      );
+                    }
+                  })
+                }
+                style={{
+                  width: "90%",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingHorizontal: 40,
+                  paddingBottom: 10
+                }}
+              >
+                <Icon
+                  name="file-document-outline"
+                  size={48}
+                  color={"#4C6873"}
+                />
+                <View style={{ flexDirection: "column" }}>
+                  <Text>{item.path.split("/")[item.path.split("/").length - 1]}</Text>
+                </View>
+              </TouchableOpacity>
             )}
           />
-        )}
-        <Text
-          style={{
-            marginLeft: 15,
-            marginRight: 15,
-            marginTop: 15
-          }}
-        >
-          {this.state.project.desc}
-        </Text>
-        <View
-          style={{
-            height: 1,
-            opacity: 0.3,
+          {this.state.project.files.length > 0 && (
+            <View style={styles.separator} />
+          )}
 
-            backgroundColor: "#b5babf",
-            marginTop: 15,
-            marginBottom: 15,
-            marginLeft: 15,
-            marginRight: 15,
-            width: "90%",
-            alignSelf: "center"
-          }}
-        />
-        {this.state.project.files.length > 0 && (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 10,
+              marginBottom: 10,
+              marginLeft: 25,
+              marginRight: 25
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  borderRadius: 100,
+                  backgroundColor: "#00a6ff",
+                  height: 60,
+                  width: 60,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+                onPress={() => this.startChat()}
+              >
+                <Icon name="message-outline" size={24} color={"white"} />
+              </TouchableOpacity>
+              <Text style={{ paddingTop: 10 }}>Contact</Text>
+            </View>
+            {this.state.member == false && (
+              <View
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 100,
+                    backgroundColor: "#00a6ff",
+                    height: 60,
+                    width: 60,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                  onPress={() => this.joinProject()}
+                >
+                  <Icon
+                    name="account-multiple-plus"
+                    size={24}
+                    color={"white"}
+                  />
+                </TouchableOpacity>
+                <Text style={{ paddingTop: 10 }}>Deelnemen</Text>
+              </View>
+            )}
+            {this.state.member == true && (
+              <View
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 100,
+                    backgroundColor: "#00a6ff",
+                    height: 60,
+                    width: 60,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                  onPress={() => this.leaveProject()}
+                >
+                  <Icon
+                    name="account-multiple-minus"
+                    size={24}
+                    color={"white"}
+                  />
+                </TouchableOpacity>
+                <Text style={{ paddingTop: 10 }}>Verlaten</Text>
+              </View>
+            )}
+            {this.state.followed == false && (
+              <View
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 100,
+                    backgroundColor: "#00a6ff",
+                    height: 60,
+                    width: 60,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                  onPress={() => this.followProject()}
+                >
+                  <Icon
+                    name="bookmark-plus-outline"
+                    size={24}
+                    color={"white"}
+                  />
+                </TouchableOpacity>
+                <Text style={{ paddingTop: 10 }}>Volgen</Text>
+              </View>
+            )}
+            {this.state.followed == true && (
+              <View
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 100,
+                    backgroundColor: "#00a6ff",
+                    height: 60,
+                    width: 60,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                  onPress={() => this.unfollowProject()}
+                >
+                  <Icon
+                    name="bookmark-plus-outline"
+                    size={24}
+                    color={"white"}
+                  />
+                </TouchableOpacity>
+                <Text style={{ paddingTop: 10 }}>Ontvolgen</Text>
+              </View>
+            )}
+          </View>
+          {this.state.projectMembers.length > 0 && (
+            <View style={styles.separator} />
+          )}
           <View
             style={{
               paddingHorizontal: 15,
-              paddingVertical: 10,
+              paddingTop: 15,
               flexDirection: "row",
               alignItems: "center",
               width: Dimensions.get("window").width
             }}
           >
-            <Icon name="file" size={24} color={"#4C6873"} />
-            <Text
-              style={{ paddingLeft: 5, color: "#4C6873", fontWeight: "bold" }}
-            >
-              Bestanden
+            <Icon name="heart-outline" size={24} color={"#4C6873"} />
+            <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+              {this.state.project.like_count} likes
             </Text>
           </View>
-        )}
-        <FlatList
-          data={this.state.project.files}
-          style={{ flexGrow: 0 }}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              key={item}
-              onPress={() =>
-                {
-                  console.log(item)
-                  console.log("https://file.ina-app.nl/?id=" + item.id)
-                Linking.canOpenURL("https://file.ina-app.nl/?id=" + item.id).then(supported => {
-                  if (supported) {
-                    Linking.openURL("https://file.ina-app.nl/?id=" + item.id);
-                  } else {
-                    console.log(
-                      "Don't know how to open URI: " + Api.getFileUrl(item)
-                    );
-                  }
-                })
-              }
-              }
-              style={{
-                width: "90%",
-                flexDirection: "row",
-                alignItems: "center",
-                paddingHorizontal: 40,
-                paddingBottom: 10
-              }}
-            >
-              <Icon name="file-document-outline" size={48} color={"#4C6873"} />
-              <View style={{ flexDirection: "column" }}>
-                <Text>{item.path.split("/")[item.path.split("/").length - 1]}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
-        {this.state.project.files.length > 0 && (
-          <View
-            style={{
-              height: 1,
-              opacity: 0.3,
-              backgroundColor: "#b5babf",
-              marginTop: 15,
-              marginBottom: 15,
-              marginLeft: 15,
-              marginRight: 15,
-              width: "90%",
-              alignSelf: "center"
-            }}
-          />
-        )}
-        <View
-          style={{
-            paddingHorizontal: 15,
-            paddingVertical: 10,
-            flexDirection: "row",
-            alignItems: "center",
-            width: Dimensions.get("window").width
-          }}
-        >
-          <Icon name="information-outline" size={24} color={"#4C6873"} />
-          <Text
-            style={{ paddingLeft: 5, color: "#4C6873", fontWeight: "bold" }}
-          >
-            Extra info
-          </Text>
-        </View>
-
-        <View style={{ paddingHorizontal: 40 }}>
           <View
             style={{
               paddingHorizontal: 15,
-              paddingVertical: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              width: Dimensions.get("window").width
+            }}
+          >
+            <Icon name="account-outline" size={24} color={"#4C6873"} />
+            <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+              {this.state.project.follower_count} volgers
+            </Text>
+          </View>
+          <View
+            style={{
+              paddingHorizontal: 15,
               flexDirection: "row",
               alignItems: "center",
               width: Dimensions.get("window").width
@@ -349,198 +679,117 @@ export default class DetailTab extends Component {
                 </Text>
               </View>
             )}
-        </View>
-        <View
-          style={{
-            height: 1,
-            opacity: 0.3,
-            backgroundColor: "#b5babf",
-            marginTop: 15,
-            marginBottom: 15,
-            marginLeft: 15,
-            marginRight: 15,
-            width: "90%",
-            alignSelf: "center"
-          }}
-        />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            margin: 10,
-            marginLeft: 35,
-            marginRight: 35
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
+
+          {this.state.projectMembers.length > 0 && (
             <TouchableOpacity
-              style={{
-                borderRadius: 100,
-                backgroundColor: "#00a6ff",
-                height: 60,
-                width: 60,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-              onPress={() => this.startChat()}
+              style={styles.personList}
+              onPress={() =>
+                Router.goTo(
+                  this.props.navigation,
+                  "ProjectStack",
+                  "ProjectMembersScreen",
+                  { persons: this.state.projectMembers }
+                )
+              }
             >
-              <Icon name="message-outline" size={24} color={"white"} />
-            </TouchableOpacity>
-            <Text style={{ paddingTop: 10 }}>Contact</Text>
-          </View>
-          {!this.state.member == true && (
-            <View
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  borderRadius: 100,
-                  backgroundColor: "#00a6ff",
-                  height: 60,
-                  width: 60,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-                onPress={() => this.joinProject()}
-              >
-                <Icon name="account-multiple-plus" size={24} color={"white"} />
-              </TouchableOpacity>
-              <Text style={{ paddingTop: 10 }}>Deelnemen</Text>
-            </View>
-          )}
-          {this.state.member == true && (
-            <View
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <TouchableOpacity
-                style={{
-                  borderRadius: 100,
-                  backgroundColor: "#00a6ff",
-                  height: 60,
-                  width: 60,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-                onPress={() => this.leaveProject()}
-              >
-                <Icon name="account-multiple-minus" size={24} color={"white"} />
-              </TouchableOpacity>
-              <Text style={{ paddingTop: 10 }}>Verlaten</Text>
-            </View>
-          )}
-          <View
-            style={{
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                borderRadius: 100,
-                backgroundColor: "#00a6ff",
-                height: 60,
-                width: 60,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-              onPress={() => this.followProject()}
-            >
-              <Icon name="bookmark-plus-outline" size={24} color={"white"} />
-            </TouchableOpacity>
-            <Text style={{ paddingTop: 10 }}>Volgen</Text>
-          </View>
-        </View>
-        {this.state.tags.length > 0 && (
-          <View
-            style={{
-              height: 1,
-              opacity: 0.3,
-              backgroundColor: "#b5babf",
-              marginTop: 15,
-              marginBottom: 15,
-              marginLeft: 15,
-              marginRight: 15,
-              width: "90%",
-              alignSelf: "center"
-            }}
-          />
-        )}
-        {this.state.tags.length > 0 && (
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "flex-start",
-              paddingBottom: 10
-            }}
-          >
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                width: Dimensions.get("window").width
-              }}
-            >
-              <Icon name="tag" size={24} color={"#4C6873"} />
-              <Text
-                style={{ paddingLeft: 5, color: "#4C6873", fontWeight: "bold" }}
-              >
-                Tags
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                flexGrow: 0,
-                flexWrap: "wrap",
-                paddingHorizontal: 35
-              }}
-            >
-              {this.state.tags.map(tag => {
-                return (
-                  <View
-                    style={{
-                      paddingTop: 2,
-                      paddingBottom: 3,
-                      marginBottom: 5,
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      borderRadius: 5,
-                      marginLeft: 10,
-                      backgroundColor: "#4C6873"
-                    }}
-                  >
-                    <Text style={{ fontSize: 12, color: "white" }}>
-                      {tag.name}
-                    </Text>
+              <FlatList
+                data={this.state.projectMembers}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <View style={styles.personCard}>
+                    <CachedImage
+                      source={{
+                        uri: Api.getFileUrl(item.profilePhotoPath)
+                      }}
+                      resizeMode="cover"
+                      style={{ width: 35, height: 35, borderRadius: 100 }}
+                    />
                   </View>
-                );
-              })}
+                )}
+              />
+            </TouchableOpacity>
+          )}
+
+          {this.state.tags.length > 0 && <View style={styles.separator} />}
+          {this.state.tags.length > 0 && (
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "flex-start",
+                paddingBottom: 10
+              }}
+            >
+              <View
+                style={{
+                  paddingHorizontal: 15,
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="tag" size={24} color={"#4C6873"} />
+                <Text
+                  style={{
+                    paddingLeft: 5,
+                    color: "#4C6873",
+                    fontWeight: "bold"
+                  }}
+                >
+                  Tags
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexGrow: 0,
+                  flexWrap: "wrap",
+                  paddingHorizontal: 35
+                }}
+              >
+                {this.state.tags.map(tag => {
+                  return (
+                    <View
+                      style={{
+                        paddingTop: 2,
+                        paddingBottom: 3,
+                        marginBottom: 5,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        borderRadius: 5,
+                        marginLeft: 10,
+                        backgroundColor: "#4C6873"
+                      }}
+                    >
+                      <Text style={{ fontSize: 12, color: "white" }}>
+                        {tag.name}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
             </View>
-          </View>
-        )}
+          )}
+        </View>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  separator: {
+    height: 1,
+    opacity: 0.3,
+    backgroundColor: "#b5babf",
+    marginTop: 15,
+    marginBottom: 15,
+    marginLeft: 10,
+    marginRight: 10,
+    width: "100%",
+    alignSelf: "center"
+  },
+
   personCard: {
     marginLeft: 15,
     marginRight: 15,
@@ -561,5 +810,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: "#00a6ff",
     borderRadius: 25
+  },
+  personList: {
+    width: "100%",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "flex-start"
   }
 });

@@ -6,6 +6,7 @@ let instance = null;
 let userToken = null;
 class Api {
   ip = "http://136.144.186.136";
+
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
