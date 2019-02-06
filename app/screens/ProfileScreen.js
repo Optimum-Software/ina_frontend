@@ -80,7 +80,9 @@ export default class ProfileScreen extends Component {
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
-        />          <Toolbar
+        />
+        <View style={{ height: Header.HEIGHT }}>
+          <Toolbar
             centerElement="Profiel"
             iconSet="MaterialCommunityIcons"
             leftElement={"chevron-left"}
@@ -89,6 +91,7 @@ export default class ProfileScreen extends Component {
               Router.goTo(this.props.navigation, "LoggedIn", "LoggedIn");
             }}
           />
+        </View>
         <ScrollView style={{ flex: 1 }}>
           <CachedImage
             source={this.state.profilePhoto}
@@ -96,7 +99,7 @@ export default class ProfileScreen extends Component {
           />
           <View>
             <CachedImage
-              source={line2}
+              source={line}
               resizeMode="cover"
               style={{ width: "100%", height: 3 }}
             />

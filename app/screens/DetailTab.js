@@ -43,12 +43,11 @@ export default class DetailTab extends Component {
       like_count: props.project.project.like_count,
       follower_count: props.project.project.follower_count
     };
-
-    this.getMembers();
-    this.tags(this.state.project.id);
   }
 
   componentDidMount() {
+    this.getMembers();
+    this.tags(this.state.project.id);
     User.getUserId().then(id => {
       this.setState({ userId: id });
     });
@@ -58,45 +57,6 @@ export default class DetailTab extends Component {
     console.log(this.state.member);
     console.log(this.state.followed);
   }
-
-  // checkIfLiked() {
-  //   User.getUserId().then(id => {
-  //     ProjectApi.checkIfLiked(this.state.project.id, id).then(res => {
-  //       if (res["bool"]) {
-  //         this.setState({ liked: res["liked"] });
-  //       } else {
-  //         console.log(res);
-  //       }
-  //     });
-  //   });
-  // }
-  //
-  // checkIfFollowed() {
-  //   User.getUserId().then(id => {
-  //     ProjectApi.checkIfFollowed(this.state.project.id, id).then(res => {
-  //       console.log(res);
-  //
-  //       if (res["bool"]) {
-  //         this.setState({ followed: res["followed"] });
-  //       } else {
-  //         console.log(res);
-  //       }
-  //     });
-  //   });
-  // }
-  //
-  //
-  // checkIfMember() {
-  //   User.getUserId().then(id => {
-  //     ProjectApi.checkIfMember(this.state.project.id, id).then(res => {
-  //       if (res["bool"]) {
-  //         this.setState({ member: res["member"] });
-  //       } else {
-  //         console.log(res);
-  //       }
-  //     });
-  //   });
-  // }
 
   likedProject() {
     User.getUserId().then(id => {
@@ -145,7 +105,8 @@ export default class DetailTab extends Component {
   }
 
   tags(id) {
-    let response = ProjectApi.getAllTags(id).then(result => {
+    ProjectApi.getTagsByProjectId(id).then(result => {
+      console.log(result);
       if (result["bool"]) {
         this.setState({
           tags: result["tags"]
@@ -257,13 +218,13 @@ export default class DetailTab extends Component {
     return (
       <ScrollView>
         <View style={{ padding: "5%" }}>
-          <View style={{ flexDirection: "row", height: 100, marginBottom: 10 }}>
+          <View style={{ flexDirection: "row" }}>
             <CachedImage
               source={{
                 uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
               }}
               resizeMode="cover"
-              style={{ width: 45, height: 45, top: 2, borderRadius: 100 }}
+              style={{ width: 45, height: 45, top: 2, borderRadius: 22.5 }}
             />
             <View
               style={{ flexDirection: "column", marginLeft: 10, width: "70%" }}
@@ -377,63 +338,230 @@ export default class DetailTab extends Component {
           <View style={styles.separator} />
 
           <Text>{this.state.project.desc}</Text>
-          <View style={styles.separator} />
-          {this.state.project.files.length > 0 && (
-            <View
-              style={{
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                flexDirection: "row",
-                alignItems: "center",
-                width: Dimensions.get("window").width
-              }}
-            >
-              <Icon name="file" size={24} color={"#4C6873"} />
-              <Text
-                style={{ paddingLeft: 5, color: "#4C6873", fontWeight: "bold" }}
-              >
-                Bestanden
-              </Text>
-            </View>
-          )}
-          <FlatList
-            data={this.state.project.files}
-            style={{ flexGrow: 0 }}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() =>
-                  Linking.canOpenURL(Api.getFileUrl(item)).then(supported => {
-                    if (supported) {
-                      Linking.openURL(Api.getFileUrl(item));
-                    } else {
-                      console.log(
-                        "Don't know how to open URI: " + Api.getFileUrl(item)
-                      );
-                    }
-                  })
-                }
-                style={{
-                  width: "90%",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  paddingHorizontal: 40,
-                  paddingBottom: 10
-                }}
-              >
-                <Icon
-                  name="file-document-outline"
-                  size={48}
-                  color={"#4C6873"}
-                />
-                <View style={{ flexDirection: "column" }}>
-                  <Text>{item.path.split("/")[item.path.split("/").length - 1]}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
+
           {this.state.project.files.length > 0 && (
             <View style={styles.separator} />
           )}
+          {this.state.project.files.length > 0 && (
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "flex-start",
+                paddingBottom: 10
+              }}
+            >
+              <View
+                style={{
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="file" size={24} color={"#4C6873"} />
+                <Text
+                  style={{
+                    paddingLeft: 5,
+                    color: "#4C6873",
+                    fontWeight: "bold"
+                  }}
+                >
+                  Bestanden
+                </Text>
+              </View>
+              <FlatList
+                data={this.state.project.files}
+                style={{ flexGrow: 0 }}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() =>
+                      Linking.canOpenURL('https://file.ina-app.nl/?id=' + (item.id)).then(
+                        supported => {
+                          if (supported) {
+                            Linking.openURL('https://file.ina-app.nl/?id=' + (item.id));
+                          } else {
+                            console.log(
+                              "Don't know how to open URI: " +
+                                Api.getFileUrl(item.path)
+                            );
+                          }
+                        }
+                      )
+                    }
+                    style={{
+                      width: "90%",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingHorizontal: 10,
+                      paddingBottom: 10
+                    }}
+                  >
+                    <Icon
+                      name="file-document-outline"
+                      size={48}
+                      color={"#4C6873"}
+                    />
+                    <View style={{ flexDirection: "column" }}>
+                      <Text>
+                        {item.path.split("/")[item.path.split("/").length - 1]}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          )}
+
+          {(this.state.project.start_date != null ||
+            this.state.project.end_date != null ||
+            this.state.project.location != null) && (
+            <View style={styles.separator} />
+          )}
+
+          {(this.state.project.start_date != null ||
+            this.state.project.end_date != null ||
+            this.state.project.location != null) && (
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "flex-start",
+                paddingBottom: 10
+              }}
+            >
+              <View
+                style={{
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="information" size={24} color={"#4C6873"} />
+                <Text
+                  style={{
+                    paddingLeft: 5,
+                    color: "#4C6873",
+                    fontWeight: "bold"
+                  }}
+                >
+                  Extra informatie
+                </Text>
+              </View>
+              {this.state.project.location != null && (
+                <View
+                  style={{
+                    paddingHorizontal: 15,
+                    paddingVertical: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: Dimensions.get("window").width
+                  }}
+                >
+                  <Icon name="map-marker" size={24} color={"#4C6873"} />
+                  <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                    {this.state.project.location}
+                  </Text>
+                </View>
+              )}
+              {this.state.project.start_date != null && (
+                <View
+                  style={{
+                    paddingHorizontal: 15,
+                    paddingVertical: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: Dimensions.get("window").width
+                  }}
+                >
+                  <Icon name="calendar-range" size={24} color={"#4C6873"} />
+                  <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                    {"Begin datum: " +
+                      this.state.project.start_date.substring(0, 10)}
+                  </Text>
+                </View>
+              )}
+              {this.state.project.end_date != null && (
+                <View
+                  style={{
+                    paddingHorizontal: 15,
+                    paddingVertical: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: Dimensions.get("window").width
+                  }}
+                >
+                  <Icon name="calendar-range" size={24} color={"#4C6873"} />
+                  <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
+                    {"Eind datum: " +
+                      this.state.project.end_date.substring(0, 10)}
+                  </Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {this.state.projectMembers.length > 0 && (
+            <View style={styles.separator} />
+          )}
+          {this.state.projectMembers.length > 0 && (
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "flex-start",
+                paddingBottom: 10
+              }}
+            >
+              <View
+                style={{
+                  paddingVertical: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: Dimensions.get("window").width
+                }}
+              >
+                <Icon name="account-group" size={24} color={"#4C6873"} />
+                <Text
+                  style={{
+                    paddingLeft: 5,
+                    color: "#4C6873",
+                    fontWeight: "bold"
+                  }}
+                >
+                  {"Deelnemers: " + this.state.projectMembers.length}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={styles.personList}
+                onPress={() =>
+                  Router.goTo(
+                    this.props.navigation,
+                    "ProjectStack",
+                    "ProjectMembersScreen",
+                    { persons: this.state.projectMembers }
+                  )
+                }
+              >
+                <FlatList
+                  data={this.state.projectMembers}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <View style={styles.personCard}>
+                      <CachedImage
+                        source={{
+                          uri: Api.getFileUrl(item.profilePhotoPath)
+                        }}
+                        resizeMode="cover"
+                        style={{ width: 35, height: 35, borderRadius: 17.5 }}
+                      />
+                    </View>
+                  )}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+
+          <View style={styles.separator} />
 
           <View
             style={{
@@ -571,7 +699,7 @@ export default class DetailTab extends Component {
                   onPress={() => this.unfollowProject()}
                 >
                   <Icon
-                    name="bookmark-plus-outline"
+                    name="bookmark-minus-outline"
                     size={24}
                     color={"white"}
                   />
@@ -580,136 +708,6 @@ export default class DetailTab extends Component {
               </View>
             )}
           </View>
-          {this.state.projectMembers.length > 0 && (
-            <View style={styles.separator} />
-          )}
-          <View
-            style={{
-              paddingHorizontal: 15,
-              paddingTop: 15,
-              flexDirection: "row",
-              alignItems: "center",
-              width: Dimensions.get("window").width
-            }}
-          >
-            <Icon name="heart-outline" size={24} color={"#4C6873"} />
-            <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
-              {this.state.project.like_count} likes
-            </Text>
-          </View>
-          <View
-            style={{
-              paddingHorizontal: 15,
-              flexDirection: "row",
-              alignItems: "center",
-              width: Dimensions.get("window").width
-            }}
-          >
-            <Icon name="account-outline" size={24} color={"#4C6873"} />
-            <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
-              {this.state.project.follower_count} volgers
-            </Text>
-          </View>
-          <View
-            style={{
-              paddingHorizontal: 15,
-              flexDirection: "row",
-              alignItems: "center",
-              width: Dimensions.get("window").width
-            }}
-          >
-            <Icon name="map-marker" size={24} color={"#4C6873"} />
-            <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
-              {this.state.project.location}
-            </Text>
-          </View>
-
-          {this.state.project.start_date != null &&
-            this.state.project.end_date != null && (
-              <View
-                style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  width: Dimensions.get("window").width
-                }}
-              >
-                <Icon name="calendar-range" size={24} color={"#4C6873"} />
-                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
-                  {this.state.project.start_date.substring(0, 10) +
-                    " / " +
-                    this.state.project.end_date.substring(0, 10)}
-                </Text>
-              </View>
-            )}
-          {this.state.project.start_date == null &&
-            this.state.project.end_date != null && (
-              <View
-                style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  width: Dimensions.get("window").width
-                }}
-              >
-                <Icon name="calendar-range" size={24} color={"#4C6873"} />
-                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
-                  {"Eind datum: " +
-                    this.state.project.end_date.substring(0, 10)}
-                </Text>
-              </View>
-            )}
-          {this.state.project.start_date != null &&
-            this.state.project.end_date == null && (
-              <View
-                style={{
-                  paddingHorizontal: 15,
-                  paddingVertical: 10,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  width: Dimensions.get("window").width
-                }}
-              >
-                <Icon name="calendar-range" size={24} color={"#4C6873"} />
-                <Text style={{ paddingLeft: 5, color: "#4C6873" }}>
-                  {"Begin datum: " +
-                    this.state.project.start_date.substring(0, 10)}
-                </Text>
-              </View>
-            )}
-
-          {this.state.projectMembers.length > 0 && (
-            <TouchableOpacity
-              style={styles.personList}
-              onPress={() =>
-                Router.goTo(
-                  this.props.navigation,
-                  "ProjectStack",
-                  "ProjectMembersScreen",
-                  { persons: this.state.projectMembers }
-                )
-              }
-            >
-              <FlatList
-                data={this.state.projectMembers}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <View style={styles.personCard}>
-                    <CachedImage
-                      source={{
-                        uri: Api.getFileUrl(item.profilePhotoPath)
-                      }}
-                      resizeMode="cover"
-                      style={{ width: 35, height: 35, borderRadius: 100 }}
-                    />
-                  </View>
-                )}
-              />
-            </TouchableOpacity>
-          )}
 
           {this.state.tags.length > 0 && <View style={styles.separator} />}
           {this.state.tags.length > 0 && (
@@ -722,7 +720,6 @@ export default class DetailTab extends Component {
             >
               <View
                 style={{
-                  paddingHorizontal: 15,
                   paddingVertical: 10,
                   flexDirection: "row",
                   alignItems: "center",

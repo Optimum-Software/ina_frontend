@@ -72,7 +72,7 @@ export default class Home extends Component {
         if (url) {
           ProjectApi.getProjectById(
             this.state.userId,
-            url.substring(Platform.OS === "android" ? 27 : 6, url.length)
+            url.substring(Platform.OS === "android" ? 29 : 6, url.length)
           ).then(result => {
             Router.goTo(
               this.props.navigation,
@@ -127,15 +127,21 @@ export default class Home extends Component {
   }
 
   _handleOpenURL(event) {
-    ProjectApi.getProjectById(
-      this.state.userId,
-      event.url.substring(Platform.OS === "android" ? 27 : 6, event.url.length)
-    ).then(result => {
-      Router.goToDeeplink(
-        "ProjectStack",
-        "ProjectDetailScreen",
-        result["project"]
-      );
+    User.getUserId().then(id => {
+      ProjectApi.getProjectById(
+        id,
+        event.url.substring(
+          Platform.OS === "android" ? 29 : 6,
+          event.url.length
+        )
+      ).then(result => {
+        console.log(result['project'])
+        Router.goToDeeplink(
+          "ProjectStack",
+          "ProjectDetailScreen",
+          result["project"]
+        );
+      });
     });
   }
 
@@ -260,7 +266,7 @@ export default class Home extends Component {
             }}
           />
           <ScrollView
-            style={{backgroundColor: "#00a6ff"}}
+            style={{ backgroundColor: "#00a6ff" }}
             refreshControl={
               <RefreshControl
                 colors={["#00a6ff"]}
@@ -269,8 +275,7 @@ export default class Home extends Component {
               />
             }
           >
-
-            <View style={{backgroundColor: 'white'}}>
+            <View style={{ backgroundColor: "white" }}>
               {this.state.loggedIn == true && (
                 <View style={styles.welcomeContainer}>
                   <ImageBackground
@@ -307,9 +312,16 @@ export default class Home extends Component {
                   </ImageBackground>
                 </View>
               )}
-              {(this.state.topics.length < 1 && this.state.projects.length < 1) &&
-              <View style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height, backgroundColor: 'white'}}/>
-            }
+              {this.state.topics.length < 1 &&
+                this.state.projects.length < 1 && (
+                  <View
+                    style={{
+                      width: Dimensions.get("window").width,
+                      height: Dimensions.get("window").height,
+                      backgroundColor: "white"
+                    }}
+                  />
+                )}
 
               {this.state.topics.length > 0 && (
                 <Text style={styles.title}>Trending Topics</Text>
@@ -359,7 +371,7 @@ export default class Home extends Component {
                 }}
               />
             </View>
-            <View style={{backgroundColor: 'white'}}>
+            <View style={{ backgroundColor: "white" }}>
               {this.state.projects.length > 0 && (
                 <Text style={[styles.title, { marginTop: 10 }]}>
                   Trending Projecten
@@ -385,9 +397,9 @@ export default class Home extends Component {
                             id: item.id,
                             name: item.name,
                             desc: item.desc,
-                            start_date: item.start_date,
-                            end_date: item.end_date,
-                            created_at: item.created_at,
+                            start_date: item.startDate,
+                            end_date: item.endDate,
+                            created_at: item.createdAt,
                             like_count: item.likeCount,
                             follower_count: item.followerCount,
                             location: item.location,
@@ -571,7 +583,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     fontSize: 20,
     padding: 15,
     margin: 10

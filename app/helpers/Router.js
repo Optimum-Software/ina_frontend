@@ -55,6 +55,7 @@ class Router {
   }
 
   goToDeeplink(stackName, screenName, parameters) {
+    dispatcherDeeplink.dispatch(StackActions.popToTop());
     dispatcherDeeplink.dispatch(
       NavigationActions.navigate({
         routeName: stackName,

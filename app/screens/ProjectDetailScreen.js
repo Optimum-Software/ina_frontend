@@ -315,6 +315,26 @@ export default class ProjectDetail extends Component {
     }
   };
 
+  async share() {
+    try {
+      const result = await Share.share({
+        message: "https://delen.ina-app.nl/?id=" + this.state.project.id
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
   render() {
     let { width, height } = Dimensions.get("window");
     const sliderWidth = width;
@@ -347,12 +367,12 @@ export default class ProjectDetail extends Component {
                 leftElement={"arrow-left"}
                 rightElement={[this.state.notiIcon, "share-variant"]}
                 onLeftElementPress={() => {
-                  this.goBack()
+                  this.goBack();
                 }}
                 onRightElementPress={action => {
                   if (action.action == "share-variant") {
                     //share
-                    console.log("share");
+                    this.share();
                   } else {
                     this.setCanNotificate();
                   }
@@ -374,7 +394,8 @@ export default class ProjectDetail extends Component {
                   );
                 }}
                 onRightElementPress={() => {
-                  //share
+                  this.share();
+
                 }}
               />
             )}

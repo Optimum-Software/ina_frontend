@@ -73,7 +73,7 @@ class ProjectCreateThirdScreen extends Component {
       (error, res) => {
         try {
           let file = {
-            uri: res.uri,
+            uri: (Platform.OS==='android') ? res.uri : res.uri.replace('file://', ''),
             name: res.fileName,
             type: res.type,
             size: res.fileSize

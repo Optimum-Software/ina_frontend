@@ -32,7 +32,7 @@
   <action android:name="android.intent.action.VIEW" />
   <category android:name="android.intent.category.DEFAULT" />
   <category android:name="android.intent.category.BROWSABLE" />
-  <data android:scheme="https" android:host="app.ina-app.nl" /> // A
+  <data android:scheme="https" android:host="delen.ina-app.nl" /> // A
 </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />

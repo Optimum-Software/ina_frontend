@@ -21,7 +21,7 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="highres512" translatesAutoresizingMaskIntoConstraints="NO" id="Gr6-Sc-Jpb">
-                        <rect key="frame" x="86.53867791842481" y="234.50632911392393" width="200.00000000000003" height="200.00000000000003"/>
+                        <rect key="frame" x="87" y="229" width="200" height="200"/>
                     </imageView>
                 </subviews>
                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -30,6 +30,7 @@
                     <constraint firstItem="Gr6-Sc-Jpb" firstAttribute="centerY" secondItem="uWM-Ou-x6Z" secondAttribute="centerY" id="vtL-R4-AQ9"/>
                 </constraints>
             </view>
+            <point key="canvasLocation" x="56.799999999999997" y="52.623688155922046"/>
         </viewController>
     </objects>
     <resources>

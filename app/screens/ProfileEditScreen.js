@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
   profilePhoto: {
     height: 150,
     width: 150,
-    borderRadius: 200,
+    borderRadius: 75,
     marginBottom: "5%"
   },
 
