@@ -347,10 +347,7 @@ export default class ProjectDetail extends Component {
                 leftElement={"arrow-left"}
                 rightElement={[this.state.notiIcon, "share-variant"]}
                 onLeftElementPress={() => {
-                  Router.goBack(
-                    this.props.navigation,
-                    this.props.navigation.getParam("differentStack", false)
-                  );
+                  this.goBack()
                 }}
                 onRightElementPress={action => {
                   if (action.action == "share-variant") {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -74,13 +74,13 @@ export default class ProfileScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
-        />
-        <View style={{ height: Header.HEIGHT }}>
-          <Toolbar
+        />          <Toolbar
             centerElement="Profiel"
             iconSet="MaterialCommunityIcons"
             leftElement={"chevron-left"}
@@ -89,7 +89,6 @@ export default class ProfileScreen extends Component {
               Router.goTo(this.props.navigation, "LoggedIn", "LoggedIn");
             }}
           />
-        </View>
         <ScrollView style={{ flex: 1 }}>
           <CachedImage
             source={this.state.profilePhoto}
@@ -97,7 +96,7 @@ export default class ProfileScreen extends Component {
           />
           <View>
             <CachedImage
-              source={line}
+              source={line2}
               resizeMode="cover"
               style={{ width: "100%", height: 3 }}
             />
@@ -135,6 +134,7 @@ export default class ProfileScreen extends Component {
           </View>
         </ScrollView>
       </SafeAreaView>
+      </Fragment>
     );
   }
 }

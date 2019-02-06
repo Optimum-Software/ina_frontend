@@ -269,8 +269,9 @@ export default class Home extends Component {
               />
             }
           >
+
             <View style={{backgroundColor: 'white'}}>
-              {this.state.loggedIn && (
+              {this.state.loggedIn == true && (
                 <View style={styles.welcomeContainer}>
                   <ImageBackground
                     style={styles.welcomeBackground}
@@ -306,6 +307,9 @@ export default class Home extends Component {
                   </ImageBackground>
                 </View>
               )}
+              {(this.state.topics.length < 1 && this.state.projects.length < 1) &&
+              <View style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height, backgroundColor: 'white'}}/>
+            }
 
               {this.state.topics.length > 0 && (
                 <Text style={styles.title}>Trending Topics</Text>

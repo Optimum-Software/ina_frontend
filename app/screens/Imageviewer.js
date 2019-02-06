@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Image, BackHandler } from "react-native";
+import { View, Image, BackHandler, SafeAreaView } from "react-native";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
 
@@ -24,6 +24,7 @@ class Imageviewer extends Component {
 
   render() {
     return (
+      <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
       <View
         style={{
           backgroundColor: "black",
@@ -57,6 +58,7 @@ class Imageviewer extends Component {
           />
         </View>
       </View>
+      </SafeAreaView>
     );
   }
 }

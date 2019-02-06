@@ -47,7 +47,7 @@ class ProjectCreateFirstScreen extends Component {
 
   pickImageHandler() {
     ImagePicker.showImagePicker(
-      { title: "Kies een omslagfoto voor het project" },
+      { title: "Kies een omslagfoto voor het project", storageOptions: { skipBackup: true, path: 'images', cameraRoll: true, waitUntilSaved: true } },
       res => {
         if (res.didCancel) {
           console.log("User cancelled!");
@@ -55,7 +55,7 @@ class ProjectCreateFirstScreen extends Component {
           console.log("Error", res.error);
         } else {
           this.setState({
-            thumbnailUri: res.uri,
+            thumbnailUri: (Platform.OS==='android') ? res.uri : res.uri.replace('file://', ''),
             thumbnailName: res.fileName,
             imgPicked: true,
             thumbnailError: ""
@@ -140,7 +140,7 @@ class ProjectCreateFirstScreen extends Component {
 
               <ImageBackground
                 imageStyle={{
-                  borderRadius: 100,
+                  borderRadius: Dimensions.get('window').width * 0.15,
                   width: Dimensions.get('window').width * 0.3,
                   height: Dimensions.get('window').width * 0.3,
                 }}
@@ -219,14 +219,14 @@ const styles = StyleSheet.create({
   imgPickContainer: {
     height: Dimensions.get('window').width * 0.3,
     width: Dimensions.get('window').width * 0.3,
-    borderRadius: 100,
+    borderRadius: Dimensions.get('window').width * 0.15,
     backgroundColor: "#dee5e8",
     alignItems: "center",
     justifyContent: "center"
   },
   imgBackground: {
 
-    borderRadius: Dimensions.get('window').width * 0.2,
+    borderRadius: Dimensions.get('window').width * 0.15,
     width: Dimensions.get('window').width * 0.3,
     height: Dimensions.get('window').width * 0.3,
     resizeMode: "cover",
