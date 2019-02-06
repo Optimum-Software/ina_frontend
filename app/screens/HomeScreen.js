@@ -38,6 +38,7 @@ import line2 from "../assets/images/line3.png";
 import RNFetchBlob from "react-native-fetch-blob";
 import OneSignal from "react-native-onesignal";
 import ProjectComponent from "../components/ProjectComponent";
+import { NavigationEvents } from 'react-navigation';
 
 const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
 
@@ -188,13 +189,15 @@ export default class Home extends Component {
   }
 
   getUserIfLoggedIn() {
-    if (this.state.userId != null) {
+    User.getUserId().then(id => {
+
+      console.log("EOEOEOEOEOEO")
       dateNow = new Date().toLocaleDateString("nl-NL", {
         weekday: "long",
         day: "numeric",
         month: "long"
       });
-      Api.callApiGet("getUserById/" + this.state.userId).then(res => {
+      Api.callApiGet("getUserById/" + id).then(res => {
         if (res["bool"]) {
           this.setState({
             user: res["user"],
@@ -203,9 +206,7 @@ export default class Home extends Component {
           });
         }
       });
-    } else {
-      this.setState({ loggedIn: false, user: null, dateNow: null });
-    }
+    } );
   }
 
   goToProjectFilterByTag(tag) {
