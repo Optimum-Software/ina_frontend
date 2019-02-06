@@ -260,7 +260,7 @@ export default class Home extends Component {
             }}
           />
           <ScrollView
-            style={{backgroundColor: "#00a6ff"}}
+            style={{ backgroundColor: "#00a6ff" }}
             refreshControl={
               <RefreshControl
                 colors={["#00a6ff"]}
@@ -269,7 +269,7 @@ export default class Home extends Component {
               />
             }
           >
-            <View style={{backgroundColor: 'white'}}>
+            <View style={{ backgroundColor: "white" }}>
               {this.state.loggedIn && (
                 <View style={styles.welcomeContainer}>
                   <ImageBackground
@@ -355,7 +355,7 @@ export default class Home extends Component {
                 }}
               />
             </View>
-            <View style={{backgroundColor: 'white'}}>
+            <View style={{ backgroundColor: "white" }}>
               {this.state.projects.length > 0 && (
                 <Text style={[styles.title, { marginTop: 10 }]}>
                   Trending Projecten
@@ -387,7 +387,7 @@ export default class Home extends Component {
                             like_count: item.likeCount,
                             follower_count: item.followerCount,
                             location: item.location,
-                            thumbnail: Api.getFileUrl(item.thumbnail),
+                            thumbnail: item.thumbnail,
                             creator: item.creator,
                             images: item.images,
                             files: item.files,
@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     fontSize: 20,
     padding: 15,
     margin: 10

@@ -152,7 +152,7 @@ export default class ProjectOverview extends Component {
                               like_count: item.likeCount,
                               follower_count: item.followerCount,
                               location: item.location,
-                              thumbnail: Api.getFileUrl(item.thumbnail),
+                              thumbnail: item.thumbnail,
                               creator: item.creator,
                               images: item.images,
                               files: item.files,
