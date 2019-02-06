@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import {
   StyleSheet,
@@ -73,7 +73,7 @@ class ProjectCreateThirdScreen extends Component {
       (error, res) => {
         try {
           let file = {
-            uri: res.uri,
+            uri: (Platform.OS==='android') ? res.uri : res.uri.replace('file://', ''),
             name: res.fileName,
             type: res.type,
             size: res.fileSize
@@ -107,11 +107,13 @@ class ProjectCreateThirdScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <StatusBar
-          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-          barStyle="light-content"
-        />
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            barStyle="light-content"
+          />
         <Toolbar
           centerElement="Project aanmaken 3/3"
           iconSet="MaterialCommunityIcons"
@@ -176,7 +178,8 @@ class ProjectCreateThirdScreen extends Component {
             <Text style={styles.buttonTextStyle}>Maak project</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+        </Fragment>
     );
   }
 }

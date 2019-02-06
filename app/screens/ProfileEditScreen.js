@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -110,7 +110,9 @@ export default class ProfileEditScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
@@ -271,6 +273,7 @@ export default class ProfileEditScreen extends Component {
           </View>
         )}
       </SafeAreaView>
+      </Fragment>
     );
   }
 }
@@ -307,7 +310,7 @@ const styles = StyleSheet.create({
   profilePhoto: {
     height: 150,
     width: 150,
-    borderRadius: 200,
+    borderRadius: 75,
     marginBottom: "5%"
   },
 

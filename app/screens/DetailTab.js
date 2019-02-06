@@ -386,10 +386,10 @@ export default class DetailTab extends Component {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
-                      Linking.canOpenURL(Api.getFileUrl(item.path)).then(
+                      Linking.canOpenURL('https://file.ina-app.nl/?id=' + (item.id)).then(
                         supported => {
                           if (supported) {
-                            Linking.openURL(Api.getFileUrl(item.path));
+                            Linking.openURL('https://file.ina-app.nl/?id=' + (item.id));
                           } else {
                             console.log(
                               "Don't know how to open URI: " +
@@ -563,7 +563,7 @@ export default class DetailTab extends Component {
                           uri: Api.getFileUrl(item.profilePhotoPath)
                         }}
                         resizeMode="cover"
-                        style={{ width: 35, height: 35, borderRadius: 100 }}
+                        style={{ width: 35, height: 35, borderRadius: 17.5 }}
                       />
                     </View>
                   )}

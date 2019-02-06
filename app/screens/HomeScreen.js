@@ -75,7 +75,7 @@ export default class Home extends Component {
         if (url) {
           ProjectApi.getProjectById(
             this.state.userId,
-            url.substring(Platform.OS === "android" ? 27 : 6, url.length)
+            url.substring(Platform.OS === "android" ? 29 : 6, url.length)
           ).then(result => {
             Router.goTo(
               this.props.navigation,
@@ -129,15 +129,21 @@ export default class Home extends Component {
   }
 
   _handleOpenURL(event) {
-    ProjectApi.getProjectById(
-      this.state.userId,
-      event.url.substring(Platform.OS === "android" ? 27 : 6, event.url.length)
-    ).then(result => {
-      Router.goToDeeplink(
-        "ProjectStack",
-        "ProjectDetailScreen",
-        result["project"]
-      );
+    User.getUserId().then(id => {
+      ProjectApi.getProjectById(
+        id,
+        event.url.substring(
+          Platform.OS === "android" ? 29 : 6,
+          event.url.length
+        )
+      ).then(result => {
+        console.log(result['project'])
+        Router.goToDeeplink(
+          "ProjectStack",
+          "ProjectDetailScreen",
+          result["project"]
+        );
+      });
     });
   }
 
@@ -273,7 +279,7 @@ export default class Home extends Component {
             }
           >
             <View style={{ backgroundColor: "white" }}>
-              {this.state.loggedIn && (
+              {this.state.loggedIn == true && (
                 <View style={styles.welcomeContainer}>
                   <ImageBackground
                     style={styles.welcomeBackground}
@@ -309,6 +315,16 @@ export default class Home extends Component {
                   </ImageBackground>
                 </View>
               )}
+              {this.state.topics.length < 1 &&
+                this.state.projects.length < 1 && (
+                  <View
+                    style={{
+                      width: Dimensions.get("window").width,
+                      height: Dimensions.get("window").height,
+                      backgroundColor: "white"
+                    }}
+                  />
+                )}
 
               {this.state.topics.length > 0 && (
                 <Text style={styles.title}>Trending Topics</Text>

@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     marginLeft: "5%",
     width: 75,
     height: 75,
-    borderRadius: 100,
+    borderRadius: 32.5,
     backgroundColor: "white",
     marginRight: "10%",
     marginVertical: 5
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     marginLeft: "5%",
     width: 75,
     height: 75,
-    borderRadius: 5,
+    borderRadius: 32.5,
     backgroundColor: "white",
     marginRight: "10%",
     marginVertical: 5

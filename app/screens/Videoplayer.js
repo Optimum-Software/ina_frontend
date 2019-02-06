@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, BackHandler } from "react-native";
+import { View, Text, BackHandler, SafeAreaView } from "react-native";
 import VideoPlayer from "react-native-video-player";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
@@ -24,7 +24,11 @@ class Videoplayer extends Component {
   }
 
   render() {
+    console.log(encodeURI(this.props.navigation
+      .getParam("url", "")
+      .replace("videoThumbnail_", "")));
     return (
+      <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>
       <View
         style={{
           backgroundColor: "black",
@@ -48,16 +52,16 @@ class Videoplayer extends Component {
         >
           <VideoPlayer
             video={{
-              uri: this.props.navigation
+              uri: encodeURI(this.props.navigation
                 .getParam("url", "")
-                .replace(" ", "%20")
-                .replace("videoThumbnail_", "")
+                .replace("videoThumbnail_", ""))
             }}
             ref={r => (this.player = r)}
             autoplay={true}
           />
         </View>
       </View>
+      </SafeAreaView>
     );
   }
 }

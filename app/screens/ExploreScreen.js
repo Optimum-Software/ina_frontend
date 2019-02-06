@@ -209,27 +209,53 @@ export default class ExploreScreen extends React.Component {
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-          <StatusBar
-            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-            barStyle="light-content"
-          />
-          <Toolbar
-            centerElement="Ontdekken"
-            iconSet="MaterialCommunityIcons"
-            leftElement={"arrow-left"}
-            onLeftElementPress={() => {
-              Router.goBack(this.props.navigation);
+        <StatusBar
+          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+          barStyle="light-content"
+        />
+        <Toolbar
+          centerElement="Ontdekken"
+          iconSet="MaterialCommunityIcons"
+          leftElement={"arrow-left"}
+          onLeftElementPress={() => {
+            Router.goBack(this.props.navigation);
+          }}
+        />
+        {this.state.cards.length < 1 && <View
+          style={{
+            height: Dimensions.get("window").height,
+            width: Dimensions.get("window").width,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "700",
+              fontSize: 18,
+              color: "gray",
+              alignSelf: "center"
             }}
-          />
-
-          <CardStack
-            style={styles.container}
-            verticalSwipe={false}
-            onSwipeStart={e => console.log(e)}
-            swipeRight={() => this.setState({ right: true })}
-            horizontalSwipe={!this.state.showDetails ? true : false}
-            renderNoMoreCards={() => (
-              <View
+          >
+            Er zijn geen nieuwe projecten
+          </Text>
+        </View>}
+        <CardStack
+          style={styles.container}
+          verticalSwipe={false}
+          onSwipeStart={e => console.log(e)}
+          swipeRight={() => this.setState({ right: true })}
+          horizontalSwipe={!this.state.showDetails ? true : false}
+          renderNoMoreCards={() => (
+            <View
+              style={{
+                height: Dimensions.get("window").height,
+                width: Dimensions.get("window").width,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Text
                 style={{
                   height: Dimensions.get("window").height,
                   width: Dimensions.get("window").width,

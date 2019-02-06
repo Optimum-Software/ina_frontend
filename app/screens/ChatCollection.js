@@ -147,9 +147,9 @@ export default class ChatCollection extends Component {
                           uri: item.photo
                         }}
                         resizeMode="cover"
-                        style={{ width: 35, height: 35, borderRadius: 100 }}
+                        style={{ width: 35, height: 35, borderRadius: 17.5 }}
                       />}
-                        
+
                       chevron={
                         <Icon
                           name="chevron-right"

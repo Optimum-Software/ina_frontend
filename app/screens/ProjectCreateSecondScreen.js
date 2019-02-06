@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import {
   StyleSheet,
@@ -111,7 +111,13 @@ class ProjectCreateSecondScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            barStyle="light-content"
+          />
         <StatusBar
           backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
           barStyle="light-content"
@@ -204,7 +210,8 @@ class ProjectCreateSecondScreen extends Component {
             <Text style={styles.buttonTextStyle}>Verder</Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
+        </SafeAreaView>
+        </Fragment>
     );
   }
 }
