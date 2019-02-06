@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import {
   StyleSheet,
@@ -115,11 +115,13 @@ class ProjectCreateFirstScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <StatusBar
-          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-          barStyle="light-content"
-        />
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            barStyle="light-content"
+          />
         <Toolbar
           centerElement="Project aanmaken 1/3"
           iconSet="MaterialCommunityIcons"
@@ -128,24 +130,28 @@ class ProjectCreateFirstScreen extends Component {
         />
         <ScrollView style={{ height: "85%", width: "100%" }}>
           <View style={styles.inputFieldContainer}>
+
+                      <Text style={styles.thumbnailLabelStyle}>OMSLAGFOTO</Text>
+                      <Text style={{ color: "red" }}>{this.state.thumbnailError}</Text>
             <TouchableOpacity
               style={styles.imgPickContainer}
               onPress={() => this.pickImageHandler()}
             >
+
               <ImageBackground
                 imageStyle={{
                   borderRadius: 100,
-                  width: 150,
-                  height: 150
+                  width: Dimensions.get('window').width * 0.3,
+                  height: Dimensions.get('window').width * 0.3,
                 }}
                 style={styles.imgBackground}
-                source={{ uri: this.state.thumbnailUri }}
+                source={{ uri: this.state.thumbnailUri == null ? "" : this.state.thumbnailUri }}
               >
                 {!this.state.imgPicked && (
                   <Icon
                     name="image-plus"
                     type="material-community"
-                    size={50}
+                    size={Dimensions.get('window').width * 0.15}
                     color="#FFFFFF"
                     underlayColor="#FFFFFF"
                   />
@@ -153,8 +159,6 @@ class ProjectCreateFirstScreen extends Component {
               </ImageBackground>
             </TouchableOpacity>
 
-            <Text style={styles.thumbnailLabelStyle}>OMSLAGFOTO</Text>
-            <Text style={{ color: "red" }}>{this.state.thumbnailError}</Text>
 
             <Text style={styles.labelStyle}>TITEL</Text>
             <Input
@@ -185,22 +189,16 @@ class ProjectCreateFirstScreen extends Component {
             />
             <Text style={{ color: "red" }}>{this.state.descError}</Text>
           </View>
-        </ScrollView>
-
-        <View
-          style={{
-            width: "100%",
-            height: "10%"
-          }}
-        >
           <TouchableOpacity
             style={styles.buttonStyle}
             onPress={() => this.goToNextPart()}
           >
             <Text style={styles.buttonTextStyle}>Verder</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
+
       </SafeAreaView>
+      </Fragment>
     );
   }
 }
@@ -219,18 +217,18 @@ const styles = StyleSheet.create({
   },
 
   imgPickContainer: {
-    height: 150,
-    width: 150,
+    height: Dimensions.get('window').width * 0.3,
+    width: Dimensions.get('window').width * 0.3,
     borderRadius: 100,
     backgroundColor: "#dee5e8",
-    marginBottom: "10%",
     alignItems: "center",
     justifyContent: "center"
   },
   imgBackground: {
-    borderRadius: 100,
-    width: "100%",
-    height: "100%",
+
+    borderRadius: Dimensions.get('window').width * 0.2,
+    width: Dimensions.get('window').width * 0.3,
+    height: Dimensions.get('window').width * 0.3,
     resizeMode: "cover",
     alignItems: "center",
     justifyContent: "center"
@@ -254,6 +252,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   buttonStyle: {
+    marginBottom: 50,
     width: "50%",
     alignSelf: "center",
     backgroundColor: "#00a6ff",
