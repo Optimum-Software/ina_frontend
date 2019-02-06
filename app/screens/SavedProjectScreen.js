@@ -122,43 +122,45 @@ export default class SavedProjects extends Component {
     const membersRoute = () => {
       return (
         <View>
-          {this.state.memberedProjects.length > 0 && !this.state.loading && (
-            <FlatList
-              data={this.state.memberedProjects}
-              onEndReached={() => this.handelEnd()}
-              refreshing={this.state.refreshingMembered}
-              onRefresh={() => this.onRefreshMembered()}
-              numColumns={2}
-              renderItem={({ item, index }) => 
-              <ProjectComponent 
-                  item={item} 
-                  index={index} 
-                  projects={this.state.memberedProjects} 
-                  dispatcher={this.props.navigation}
-                  differentStack={true}
+          {this.state.memberedProjects.length > 0 &&
+            !this.state.loading && (
+              <FlatList
+                data={this.state.memberedProjects}
+                onEndReached={() => this.handelEnd()}
+                refreshing={this.state.refreshingMembered}
+                onRefresh={() => this.onRefreshMembered()}
+                numColumns={2}
+                renderItem={({ item, index }) => (
+                  <ProjectComponent
+                    item={item}
+                    index={index}
+                    projects={this.state.memberedProjects}
+                    dispatcher={this.props.navigation}
+                    differentStack={true}
                   />
-                }
-            />
-          )}
-          {this.state.memberedProjects.length == 0 && !this.state.loading && (
-            <View style={styles.emptyBox}>
-              <Text style={styles.emptyText}>
-                Er zijn geen projecten gevonden waar jij aan deelneemt
-              </Text>
-              <Ripple
-                rippleColor="#00a6ff"
-                style={styles.refreshButton}
-                onPress={() => this.onRefreshMembered()}
-              >
-                <Icon
-                  name="refresh"
-                  type="font-awesome"
-                  size={25}
-                  color="#FFF"
-                />
-              </Ripple>
-            </View>
-          )}
+                )}
+              />
+            )}
+          {this.state.memberedProjects.length == 0 &&
+            !this.state.loading && (
+              <View style={styles.emptyBox}>
+                <Text style={styles.emptyText}>
+                  Er zijn geen projecten gevonden waar jij aan deelneemt
+                </Text>
+                <Ripple
+                  rippleColor="#00a6ff"
+                  style={styles.refreshButton}
+                  onPress={() => this.onRefreshMembered()}
+                >
+                  <Icon
+                    name="refresh"
+                    type="font-awesome"
+                    size={25}
+                    color="#FFF"
+                  />
+                </Ripple>
+              </View>
+            )}
           {this.state.loading && (
             <View
               style={{
@@ -177,43 +179,45 @@ export default class SavedProjects extends Component {
     const followedRoute = () => {
       return (
         <View>
-          {this.state.followedProjects.length > 0 && !this.state.loading && (
-            <FlatList
-              data={this.state.followedProjects}
-              onEndReached={() => this.handelEnd()}
-              refreshing={this.state.refreshingFollowed}
-              onRefresh={() => this.onRefreshFollowed()}
-              numColumns={2}
-              renderItem={({ item, index }) => 
-              <ProjectComponent 
-                  item={item} 
-                  index={index} 
-                  projects={this.state.followedProjects} 
-                  dispatcher={this.props.navigation}
-                  differentStack={true}
+          {this.state.followedProjects.length > 0 &&
+            !this.state.loading && (
+              <FlatList
+                data={this.state.followedProjects}
+                onEndReached={() => this.handelEnd()}
+                refreshing={this.state.refreshingFollowed}
+                onRefresh={() => this.onRefreshFollowed()}
+                numColumns={2}
+                renderItem={({ item, index }) => (
+                  <ProjectComponent
+                    item={item}
+                    index={index}
+                    projects={this.state.followedProjects}
+                    dispatcher={this.props.navigation}
+                    differentStack={true}
                   />
-                }
-            />
-          )}
-          {this.state.followedProjects.length == 0 && !this.state.loading && (
-            <View style={styles.emptyBox}>
-              <Text style={styles.emptyText}>
-                Er zijn geen projecten gevonden die jij volgt
-              </Text>
-              <Ripple
-                rippleColor="#00a6ff"
-                style={styles.refreshButton}
-                onPress={() => this.onRefreshFollowed()}
-              >
-                <Icon
-                  name="refresh"
-                  type="font-awesome"
-                  size={25}
-                  color="#FFF"
-                />
-              </Ripple>
-            </View>
-          )}
+                )}
+              />
+            )}
+          {this.state.followedProjects.length == 0 &&
+            !this.state.loading && (
+              <View style={styles.emptyBox}>
+                <Text style={styles.emptyText}>
+                  Er zijn geen projecten gevonden die jij volgt
+                </Text>
+                <Ripple
+                  rippleColor="#00a6ff"
+                  style={styles.refreshButton}
+                  onPress={() => this.onRefreshFollowed()}
+                >
+                  <Icon
+                    name="refresh"
+                    type="font-awesome"
+                    size={25}
+                    color="#FFF"
+                  />
+                </Ripple>
+              </View>
+            )}
           {this.state.loading && (
             <View
               style={{
@@ -232,43 +236,45 @@ export default class SavedProjects extends Component {
     const likedRoute = () => {
       return (
         <View>
-          {this.state.likedProjects.length > 0 && !this.state.loading && (
-            <FlatList
-              data={this.state.likedProjects}
-              onEndReached={() => this.handelEnd()}
-              refreshing={this.state.refreshingLiked}
-              onRefresh={() => this.onRefreshLiked()}
-              numColumns={2}
-              renderItem={({ item, index }) => 
-              <ProjectComponent 
-                  item={item} 
-                  index={index} 
-                  projects={this.state.likedProjects} 
-                  dispatcher={this.props.navigation}
-                  differentStack={true}
+          {this.state.likedProjects.length > 0 &&
+            !this.state.loading && (
+              <FlatList
+                data={this.state.likedProjects}
+                onEndReached={() => this.handelEnd()}
+                refreshing={this.state.refreshingLiked}
+                onRefresh={() => this.onRefreshLiked()}
+                numColumns={2}
+                renderItem={({ item, index }) => (
+                  <ProjectComponent
+                    item={item}
+                    index={index}
+                    projects={this.state.likedProjects}
+                    dispatcher={this.props.navigation}
+                    differentStack={true}
                   />
-                }
-            />
-          )}
-          {this.state.likedProjects.length == 0 && !this.state.loading && (
-            <View style={styles.emptyBox}>
-              <Text style={styles.emptyText}>
-                Er zijn geen projecten gevonden die jij leuk vindt
-              </Text>
-              <Ripple
-                rippleColor="#00a6ff"
-                style={styles.refreshButton}
-                onPress={() => this.onRefreshLiked()}
-              >
-                <Icon
-                  name="refresh"
-                  type="font-awesome"
-                  size={25}
-                  color="#FFF"
-                />
-              </Ripple>
-            </View>
-          )}
+                )}
+              />
+            )}
+          {this.state.likedProjects.length == 0 &&
+            !this.state.loading && (
+              <View style={styles.emptyBox}>
+                <Text style={styles.emptyText}>
+                  Er zijn geen projecten gevonden die jij leuk vindt
+                </Text>
+                <Ripple
+                  rippleColor="#00a6ff"
+                  style={styles.refreshButton}
+                  onPress={() => this.onRefreshLiked()}
+                >
+                  <Icon
+                    name="refresh"
+                    type="font-awesome"
+                    size={25}
+                    color="#FFF"
+                  />
+                </Ripple>
+              </View>
+            )}
           {this.state.loading && (
             <View
               style={{

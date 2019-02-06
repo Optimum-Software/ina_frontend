@@ -174,7 +174,7 @@ export default class Home extends Component {
   getTrendingProjects() {
     ProjectApi.getProjects(this.state.userId, "most_liked").then(response => {
       if (response["bool"]) {
-        this.setState({ projects: response["projects"]});
+        this.setState({ projects: response["projects"] });
       }
     });
   }
@@ -226,7 +226,7 @@ export default class Home extends Component {
 
   handelProjectsEnd = () => {};
 
-  handelEnd = () => { }
+  handelEnd = () => {};
 
   onRefresh = () => {
     this.setState({ refreshing: true, searchTerm: "" });
@@ -263,7 +263,7 @@ export default class Home extends Component {
             }}
           />
           <ScrollView
-            style={{backgroundColor: "#00a6ff"}}
+            style={{ backgroundColor: "#00a6ff" }}
             refreshControl={
               <RefreshControl
                 colors={["#00a6ff"]}
@@ -272,7 +272,7 @@ export default class Home extends Component {
               />
             }
           >
-            <View style={{backgroundColor: 'white'}}>
+            <View style={{ backgroundColor: "white" }}>
               {this.state.loggedIn && (
                 <View style={styles.welcomeContainer}>
                   <ImageBackground
@@ -358,7 +358,7 @@ export default class Home extends Component {
                 }}
               />
             </View>
-            <View style={{backgroundColor: 'white'}}>
+            <View style={{ backgroundColor: "white" }}>
               {this.state.projects.length > 0 && (
                 <Text style={[styles.title, { marginTop: 10 }]}>
                   Trending Projecten
@@ -369,14 +369,15 @@ export default class Home extends Component {
                 onEndReached={() => this.handelProjectsEnd()}
                 numColumns={2}
                 contentContainerStyle={{ paddingLeft: 10, paddingRight: 10 }}
-                renderItem={({ item, index }) => <ProjectComponent 
-                  item={item} 
-                  index={index} 
-                  projects={this.state.projects} 
-                  dispatcher={this.props.navigation}
-                  differentStack={true}
+                renderItem={({ item, index }) => (
+                  <ProjectComponent
+                    item={item}
+                    index={index}
+                    projects={this.state.projects}
+                    dispatcher={this.props.navigation}
+                    differentStack={true}
                   />
-                }
+                )}
               />
             </View>
           </ScrollView>
@@ -480,7 +481,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     fontSize: 20,
     padding: 15,
     margin: 10

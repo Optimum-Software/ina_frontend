@@ -131,15 +131,15 @@ export default class ProjectOverview extends Component {
                   onRefresh={() => this.onRefresh()}
                   keyExtractor={item => item.id}
                   contentContainerStyle={{ paddingLeft: 10, paddingRight: 10 }}
-                  renderItem={({ item, index }) => 
-                    <ProjectComponent 
-                      item={item} 
-                      index={index} 
-                      projects={this.state.data} 
+                  renderItem={({ item, index }) => (
+                    <ProjectComponent
+                      item={item}
+                      index={index}
+                      projects={this.state.data}
                       dispatcher={this.props.navigation}
                       differentStack={false}
                     />
-                  }
+                  )}
                 />
               )}
             {this.state.data.length == 0 &&

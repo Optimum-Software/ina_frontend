@@ -25,6 +25,7 @@ import Router from "../helpers/Router";
 import Ripple from "react-native-material-ripple";
 import FirebaseApi from "../helpers/FirebaseApi";
 import { CachedImage } from "react-native-cached-image";
+import ProfileParameters from "../helpers/ProfileParameters";
 
 export default class DetailTab extends Component {
   constructor(props) {
@@ -214,13 +215,28 @@ export default class DetailTab extends Component {
       <ScrollView>
         <View style={{ padding: "5%" }}>
           <View style={{ flexDirection: "row" }}>
-            <CachedImage
-              source={{
-                uri: Api.getFileUrl(this.state.project.creator.profilePhotoPath)
-              }}
-              resizeMode="cover"
+            <Ripple
+              rippleColor="#FFF"
               style={{ width: 45, height: 45, top: 2, borderRadius: 100 }}
-            />
+              onPress={() => {
+                ProfileParameters.storeUserId(this.state.project.creator.id);
+                Router.goTo(
+                  this.props.navigation,
+                  "ProfileScreen",
+                  "ProfileScreen"
+                );
+              }}
+            >
+              <CachedImage
+                source={{
+                  uri: Api.getFileUrl(
+                    this.state.project.creator.profilePhotoPath
+                  )
+                }}
+                resizeMode="cover"
+                style={{ width: 45, height: 45, top: 2, borderRadius: 100 }}
+              />
+            </Ripple>
             <View
               style={{ flexDirection: "column", marginLeft: 10, width: "70%" }}
             >

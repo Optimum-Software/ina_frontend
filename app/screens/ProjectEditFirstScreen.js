@@ -22,6 +22,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Api from "../helpers/Api";
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
+import { CachedImage } from "react-native-cached-image";
 
 class ProjectEditFirstScreen extends Component {
   constructor(props) {
@@ -42,7 +43,9 @@ class ProjectEditFirstScreen extends Component {
       start_date: this.props.navigation.getParam("start_date", ""),
       end_date: this.props.navigation.getParam("end_date", ""),
       location: this.props.navigation.getParam("location", ""),
-      thumbnailUri: this.props.navigation.getParam("thumbnail", ""),
+      thumbnailUri: Api.getFileUrl(
+        this.props.navigation.getParam("thumbnail", "")
+      ),
       images: this.props.navigation.getParam("images", ""),
       files: this.props.navigation.getParam("files", ""),
       tags: this.props.navigation.getParam("tags", ""),
@@ -51,22 +54,9 @@ class ProjectEditFirstScreen extends Component {
     };
   }
 
-  removeThumbnailFromImages() {
-    let imagesWithoutThumbnail = [];
+  componentDidMount() {
     console.log(this.state.images);
     console.log(this.state.thumbnailUri);
-
-    for (let image of this.state.images) {
-      let splitImage = image.split("/");
-      console.log(splitImage);
-      if (splitImage[3] != "thumbnail") {
-        imagesWithoutThumbnail.push(image);
-      }
-    }
-    console.log(imagesWithoutThumbnail);
-
-    this.setState({ imagesWithoutThumbnail: imagesWithoutThumbnail });
-    console.log(this.state.imagesWithoutThumbnail);
   }
 
   pickImageHandler() {
@@ -184,14 +174,10 @@ class ProjectEditFirstScreen extends Component {
               style={styles.imgPickContainer}
               onPress={() => this.pickImageHandler()}
             >
-              <ImageBackground
-                imageStyle={{
-                  borderRadius: 100,
-                  width: 150,
-                  height: 150
-                }}
-                style={styles.imgBackground}
+              <CachedImage
                 source={{ uri: this.state.thumbnailUri }}
+                resizeMode="cover"
+                style={styles.image}
               />
             </TouchableOpacity>
 
@@ -265,14 +251,13 @@ const styles = StyleSheet.create({
     width: 150,
     borderRadius: 100,
     backgroundColor: "#dee5e8",
-    marginBottom: "10%",
     alignItems: "center",
     justifyContent: "center"
   },
-  imgBackground: {
+  image: {
     borderRadius: 100,
-    width: "100%",
-    height: "100%",
+    width: 150,
+    height: 150,
     resizeMode: "cover",
     alignItems: "center",
     justifyContent: "center"

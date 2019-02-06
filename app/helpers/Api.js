@@ -5,7 +5,7 @@ import Router from "./Router";
 let instance = null;
 let userToken = null;
 class Api {
-  ip = "http://145.37.144.114:8000";
+  ip = "http://145.37.152.130:8000";
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
 
