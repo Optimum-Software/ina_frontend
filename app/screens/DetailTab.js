@@ -43,12 +43,11 @@ export default class DetailTab extends Component {
       like_count: props.project.project.like_count,
       follower_count: props.project.project.follower_count
     };
-
-    this.getMembers();
-    this.tags(this.state.project.id);
   }
 
   componentDidMount() {
+    this.getMembers();
+    this.tags(this.state.project.id);
     User.getUserId().then(id => {
       this.setState({ userId: id });
     });
@@ -145,7 +144,8 @@ export default class DetailTab extends Component {
   }
 
   tags(id) {
-    let response = ProjectApi.getAllTags(id).then(result => {
+    ProjectApi.getTagsByProjectId(id).then(result => {
+      console.log(result);
       if (result["bool"]) {
         this.setState({
           tags: result["tags"]
