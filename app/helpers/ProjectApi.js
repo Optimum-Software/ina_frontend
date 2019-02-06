@@ -34,6 +34,10 @@ class ProjectApi {
     }
   }
 
+  getTagsByProjectId(projectId) {
+    return Api.callApiGet("getTagsByProjectId/" + projectId);
+  }
+
   getAllTags() {
     return Api.callApiGet("getAllTags");
   }

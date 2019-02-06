@@ -18,7 +18,7 @@ import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import line from "../assets/images/line3.png";
 import Router from "../helpers/Router";
-import SavedApi from "../helpers/SavedApi";
+import ProjectApi from "../helpers/ProjectApi";
 import Api from "../helpers/Api";
 import User from "../helpers/User";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
@@ -49,31 +49,25 @@ export default class SavedProjects extends Component {
 
   componentDidMount() {
     User.getUserId().then(userId => {
-      SavedApi.getAllFollows(userId).then(res => {
+      ProjectApi.getProjects(userId, "user_followed").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ followedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ followedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
       });
-      SavedApi.getAllMembered(userId).then(res => {
-        if(res['bool']) {
-          if(res['found']) {
-            this.setState({memberedProjects: res['projects']})
-          } else {
-            alert(res["msg"]);
-          }
+      ProjectApi.getProjects(userId, "user_member").then(res => {
+        if (res["bool"]) {
+          this.setState({ memberedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
       });
-      SavedApi.getAllLiked(userId).then(res => {
+      ProjectApi.getProjects(userId, "user_liked").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ likedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ likedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
       });
       this.setState({ loading: false });
@@ -82,52 +76,45 @@ export default class SavedProjects extends Component {
 
   handelEnd = () => {};
 
-
   onRefreshMembered() {
     this.setState({ loading: true });
-    User.getUserId().then(id => {
-      SavedApi.getAllMembered(id).then(res => {
+    User.getUserId().then(userId => {
+      ProjectApi.getProjects(userId, "user_member").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ memberedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ memberedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
-        this.setState({ loading: false });
       });
+      this.setState({ loading: false });
     });
   }
 
   onRefreshFollowed() {
     this.setState({ loading: true });
-    User.getUserId().then(id => {
-      SavedApi.getAllFollows(id).then(res => {
+    User.getUserId().then(userId => {
+      ProjectApi.getProjects(userId, "user_followed").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ followedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ followedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
-        this.setState({ loading: false });
       });
+      this.setState({ loading: false });
     });
   }
 
   onRefreshLiked() {
     this.setState({ loading: true });
-    User.getUserId().then(id => {
-      SavedApi.getAllLiked(id).then(res => {
+    User.getUserId().then(userId => {
+      ProjectApi.getProjects(userId, "user_liked").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ likedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ likedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
-        this.setState({ loading: false });
       });
+      this.setState({ loading: false });
     });
   }
 

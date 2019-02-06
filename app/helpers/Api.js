@@ -63,8 +63,8 @@ class Api {
         },
         body: JSON.stringify(data)
       });
-      if(response.status == 401) {
-        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      if (response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true });
       }
       let responseJson = await response.json();
       return responseJson;
@@ -104,8 +104,8 @@ class Api {
           Authorization: "Token " + userToken
         }
       });
-      if(response.status == 401) {
-        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      if (response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true });
       }
       let responseJson = await response.json();
       return responseJson;
@@ -189,8 +189,8 @@ class Api {
         },
         body: data
       });
-      if(response.status == 401) {
-        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      if (response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true });
       }
       let responseJson = await response.json();
       return responseJson;
@@ -239,8 +239,8 @@ class Api {
         },
         body: data
       });
-      if(response.status == 401) {
-        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      if (response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true });
       }
       let responseJson = await response.json();
       return responseJson;
