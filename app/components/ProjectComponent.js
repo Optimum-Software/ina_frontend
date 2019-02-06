@@ -48,7 +48,7 @@ export default class ProjectComponent extends PureComponent {
     >
       {this.props.index != this.props.projects.length - 1 && (
         //not last card
-        <View style={styles.card}>
+        <View style={[styles.card, { marginBottom: this.props.index == this.props.projects.length -2 ? 20 : 0}]}>
           <View style={styles.cardImage}>
             <CachedImage
               source={{ uri: Api.getFileUrl(this.props.item.thumbnail) }}
@@ -69,7 +69,7 @@ export default class ProjectComponent extends PureComponent {
       {this.props.index == this.props.projects.length - 1 &&
         (this.props.index + 1) % 2 == 0 && (
           //last card but even index
-          <View style={styles.card}>
+          <View style={[styles.card, { marginBottom: this.props.index == this.props.projects.length -1 ? 20 : 0}]}>
             <View style={styles.cardImage}>
               <CachedImage
                 source={{ uri: Api.getFileUrl(this.props.item.thumbnail) }}

@@ -15,6 +15,7 @@ import { Toolbar } from "react-native-material-ui";
 import { Input, Icon } from "react-native-elements";
 import Router from "../helpers/Router";
 import { Fragment } from "react";
+import WhiteButton from "../components/WhiteButton";
 
 import firebaseApi from "../helpers/FirebaseApi";
 
@@ -149,17 +150,17 @@ export default class RegistrationScreenPhone extends Component {
                 />
                 <View
                   style={{
+                    paddingTop: '10%',
                     paddingLeft: "10%",
                     paddingRight: "10%",
                     justifyContent: "center"
                   }}
                 >
-                  <TouchableOpacity
-                    style={styles.buttonStyle}
-                    onPress={() => this.verifyPhone()}
-                  >
-                    <Text style={styles.textStyle}>Verder</Text>
-                  </TouchableOpacity>
+                <WhiteButton
+            label='Verder'
+            onPress={() => this.verifyPhone()}
+          />
+
                 </View>
               </View>
             </View>

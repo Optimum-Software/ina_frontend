@@ -21,6 +21,7 @@ import Api from "../helpers/Api";
 import { Input, Icon } from "react-native-elements";
 import ImagePicker from "react-native-image-picker";
 import { CachedImage } from "react-native-cached-image";
+import BlueButton from "../components/BlueButton";
 
 export default class ProfileEditScreen extends Component {
   constructor() {
@@ -122,8 +123,9 @@ export default class ProfileEditScreen extends Component {
             <Toolbar
               centerElement="Profiel aanpassen"
               iconSet="MaterialCommunityIcons"
-              leftElement={"chevron-left"}
-              style={{ container: { backgroundColor: "#009EF2" } }}
+              leftElement={"arrow-left"}
+
+              style={{ container: { backgroundColor: "#00a6ff", elevation: 0 } }}
               onLeftElementPress={() => {
                 Router.goTo(
                   this.props.navigation,
@@ -143,22 +145,30 @@ export default class ProfileEditScreen extends Component {
             >
               <View style={styles.inputFieldContainer}>
                 <View
-                  style={{ flexDirection: "row", justifyContent: "center" }}
+                  style={{ flexDirection: "row", justifyContent: "center", margin: '5%' }}
                 >
                   <CachedImage
                     source={this.state.profilePhoto}
                     resizeMode="cover"
                     style={styles.profilePhoto}
-                  />
+                  >
                   <Icon
                     name="edit"
                     type="MaterialIcons"
                     size={30}
-                    color="#00a6ff"
+                    color="white"
+                    containerStyle={{height: 100,
+                    width: 100,
+                    borderRadius: 50,
+                    marginBottom: '6%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  backgroundColor: '#00000055'}}
                     underlayColor="transparent"
-                    containerStyle={styles.editPhotoContainer}
                     onPress={() => this.pickImageHandler()}
                   />
+                  </CachedImage>
+
                 </View>
 
                 <Text style={[styles.labelStyle, { marginBottom: 0 }]}>
@@ -167,10 +177,10 @@ export default class ProfileEditScreen extends Component {
                 <View style={styles.immutableInfoContainer}>
                   <View style={styles.immutableInfoRow}>
                     <Icon
-                      name="envelope"
-                      type="font-awesome"
+                      name="email"
+                      type= "material-community"
                       size={25}
-                      color="#a8a8a8"
+                      color="#4a6572"
                     />
                     <Text style={styles.immutableInfoLabel}>
                       {this.state.email}
@@ -179,65 +189,81 @@ export default class ProfileEditScreen extends Component {
 
                   <View style={styles.immutableInfoRow}>
                     <Icon
-                      name="mobile"
-                      type="font-awesome"
-                      size={35}
-                      color="#a8a8a8"
+                      name="cellphone"
+                      type="material-community"
+                      size={25}
+                      color="#4a6572"
                     />
                     <Text style={styles.immutableInfoLabel}>
                       {this.state.mobile}
                     </Text>
                   </View>
                 </View>
-
-                <Text style={styles.labelStyle}>VOORNAAM</Text>
+                <Text style={[styles.labelStyle, { marginBottom: '5%', marginTop: '5%' }]}>
+                  TE BEWERKEN
+                </Text>
                 <Input
                   placeholder="Voornaam"
-                  placeholderTextColor="#4a6572"
+                  placeholderTextColor="#a8a8a8"
                   maxLength={30}
                   containerStyle={styles.containerStyle}
                   inputStyle={styles.inputStyle}
                   value={this.state.firstName}
+                  leftIcon={{
+          type: "material-community",
+                    name: "account",
+                    color: "#4a6572"
+                  }}
                   onChangeText={firstName => this.setState({ firstName })}
                 />
 
-                <Text style={styles.labelStyle}>ACHTERNAAM</Text>
                 <Input
                   placeholder="Achternaam"
-                  placeholderTextColor="#4a6572"
+                  placeholderTextColor="#a8a8a8"
                   maxLength={30}
                   containerStyle={styles.containerStyle}
                   inputStyle={styles.inputStyle}
                   value={this.state.lastName}
+                  leftIcon={{
+                    type: "material-community",
+                              name: "account",
+                    color: "#4a6572"
+                  }}
                   onChangeText={lastName => this.setState({ lastName })}
                 />
-
-                <Text style={styles.labelStyle}>ORGANISATIE</Text>
                 <Input
                   placeholder="Organisatie"
-                  placeholderTextColor="#4a6572"
+                  placeholderTextColor="#a8a8a8"
                   maxLength={50}
                   containerStyle={styles.containerStyle}
                   inputStyle={styles.inputStyle}
                   value={this.state.organisation}
+                  leftIcon={{
+                    type: "material-community",
+                    name: "office-building",
+                    color: "#4a6572"
+                  }}
                   onChangeText={organisation => this.setState({ organisation })}
                 />
 
-                <Text style={styles.labelStyle}>FUNCTIE</Text>
                 <Input
                   placeholder="Functie"
-                  placeholderTextColor="#4a6572"
+                  placeholderTextColor="#a8a8a8"
                   maxLength={50}
                   containerStyle={styles.containerStyle}
                   inputStyle={styles.inputStyle}
                   value={this.state._function}
+                  leftIcon={{
+                    type: "material-community",
+                    name: "account-card-details",
+                    color: "#4a6572"
+                  }}
                   onChangeText={_function => this.setState({ _function })}
                 />
 
-                <Text style={styles.labelStyle}>BIOGRAFIE</Text>
                 <Input
                   placeholder="Begin hier met het typen van je biografie.."
-                  placeholderTextColor="#4a6572"
+                  placeholderTextColor="#a8a8a8"
                   multiline={true}
                   editable={true}
                   maxLength={2000}
@@ -248,16 +274,27 @@ export default class ProfileEditScreen extends Component {
                   onContentSizeChange={e =>
                     this.updateSize(e.nativeEvent.contentSize.height)
                   }
+                  leftIcon={{
+                    type: "material-community",
+                    name: "text-subject",
+                    color: "#4a6572"
+                  }}
                   textAlignVertical={"top"}
                 />
               </View>
-              <TouchableHighlight
-                underlayColor="#009ef2"
-                style={styles.buttonStyle}
-                onPress={() => this.saveInfo()}
+              <View
+                style={{
+                  paddingLeft: "10%",
+                  paddingRight: "10%",
+                  justifyContent: "center"
+                }}
               >
-                <Text style={styles.saveText}>Opslaan</Text>
-              </TouchableHighlight>
+              <BlueButton
+          label='Opslaan'
+          onPress={() => this.saveInfo()}
+        />
+
+              </View>
             </View>
           )}
         </ScrollView>
@@ -308,15 +345,18 @@ const styles = StyleSheet.create({
   },
 
   profilePhoto: {
-    height: 150,
-    width: 150,
-    borderRadius: 75,
-    marginBottom: "5%"
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+    marginBottom: "5%",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   editPhotoContainer: {
     width: "10%",
     height: "20%",
+
     alignSelf: "flex-end"
   },
 
@@ -353,7 +393,7 @@ const styles = StyleSheet.create({
     width: "100%",
     fontSize: 16,
     fontWeight: "bold",
-    color: "#a8a8a8"
+    color: "#4a6572"
   },
   labelWithBorder: {
     paddingBottom: "2%",

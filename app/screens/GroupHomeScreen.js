@@ -191,7 +191,8 @@ export default class GroupHomeScreen extends Component {
           color="#00a6ff"
           iconSet="MaterialCommunityIcons"
           centerElement={this.state.group.name}
-          leftElement={"chevron-left"}
+          leftElement={"arrow-left"}
+
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
           rightElement={"share-variant"}
           onRightElementPress={() => {

@@ -23,6 +23,7 @@ import Router from "../helpers/Router";
 import DatePicker from "react-native-datepicker";
 import AutoTags from "react-native-tag-autocomplete";
 import ProjectApi from "../helpers/ProjectApi";
+import BlueButton from "../components/BlueButton";
 
 class ProjectCreateSecondScreen extends Component {
   constructor(props) {
@@ -195,21 +196,18 @@ class ProjectCreateSecondScreen extends Component {
               }}
             />
           </View>
+          <View
+            style={{
+              paddingLeft: "10%",
+              paddingRight: "10%",
+              paddingBottom: "10%"
+            }}
+          >
+            <BlueButton label="Verder" onPress={() => this.goToNextPart()} />
+          </View>
         </ScrollView>
 
-        <View
-          style={{
-            width: "100%",
-            height: "10%"
-          }}
-        >
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.goToNextPart()}
-          >
-            <Text style={styles.buttonTextStyle}>Verder</Text>
-          </TouchableOpacity>
-        </View>
+
         </SafeAreaView>
         </Fragment>
     );

@@ -20,6 +20,7 @@ import User from "../helpers/User";
 import firebaseApi from "../helpers/FirebaseApi";
 import firebase from "react-native-firebase";
 import { Fragment } from "react";
+import WhiteButton from "../components/WhiteButton";
 
 export default class RegistrationScreenStart extends Component {
   constructor() {
@@ -192,12 +193,11 @@ export default class RegistrationScreenStart extends Component {
                     maxLength={6}
                   />
                 </View>
-                <TouchableOpacity
-                  style={styles.buttonStyle}
-                  onPress={() => this.checkCode()}
-                >
-                  <Text style={styles.textStyle}>Verder</Text>
-                </TouchableOpacity>
+                <WhiteButton
+            label='Verder'
+            onPress={() => this.checkCode()}
+          />
+
               </View>
             )}
           </ImageBackground>

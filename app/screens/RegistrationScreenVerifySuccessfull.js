@@ -15,6 +15,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Router from "../helpers/Router";
 import { Toolbar } from "react-native-material-ui";
 import { Fragment } from "react";
+import WhiteButton from "../components/WhiteButton";
 
 class RegistrationScreenVerifySuccessfull extends Component {
   render() {
@@ -67,21 +68,19 @@ class RegistrationScreenVerifySuccessfull extends Component {
               </Text>
             </View>
             <View style={styles.actionContainer}>
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() =>
-                  Router.goTo(
-                    this.props.navigation,
-                    "LoginStack",
-                    "RegisterOptional",
-                    null
-                  )
-                }
-              >
-                <Text style={styles.textStyle}>
-                  Verder met optionele informatie invullen
-                </Text>
-              </TouchableOpacity>
+            <WhiteButton
+        label='Verder met optionele informatie invullen'
+        onPress={() =>
+          Router.goTo(
+            this.props.navigation,
+            "LoginStack",
+            "RegisterOptional",
+            null
+          )
+        }
+      />
+
+
               <TouchableOpacity
                 style={styles.buttonStyle}
                 onPress={() => Router.goTo(

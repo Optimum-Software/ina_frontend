@@ -29,6 +29,7 @@ import OneSignal from "react-native-onesignal";
 import sha256 from "crypto-js/sha256";
 var SHA256 = require("crypto-js/sha256");
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import WhiteButton from "../components/WhiteButton";
 
 class LoginScreen extends Component {
   constructor() {
@@ -81,7 +82,7 @@ class LoginScreen extends Component {
               result => {}
             );
           });
-          User.storeUserId(result.userId); 
+          User.storeUserId(result.userId);
           Router.switchLogin(this.props.navigation);
           Router.goTo(this.props.navigation, "Tabs", "HomeScreen");
         } else {
@@ -210,12 +211,11 @@ class LoginScreen extends Component {
                 </Text>
               </TouchableOpacity>
               <View style={{ marginBottom: "0%" }}>
-                <TouchableOpacity
-                  style={styles.buttonStyle}
-                  onPress={() => this.login()}
-                >
-                  <Text style={styles.textStyle}>Inloggen</Text>
-                </TouchableOpacity>
+              <WhiteButton
+          label='Inloggen'
+          onPress={() => this.login()}
+        />
+
                 <TouchableOpacity
                   style={{ alignSelf: "center" }}
                   onPress={() =>

@@ -19,6 +19,7 @@ import {
 import { Input } from "react-native-elements";
 import ImagePicker from "react-native-image-picker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import BlueButton from "../components/BlueButton";
 
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
@@ -47,7 +48,15 @@ class ProjectCreateFirstScreen extends Component {
 
   pickImageHandler() {
     ImagePicker.showImagePicker(
-      { title: "Kies een omslagfoto voor het project", storageOptions: { skipBackup: true, path: 'images', cameraRoll: true, waitUntilSaved: true } },
+      {
+        title: "Kies een omslagfoto voor het project",
+        storageOptions: {
+          skipBackup: true,
+          path: "images",
+          cameraRoll: true,
+          waitUntilSaved: true
+        }
+      },
       res => {
         if (res.didCancel) {
           console.log("User cancelled!");
@@ -55,7 +64,10 @@ class ProjectCreateFirstScreen extends Component {
           console.log("Error", res.error);
         } else {
           this.setState({
-            thumbnailUri: (Platform.OS==='android') ? res.uri : res.uri.replace('file://', ''),
+            thumbnailUri:
+              Platform.OS === "android"
+                ? res.uri
+                : res.uri.replace("file://", ""),
             thumbnailName: res.fileName,
             imgPicked: true,
             thumbnailError: ""
@@ -122,82 +134,86 @@ class ProjectCreateFirstScreen extends Component {
             backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
             barStyle="light-content"
           />
-        <Toolbar
-          centerElement="Project aanmaken 1/3"
-          iconSet="MaterialCommunityIcons"
-          leftElement={"chevron-left"}
-          onLeftElementPress={() => Router.goBack(this.props.navigation)}
-        />
-        <ScrollView style={{ height: "85%", width: "100%" }}>
-          <View style={styles.inputFieldContainer}>
-
-                      <Text style={styles.thumbnailLabelStyle}>OMSLAGFOTO</Text>
-                      <Text style={{ color: "red" }}>{this.state.thumbnailError}</Text>
-            <TouchableOpacity
-              style={styles.imgPickContainer}
-              onPress={() => this.pickImageHandler()}
-            >
-
-              <ImageBackground
-                imageStyle={{
-                  borderRadius: Dimensions.get('window').width * 0.15,
-                  width: Dimensions.get('window').width * 0.3,
-                  height: Dimensions.get('window').width * 0.3,
-                }}
-                style={styles.imgBackground}
-                source={{ uri: this.state.thumbnailUri == null ? "" : this.state.thumbnailUri }}
+          <Toolbar
+            centerElement="Project aanmaken 1/3"
+            iconSet="MaterialCommunityIcons"
+            leftElement={"arrow-left"}
+            onLeftElementPress={() => Router.goBack(this.props.navigation)}
+          />
+          <ScrollView style={{ height: "85%", width: "100%" }}>
+            <View style={styles.inputFieldContainer}>
+              <Text style={styles.thumbnailLabelStyle}>OMSLAGFOTO</Text>
+              <Text style={{ color: "red" }}>{this.state.thumbnailError}</Text>
+              <TouchableOpacity
+                style={styles.imgPickContainer}
+                onPress={() => this.pickImageHandler()}
               >
-                {!this.state.imgPicked && (
-                  <Icon
-                    name="image-plus"
-                    type="material-community"
-                    size={Dimensions.get('window').width * 0.15}
-                    color="#FFFFFF"
-                    underlayColor="#FFFFFF"
-                  />
-                )}
-              </ImageBackground>
-            </TouchableOpacity>
+                <ImageBackground
+                  imageStyle={{
+                    borderRadius: Dimensions.get("window").width * 0.15,
+                    width: Dimensions.get("window").width * 0.3,
+                    height: Dimensions.get("window").width * 0.3
+                  }}
+                  style={styles.imgBackground}
+                  source={{
+                    uri:
+                      this.state.thumbnailUri == null
+                        ? ""
+                        : this.state.thumbnailUri
+                  }}
+                >
+                  {!this.state.imgPicked && (
+                    <Icon
+                      name="image-plus"
+                      type="material-community"
+                      size={Dimensions.get("window").width * 0.15}
+                      color="#FFFFFF"
+                      underlayColor="#FFFFFF"
+                    />
+                  )}
+                </ImageBackground>
+              </TouchableOpacity>
 
+              <Text style={styles.labelStyle}>TITEL</Text>
+              <Input
+                placeholder="Type hier de titel.."
+                placeholderTextColor="#4a6572"
+                maxLength={50}
+                containerStyle={styles.containerStyle}
+                inputStyle={styles.inputStyle}
+                value={this.state.name}
+                onChangeText={text => this.setState({ name: text })}
+              />
+              <Text style={{ color: "red" }}>{this.state.nameError}</Text>
 
-            <Text style={styles.labelStyle}>TITEL</Text>
-            <Input
-              placeholder="Type hier de titel.."
-              placeholderTextColor="#4a6572"
-              maxLength={50}
-              containerStyle={styles.containerStyle}
-              inputStyle={styles.inputStyle}
-              value={this.state.name}
-              onChangeText={text => this.setState({ name: text })}
-            />
-            <Text style={{ color: "red" }}>{this.state.nameError}</Text>
-
-            <Text style={styles.labelStyle}>BESCHRIJVING</Text>
-            <Input
-              placeholder="Begin met het typen van een beschrijving.."
-              placeholderTextColor="#4a6572"
-              multiline={true}
-              editable={true}
-              containerStyle={styles.containerStyle}
-              inputStyle={styles.inputStyle}
-              value={this.state.desc}
-              textAlignVertical={"top"}
-              onChangeText={text => this.setState({ desc: text })}
-              onContentSizeChange={e =>
-                this.updateSize(e.nativeEvent.contentSize.height)
-              }
-            />
-            <Text style={{ color: "red" }}>{this.state.descError}</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.goToNextPart()}
-          >
-            <Text style={styles.buttonTextStyle}>Verder</Text>
-          </TouchableOpacity>
-        </ScrollView>
-
-      </SafeAreaView>
+              <Text style={styles.labelStyle}>BESCHRIJVING</Text>
+              <Input
+                placeholder="Begin met het typen van een beschrijving.."
+                placeholderTextColor="#4a6572"
+                multiline={true}
+                editable={true}
+                containerStyle={styles.containerStyle}
+                inputStyle={styles.inputStyle}
+                value={this.state.desc}
+                textAlignVertical={"top"}
+                onChangeText={text => this.setState({ desc: text })}
+                onContentSizeChange={e =>
+                  this.updateSize(e.nativeEvent.contentSize.height)
+                }
+              />
+              <Text style={{ color: "red" }}>{this.state.descError}</Text>
+            </View>
+            <View
+              style={{
+                paddingLeft: "10%",
+                paddingRight: "10%",
+                paddingBottom: "10%"
+              }}
+            >
+              <BlueButton label="Verder" onPress={() => this.goToNextPart()} />
+            </View>
+          </ScrollView>
+        </SafeAreaView>
       </Fragment>
     );
   }
@@ -217,18 +233,17 @@ const styles = StyleSheet.create({
   },
 
   imgPickContainer: {
-    height: Dimensions.get('window').width * 0.3,
-    width: Dimensions.get('window').width * 0.3,
-    borderRadius: Dimensions.get('window').width * 0.15,
+    height: Dimensions.get("window").width * 0.3,
+    width: Dimensions.get("window").width * 0.3,
+    borderRadius: Dimensions.get("window").width * 0.15,
     backgroundColor: "#dee5e8",
     alignItems: "center",
     justifyContent: "center"
   },
   imgBackground: {
-
-    borderRadius: Dimensions.get('window').width * 0.15,
-    width: Dimensions.get('window').width * 0.3,
-    height: Dimensions.get('window').width * 0.3,
+    borderRadius: Dimensions.get("window").width * 0.15,
+    width: Dimensions.get("window").width * 0.3,
+    height: Dimensions.get("window").width * 0.3,
     resizeMode: "cover",
     alignItems: "center",
     justifyContent: "center"
@@ -237,8 +252,7 @@ const styles = StyleSheet.create({
   containerStyle: {
     width: "100%",
     alignSelf: "center",
-    backgroundColor: "transparent",
-    marginBottom: 20
+    backgroundColor: "transparent"
   },
 
   inputStyle: {

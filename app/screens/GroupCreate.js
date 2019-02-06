@@ -14,7 +14,8 @@ class GroupCreate extends Component {
         <Toolbar
           centerElement="Nieuwe groep"
           iconSet="MaterialCommunityIcons"
-          leftElement={"chevron-left"}
+          leftElement={"arrow-left"}
+
           onLeftElementPress={() => Router.goBack(this.props.navigation)}
         />
         <Text>Hier kan je een nieuwe groep aanmaken ;)</Text>

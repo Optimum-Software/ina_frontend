@@ -35,7 +35,7 @@ const tabbarVisible = navigation => {
 
   let showTabbar = true;
   routes.forEach(route => {
-    if (route.routeName === "ProjectDetailScreen") {
+    if (route.routeName === "ProjectDetailScreen" || 'projectcreate'.indexOf(route.routeName.toLowerCase()) > -1) {
       showTabbar = false;
     }
   });

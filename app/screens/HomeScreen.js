@@ -63,7 +63,9 @@ export default class Home extends Component {
     Router.setDispatcher(this.props.navigation);
   }
 
+
   componentDidMount() {
+    this.onLoad();
     User.getUserId().then(id => {
       this.setState({ userId: id });
     });

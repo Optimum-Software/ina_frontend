@@ -1,11 +1,15 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import {
   StyleSheet,
   Text,
   View,
   ImageBackground,
   TouchableOpacity,
-  TouchableHighlight
+  TouchableHighlight,
+  SafeAreaView,
+  StatusBar,
+  Platform,
+  Dimensions
 } from "react-native";
 import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
@@ -15,6 +19,7 @@ import User from "../helpers/User";
 import UserApi from "../helpers/UserApi";
 import ImagePicker from "react-native-image-picker";
 import { CachedImage } from "react-native-cached-image";
+import WhiteButton from "../components/WhiteButton";
 
 export default class RegistrationScreenOptional extends Component {
   constructor() {
@@ -80,29 +85,33 @@ export default class RegistrationScreenOptional extends Component {
 
   render() {
     return (
-      <ImageBackground
-        style={styles.container}
-        source={require("../assets/images/bluewavebg.png")}
-        resizeMode="stretch"
-      >
-        <View style={{ flexDirection: "row" }}>
-          <Icon
-            name="chevron-left"
-            type="font-awesome"
-            size={20}
-            color="#00A6FF"
-            underlayColor="#c1efff"
-            containerStyle={{ width: "10%", marginTop: "7%" }}
-            onPress={() => Router.goBack(this.props.navigation)}
+      <Fragment>
+        <SafeAreaView style={{ flex: 0, backgroundColor: "white" }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#00a6ff" }}>
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "white" : "#00a6ff"}
+            barStyle="dark-content"
           />
-          <View style={{ flex: 2, width: "90%", marginTop: "5%" }}>
-            <Text style={styles.infoTextTitle}>Registreren</Text>
-            <Text style={styles.infoText}>
-              Je kan deze velden invullen om meer informatie te geven over
-              jezelf.
-            </Text>
-          </View>
-        </View>
+          <ImageBackground
+            style={{
+              flex: 1,
+              backgroundColor: "white",
+              justifyContent: "center"
+            }}
+            source={require("../assets/images/bluewavebg.png")}
+            resizeMode="stretch"
+          >
+            <Toolbar
+              leftElement="arrow-back"
+              onLeftElementPress={() => this.props.navigation.goBack()}
+              centerElement="Registreren"
+              style={{
+                container: { backgroundColor: "transparent" },
+                titleText: { color: "#00a6ff" },
+                leftElement: { color: "#00a6ff" }
+              }}
+            />
+
         <View style={styles.inputFieldContainer}>
           <CachedImage
             style={styles.imgPickContainer}
@@ -164,7 +173,7 @@ export default class RegistrationScreenOptional extends Component {
             placeholderTextColor="#FFFFFF"
             containerStyle={[styles.containerStyle]}
             inputContainerStyle={[styles.inputContainerStyle]}
-            inputStyle={{ color: "#FFFFFF", height: null }}
+            inputStyle={{ color: "#FFFFFF", }}
             value={this.state.bio}
             leftIcon={{
               type: "material-community",
@@ -179,17 +188,18 @@ export default class RegistrationScreenOptional extends Component {
             onChangeText={bio => this.setState({ bio })}
           />
           <Text style={styles.errorStyle}>{this.state.bioError}</Text>
+
         </View>
-        <View style={styles.actionContainer}>
-          <TouchableHighlight
-            underlayColor="#c1efff"
-            style={styles.buttonStyle}
-            onPress={() => this.editOptionalInfo()}
-          >
-            <Text style={styles.buttonText}>Verder</Text>
-          </TouchableHighlight>
+        <View style={{width: Dimensions.get('window').width, paddingBottom: 25, paddingLeft: '15%', paddingRight: '15%'}}>
+        <WhiteButton
+        label='Verder'
+        onPress={() => this.editOptionalInfo()}
+        />
         </View>
       </ImageBackground>
+        </SafeAreaView>
+        </Fragment>
+
     );
   }
 }
@@ -215,27 +225,29 @@ const styles = StyleSheet.create({
   },
 
   inputFieldContainer: {
-    flex: 4,
+    flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+    alignItems: 'center',
     paddingTop: "40%",
     marginTop: "5%"
   },
 
   imgPickContainer: {
-    height: 150,
-    width: 150,
-    borderRadius: 200,
+    height: 100,
+    width: 100,
+    borderRadius: 50,
     alignSelf: "center",
     marginBottom: "5%",
     marginTop: "5%",
+    marginBottom: '15%',
     backgroundColor: "#FFFFFF"
   },
 
   imgPickBtn: {
-    height: 150,
-    width: 150,
-    borderRadius: 200,
+    height: 100,
+    width: 100,
+    borderRadius: 50,
     justifyContent: "center",
     alignSelf: "center",
   },

@@ -85,7 +85,8 @@ export default class ProfileScreen extends Component {
           <Toolbar
             centerElement="Profiel"
             iconSet="MaterialCommunityIcons"
-            leftElement={"chevron-left"}
+            leftElement={"arrow-left"}
+
             style={{ container: { backgroundColor: "#009EF2" } }}
             onLeftElementPress={() => {
               Router.goTo(this.props.navigation, "LoggedIn", "LoggedIn");
