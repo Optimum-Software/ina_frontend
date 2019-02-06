@@ -47,8 +47,9 @@ class ProjectEditThirdScreen extends Component {
       files: this.props.navigation.getParam("files", ""),
       tags: this.props.navigation.getParam("tags", ""),
 
+      project: {},
       totalSize: 0,
-      editing: true
+      editing: false
     };
   }
 
@@ -127,12 +128,16 @@ class ProjectEditThirdScreen extends Component {
         if (result["bool"]) {
           ProjectApi.getProjectById(id, result["id"]).then(result => {
             if (result["bool"]) {
-              this.setState({
-                editing: false,
-                projectEdited: true,
-                project: result["project"]
-              });
-              this.goToProject();
+              this.setState(
+                {
+                  editing: false,
+                  projectEdited: true,
+                  project: result["project"]
+                },
+                () => {
+                  this.goToProject();
+                }
+              );
             }
           });
         } else {
@@ -147,6 +152,8 @@ class ProjectEditThirdScreen extends Component {
   }
 
   goToProject() {
+    console.log(this.state.project);
+    Router.popToTop(this.props.navigation);
     Router.goTo(this.props.navigation, "ProjectStack", "ProjectDetailScreen", {
       id: this.state.project.id,
       name: this.state.project.name,
@@ -161,6 +168,9 @@ class ProjectEditThirdScreen extends Component {
       creator: this.state.project.creator,
       images: this.state.project.images,
       files: this.state.project.files,
+      liked: this.state.project.liked,
+      member: this.state.project.member,
+      followed: this.state.project.followed,
       prevRoute: "ProjectEdit"
     });
   }
@@ -259,6 +269,9 @@ class ProjectEditThirdScreen extends Component {
                 )}
               />
             </View>
+            {this.state.editing && (
+              <ActivityIndicator size="large" color="#0000ff" />
+            )}
           </View>
         </View>
         <View
@@ -274,9 +287,6 @@ class ProjectEditThirdScreen extends Component {
             <Text style={styles.buttonTextStyle}>Opslaan</Text>
           </TouchableOpacity>
         </View>
-        {this.state.editing && (
-          <ActivityIndicator size="large" color="#0000ff" />
-        )}
       </SafeAreaView>
     );
   }
@@ -331,7 +341,7 @@ const styles = StyleSheet.create({
     color: "#a8a8a8"
   },
   documentContainer: {
-    height: "50%",
+    height: "40%",
     width: "90%",
     paddingTop: "2%",
     alignSelf: "center"

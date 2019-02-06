@@ -9,7 +9,8 @@ import {
   ScrollView,
   Text,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from "react-native";
 import { Toolbar } from "react-native-material-ui";
 import UserApi from "../helpers/UserApi";
@@ -91,7 +92,7 @@ export default class ProfileEditScreen extends Component {
         this.state.profilePhoto.uri
       ).then(res => {
         if (res["bool"]) {
-          alert(res["msg"]);
+          Alert.alert(res["msg"], "Je veranderingen zijn opgeslagen");
           Router.switchLogin(this.props.navigation);
         } else {
           alert(res["msg"]);
@@ -140,29 +141,6 @@ export default class ProfileEditScreen extends Component {
                 paddingBottom: "5%"
               }}
             >
-              {
-                // <View style={styles.contactBox}>
-                //   <View style={styles.labels}>
-                //     <Icon
-                //       name="envelope"
-                //       type="font-awesome"
-                //       size={25}
-                //       color="#a8a8a8"
-                //     />
-                //     <Icon
-                //       name="mobile"
-                //       type="font-awesome"
-                //       size={35}
-                //       color="#a8a8a8"
-                //     />
-                //   </View>
-                //   <View style={styles.items}>
-                //     <Text style={styles.item}>{this.state.email}</Text>
-                //     <Text style={styles.item}>{this.state.mobile}</Text>
-                //   </View>
-                // </View>
-                //<View style={styles.separator} />
-              }
               <View style={styles.inputFieldContainer}>
                 <View
                   style={{ flexDirection: "row", justifyContent: "center" }}

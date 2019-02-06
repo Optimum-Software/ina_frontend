@@ -13,7 +13,8 @@ import {
   StatusBar,
   Platform,
   Share,
-  BackHandler
+  BackHandler,
+  Alert
 } from "react-native";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
@@ -108,7 +109,8 @@ export default class ProjectDetail extends Component {
         followed: this.props.navigation.getParam("followed", "")
       },
       notiIcon: "bell-outline",
-      canNotificate: false
+      canNotificate: false,
+      canDelete: false
     };
     User.getUserId().then(userId => {
       this.setState({ userId: userId });
@@ -146,6 +148,7 @@ export default class ProjectDetail extends Component {
   }
 
   refreshProject() {
+    this.checkCanDelete()
     User.getUserId().then(userId => {
       ProjectApi.getProjectById(userId, this.state.project.id).then(result => {
         if (result["bool"]) {
@@ -177,6 +180,42 @@ export default class ProjectDetail extends Component {
         }
       });
     });
+  }
+
+  checkCanDelete() {
+    User.getUserId().then(id => {
+      if(this.state.project.creator.id == id) {
+        this.setState({canDelete: true})
+      }
+    });
+  }
+
+  delete() {
+    User.getUserId().then(id => {
+      ProjectApi.deleteProjectById(id, this.state.project.id).then(res => {
+        if(res['bool']) {
+          if(res['deleted']) {
+            Alert.alert("Project verwijdert", "Je project is succesvol verwijdert")
+            Router.goBack(
+              this.props.navigation,
+              this.props.navigation.getParam("differentStack", false)
+            );
+          }
+        }
+      })
+    })
+  }
+
+  triggerDelete() {
+    Alert.alert(
+      "Project verwijderen",
+      "Je staat op het punt dit project te verwijderen",
+      [ 
+        {text: "Annuleer", onPress: () => {}},
+        {text: "Ja, verwijder", onPress: () => this.delete(), style: 'cancel'}
+      ],
+      {cancelable: false}
+    )
   }
 
   _renderItem({ item, index }) {
@@ -379,7 +418,31 @@ export default class ProjectDetail extends Component {
                 }}
               />
             )}
-            {!this.state.followed && (
+            {!this.state.followed && this.state.canDelete && (
+              <Toolbar
+                style={{
+                  container: { backgroundColor: "transparent", elevation: 0 }
+                }}
+                iconSet="MaterialCommunityIcons"
+                leftElement={"arrow-left"}
+                rightElement={["delete", "share-variant"]}
+                onLeftElementPress={() => {
+                  Router.goBack(
+                    this.props.navigation,
+                    this.props.navigation.getParam("differentStack", false)
+                  );
+                }}
+                onRightElementPress={action => {
+                  if (action.action == "share-variant") {
+                    //share
+                    console.log("share");
+                  } else {
+                    this.triggerDelete();
+                  }
+                }}
+              />
+            )}
+            {!this.state.followed && !this.state.canDelete && (
               <Toolbar
                 style={{
                   container: { backgroundColor: "transparent", elevation: 0 }

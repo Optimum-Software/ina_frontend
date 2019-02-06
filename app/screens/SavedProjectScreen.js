@@ -25,6 +25,7 @@ import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import { CachedImage } from "react-native-cached-image";
 import Ripple from "react-native-material-ripple";
 import { Icon } from "react-native-elements";
+import ProjectComponent from "../components/ProjectComponent";
 
 export default class SavedProjects extends Component {
   constructor() {
@@ -74,58 +75,6 @@ export default class SavedProjects extends Component {
   }
 
   handelEnd = () => {};
-
-  _renderItem = ({ item }) => (
-    <Ripple
-      rippleColor="#FFF"
-      style={styles.cardContainer}
-      key={item.id}
-      onPress={() => {
-        Router.goTo(
-          this.props.navigation,
-          "ProjectStack",
-          "ProjectDetailScreen",
-          {
-            id: item.id,
-            name: item.name,
-            desc: item.desc,
-            start_date: item.startDate,
-            end_date: item.endDate,
-            created_at: item.createdAt,
-            like_count: item.likeCount,
-            follower_count: item.followerCount,
-            location: item.location,
-            thumbnail: Api.getFileUrl(item.thumbnail),
-            creator: item.creator,
-            images: item.images,
-            files: item.files,
-            liked: item.liked,
-            member: item.member,
-            followed: item.followed,
-            differentStack: true
-          }
-        );
-      }}
-    >
-      <View style={styles.card}>
-        <View style={styles.cardImage}>
-          <CachedImage
-            source={{ uri: Api.getFileUrl(item.thumbnail) }}
-            resizeMode="cover"
-            style={styles.image}
-          />
-        </View>
-        <Image
-          source={line}
-          resizeMode="stretch"
-          style={{ width: "100%", height: "2%" }}
-        />
-        <Text numberOfLines={2} style={styles.cardTitle}>
-          {item.name}
-        </Text>
-      </View>
-    </Ripple>
-  );
 
   onRefreshMembered() {
     this.setState({ loading: true });
@@ -181,7 +130,15 @@ export default class SavedProjects extends Component {
                 refreshing={this.state.refreshingMembered}
                 onRefresh={() => this.onRefreshMembered()}
                 numColumns={2}
-                renderItem={this._renderItem}
+                renderItem={({ item, index }) => (
+                  <ProjectComponent
+                    item={item}
+                    index={index}
+                    projects={this.state.memberedProjects}
+                    dispatcher={this.props.navigation}
+                    differentStack={true}
+                  />
+                )}
               />
             )}
           {this.state.memberedProjects.length == 0 &&
@@ -204,7 +161,7 @@ export default class SavedProjects extends Component {
                 </Ripple>
               </View>
             )}
-          {this.state.loading == true && (
+          {this.state.loading && (
             <View
               style={{
                 height: "92.5%",
@@ -230,7 +187,15 @@ export default class SavedProjects extends Component {
                 refreshing={this.state.refreshingFollowed}
                 onRefresh={() => this.onRefreshFollowed()}
                 numColumns={2}
-                renderItem={this._renderItem}
+                renderItem={({ item, index }) => (
+                  <ProjectComponent
+                    item={item}
+                    index={index}
+                    projects={this.state.followedProjects}
+                    dispatcher={this.props.navigation}
+                    differentStack={true}
+                  />
+                )}
               />
             )}
           {this.state.followedProjects.length == 0 &&
@@ -253,7 +218,7 @@ export default class SavedProjects extends Component {
                 </Ripple>
               </View>
             )}
-          {this.state.loading == true && (
+          {this.state.loading && (
             <View
               style={{
                 height: "92.5%",
@@ -279,7 +244,15 @@ export default class SavedProjects extends Component {
                 refreshing={this.state.refreshingLiked}
                 onRefresh={() => this.onRefreshLiked()}
                 numColumns={2}
-                renderItem={this._renderItem}
+                renderItem={({ item, index }) => (
+                  <ProjectComponent
+                    item={item}
+                    index={index}
+                    projects={this.state.likedProjects}
+                    dispatcher={this.props.navigation}
+                    differentStack={true}
+                  />
+                )}
               />
             )}
           {this.state.likedProjects.length == 0 &&
@@ -302,7 +275,7 @@ export default class SavedProjects extends Component {
                 </Ripple>
               </View>
             )}
-          {this.state.loading == true && (
+          {this.state.loading && (
             <View
               style={{
                 height: "92.5%",

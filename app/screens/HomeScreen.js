@@ -37,6 +37,7 @@ import { ifIphoneX, isIphoneX } from "react-native-iphone-x-helper";
 import line2 from "../assets/images/line3.png";
 import RNFetchBlob from "react-native-fetch-blob";
 import OneSignal from "react-native-onesignal";
+import ProjectComponent from "../components/ProjectComponent";
 
 const colorArray = ["#312783", "#F39200", "#3AAA35", "#E94E1B", "#BE1522"];
 
@@ -54,7 +55,9 @@ export default class Home extends Component {
       refreshing: false,
       search: false,
       unRead: 0,
-      userId: null
+      userId: null,
+      startIndex: 0,
+      endIndex: 9
     };
     this.animatedValue = new Animated.Value(0);
     Router.setDispatcher(this.props.navigation);
@@ -87,7 +90,6 @@ export default class Home extends Component {
   }
 
   onOpened(openResult) {
-    console.log(openResult.notification);
     if (openResult.notification.isAppInFocus) {
       if (openResult.notification.payload.additionalData["type"] == 0) {
         //go to chat
@@ -179,7 +181,6 @@ export default class Home extends Component {
     ProjectApi.getProjects(this.state.userId, "most_liked").then(response => {
       if (response["bool"]) {
         this.setState({ projects: response["projects"] });
-        console.log(response);
       }
     });
   }
@@ -228,6 +229,8 @@ export default class Home extends Component {
     });
     this.setState({ searchTerm: "" });
   }
+
+  handelProjectsEnd = () => {};
 
   handelEnd = () => {};
 
@@ -379,107 +382,18 @@ export default class Home extends Component {
               )}
               <FlatList
                 data={this.state.projects}
-                onEndReached={() => this.handelEnd()}
+                onEndReached={() => this.handelProjectsEnd()}
                 numColumns={2}
                 contentContainerStyle={{ paddingLeft: 10, paddingRight: 10 }}
-                renderItem={({ item, index }) => {
-                  return (
-                    <Ripple
-                      rippleColor="#fff"
-                      style={styles.cardContainer}
-                      key={item.id}
-                      onPress={() =>
-                        Router.goTo(
-                          this.props.navigation,
-                          "ProjectStack",
-                          "ProjectDetailScreen",
-                          {
-                            id: item.id,
-                            name: item.name,
-                            desc: item.desc,
-                            start_date: item.startDate,
-                            end_date: item.endDate,
-                            created_at: item.createdAt,
-                            like_count: item.likeCount,
-                            follower_count: item.followerCount,
-                            location: item.location,
-                            thumbnail: Api.getFileUrl(item.thumbnail),
-                            creator: item.creator,
-                            images: item.images,
-                            files: item.files,
-                            liked: item.liked,
-                            member: item.member,
-                            followed: item.followed,
-                            differentStack: true
-                          }
-                        )
-                      }
-                    >
-                      {index != this.state.projects.length - 1 && (
-                        //not last card
-                        <View style={styles.card}>
-                          <View style={styles.cardImage}>
-                            <CachedImage
-                              source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                              resizeMode="cover"
-                              style={styles.image}
-                            />
-                          </View>
-                          <Image
-                            source={line2}
-                            resizeMode="stretch"
-                            style={{ width: "100%", height: "2%" }}
-                          />
-                          <Text numberOfLines={2} style={styles.cardTitle}>
-                            {item.name}
-                          </Text>
-                        </View>
-                      )}
-                      {index == this.state.projects.length - 1 &&
-                        (index + 1) % 2 == 0 && (
-                          //last card but even index
-                          <View style={styles.card}>
-                            <View style={styles.cardImage}>
-                              <CachedImage
-                                source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                                resizeMode="cover"
-                                style={styles.image}
-                              />
-                            </View>
-                            <Image
-                              source={line2}
-                              resizeMode="stretch"
-                              style={{ width: "100%", height: "2%" }}
-                            />
-                            <Text numberOfLines={2} style={styles.cardTitle}>
-                              {item.name}
-                            </Text>
-                          </View>
-                        )}
-                      {index == this.state.projects.length - 1 &&
-                        (index + 1) % 2 != 0 && (
-                          //last card but uneven index
-                          <View style={styles.cardUneven}>
-                            <View style={styles.cardImage}>
-                              <CachedImage
-                                source={{ uri: Api.getFileUrl(item.thumbnail) }}
-                                resizeMode="cover"
-                                style={styles.image}
-                              />
-                            </View>
-                            <Image
-                              source={line2}
-                              resizeMode="stretch"
-                              style={{ width: "100%", height: "2%" }}
-                            />
-                            <Text numberOfLines={2} style={styles.cardTitle}>
-                              {item.name}
-                            </Text>
-                          </View>
-                        )}
-                    </Ripple>
-                  );
-                }}
+                renderItem={({ item, index }) => (
+                  <ProjectComponent
+                    item={item}
+                    index={index}
+                    projects={this.state.projects}
+                    dispatcher={this.props.navigation}
+                    differentStack={true}
+                  />
+                )}
               />
             </View>
           </ScrollView>
