@@ -5,7 +5,8 @@ import Router from "./Router";
 let instance = null;
 let userToken = null;
 class Api {
-  ip = "http://136.144.186.136";
+  ip = "http://145.37.152.130:8000";
+  //ip = "http://136.144.186.136";
 
   url = this.ip + "/api/";
   mediaUrl = this.ip + "/media";
@@ -64,8 +65,8 @@ class Api {
         },
         body: JSON.stringify(data)
       });
-      if(response.status == 401) {
-        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      if (response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true });
       }
       let responseJson = await response.json();
       return responseJson;
@@ -105,8 +106,8 @@ class Api {
           Authorization: "Token " + userToken
         }
       });
-      if(response.status == 401) {
-        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      if (response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true });
       }
       let responseJson = await response.json();
       return responseJson;
@@ -190,8 +191,8 @@ class Api {
         },
         body: data
       });
-      if(response.status == 401) {
-        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      if (response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true });
       }
       let responseJson = await response.json();
       return responseJson;
@@ -240,8 +241,8 @@ class Api {
         },
         body: data
       });
-      if(response.status == 401) {
-        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true})
+      if (response.status == 401) {
+        Router.goFromApi("LoginStack", "LoginScreen", { differentStack: true });
       }
       let responseJson = await response.json();
       return responseJson;

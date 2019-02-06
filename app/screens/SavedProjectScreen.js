@@ -18,7 +18,7 @@ import { Header } from "react-navigation";
 import { Toolbar } from "react-native-material-ui";
 import line from "../assets/images/line3.png";
 import Router from "../helpers/Router";
-import SavedApi from "../helpers/SavedApi";
+import ProjectApi from "../helpers/ProjectApi";
 import Api from "../helpers/Api";
 import User from "../helpers/User";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
@@ -48,31 +48,25 @@ export default class SavedProjects extends Component {
 
   componentDidMount() {
     User.getUserId().then(userId => {
-      SavedApi.getAllFollows(userId).then(res => {
+      ProjectApi.getProjects(userId, "user_followed").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ followedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ followedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
       });
-      SavedApi.getAllMembered(userId).then(res => {
-        if(res['bool']) {
-          if(res['found']) {
-            this.setState({memberedProjects: res['projects']})
-          } else {
-            alert(res["msg"]);
-          }
+      ProjectApi.getProjects(userId, "user_member").then(res => {
+        if (res["bool"]) {
+          this.setState({ memberedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
       });
-      SavedApi.getAllLiked(userId).then(res => {
+      ProjectApi.getProjects(userId, "user_liked").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ likedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ likedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
       });
       this.setState({ loading: false });
@@ -105,11 +99,13 @@ export default class SavedProjects extends Component {
             creator: item.creator,
             images: item.images,
             files: item.files,
-
-            differentStack: true,
+            liked: item.liked,
+            member: item.member,
+            followed: item.followed,
+            differentStack: true
           }
-        )}
-      }
+        );
+      }}
     >
       <View style={styles.card}>
         <View style={styles.cardImage}>
@@ -133,49 +129,43 @@ export default class SavedProjects extends Component {
 
   onRefreshMembered() {
     this.setState({ loading: true });
-    User.getUserId().then(id => {
-      SavedApi.getAllMembered(id).then(res => {
+    User.getUserId().then(userId => {
+      ProjectApi.getProjects(userId, "user_member").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ memberedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ memberedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
-        this.setState({ loading: false });
       });
+      this.setState({ loading: false });
     });
   }
 
   onRefreshFollowed() {
     this.setState({ loading: true });
-    User.getUserId().then(id => {
-      SavedApi.getAllFollows(id).then(res => {
+    User.getUserId().then(userId => {
+      ProjectApi.getProjects(userId, "user_followed").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ followedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ followedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
-        this.setState({ loading: false });
       });
+      this.setState({ loading: false });
     });
   }
 
   onRefreshLiked() {
     this.setState({ loading: true });
-    User.getUserId().then(id => {
-      SavedApi.getAllLiked(id).then(res => {
+    User.getUserId().then(userId => {
+      ProjectApi.getProjects(userId, "user_liked").then(res => {
         if (res["bool"]) {
-          if (res["found"]) {
-            this.setState({ likedProjects: res["projects"] });
-          } else {
-            alert(res["msg"]);
-          }
+          this.setState({ likedProjects: res["projects"] });
+        } else {
+          alert(res["msg"]);
         }
-        this.setState({ loading: false });
       });
+      this.setState({ loading: false });
     });
   }
 
@@ -183,36 +173,38 @@ export default class SavedProjects extends Component {
     const membersRoute = () => {
       return (
         <View>
-          {this.state.memberedProjects.length > 0 && !this.state.loading && (
-            <FlatList
-              data={this.state.memberedProjects}
-              onEndReached={() => this.handelEnd()}
-              refreshing={this.state.refreshingMembered}
-              onRefresh={() => this.onRefreshMembered()}
-              numColumns={2}
-              renderItem={this._renderItem}
-            />
-          )}
-          {this.state.memberedProjects.length == 0 && !this.state.loading && (
-            <View style={styles.emptyBox}>
-              <Text style={styles.emptyText}>
-                Er zijn geen projecten gevonden waar jij aan deelneemt
-              </Text>
-              <Ripple
-                rippleColor="#00a6ff"
-                style={styles.refreshButton}
-                onPress={() => this.onRefreshMembered()}
-              >
-                <Icon
-                  name="refresh"
-                  type="font-awesome"
-                  size={25}
-                  color="#FFF"
-                />
-              </Ripple>
-            </View>
-          )}
-          {this.state.loading && (
+          {this.state.memberedProjects.length > 0 &&
+            !this.state.loading && (
+              <FlatList
+                data={this.state.memberedProjects}
+                onEndReached={() => this.handelEnd()}
+                refreshing={this.state.refreshingMembered}
+                onRefresh={() => this.onRefreshMembered()}
+                numColumns={2}
+                renderItem={this._renderItem}
+              />
+            )}
+          {this.state.memberedProjects.length == 0 &&
+            !this.state.loading && (
+              <View style={styles.emptyBox}>
+                <Text style={styles.emptyText}>
+                  Er zijn geen projecten gevonden waar jij aan deelneemt
+                </Text>
+                <Ripple
+                  rippleColor="#00a6ff"
+                  style={styles.refreshButton}
+                  onPress={() => this.onRefreshMembered()}
+                >
+                  <Icon
+                    name="refresh"
+                    type="font-awesome"
+                    size={25}
+                    color="#FFF"
+                  />
+                </Ripple>
+              </View>
+            )}
+          {this.state.loading == true && (
             <View
               style={{
                 height: "92.5%",
@@ -230,36 +222,38 @@ export default class SavedProjects extends Component {
     const followedRoute = () => {
       return (
         <View>
-          {this.state.followedProjects.length > 0 && !this.state.loading && (
-            <FlatList
-              data={this.state.followedProjects}
-              onEndReached={() => this.handelEnd()}
-              refreshing={this.state.refreshingFollowed}
-              onRefresh={() => this.onRefreshFollowed()}
-              numColumns={2}
-              renderItem={this._renderItem}
-            />
-          )}
-          {this.state.followedProjects.length == 0 && !this.state.loading && (
-            <View style={styles.emptyBox}>
-              <Text style={styles.emptyText}>
-                Er zijn geen projecten gevonden die jij volgt
-              </Text>
-              <Ripple
-                rippleColor="#00a6ff"
-                style={styles.refreshButton}
-                onPress={() => this.onRefreshFollowed()}
-              >
-                <Icon
-                  name="refresh"
-                  type="font-awesome"
-                  size={25}
-                  color="#FFF"
-                />
-              </Ripple>
-            </View>
-          )}
-          {this.state.loading && (
+          {this.state.followedProjects.length > 0 &&
+            !this.state.loading && (
+              <FlatList
+                data={this.state.followedProjects}
+                onEndReached={() => this.handelEnd()}
+                refreshing={this.state.refreshingFollowed}
+                onRefresh={() => this.onRefreshFollowed()}
+                numColumns={2}
+                renderItem={this._renderItem}
+              />
+            )}
+          {this.state.followedProjects.length == 0 &&
+            !this.state.loading && (
+              <View style={styles.emptyBox}>
+                <Text style={styles.emptyText}>
+                  Er zijn geen projecten gevonden die jij volgt
+                </Text>
+                <Ripple
+                  rippleColor="#00a6ff"
+                  style={styles.refreshButton}
+                  onPress={() => this.onRefreshFollowed()}
+                >
+                  <Icon
+                    name="refresh"
+                    type="font-awesome"
+                    size={25}
+                    color="#FFF"
+                  />
+                </Ripple>
+              </View>
+            )}
+          {this.state.loading == true && (
             <View
               style={{
                 height: "92.5%",
@@ -277,36 +271,38 @@ export default class SavedProjects extends Component {
     const likedRoute = () => {
       return (
         <View>
-          {this.state.likedProjects.length > 0 && !this.state.loading && (
-            <FlatList
-              data={this.state.likedProjects}
-              onEndReached={() => this.handelEnd()}
-              refreshing={this.state.refreshingLiked}
-              onRefresh={() => this.onRefreshLiked()}
-              numColumns={2}
-              renderItem={this._renderItem}
-            />
-          )}
-          {this.state.likedProjects.length == 0 && !this.state.loading && (
-            <View style={styles.emptyBox}>
-              <Text style={styles.emptyText}>
-                Er zijn geen projecten gevonden die jij leuk vindt
-              </Text>
-              <Ripple
-                rippleColor="#00a6ff"
-                style={styles.refreshButton}
-                onPress={() => this.onRefreshLiked()}
-              >
-                <Icon
-                  name="refresh"
-                  type="font-awesome"
-                  size={25}
-                  color="#FFF"
-                />
-              </Ripple>
-            </View>
-          )}
-          {this.state.loading && (
+          {this.state.likedProjects.length > 0 &&
+            !this.state.loading && (
+              <FlatList
+                data={this.state.likedProjects}
+                onEndReached={() => this.handelEnd()}
+                refreshing={this.state.refreshingLiked}
+                onRefresh={() => this.onRefreshLiked()}
+                numColumns={2}
+                renderItem={this._renderItem}
+              />
+            )}
+          {this.state.likedProjects.length == 0 &&
+            !this.state.loading && (
+              <View style={styles.emptyBox}>
+                <Text style={styles.emptyText}>
+                  Er zijn geen projecten gevonden die jij leuk vindt
+                </Text>
+                <Ripple
+                  rippleColor="#00a6ff"
+                  style={styles.refreshButton}
+                  onPress={() => this.onRefreshLiked()}
+                >
+                  <Icon
+                    name="refresh"
+                    type="font-awesome"
+                    size={25}
+                    color="#FFF"
+                  />
+                </Ripple>
+              </View>
+            )}
+          {this.state.loading == true && (
             <View
               style={{
                 height: "92.5%",
