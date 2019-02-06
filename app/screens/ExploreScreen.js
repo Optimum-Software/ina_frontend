@@ -531,7 +531,10 @@ export default class ExploreScreen extends React.Component {
                   ),
                   creator: this.state.cards[this.swiper.state.sindex - 2].creator,
                   images: this.state.cards[this.swiper.state.sindex - 2].images,
-                  files: this.state.cards[this.swiper.state.sindex - 2].files
+                  files: this.state.cards[this.swiper.state.sindex - 2].files,
+                  liked: this.state.cards[this.swiper.state.sindex - 2].liked,
+                  member: this.state.cards[this.swiper.state.sindex - 2].member,
+                  followed: this.state.cards[this.swiper.state.sindex - 2].followed
                 }
               )
             }
