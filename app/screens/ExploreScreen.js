@@ -221,25 +221,27 @@ export default class ExploreScreen extends React.Component {
             Router.goBack(this.props.navigation);
           }}
         />
-        {this.state.cards.length < 1 && <View
-          style={{
-            height: Dimensions.get("window").height,
-            width: Dimensions.get("window").width,
-            justifyContent: "center",
-            alignItems: "center"
-          }}
-        >
-          <Text
+        {this.state.cards.length < 1 && (
+          <View
             style={{
-              fontWeight: "700",
-              fontSize: 18,
-              color: "gray",
-              alignSelf: "center"
+              height: Dimensions.get("window").height,
+              width: Dimensions.get("window").width,
+              justifyContent: "center",
+              alignItems: "center"
             }}
           >
-            Er zijn geen nieuwe projecten
-          </Text>
-        </View>}
+            <Text
+              style={{
+                fontWeight: "700",
+                fontSize: 18,
+                color: "gray",
+                alignSelf: "center"
+              }}
+            >
+              Er zijn geen nieuwe projecten
+            </Text>
+          </View>)
+      }
         <CardStack
           style={styles.container}
           verticalSwipe={false}
@@ -255,14 +257,6 @@ export default class ExploreScreen extends React.Component {
                 alignItems: "center"
               }}
             >
-              <Text
-                style={{
-                  height: Dimensions.get("window").height,
-                  width: Dimensions.get("window").width,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
                 <Text
                   style={{
                     fontWeight: "700",
