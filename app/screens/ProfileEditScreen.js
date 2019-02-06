@@ -89,7 +89,7 @@ export default class ProfileEditScreen extends Component {
         this.state.lastName,
         this.state.bio,
         this.state.organisation,
-        this.state._function,
+encodeURIComponent(this.state._function),
         this.state.profilePhoto.uri
       ).then(res => {
         if (res["bool"]) {

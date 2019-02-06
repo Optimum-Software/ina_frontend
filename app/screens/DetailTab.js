@@ -348,7 +348,7 @@ export default class DetailTab extends Component {
 
           <View style={styles.separator} />
 
-          <Text>{this.state.project.desc}</Text>
+          <Text>{decodeURIComponent(this.state.project.desc)}</Text>
 
           {this.state.project.files.length > 0 && (
             <View style={styles.separator} />

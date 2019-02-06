@@ -138,7 +138,7 @@ class ProjectCreateSecondScreen extends Component {
               handleAddition={this.handleAddition}
               handleDelete={this.handleDelete}
               onCustomTagCreated={this.handleCustomTagCreated}
-              createTagOnSpace={true}
+              createTagOnSpace={false}
               placeholder="Voeg een tag toe.."
             />
 
