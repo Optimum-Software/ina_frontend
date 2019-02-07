@@ -61,6 +61,7 @@ export default class ExploreScreen extends React.Component {
   updateStack = () => {
     User.getUserId().then(id => {
       ProjectApi.getSwipeProjects(id).then(response => {
+        console.log(response)
         this.setState({ cards: response["projects"] });
         setTimeout(() => this.swiper.triggerRight(), 2000);
       });
@@ -68,7 +69,7 @@ export default class ExploreScreen extends React.Component {
   };
 
   startChat() {
-    console.log(this.state.cards[this.state.cardIndex]);
+    //console.log(this.state.cards[this.state.cardIndex]);
     User.getUserId().then(id => {
       let creatorId = this.state.cards[this.swiper.state.sindex - 2].creator.id;
       let uid = "";
@@ -221,6 +222,7 @@ export default class ExploreScreen extends React.Component {
             Router.goBack(this.props.navigation);
           }}
         />
+        {console.log(this.state.cards)}
         {this.state.cards.length < 1 && (
           <View
             style={{

@@ -34,9 +34,9 @@ class ProjectCreateFirstScreen extends Component {
       pickedImgUri: "",
       imgPicked: false,
 
-      name: "Docent aan het roer",
+      name: "",
       desc:
-        "De docent kan bijsturen wanneer en waar het nodig is. De dashboards per individuele leerling en voor de hele klas geven direct inzicht. Heeft de hele klas moeite met een bepaald onderwerp? Dan kan het onderwerp klassikaal nog eens behandeld worden. Met Versterk jezelf verwacht Malmberg dat docenten tijdwinst behalen doordat de leerling zelfstandig een stap verder komt. Hij wordt een stukje onafhankelijker en kan ook thuis verder met lastige lesstof. De leraar komt niet buitenspel te staan, het systeem adviseert leerlingen om naar de docent te gaan als hij het onderwerp lastig blijft vinden. Dit voorkomt dat een leerling eindeloos opdrachten aangeboden krijgt en gedemotiveerd raakt. Zo kan de docent zich richten op de leerlingen die extra ondersteuning nodig hebben. Als docent hoef je natuurlijk niet te wachten tot dat een leerling om hulp vraagt. Met het dashboard is één oogopslag inzichtelijk welk onderwerp als moeilijk wordt ervaren. “Versterk jezelf van MAX Online draagt echt bij aan het verhogen van het kennisniveau van leerlingen in het voortgezet onderwijs.” aldus de jury. Wil je meer weten over MAX? Kijk dan op de website of neem contact op per e-mail. De Award wordt op 31 oktober 2017 uitgereikt. Je kunt nog stemmen op jouw favoriete ICT project.",
+        "",
 
       nameError: "",
       descError: "",

@@ -68,6 +68,7 @@ export default class Chat extends Component {
                 // Any additional custom parameters are passed through
               });
             } else {
+              console.log(child.val().user.id)
               var bytes = CryptoJS.AES.decrypt(
                 child.val().text,
                 sha256(child.val().user.id + child.val().user.email).toString()

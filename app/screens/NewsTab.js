@@ -196,7 +196,8 @@ const styles = StyleSheet.create({
 
   box: {
     marginVertical: 5,
-    marginLeft: "7.5%"
+    marginLeft: "7.5%",
+    width: '78%'
   },
 
   iconContainer: {
