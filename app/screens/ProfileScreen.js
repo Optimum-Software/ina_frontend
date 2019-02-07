@@ -9,7 +9,8 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  TouchableHighlight
+  TouchableHighlight,
+  ImageBackground
 } from "react-native";
 import { Toolbar } from "react-native-material-ui";
 import UserApi from "../helpers/UserApi";
@@ -43,33 +44,41 @@ export default class ProfileScreen extends Component {
       if (id != null) {
         ProfileParameters.storeUserId(null);
         Api.callApiGetSafe("getUserById/" + id).then(res => {
+          console.log(res);
           this.setState({
             id: res.user.id,
-            firstName: res.user.firstName,
-            lastName: res.user.lastName,
-            organisation: res.user.organisation,
-            _function: res.user.function,
-            bio: res.user.bio,
-            profilePhoto: { uri: Api.getFileUrl(res.user.profilePhotoPath) }
+            firstName: res["user"].firstName,
+            lastName: res["user"].lastName,
+            organisation: res["user"].organisation,
+            _function: res["user"].function,
+            bio: res["user"].bio,
+            profilePhoto: {
+              uri: Api.getFileUrl(res["user"].profilePhotoPath)
+            }
           });
         });
       } else {
         User.getUserId().then(id => {
           Api.callApiGetSafe("getUserById/" + id).then(res => {
+            console.log(res);
+
             this.setState({
               id: res.user.id,
-              firstName: res.user.firstName,
-              lastName: res.user.lastName,
-              organisation: res.user.organisation,
-              _function: res.user.function,
-              bio: res.user.bio,
-              profilePhoto: { uri: Api.getFileUrl(res.user.profilePhotoPath) },
+              firstName: res["user"].firstName,
+              lastName: res["user"].lastName,
+              organisation: res["user"].organisation,
+              _function: res["user"].function,
+              bio: res["user"].bio,
+              profilePhoto: {
+                uri: Api.getFileUrl(res["user"].profilePhotoPath)
+              },
               admin: true
             });
           });
         });
       }
     });
+    console.log(this.state);
   }
 
   render() {
@@ -77,66 +86,116 @@ export default class ProfileScreen extends Component {
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-        <StatusBar
-          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-          barStyle="light-content"
-        />
-        <View style={{ height: Header.HEIGHT }}>
-          <Toolbar
-            centerElement="Profiel"
-            iconSet="MaterialCommunityIcons"
-            leftElement={"chevron-left"}
-            style={{ container: { backgroundColor: "#009EF2" } }}
-            onLeftElementPress={() => {
-              Router.goTo(this.props.navigation, "LoggedIn", "LoggedIn");
-            }}
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            barStyle="light-content"
           />
-        </View>
-        <ScrollView style={{ flex: 1 }}>
-          <CachedImage
-            source={this.state.profilePhoto}
-            style={styles.profilePhoto}
-          />
-          <View>
-            <CachedImage
-              source={line}
-              resizeMode="cover"
-              style={{ width: "100%", height: 3 }}
-            />
-            <View style={styles.personalInfoBox}>
-              <View style={styles.labels}>
-                <Text style={styles.label}>Naam</Text>
-                <Text style={styles.label}>Organisatie</Text>
-                <Text style={styles.label}>Functie</Text>
-              </View>
-              <View style={styles.items}>
-                <Text>{this.state.firstName + " " + this.state.lastName}</Text>
-                <Text>{this.state.organisation}</Text>
-                <Text>{this.state._function}</Text>
-              </View>
-              {this.state.admin && (
-                <TouchableHighlight
-                  underlayColor="#009ef2"
-                  style={styles.buttonStyle}
-                  onPress={() => {
-                    Router.goTo(
-                      this.props.navigation,
-                      "ProfileEdit",
-                      "ProfileEditScreen"
-                    );
+
+          <ScrollView style={{ flex: 1 }}>
+            <View>
+              <View style={styles.infoContainer}>
+                <View style={{ height: Header.HEIGHT }}>
+                  {!this.state.admin && (
+                    <Toolbar
+                      iconSet="MaterialCommunityIcons"
+                      leftElement={"chevron-left"}
+                      style={{
+                        container: {
+                          backgroundColor: "transparent",
+                          elevation: 0
+                        }
+                      }}
+                      onLeftElementPress={() => {
+                        Router.goTo(
+                          this.props.navigation,
+                          "LoggedIn",
+                          "LoggedIn"
+                        );
+                      }}
+                    />
+                  )}
+                  {this.state.admin == true && (
+                    <Toolbar
+                      iconSet="MaterialCommunityIcons"
+                      leftElement={"chevron-left"}
+                      style={{
+                        container: {
+                          backgroundColor: "transparent",
+                          elevation: 0
+                        }
+                      }}
+                      onLeftElementPress={() => {
+                        Router.goTo(
+                          this.props.navigation,
+                          "LoggedIn",
+                          "LoggedIn"
+                        );
+                      }}
+                      rightElement={"pencil"}
+                      onRightElementPress={() => {
+                        Router.goTo(
+                          this.props.navigation,
+                          "ProfileEdit",
+                          "ProfileEditScreen"
+                        );
+                      }}
+                    />
+                  )}
+                </View>
+                <View style={styles.profilePhotoContainer}>
+                  <CachedImage
+                    source={this.state.profilePhoto}
+                    resizeMode={"cover"}
+                    style={styles.profilePhoto}
+                  />
+                </View>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: "#fff",
+                    alignSelf: "center",
+                    marginTop: 10,
+                    fontWeight: "bold"
                   }}
                 >
-                  <Icon name="edit" type="entypo" size={30} color="#FFF" />
-                </TouchableHighlight>
-              )}
+                  {this.state.firstName + " " + this.state.lastName}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: "#fff",
+                    alignSelf: "center"
+                  }}
+                >
+                  {this.state._function}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: "#fff",
+                    alignSelf: "center"
+                  }}
+                >
+                  {this.state.organisation}
+                </Text>
+              </View>
+              <ImageBackground
+                style={styles.wave}
+                resizeMode="stretch"
+                source={require("../assets/images/bluewavebgRev.png")}
+              />
             </View>
-            <View style={styles.separator} />
-            <View style={{ paddingLeft: "10%", paddingRight: "10%" }}>
+            <View
+              style={{
+                paddingLeft: "5%",
+                paddingRight: "5%",
+                paddingTop: "5%"
+              }}
+            >
               <Text>{this.state.bio}</Text>
             </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+          </ScrollView>
+        </SafeAreaView>
       </Fragment>
     );
   }
@@ -146,7 +205,15 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1
   },
-
+  infoContainer: {
+    backgroundColor: "#00a6ff",
+    height: Dimensions.get("window").height * 0.3,
+    zIndex: 1
+  },
+  wave: {
+    height: 115,
+    zIndex: 0
+  },
   buttonStyle: {
     height: 50,
     width: 50,
@@ -156,9 +223,22 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
 
+  profilePhotoContainer: {
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 62,
+    width: 124,
+    height: 124,
+    resizeMode: "cover",
+    alignSelf: "center"
+  },
   profilePhoto: {
-    width: "100%",
-    height: Dimensions.get("window").height * 0.3
+    borderRadius: 60,
+    width: 120,
+    height: 120,
+    resizeMode: "cover",
+    alignSelf: "center"
   },
   personalInfoBox: {
     marginTop: 30,
