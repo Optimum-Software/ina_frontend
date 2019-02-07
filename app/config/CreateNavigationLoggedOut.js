@@ -28,7 +28,6 @@ import SavedProjectScreen from "../screens/SavedProjectScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import NotificationScreen from "../screens/NotificationScreen";
-import RegistrationScreenVerifySuccessfull from "../screens/RegistrationScreenVerifySuccessfull";
 
 import ChatStack from "./ChatStackNavigator";
 import LoginStack from "./LoginStackNavigator";
@@ -179,8 +178,12 @@ export const Drawer = createDrawerNavigator(
     drawerBackgroundColor: "transparent",
 
     contentOptions: {
-      activeTintColor: "black",
+      activeTintColor: "#fff",
       activeBackgroundColor: "transparent",
+      activeLabelStyle: {
+        fontColor: "#fff",
+        textDecorationLine: "underline"
+      },
       inactiveTintColor: "#fff",
       itemsContainerStyle: {
         marginVertical: 0

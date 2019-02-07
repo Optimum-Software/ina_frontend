@@ -17,6 +17,7 @@ import { Input, Button, Icon } from "react-native-elements";
 import Router from "../helpers/Router";
 import UserApi from "../helpers/UserApi";
 import sha256 from "crypto-js/sha256";
+import WhiteButton from "../components/WhiteButton";
 
 var SHA256 = require("crypto-js/sha256");
 
@@ -251,29 +252,16 @@ export default class RegistrationScreenStart extends Component {
               <Text style={styles.errorStyle}>{this.state.pwRepeatError}</Text>
               <View
                 style={{
-                  paddingLeft: "10%",
-                  paddingRight: "10%",
+                  paddingLeft: "13%",
+                  paddingRight: "13%",
                   justifyContent: "center"
                 }}
               >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#ffffff",
-                    borderRadius: 25
-                  }}
-                  onPress={() => this.goToRegisterPhone()}
-                >
-                  <Text
-                    style={{
-                      padding: "4%",
-                      fontSize: 16,
-                      color: "#00a6ff",
-                      textAlign: "center"
-                    }}
-                  >
-                    Registreren
-                  </Text>
-                </TouchableOpacity>
+              <WhiteButton
+          label='Registreren'
+          onPress={() => this.goToRegisterPhone()}
+        />
+
               </View>
 
               <TouchableOpacity

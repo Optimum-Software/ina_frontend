@@ -41,7 +41,8 @@ export default class GroupMembersScreen extends Component {
     return (
       <View style={styles.container}>
         <Toolbar
-          leftElement={"chevron-left"}
+          leftElement={"arrow-left"}
+
           onLeftElementPress={() => Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))}
           centerElement="Leden"
         />

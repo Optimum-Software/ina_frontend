@@ -35,7 +35,10 @@ const tabbarVisible = navigation => {
 
   let showTabbar = true;
   routes.forEach(route => {
-    if (route.routeName === "ProjectDetailScreen") {
+    if (
+      route.routeName === "ProjectDetailScreen" ||
+      "projectcreate".indexOf(route.routeName.toLowerCase()) > -1
+    ) {
       showTabbar = false;
     }
   });
@@ -153,8 +156,12 @@ export const Drawer = createDrawerNavigator(
     contentComponent: DrawerContentComponent,
     drawerBackgroundColor: "transparent",
     contentOptions: {
-      activeTintColor: "black",
+      activeTintColor: "#fff",
       activeBackgroundColor: "transparent",
+      activeLabelStyle: {
+        fontColor: "#fff",
+        textDecorationLine: "underline"
+      },
       inactiveTintColor: "#fff",
       itemsContainerStyle: {
         marginVertical: 0

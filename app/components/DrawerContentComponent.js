@@ -44,7 +44,7 @@ export default class DrawerContentComponent extends Component {
             firstName: res["user"].firstName,
             lastName: res["user"].lastName,
             profilePhoto: { uri: Api.getFileUrl(res["user"].profilePhotoPath) },
-            organisation: res["user"].organisation
+            organisation: decodeURIComponent(res["user"].organisation)
           });
         });
       }
@@ -55,8 +55,7 @@ export default class DrawerContentComponent extends Component {
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "00a6ff" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "transparent" }}>
-
-          <View style={{height: Dimensions.get('window').height}}>
+          <View style={{ height: Dimensions.get("window").height }}>
             <View style={{ height: "90%" }}>
               <CachedImage
                 source={require("../assets/images/drawer.png")}
@@ -76,7 +75,7 @@ export default class DrawerContentComponent extends Component {
                   }}
                 >
                   <TouchableOpacity
-                    style={{marginLeft: 15}}
+                    style={{ marginLeft: 15 }}
                     onPress={() => {
                       Router.goTo(
                         this.props.navigation,
@@ -95,7 +94,6 @@ export default class DrawerContentComponent extends Component {
 
                         backgroundColor: "white"
                       }}
-
                     />
                   </TouchableOpacity>
                   <View
@@ -201,7 +199,7 @@ export default class DrawerContentComponent extends Component {
                 height: 60,
                 backgroundColor: "#01a6ff",
                 borderRadius: 100,
-                position: 'absolute',
+                position: "absolute",
                 bottom: (Dimensions.get("window").height - 90) * 0.055,
                 ...ifIphoneX({
                   bottom: (Dimensions.get("window").height - 150) * 0.115

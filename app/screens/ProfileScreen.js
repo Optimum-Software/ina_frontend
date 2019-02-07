@@ -66,9 +66,9 @@ export default class ProfileScreen extends Component {
               id: res.user.id,
               firstName: res["user"].firstName,
               lastName: res["user"].lastName,
-              organisation: res["user"].organisation,
-              _function: res["user"].function,
-              bio: res["user"].bio,
+              organisation: decodeURIComponent(res["user"].organisation),
+              _function: decodeURIComponent(res["user"].function),
+              bio: decodeURIComponent(res["user"].bio),
               profilePhoto: {
                 uri: Api.getFileUrl(res["user"].profilePhotoPath)
               },

@@ -13,6 +13,7 @@ import {
   Platform
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import BlueButton from "../components/BlueButton";
 
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
@@ -150,7 +151,7 @@ class ProjectCreateFourthScreen extends Component {
                 style={styles.buttonStyle}
                 onPress={() => this.goToNextPart()}
               >
-                <Text style={styles.buttonTextStyle}>Ga naar jouw project</Text>
+                <Text style={styles.buttonTextStyle}>Ga naar project</Text>
               </TouchableOpacity>
             </View>
           )}

@@ -349,7 +349,7 @@ export default class DetailTab extends Component {
 
           <View style={styles.separator} />
 
-          <Text>{this.state.project.desc}</Text>
+          <Text>{decodeURIComponent(this.state.project.desc)}</Text>
 
           {this.state.project.files.length > 0 && (
             <View style={styles.separator} />
@@ -428,13 +428,13 @@ export default class DetailTab extends Component {
 
           {(this.state.project.start_date != null ||
             this.state.project.end_date != null ||
-            this.state.project.location != null) && (
+            this.state.project.location != "") && (
             <View style={styles.separator} />
           )}
 
           {(this.state.project.start_date != null ||
             this.state.project.end_date != null ||
-            this.state.project.location != null) && (
+            this.state.project.location != "") && (
             <View
               style={{
                 flexDirection: "column",
@@ -461,7 +461,7 @@ export default class DetailTab extends Component {
                   Extra informatie
                 </Text>
               </View>
-              {this.state.project.location != null && (
+              {this.state.project.location != "" && (
                 <View
                   style={{
                     paddingHorizontal: 15,

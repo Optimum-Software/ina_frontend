@@ -22,6 +22,7 @@ import {
   DocumentPicker,
   DocumentPickerUtil
 } from "react-native-document-picker";
+import BlueButton from "../components/BlueButton";
 
 import { Toolbar } from "react-native-material-ui";
 import Router from "../helpers/Router";
@@ -167,16 +168,12 @@ class ProjectCreateThirdScreen extends Component {
         </View>
         <View
           style={{
-            width: "100%",
-            height: "10%"
+            paddingLeft: "10%",
+            paddingRight: "10%",
+            paddingBottom: "10%"
           }}
         >
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => this.goToNextPart()}
-          >
-            <Text style={styles.buttonTextStyle}>Maak project</Text>
-          </TouchableOpacity>
+          <BlueButton label="Maak project" onPress={() => this.goToNextPart()} />
         </View>
         </SafeAreaView>
         </Fragment>
