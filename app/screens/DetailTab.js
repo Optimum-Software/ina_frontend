@@ -574,10 +574,12 @@ export default class DetailTab extends Component {
               </TouchableOpacity>
             </View>
           )}
-
-          <View style={styles.separator} />
-
-          <View
+          {this.state.userId != this.state.project.creator.id && (
+            <View style={styles.separator} />
+            )}
+          
+          {this.state.userId != this.state.project.creator.id && (
+            <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
@@ -722,6 +724,8 @@ export default class DetailTab extends Component {
               </View>
             )}
           </View>
+        )}
+          
 
           {this.state.tags.length > 0 && <View style={styles.separator} />}
           {this.state.tags.length > 0 && (

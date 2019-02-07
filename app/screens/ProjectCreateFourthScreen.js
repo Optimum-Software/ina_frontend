@@ -82,8 +82,8 @@ class ProjectCreateFourthScreen extends Component {
   goToNextPart() {
     Router.goTo(this.props.navigation, "ProjectStack", "ProjectDetailScreen", {
       id: this.state.project.id,
-      name: this.state.project.name,
-      desc: this.state.project.desc,
+      name: encodeURIComponent(this.state.project.name),
+      desc: encodeURIComponent(this.state.project.desc),
       start_date: this.state.project.startDate,
       end_date: this.state.project.endDate,
       created_at: this.state.project.createdAt,

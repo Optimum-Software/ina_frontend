@@ -222,7 +222,6 @@ export default class ExploreScreen extends React.Component {
             Router.goBack(this.props.navigation);
           }}
         />
-        {console.log(this.state.cards)}
         {this.state.cards.length < 1 && (
           <View
             style={{
@@ -393,7 +392,7 @@ export default class ExploreScreen extends React.Component {
                                   }}
                                   numberOfLines={1}
                                 >
-                                  {card.name}
+                                  {decodeURIComponent(card.name)}
                                 </Text>
                                 <Text
                                   style={{
@@ -429,7 +428,7 @@ export default class ExploreScreen extends React.Component {
                                 paddingBottom: 15
                               }}
                             >
-                              {card.desc}
+                              {decodeURIComponent(card.desc)}
                             </Text>
                           </LinearGradient>
                         </Animated.View>
@@ -466,7 +465,7 @@ export default class ExploreScreen extends React.Component {
                               }}
                               numberOfLines={1}
                             >
-                              {card.name}
+                              {decodeURIComponent(card.name)}
                             </Text>
                             <Text
                               style={{
@@ -508,7 +507,7 @@ export default class ExploreScreen extends React.Component {
                             height: Dimensions.get("window").height
                           }}
                         >
-                          {card.desc}
+                          {decodeURIComponent(card.desc)}
                         </Text>
                       </Animated.View>
                       <Animated.View
@@ -560,8 +559,8 @@ export default class ExploreScreen extends React.Component {
                   "ProjectDetailScreen",
                   {
                     id: this.state.cards[this.swiper.state.sindex - 2].id,
-                    name: this.state.cards[this.swiper.state.sindex - 2].name,
-                    desc: this.state.cards[this.swiper.state.sindex - 2].desc,
+                    name: decodeURIComponent(this.state.cards[this.swiper.state.sindex - 2].name),
+                    desc: decodeURIComponent(this.state.cards[this.swiper.state.sindex - 2].desc),
                     start_date: this.state.cards[this.swiper.state.sindex - 2]
                       .startDate,
                     end_date: this.state.cards[this.swiper.state.sindex - 2]
