@@ -94,8 +94,8 @@ class ProjectCreateFirstScreen extends Component {
         {
           thumbnailUri: this.state.thumbnailUri,
           thumbnailName: this.state.thumbnailName,
-          name: this.state.name,
-          desc: (this.state.desc)
+          name: encodeURIComponent(this.state.name),
+          desc: encodeURIComponent(this.state.desc)
         }
       );
     } else if (this.state.thumbnailUri == null) {
