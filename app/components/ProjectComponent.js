@@ -62,7 +62,7 @@ export default class ProjectComponent extends PureComponent {
             style={{ width: "100%", height: "2%" }}
           />
           <Text numberOfLines={2} style={styles.cardTitle}>
-            {this.props.item.name}
+            {decodeURIComponent(this.props.item.name)}
           </Text>
         </View>
       )}
@@ -83,7 +83,7 @@ export default class ProjectComponent extends PureComponent {
               style={{ width: "100%", height: "2%" }}
             />
             <Text numberOfLines={2} style={styles.cardTitle}>
-              {this.props.item.name}
+              {decodeURIComponent(this.props.item.name)}
             </Text>
           </View>
         )}

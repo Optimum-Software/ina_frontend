@@ -149,16 +149,6 @@ export const Drawer = createDrawerNavigator(
         )
       }
     },
-
-    RegistrationScreenOptional: {
-      screen: RegistrationScreenOptional,
-      navigationOptions: {
-        drawerLabel: "Instellingen",
-        drawerIcon: ({ tintColor }) => (
-          <Icon name="settings" size={25} color={tintColor} />
-        )
-      }
-    }
   },
   {
     drawerPosition: "left",
