@@ -189,8 +189,6 @@ export default class Home extends Component {
 
   getUserIfLoggedIn() {
     User.getUserId().then(id => {
-
-      console.log("EOEOEOEOEOEO")
       dateNow = new Date().toLocaleDateString("nl-NL", {
         weekday: "long",
         day: "numeric",

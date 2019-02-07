@@ -469,6 +469,7 @@ export default class ProjectDetail extends Component {
                     })
                   }}
                 >
+                {console.log(this.state.project)}
                   <Carousel
                     ref={c => {
                       this._carousel = c;

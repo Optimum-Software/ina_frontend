@@ -17,7 +17,7 @@ export default class ForgotPasswordScreen extends Component {
   constructor() {
     super();
     this.state = {
-      email: "bertde.boer@hotmail.com",
+      email: "",
       emailError: "",
       loading: false
     };

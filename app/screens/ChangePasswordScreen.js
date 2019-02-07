@@ -21,10 +21,10 @@ export default class ChangePasswordScreen extends Component {
       code: "",
       codeError: "",
 
-      pw: "123456",
+      pw: "",
       pwError: "",
 
-      pwRepeat: "123456",
+      pwRepeat: "",
       pwRepeatError: "",
       loading: false
     };
