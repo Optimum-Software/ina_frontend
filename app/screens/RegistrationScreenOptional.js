@@ -22,9 +22,11 @@ import { CachedImage } from "react-native-cached-image";
 import WhiteButton from "../components/WhiteButton";
 
 export default class RegistrationScreenOptional extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      userId: this.props.navigation.getParam("userId", null),
+
       profilePhoto: null,
       pickedImgUri: { uri: "" },
       imgPicked: false,
@@ -48,22 +50,18 @@ export default class RegistrationScreenOptional extends Component {
 
   editOptionalInfo() {
     this.resetErrors();
-    User.getUserId().then(id => {
-      UserApi.updateUser(
-        id,
-        "",
-        "",
-        this.state.bio,
-        this.state.organisation,
-        this.state.jobFunction,
-        this.state.pickedImgUri.uri
-      ).then(res => {
-        console.log(res);
-        if (res["bool"]) {
-          Router.switchLogin(this.props.navigation);
-        }
-        this.setState({ loading: false });
-      });
+    UserApi.editOptionalInfo(
+      this.state.userId,
+      this.state.bio,
+      this.state.organisation,
+      this.state.jobFunction,
+      this.state.pickedImgUri.uri
+    ).then(res => {
+      console.log(res);
+      if (res["bool"]) {
+        Router.switchLogin(this.props.navigation);
+      }
+      this.setState({ loading: false });
     });
   }
 

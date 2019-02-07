@@ -104,13 +104,20 @@ class UserApi {
     return Api.callApiPostFormSafe("updateUser", data);
   }
 
-  editOptionalInfo(id, bio, organisation, _function) {
-    userData = {
-      userId: id,
-      bio: bio,
-      organisation: organisation,
-      function: _function
-    };
+  editOptionalInfo(id, bio, organisation, _function, thumbnail) {
+    const data = new FormData();
+    data.append("id", id);
+    data.append("bio", encodeURIComponent(bio));
+    data.append("organisation", encodeURIComponent(organisation));
+    data.append("function", encodeURIComponent(_function));
+    if (thumbnail != "") {
+      photoFile = {
+        uri: thumbnail,
+        name: id + "_thumbnail",
+        type: "multipart/form-data"
+      };
+      data.append("thumbnail", photoFile);
+    }
     return Api.callApiPost("editOptionalInfo", userData);
   }
 

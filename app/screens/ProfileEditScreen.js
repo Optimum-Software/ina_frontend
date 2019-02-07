@@ -47,23 +47,21 @@ export default class ProfileEditScreen extends Component {
   componentDidMount() {
     this.setState({ loading: true });
     User.getUserId().then(id => {
-      if (id != null) {
-        Api.callApiGetSafe("getUserById/" + id).then(res => {
-          if (res["bool"]) {
-            this.setState({
-              profilePhoto: { uri: Api.getFileUrl(res.user.profilePhotoPath) },
-              firstName: res.user.firstName,
-              lastName: res.user.lastName,
-              bio: decodeURIComponent(res.user.bio),
-              organisation: decodeURIComponent(res.user.organisation),
-              _function: decodeURIComponent(res.user.function),
-              email: res.user.email,
-              mobile: res.user.mobile
-            });
-          }
-          this.setState({ loading: false });
-        });
-      }
+      Api.callApiGetSafe("getUserById/" + id).then(res => {
+        if (res["bool"]) {
+          this.setState({
+            profilePhoto: { uri: Api.getFileUrl(res.user.profilePhotoPath) },
+            firstName: res.user.firstName,
+            lastName: res.user.lastName,
+            bio: decodeURIComponent(res.user.bio),
+            organisation: decodeURIComponent(res.user.organisation),
+            _function: decodeURIComponent(res.user.function),
+            email: res.user.email,
+            mobile: res.user.mobile
+          });
+        }
+        this.setState({ loading: false });
+      });
     });
   }
 

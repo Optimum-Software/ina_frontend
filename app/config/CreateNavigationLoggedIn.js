@@ -25,6 +25,7 @@ import SavedProjectStack from "./SavedProjectStack";
 import ExploreNavigateButton from "./ExploreNavigateButton";
 
 import DrawerContentComponent from "../components/DrawerContentComponent";
+import RegistrationScreenOptional from "../screens/RegistrationScreenOptional";
 
 let screen = Dimensions.get("window");
 
@@ -141,6 +142,16 @@ export const Drawer = createDrawerNavigator(
     },
     SettingsScreen: {
       screen: SettingsScreen,
+      navigationOptions: {
+        drawerLabel: "Instellingen",
+        drawerIcon: ({ tintColor }) => (
+          <Icon name="settings" size={25} color={tintColor} />
+        )
+      }
+    },
+
+    RegistrationScreenOptional: {
+      screen: RegistrationScreenOptional,
       navigationOptions: {
         drawerLabel: "Instellingen",
         drawerIcon: ({ tintColor }) => (

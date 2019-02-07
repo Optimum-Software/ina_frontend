@@ -19,6 +19,9 @@ import { Fragment } from "react";
 import WhiteButton from "../components/WhiteButton";
 
 class RegistrationScreenVerifySuccessfull extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <Fragment>
@@ -85,7 +88,9 @@ class RegistrationScreenVerifySuccessfull extends Component {
                         this.props.navigation,
                         "LoginStack",
                         "RegisterOptional",
-                        null
+                        {
+                          userId: this.props.navigation.getParam("userId", null)
+                        }
                       )
                     }
                   />
