@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Platform
+  Platform,
+  Dimensions
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Router from "../helpers/Router";
@@ -18,6 +19,9 @@ import { Fragment } from "react";
 import WhiteButton from "../components/WhiteButton";
 
 class RegistrationScreenVerifySuccessfull extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <Fragment>
@@ -44,54 +48,75 @@ class RegistrationScreenVerifySuccessfull extends Component {
                 leftElement: { color: "#00a6ff" }
               }}
             />
-            <View
-              style={{
-                flex: 2,
-                alignSelf: "center",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <Icon name="verified" size={140} color="#fff" />
-              <Text
+            <View style={{ height: "80%", marginTop: "20%" }}>
+              <View
                 style={{
-                  marginTop: "3%",
-                  color: "#fff",
-                  fontWeight: "bold",
-                  fontSize: 18
+                  flex: 2,
+                  alignSelf: "center",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "20%"
                 }}
               >
-                Verificatie voltooid!
-              </Text>
-              <Text style={{ color: "#fff", fontSize: 12 }}>
-                Ga verder om te beginnen.
-              </Text>
-            </View>
-            <View style={styles.actionContainer}>
-            <WhiteButton
-        label='Verder met optionele informatie invullen'
-        onPress={() =>
-          Router.goTo(
-            this.props.navigation,
-            "LoginStack",
-            "RegisterOptional",
-            null
-          )
-        }
-      />
-
-
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() => Router.goTo(
-                    this.props.navigation,
-                    "LoginStack",
-                    "LoginScreen",
-                    null
-                  )}
-              >
-                <Text style={styles.textStyle}>Overslaan</Text>
-              </TouchableOpacity>
+                <Icon name="verified" size={140} color="#fff" />
+                <Text
+                  style={{
+                    marginTop: "3%",
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontSize: 18
+                  }}
+                >
+                  Verificatie voltooid!
+                </Text>
+                <Text style={{ color: "#fff", fontSize: 12 }}>
+                  Ga verder om optionele informatie in te vullen.
+                </Text>
+              </View>
+              <View style={styles.actionContainer}>
+                <View
+                  style={{
+                    width: Dimensions.get("window").width,
+                    paddingLeft: "15%",
+                    paddingRight: "15%"
+                  }}
+                >
+                  <WhiteButton
+                    label="Verder"
+                    onPress={() =>
+                      Router.goTo(
+                        this.props.navigation,
+                        "LoginStack",
+                        "RegisterOptional",
+                        {
+                          userId: this.props.navigation.getParam("userId", null)
+                        }
+                      )
+                    }
+                  />
+                </View>
+                <TouchableOpacity
+                  style={{ alignSelf: "center" }}
+                  onPress={() =>
+                    Router.goTo(
+                      this.props.navigation,
+                      "LoginStack",
+                      "LoginScreen", //change back to RegisterStart
+                      null
+                    )
+                  }
+                >
+                  <Text
+                    style={{
+                      color: "#ffffff",
+                      marginTop: 10,
+                      fontSize: 14
+                    }}
+                  >
+                    Overslaan
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </ImageBackground>
         </SafeAreaView>
@@ -122,8 +147,11 @@ const styles = StyleSheet.create({
 
   actionContainer: {
     flex: 2,
+    width: Dimensions.get("window").width,
+    alignSelf: "center",
     flexDirection: "column",
     justifyContent: "flex-end",
+    alignItems: "center",
     marginBottom: "7%"
   }
 });

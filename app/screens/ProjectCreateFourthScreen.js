@@ -94,6 +94,9 @@ class ProjectCreateFourthScreen extends Component {
       creator: this.state.project.creator,
       images: this.state.project.images,
       files: this.state.project.files,
+      liked: this.state.project.liked,
+      member: this.state.project.member,
+      followed: this.state.project.followed,
       prevRoute: "ProjectCreate"
     });
   }
@@ -106,57 +109,54 @@ class ProjectCreateFourthScreen extends Component {
             backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
             barStyle="light-content"
           />
-        {this.state.projectCreated == false && (
-          <View style={styles.container}>
-            <Toolbar
-              centerElement="Project aanmaken"
-              iconSet="MaterialCommunityIcons"
-            />
-
-            <View style={styles.content}>
-              {this.state.creating && (
-                <View style={{ paddingTop: "5%" }}>
-                  <Text style={styles.loadingTextStyle}>
-                    Project wordt aangemaakt...
-                  </Text>
-                  <BallIndicator size={100} color="#00a6ff" />
-                </View>
-              )}
-            </View>
-          </View>
-        )}
-        {this.state.projectCreated && (
-          <View style={styles.container}>
-            <Toolbar
-              centerElement="Project aangemaakt"
-              iconSet="MaterialCommunityIcons"
-            />
-
-            <View style={styles.content}>
-              <Icon
-                name="verified"
-                size={200}
-                color="#4a6572"
-                style={{ marginTop: "5%" }}
+          {this.state.projectCreated == false && (
+            <View style={styles.container}>
+              <Toolbar
+                centerElement="Project aanmaken"
+                iconSet="MaterialCommunityIcons"
               />
-              <Text style={styles.succesTextStyle}>
-                Project is succesvol aangemaakt!
-              </Text>
-            </View>
 
-            <View
-              style={{
-                paddingLeft: "10%",
-                paddingRight: "10%",
-                paddingBottom: "10%"
-              }}
-            >
-              <BlueButton label="Ga naar project" onPress={() => this.goToNextPart()} />
+              <View style={styles.content}>
+                {this.state.creating && (
+                  <View style={{ paddingTop: "5%" }}>
+                    <Text style={styles.loadingTextStyle}>
+                      Project wordt aangemaakt...
+                    </Text>
+                    <BallIndicator size={100} color="#00a6ff" />
+                  </View>
+                )}
+              </View>
             </View>
-          </View>
-        )}
+          )}
+          {this.state.projectCreated && (
+            <View style={styles.container}>
+              <Toolbar
+                centerElement="Project aangemaakt"
+                iconSet="MaterialCommunityIcons"
+              />
+
+              <View style={styles.content}>
+                <Icon
+                  name="verified"
+                  size={200}
+                  color="#4a6572"
+                  style={{ marginTop: "5%" }}
+                />
+                <Text style={styles.succesTextStyle}>
+                  Project is succesvol aangemaakt!
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => this.goToNextPart()}
+              >
+                <Text style={styles.buttonTextStyle}>Ga naar project</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </SafeAreaView>
-        </Fragment>
+      </Fragment>
     );
   }
 }

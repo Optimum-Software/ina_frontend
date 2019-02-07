@@ -22,9 +22,11 @@ import { CachedImage } from "react-native-cached-image";
 import WhiteButton from "../components/WhiteButton";
 
 export default class RegistrationScreenOptional extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      userId: this.props.navigation.getParam("userId", null),
+
       profilePhoto: null,
       pickedImgUri: { uri: "" },
       imgPicked: false,
@@ -48,22 +50,18 @@ export default class RegistrationScreenOptional extends Component {
 
   editOptionalInfo() {
     this.resetErrors();
-    User.getUserId().then(id => {
-      if(this.state.imgPicked) {
-        UserApi.updateUser(id, "", "", this.state.bio, this.state.organisation, this.state.jobFunction, this.state.pickedImgUri.uri).then(res => {
-          if(res['bool']) {
-            Router.switchLogin(this.props.navigation)
-          }
-          this.setState({loading: false})
-        });
-      } else {
-        UserApi.editOptionalInfo(id, this.state.bio, this.state.organisation, this.state.jobFunction).then(res => {
-          if(res['bool']) {
-            Router.switchLogin(this.props.navigation)
-          }
-          this.setState({loading: false})
-        });
+    UserApi.editOptionalInfo(
+      this.state.userId,
+      this.state.bio,
+      this.state.organisation,
+      this.state.jobFunction,
+      this.state.pickedImgUri.uri
+    ).then(res => {
+      console.log(res);
+      if (res["bool"]) {
+        Router.switchLogin(this.props.navigation);
       }
+      this.setState({ loading: false });
     });
   }
 
@@ -112,94 +110,112 @@ export default class RegistrationScreenOptional extends Component {
               }}
             />
 
-        <View style={styles.inputFieldContainer}>
-          <CachedImage
-            style={styles.imgPickContainer}
-            source={this.state.pickedImgUri}
-            imageStyle={{borderRadius: 200}}
-            resizeMode="cover"
-          >
-            <TouchableOpacity
-              style={styles.imgPickBtn}
-              onPress={() => this.pickImageHandler()}
-            >
-              <Icon
-                name="image-plus"
-                type="material-community"
-                style={{alignSelf: 'center'}}
-                size={50}
-                color="#00A6FF"
-                underlayColor="#c1efff"
+            <View style={styles.inputFieldContainer}>
+              <View style={styles.imgPickContainer}>
+                <CachedImage
+                  style={styles.imgPicked}
+                  source={this.state.pickedImgUri}
+                  resizeMode="cover"
+                >
+                  <TouchableOpacity
+                    style={styles.imgPickBtn}
+                    onPress={() => this.pickImageHandler()}
+                  >
+                    {this.state.imgPicked == false && (
+                      <Icon
+                        name="image-plus"
+                        type="material-community"
+                        style={{ alignSelf: "center" }}
+                        size={50}
+                        color="#00A6FF"
+                        underlayColor="#c1efff"
+                      />
+                    )}
+                  </TouchableOpacity>
+                </CachedImage>
+              </View>
+
+              <Input
+                placeholder="Organisatie"
+                placeholderTextColor="#FFFFFF"
+                containerStyle={[
+                  styles.containerStyle,
+                  {
+                    marginTop: "10%"
+                  }
+                ]}
+                inputContainerStyle={styles.inputContainerStyle}
+                inputStyle={styles.inputStyle}
+                value={this.state.organisation}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "building",
+                  color: "#FFFFFF"
+                }}
+                maxLength={50}
+                onChangeText={organisation => this.setState({ organisation })}
+                onSubmitEditing={() => console.log(this.state.organisation)}
+                shake={true}
               />
-            </TouchableOpacity>
-          </CachedImage>
-          <Input
-            placeholder="Organisatie"
-            placeholderTextColor="#FFFFFF"
-            containerStyle={styles.containerStyle}
-            inputContainerStyle={styles.inputContainerStyle}
-            inputStyle={styles.inputStyle}
-            value={this.state.organisation}
-            leftIcon={{
-              type: "font-awesome",
-              name: "building",
-              color: "#FFFFFF"
-            }}
-            maxLength={50}
-            onChangeText={organisation => this.setState({ organisation })}
-            onSubmitEditing={() => console.log(this.state.organisation)}
-            shake={true}
-          />
-          <Text style={styles.errorStyle}>{this.state.organisationError}</Text>
-          <Input
-            placeholder="Functie"
-            placeholderTextColor="#FFFFFF"
-            containerStyle={styles.containerStyle}
-            inputContainerStyle={styles.inputContainerStyle}
-            inputStyle={styles.inputStyle}
-            value={this.state.jobFunction}
-            leftIcon={{
-              type: "font-awesome",
-              name: "id-card",
-              color: "#FFFFFF"
-            }}
-            maxLength={50}
-            onChangeText={jobFunction => this.setState({ jobFunction })}
-            onSubmitEditing={() => console.log(this.state.jobFunction)}
-          />
-          <Text style={styles.errorStyle}>{this.state.jobFunctionError}</Text>
-          <Input
-            placeholder="Bio"
-            placeholderTextColor="#FFFFFF"
-            containerStyle={[styles.containerStyle]}
-            inputContainerStyle={[styles.inputContainerStyle]}
-            inputStyle={{ color: "#FFFFFF", }}
-            value={this.state.bio}
-            leftIcon={{
-              type: "material-community",
-              name: "text-subject",
-              color: "#FFFFFF"
-            }}
-            leftIconContainerStyle={{ alignSelf: "flex-start" }}
-            multiline={true}
-            numberOfLines={6}
-            maxLength={2000}
-            textAlignVertical={"top"}
-            onChangeText={bio => this.setState({ bio })}
-          />
-          <Text style={styles.errorStyle}>{this.state.bioError}</Text>
-
-        </View>
-        <View style={{width: Dimensions.get('window').width, paddingBottom: 25, paddingLeft: '15%', paddingRight: '15%'}}>
-        <WhiteButton
-        label='Verder'
-        onPress={() => this.editOptionalInfo()}
-        />
-        </View>
-      </ImageBackground>
+              <Text style={styles.errorStyle}>
+                {this.state.organisationError}
+              </Text>
+              <Input
+                placeholder="Functie"
+                placeholderTextColor="#FFFFFF"
+                containerStyle={styles.containerStyle}
+                inputContainerStyle={styles.inputContainerStyle}
+                inputStyle={styles.inputStyle}
+                value={this.state.jobFunction}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "id-card",
+                  color: "#FFFFFF"
+                }}
+                maxLength={50}
+                onChangeText={jobFunction => this.setState({ jobFunction })}
+                onSubmitEditing={() => console.log(this.state.jobFunction)}
+              />
+              <Text style={styles.errorStyle}>
+                {this.state.jobFunctionError}
+              </Text>
+              <Input
+                placeholder="Bio"
+                placeholderTextColor="#FFFFFF"
+                containerStyle={[styles.containerStyle]}
+                inputContainerStyle={[styles.inputContainerStyle]}
+                inputStyle={{ color: "#FFFFFF" }}
+                value={this.state.bio}
+                leftIcon={{
+                  type: "material-community",
+                  name: "text-subject",
+                  color: "#FFFFFF"
+                }}
+                leftIconContainerStyle={{ alignSelf: "flex-start" }}
+                multiline={true}
+                numberOfLines={6}
+                maxLength={2000}
+                textAlignVertical={"top"}
+                onChangeText={bio => this.setState({ bio })}
+              />
+              <Text style={styles.errorStyle}>{this.state.bioError}</Text>
+            </View>
+            <View
+              style={{
+                width: Dimensions.get("window").width,
+                paddingBottom: 25,
+                paddingLeft: "15%",
+                paddingRight: "15%"
+              }}
+            >
+              <WhiteButton
+                label="Verder"
+                onPress={() => this.editOptionalInfo()}
+              />
+            </View>
+          </ImageBackground>
         </SafeAreaView>
-        </Fragment>
-
+      </Fragment>
     );
   }
 }
@@ -228,19 +244,24 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: "40%",
     marginTop: "5%"
   },
 
   imgPickContainer: {
+    height: 104,
+    width: 104,
+    borderRadius: 52,
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF"
+  },
+  imgPicked: {
     height: 100,
     width: 100,
     borderRadius: 50,
-    alignSelf: "center",
-    marginBottom: "5%",
-    marginTop: "5%",
-    marginBottom: '15%',
     backgroundColor: "#FFFFFF"
   },
 
@@ -249,7 +270,7 @@ const styles = StyleSheet.create({
     width: 100,
     borderRadius: 50,
     justifyContent: "center",
-    alignSelf: "center",
+    alignSelf: "center"
   },
 
   containerStyle: {
@@ -297,6 +318,5 @@ const styles = StyleSheet.create({
     color: "#01A6FF",
     alignSelf: "center",
     fontSize: 20
-  },
-
+  }
 });

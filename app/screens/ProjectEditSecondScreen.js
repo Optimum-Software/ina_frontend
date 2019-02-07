@@ -135,9 +135,14 @@ class ProjectEditSecondScreen extends Component {
               tagsSelected={this.state.tagsSelected}
               handleAddition={this.handleAddition}
               handleDelete={this.handleDelete}
+              tagsOrientedBelow={true}
+              inputContainerStyle={styles.tagInputContainerStyle}
+              tagStyles={styles.tagStyles}
+              containerStyle={styles.tagContainerStyle}
+              style={{ backgroundColor: "transparent", fontSize: 14 }}
               onCustomTagCreated={this.handleCustomTagCreated}
               createTagOnSpace={true}
-              placeholder="Voeg een tag toe.."
+              placeholder="Voeg een tag toe door op spatie te drukken.."
             />
 
             <Text style={styles.labelStyle}>LOCATIE</Text>
@@ -266,6 +271,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#a8a8a8"
+  },
+  tagInputContainerStyle: {
+    borderWidth: 1,
+    borderColor: "#aaa",
+    paddingLeft: 5,
+    height: 40,
+    width: 300,
+    justifyContent: "center",
+    alignItems: "stretch",
+    backgroundColor: "#fff"
+  },
+  tagContainerStyle: {
+    minWidth: 200,
+    maxWidth: 300,
+    backgroundColor: "#fff"
+  },
+
+  tagStyles: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+    backgroundColor: "#fff",
+    marginTop: 10,
+    width: 300
   }
 });
 

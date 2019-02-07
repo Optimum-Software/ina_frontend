@@ -25,16 +25,25 @@ export default class ProjectMembersScreen extends Component {
   }
 
   componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBack.bind(this))
+    BackHandler.addEventListener(
+      "hardwareBackPress",
+      this.handleBack.bind(this)
+    );
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBack.bind(this))
+    BackHandler.removeEventListener(
+      "hardwareBackPress",
+      this.handleBack.bind(this)
+    );
   }
 
   handleBack() {
-    Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false))
-    return true
+    Router.goBack(
+      this.props.navigation,
+      this.props.navigation.getParam("differentStack", false)
+    );
+    return true;
   }
 
   renderSeparator = () => {
@@ -56,7 +65,12 @@ export default class ProjectMembersScreen extends Component {
       <View style={styles.container}>
         <Toolbar
           leftElement={"chevron-left"}
-          onLeftElementPress={() => Router.goBack(this.props.navigation , this.props.navigation.getParam("differentStack", false))}
+          onLeftElementPress={() =>
+            Router.goBack(
+              this.props.navigation,
+              this.props.navigation.getParam("differentStack", false)
+            )
+          }
           centerElement="Leden"
         />
         <ScrollView>
@@ -68,21 +82,26 @@ export default class ProjectMembersScreen extends Component {
               renderItem={({ item }) => (
                 <ListItem
                   title={item.firstName + " " + item.lastName}
-                  subtitle={item.organisation}
-                  leftAvatar={item.profilePhotoPath != "" ? {
-                    source: { uri: Api.getFileUrl(item.profilePhotoPath) }
-                  } : <Icon
-                    name="account-circle"
-                    size={45}
-                    />}
+                  subtitle={decodeURIComponent(item.organisation)}
+                  leftAvatar={
+                    item.profilePhotoPath != "" ? (
+                      {
+                        source: { uri: Api.getFileUrl(item.profilePhotoPath) }
+                      }
+                    ) : (
+                      <Icon name="account-circle" size={45} />
+                    )
+                  }
                   chevronColor="white"
                   chevron
-                  onPress={() =>
-                    {
-                      ProfileParameters.storeUserId(item.id)
-                      Router.goTo(this.props.navigation, 'ProfileScreen', 'ProfileScreen')
-                    }
-                  }
+                  onPress={() => {
+                    ProfileParameters.storeUserId(item.id);
+                    Router.goTo(
+                      this.props.navigation,
+                      "ProfileScreen",
+                      "ProfileScreen"
+                    );
+                  }}
                 />
               )}
             />

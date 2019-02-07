@@ -16,7 +16,7 @@ class UserApi {
   }
 
   getUserSettings(id) {
-    return Api.callApiGetSafe("getUserSettings/" + id)
+    return Api.callApiGetSafe("getUserSettings/" + id);
   }
 
   login(username, password) {
@@ -44,12 +44,12 @@ class UserApi {
     userData = {
       userId: id,
       canNotificate: canNotificate
-    }
-    return Api.callApiPostSafe('saveUserSettings', userData);
+    };
+    return Api.callApiPostSafe("saveUserSettings", userData);
   }
 
   uploadProfilePhoto(userId, file) {
-    return Api.callApiUploadProfilePhoto(userId, "ProfilePhoto", file);    
+    return Api.callApiUploadProfilePhoto(userId, "ProfilePhoto", file);
   }
 
   createDeviceId(userId, deviceId) {
@@ -90,30 +90,39 @@ class UserApi {
     data.append("id", id);
     data.append("firstName", firstName);
     data.append("lastName", lastName);
-    data.append("bio", bio);
-    data.append("organisation", organisation);
-    data.append("function", _function);
-    photoFile = {
-      uri: thumbnail,
-      name: id + "_thumbnail",
-      type: "multipart/form-data"
-    };
-    data.append("thumbnail", photoFile);
+    data.append("bio", encodeURIComponent(bio));
+    data.append("organisation", encodeURIComponent(organisation));
+    data.append("function", encodeURIComponent(_function));
+    if (thumbnail != "") {
+      photoFile = {
+        uri: thumbnail,
+        name: id + "_thumbnail",
+        type: "multipart/form-data"
+      };
+      data.append("thumbnail", photoFile);
+    }
     return Api.callApiPostFormSafe("updateUser", data);
   }
 
-  editOptionalInfo(id, bio, organisation, _function) {
-    userData = {
-      userId: id,
-      bio: bio,
-      organisation: organisation,
-      function: _function
+  editOptionalInfo(id, bio, organisation, _function, thumbnail) {
+    const data = new FormData();
+    data.append("id", id);
+    data.append("bio", encodeURIComponent(bio));
+    data.append("organisation", encodeURIComponent(organisation));
+    data.append("function", encodeURIComponent(_function));
+    if (thumbnail != "") {
+      photoFile = {
+        uri: thumbnail,
+        name: id + "_thumbnail",
+        type: "multipart/form-data"
+      };
+      data.append("thumbnail", photoFile);
     }
-    return Api.callApiPost("editOptionalInfo", userData)
+    return Api.callApiPost("editOptionalInfo", userData);
   }
 
   getNotifications(id) {
-    return Api.callApiGetSafe("getNotificationByUser/"+id);
+    return Api.callApiGetSafe("getNotificationByUser/" + id);
   }
 
   markAsRead(id) {

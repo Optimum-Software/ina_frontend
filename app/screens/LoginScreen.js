@@ -76,11 +76,9 @@ class LoginScreen extends Component {
         if (result.bool) {
           FirebaseApi.login(this.state.email, hashedPw);
           User.storeToken(result.token);
-          Api.saveToken()
+          Api.saveToken();
           User.getDeviceId().then(deviceId => {
-            UserApi.createDeviceId(result.userId, deviceId).then(
-              result => {}
-            );
+            UserApi.createDeviceId(result.userId, deviceId).then(result => {});
           });
           User.storeUserId(result.userId);
           Router.switchLogin(this.props.navigation);
@@ -211,10 +209,7 @@ class LoginScreen extends Component {
                 </Text>
               </TouchableOpacity>
               <View style={{ marginBottom: "0%" }}>
-              <WhiteButton
-          label='Inloggen'
-          onPress={() => this.login()}
-        />
+                <WhiteButton label="Inloggen" onPress={() => this.login()} />
 
                 <TouchableOpacity
                   style={{ alignSelf: "center" }}

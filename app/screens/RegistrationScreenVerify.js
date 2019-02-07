@@ -110,7 +110,8 @@ export default class RegistrationScreenStart extends Component {
         Router.goTo(
           this.props.navigation,
           "LoginStack",
-          "RegisterVerifySuccessfull"
+          "RegisterVerifySuccessfull",
+          { userId: userId }
         ); //route to succesfeedback screen
       }
     });
@@ -193,11 +194,7 @@ export default class RegistrationScreenStart extends Component {
                     maxLength={6}
                   />
                 </View>
-                <WhiteButton
-            label='Verder'
-            onPress={() => this.checkCode()}
-          />
-
+                <WhiteButton label="Verder" onPress={() => this.checkCode()} />
               </View>
             )}
           </ImageBackground>

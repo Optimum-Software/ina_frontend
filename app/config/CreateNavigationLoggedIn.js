@@ -25,6 +25,7 @@ import SavedProjectStack from "./SavedProjectStack";
 import ExploreNavigateButton from "./ExploreNavigateButton";
 
 import DrawerContentComponent from "../components/DrawerContentComponent";
+import RegistrationScreenOptional from "../screens/RegistrationScreenOptional";
 
 let screen = Dimensions.get("window");
 
@@ -35,7 +36,10 @@ const tabbarVisible = navigation => {
 
   let showTabbar = true;
   routes.forEach(route => {
-    if (route.routeName === "ProjectDetailScreen" || 'projectcreate'.indexOf(route.routeName.toLowerCase()) > -1) {
+    if (
+      route.routeName === "ProjectDetailScreen" ||
+      "projectcreate".indexOf(route.routeName.toLowerCase()) > -1
+    ) {
       showTabbar = false;
     }
   });
@@ -144,6 +148,16 @@ export const Drawer = createDrawerNavigator(
           <Icon name="settings" size={25} color={tintColor} />
         )
       }
+    },
+
+    RegistrationScreenOptional: {
+      screen: RegistrationScreenOptional,
+      navigationOptions: {
+        drawerLabel: "Instellingen",
+        drawerIcon: ({ tintColor }) => (
+          <Icon name="settings" size={25} color={tintColor} />
+        )
+      }
     }
   },
   {
@@ -153,8 +167,12 @@ export const Drawer = createDrawerNavigator(
     contentComponent: DrawerContentComponent,
     drawerBackgroundColor: "transparent",
     contentOptions: {
-      activeTintColor: "black",
+      activeTintColor: "#fff",
       activeBackgroundColor: "transparent",
+      activeLabelStyle: {
+        fontColor: "#fff",
+        textDecorationLine: "underline"
+      },
       inactiveTintColor: "#fff",
       itemsContainerStyle: {
         marginVertical: 0

@@ -10,7 +10,8 @@ import {
   Text,
   TouchableHighlight,
   ActivityIndicator,
-  Alert
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import { Toolbar } from "react-native-material-ui";
 import UserApi from "../helpers/UserApi";
@@ -46,23 +47,21 @@ export default class ProfileEditScreen extends Component {
   componentDidMount() {
     this.setState({ loading: true });
     User.getUserId().then(id => {
-      if (id != null) {
-        Api.callApiGetSafe("getUserById/" + id).then(res => {
-          if (res["bool"]) {
-            this.setState({
-              profilePhoto: { uri: Api.getFileUrl(res.user.profilePhotoPath) },
-              firstName: res.user.firstName,
-              lastName: res.user.lastName,
-              bio: res.user.bio,
-              organisation: res.user.organisation,
-              _function: res.user.function,
-              email: res.user.email,
-              mobile: res.user.mobile
-            });
-          }
-          this.setState({ loading: false });
-        });
-      }
+      Api.callApiGetSafe("getUserById/" + id).then(res => {
+        if (res["bool"]) {
+          this.setState({
+            profilePhoto: { uri: Api.getFileUrl(res.user.profilePhotoPath) },
+            firstName: res.user.firstName,
+            lastName: res.user.lastName,
+            bio: decodeURIComponent(res.user.bio),
+            organisation: decodeURIComponent(res.user.organisation),
+            _function: decodeURIComponent(res.user.function),
+            email: res.user.email,
+            mobile: res.user.mobile
+          });
+        }
+        this.setState({ loading: false });
+      });
     });
   }
 
@@ -89,7 +88,7 @@ export default class ProfileEditScreen extends Component {
         this.state.lastName,
         this.state.bio,
         this.state.organisation,
-encodeURIComponent(this.state._function),
+        this.state._function,
         this.state.profilePhoto.uri
       ).then(res => {
         if (res["bool"]) {
@@ -114,202 +113,209 @@ encodeURIComponent(this.state._function),
       <Fragment>
         <SafeAreaView style={{ flex: 0, backgroundColor: "#00a6ff" }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-        <StatusBar
-          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-          barStyle="light-content"
-        />
-        <ScrollView>
-          <View style={{ height: Header.HEIGHT }}>
-            <Toolbar
-              centerElement="Profiel aanpassen"
-              iconSet="MaterialCommunityIcons"
-              leftElement={"arrow-left"}
-
-              style={{ container: { backgroundColor: "#00a6ff", elevation: 0 } }}
-              onLeftElementPress={() => {
-                Router.goTo(
-                  this.props.navigation,
-                  "ProfileScreen",
-                  "ProfileScreen"
-                );
-              }}
-            />
-          </View>
-          {!this.state.loading && (
-            <View
-              style={{
-                paddingLeft: "5%",
-                paddingRight: "5%",
-                paddingBottom: "5%"
-              }}
-            >
-              <View style={styles.inputFieldContainer}>
-                <View
-                  style={{ flexDirection: "row", justifyContent: "center", margin: '5%' }}
-                >
-                  <CachedImage
-                    source={this.state.profilePhoto}
-                    resizeMode="cover"
-                    style={styles.profilePhoto}
-                  >
-                  <Icon
-                    name="edit"
-                    type="MaterialIcons"
-                    size={30}
-                    color="white"
-                    containerStyle={{height: 100,
-                    width: 100,
-                    borderRadius: 50,
-                    marginBottom: '6%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  backgroundColor: '#00000055'}}
-                    underlayColor="transparent"
-                    onPress={() => this.pickImageHandler()}
-                  />
-                  </CachedImage>
-
-                </View>
-
-                <Text style={[styles.labelStyle, { marginBottom: 0 }]}>
-                  VASTE INFORMATIE
-                </Text>
-                <View style={styles.immutableInfoContainer}>
-                  <View style={styles.immutableInfoRow}>
-                    <Icon
-                      name="email"
-                      type= "material-community"
-                      size={25}
-                      color="#4a6572"
-                    />
-                    <Text style={styles.immutableInfoLabel}>
-                      {this.state.email}
-                    </Text>
-                  </View>
-
-                  <View style={styles.immutableInfoRow}>
-                    <Icon
-                      name="cellphone"
-                      type="material-community"
-                      size={25}
-                      color="#4a6572"
-                    />
-                    <Text style={styles.immutableInfoLabel}>
-                      {this.state.mobile}
-                    </Text>
-                  </View>
-                </View>
-                <Text style={[styles.labelStyle, { marginBottom: '5%', marginTop: '5%' }]}>
-                  TE BEWERKEN
-                </Text>
-                <Input
-                  placeholder="Voornaam"
-                  placeholderTextColor="#a8a8a8"
-                  maxLength={30}
-                  containerStyle={styles.containerStyle}
-                  inputStyle={styles.inputStyle}
-                  value={this.state.firstName}
-                  leftIcon={{
-          type: "material-community",
-                    name: "account",
-                    color: "#4a6572"
-                  }}
-                  onChangeText={firstName => this.setState({ firstName })}
-                />
-
-                <Input
-                  placeholder="Achternaam"
-                  placeholderTextColor="#a8a8a8"
-                  maxLength={30}
-                  containerStyle={styles.containerStyle}
-                  inputStyle={styles.inputStyle}
-                  value={this.state.lastName}
-                  leftIcon={{
-                    type: "material-community",
-                              name: "account",
-                    color: "#4a6572"
-                  }}
-                  onChangeText={lastName => this.setState({ lastName })}
-                />
-                <Input
-                  placeholder="Organisatie"
-                  placeholderTextColor="#a8a8a8"
-                  maxLength={50}
-                  containerStyle={styles.containerStyle}
-                  inputStyle={styles.inputStyle}
-                  value={this.state.organisation}
-                  leftIcon={{
-                    type: "material-community",
-                    name: "office-building",
-                    color: "#4a6572"
-                  }}
-                  onChangeText={organisation => this.setState({ organisation })}
-                />
-
-                <Input
-                  placeholder="Functie"
-                  placeholderTextColor="#a8a8a8"
-                  maxLength={50}
-                  containerStyle={styles.containerStyle}
-                  inputStyle={styles.inputStyle}
-                  value={this.state._function}
-                  leftIcon={{
-                    type: "material-community",
-                    name: "account-card-details",
-                    color: "#4a6572"
-                  }}
-                  onChangeText={_function => this.setState({ _function })}
-                />
-
-                <Input
-                  placeholder="Begin hier met het typen van je biografie.."
-                  placeholderTextColor="#a8a8a8"
-                  multiline={true}
-                  editable={true}
-                  maxLength={2000}
-                  containerStyle={styles.containerStyle}
-                  inputStyle={styles.inputStyle}
-                  value={this.state.bio}
-                  onChangeText={bio => this.setState({ bio })}
-                  onContentSizeChange={e =>
-                    this.updateSize(e.nativeEvent.contentSize.height)
-                  }
-                  leftIcon={{
-                    type: "material-community",
-                    name: "text-subject",
-                    color: "#4a6572"
-                  }}
-                  textAlignVertical={"top"}
-                />
-              </View>
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            barStyle="light-content"
+          />
+          <ScrollView>
+            <View style={{ height: Header.HEIGHT }}>
+              <Toolbar
+                centerElement="Profiel aanpassen"
+                iconSet="MaterialCommunityIcons"
+                leftElement={"arrow-left"}
+                style={{
+                  container: { backgroundColor: "#00a6ff", elevation: 0 }
+                }}
+                onLeftElementPress={() => {
+                  Router.goTo(
+                    this.props.navigation,
+                    "ProfileScreen",
+                    "ProfileScreen"
+                  );
+                }}
+              />
+            </View>
+            {!this.state.loading && (
               <View
                 style={{
-                  paddingLeft: "10%",
-                  paddingRight: "10%",
-                  justifyContent: "center"
+                  paddingLeft: "5%",
+                  paddingRight: "5%",
+                  paddingBottom: "5%"
                 }}
               >
-              <BlueButton
-          label='Opslaan'
-          onPress={() => this.saveInfo()}
-        />
+                <View style={styles.inputFieldContainer}>
+                  <View style={styles.imgPickContainer}>
+                    <CachedImage
+                      style={styles.imgPicked}
+                      source={this.state.profilePhoto}
+                      resizeMode="cover"
+                    >
+                      <TouchableOpacity
+                        style={styles.imgPickBtn}
+                        onPress={() => this.pickImageHandler()}
+                      >
+                        <Icon
+                          name="edit"
+                          type="MaterialIcons"
+                          size={30}
+                          color="white"
+                          containerStyle={{
+                            height: 100,
+                            width: 100,
+                            borderRadius: 50,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "#00000055"
+                          }}
+                          underlayColor="transparent"
+                          onPress={() => this.pickImageHandler()}
+                        />
+                      </TouchableOpacity>
+                    </CachedImage>
+                  </View>
 
+                  <Text
+                    style={[
+                      styles.labelStyle,
+                      { marginBottom: 0, marginTop: "5%" }
+                    ]}
+                  >
+                    VASTE INFORMATIE
+                  </Text>
+                  <View style={styles.immutableInfoContainer}>
+                    <View style={styles.immutableInfoRow}>
+                      <Icon
+                        name="email"
+                        type="material-community"
+                        size={25}
+                        color="#4a6572"
+                      />
+                      <Text style={styles.immutableInfoLabel}>
+                        {this.state.email}
+                      </Text>
+                    </View>
+
+                    <View style={styles.immutableInfoRow}>
+                      <Icon
+                        name="cellphone"
+                        type="material-community"
+                        size={25}
+                        color="#4a6572"
+                      />
+                      <Text style={styles.immutableInfoLabel}>
+                        {this.state.mobile}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text
+                    style={[
+                      styles.labelStyle,
+                      { marginBottom: "5%", marginTop: "5%" }
+                    ]}
+                  >
+                    TE BEWERKEN
+                  </Text>
+                  <Input
+                    placeholder="Voornaam"
+                    placeholderTextColor="#a8a8a8"
+                    maxLength={30}
+                    containerStyle={styles.containerStyle}
+                    inputStyle={styles.inputStyle}
+                    value={this.state.firstName}
+                    leftIcon={{
+                      type: "material-community",
+                      name: "account",
+                      color: "#4a6572"
+                    }}
+                    onChangeText={firstName => this.setState({ firstName })}
+                  />
+
+                  <Input
+                    placeholder="Achternaam"
+                    placeholderTextColor="#a8a8a8"
+                    maxLength={30}
+                    containerStyle={styles.containerStyle}
+                    inputStyle={styles.inputStyle}
+                    value={this.state.lastName}
+                    leftIcon={{
+                      type: "material-community",
+                      name: "account",
+                      color: "#4a6572"
+                    }}
+                    onChangeText={lastName => this.setState({ lastName })}
+                  />
+                  <Input
+                    placeholder="Organisatie"
+                    placeholderTextColor="#a8a8a8"
+                    maxLength={50}
+                    containerStyle={styles.containerStyle}
+                    inputStyle={styles.inputStyle}
+                    value={this.state.organisation}
+                    leftIcon={{
+                      type: "material-community",
+                      name: "office-building",
+                      color: "#4a6572"
+                    }}
+                    onChangeText={organisation =>
+                      this.setState({ organisation })
+                    }
+                  />
+
+                  <Input
+                    placeholder="Functie"
+                    placeholderTextColor="#a8a8a8"
+                    maxLength={50}
+                    containerStyle={styles.containerStyle}
+                    inputStyle={styles.inputStyle}
+                    value={this.state._function}
+                    leftIcon={{
+                      type: "material-community",
+                      name: "account-card-details",
+                      color: "#4a6572"
+                    }}
+                    onChangeText={_function => this.setState({ _function })}
+                  />
+
+                  <Input
+                    placeholder="Begin hier met het typen van je biografie.."
+                    placeholderTextColor="#a8a8a8"
+                    multiline={true}
+                    editable={true}
+                    maxLength={2000}
+                    containerStyle={styles.containerStyle}
+                    inputStyle={styles.inputStyle}
+                    value={this.state.bio}
+                    onChangeText={bio => this.setState({ bio })}
+                    onContentSizeChange={e =>
+                      this.updateSize(e.nativeEvent.contentSize.height)
+                    }
+                    textAlignVertical={"top"}
+                  />
+                </View>
+                <View
+                  style={{
+                    paddingLeft: "10%",
+                    paddingRight: "10%",
+                    justifyContent: "center"
+                  }}
+                >
+                  <BlueButton label="Opslaan" onPress={() => this.saveInfo()} />
+                </View>
               </View>
+            )}
+          </ScrollView>
+          {this.state.loading && (
+            <View
+              style={{
+                height: "92.5%",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <ActivityIndicator size="large" color="#000" />
             </View>
           )}
-        </ScrollView>
-        {this.state.loading && (
-          <View
-            style={{
-              height: "92.5%",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <ActivityIndicator size="large" color="#000" />
-          </View>
-        )}
-      </SafeAreaView>
+        </SafeAreaView>
       </Fragment>
     );
   }
@@ -349,8 +355,8 @@ const styles = StyleSheet.create({
     width: 100,
     borderRadius: 50,
     marginBottom: "5%",
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center"
   },
 
   editPhotoContainer: {
@@ -403,5 +409,28 @@ const styles = StyleSheet.create({
     color: "#a8a8a8",
     borderBottomWidth: 1,
     borderBottomColor: "#4a6572"
+  },
+  imgPickContainer: {
+    height: 104,
+    width: 104,
+    borderRadius: 52,
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#4a6572"
+  },
+  imgPicked: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+    backgroundColor: "#FFFFFF"
+  },
+
+  imgPickBtn: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignSelf: "center"
   }
 });

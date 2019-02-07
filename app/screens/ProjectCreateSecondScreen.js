@@ -119,97 +119,105 @@ class ProjectCreateSecondScreen extends Component {
             backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
             barStyle="light-content"
           />
-        <StatusBar
-          backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
-          barStyle="light-content"
-        />
-        <Toolbar
-          centerElement="Optionele informatie 2/3"
-          iconSet="MaterialCommunityIcons"
-          leftElement={"chevron-left"}
-          onLeftElementPress={() => Router.goBack(this.props.navigation)}
-        />
-        <ScrollView style={{ height: "85%", width: "100%" }}>
-          <View style={styles.inputFieldContainer}>
-            <Text style={styles.labelStyle}>TAGS</Text>
-            <AutoTags
-              suggestions={this.state.suggestions}
-              tagsSelected={this.state.tagsSelected}
-              handleAddition={this.handleAddition}
-              handleDelete={this.handleDelete}
-              onCustomTagCreated={this.handleCustomTagCreated}
-              createTagOnSpace={false}
-              placeholder="Voeg een tag toe.."
-            />
+          <StatusBar
+            backgroundColor={Platform.OS == "android" ? "#0085cc" : "#00a6ff"}
+            barStyle="light-content"
+          />
+          <Toolbar
+            centerElement="Optionele informatie 2/3"
+            iconSet="MaterialCommunityIcons"
+            leftElement={"chevron-left"}
+            onLeftElementPress={() => Router.goBack(this.props.navigation)}
+          />
+          <ScrollView style={{ height: "85%", width: "100%" }}>
+            <View style={styles.inputFieldContainer}>
+              <Text style={styles.labelStyle}>TAGS</Text>
+              <AutoTags
+                suggestions={this.state.suggestions}
+                tagsSelected={this.state.tagsSelected}
+                handleAddition={this.handleAddition}
+                handleDelete={this.handleDelete}
+                tagsOrientedBelow={true}
+                inputContainerStyle={styles.tagInputContainerStyle}
+                tagStyles={styles.tagStyles}
+                containerStyle={styles.tagContainerStyle}
+                style={{ backgroundColor: "transparent", fontSize: 14 }}
+                onCustomTagCreated={this.handleCustomTagCreated}
+                createTagOnSpace={true}
+                placeholder="Voeg een tag toe door op spatie te drukken.."
+              />
 
-            <Text style={styles.labelStyle}>LOCATIE</Text>
+              <Text style={styles.labelStyle}>LOCATIE</Text>
 
-            <Input
-              placeholder="Locatie"
-              placeholderTextColor="#4a6572"
-              maxLength={200}
-              containerStyle={styles.containerStyle}
-              inputStyle={styles.inputStyle}
-              value={this.state.location}
-              onChangeText={text => this.setState({ location: text })}
-              errorStyle={{ color: "red" }}
-              errorMessage={this.state.locationError}
-            />
+              <Input
+                placeholder="Locatie"
+                placeholderTextColor="#4a6572"
+                maxLength={200}
+                containerStyle={styles.containerStyle}
+                inputStyle={styles.inputStyle}
+                value={this.state.location}
+                onChangeText={text => this.setState({ location: text })}
+                errorStyle={{ color: "red" }}
+                errorMessage={this.state.locationError}
+              />
 
-            <Text style={styles.labelStyle}>BEGIN DATUM</Text>
+              <Text style={styles.labelStyle}>BEGIN DATUM</Text>
 
-            <DatePicker
-              style={{
-                width: "100%",
-                marginBottom: "3%",
-                marginTop: "3%"
-              }}
-              date={this.state.beginDate}
-              mode="date"
-              placeholder="Selecteer begin datum"
-              format="YYYY-MM-DD"
-              minDate="2019-01-01"
-              maxDate="2050-06-01"
-              confirmBtnText="Bevestig"
-              cancelBtnText="Annuleren"
-              onDateChange={date => {
-                this.setState({ beginDate: date });
-              }}
-            />
+              <DatePicker
+                style={{
+                  width: "100%",
+                  marginBottom: "3%",
+                  marginTop: "3%"
+                }}
+                date={this.state.beginDate}
+                mode="date"
+                placeholder="Selecteer begin datum"
+                format="YYYY-MM-DD"
+                minDate="2019-01-01"
+                maxDate="2050-06-01"
+                confirmBtnText="Bevestig"
+                cancelBtnText="Annuleren"
+                onDateChange={date => {
+                  this.setState({ beginDate: date });
+                }}
+              />
 
-            <Text style={styles.labelStyle}>EIND DATUM</Text>
+              <Text style={styles.labelStyle}>EIND DATUM</Text>
 
-            <DatePicker
-              style={{
-                width: "100%"
-              }}
-              date={this.state.endDate}
-              mode="date"
-              placeholder="Selecteer eind datum"
-              format="YYYY-MM-DD"
-              minDate="2019-01-01"
-              maxDate="2050-06-01"
-              confirmBtnText="Bevestig"
-              cancelBtnText="Annuleren"
-              onDateChange={date => {
-                this.setState({ endDate: date });
-              }}
-            />
-          </View>
+              <DatePicker
+                style={{
+                  width: "100%"
+                }}
+                date={this.state.endDate}
+                mode="date"
+                placeholder="Selecteer eind datum"
+                format="YYYY-MM-DD"
+                minDate="2019-01-01"
+                maxDate="2050-06-01"
+                confirmBtnText="Bevestig"
+                cancelBtnText="Annuleren"
+                onDateChange={date => {
+                  this.setState({ endDate: date });
+                }}
+              />
+            </View>
+          </ScrollView>
+
           <View
             style={{
-              paddingLeft: "10%",
-              paddingRight: "10%",
-              paddingBottom: "10%"
+              width: "100%",
+              height: "10%"
             }}
           >
-            <BlueButton label="Verder" onPress={() => this.goToNextPart()} />
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={() => this.goToNextPart()}
+            >
+              <Text style={styles.buttonTextStyle}>Verder</Text>
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-
-
         </SafeAreaView>
-        </Fragment>
+      </Fragment>
     );
   }
 }
@@ -250,7 +258,8 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
     backgroundColor: "transparent",
-    marginTop: 20
+    marginTop: 20,
+    height: null
   },
 
   inputContainerStyle: {
@@ -266,6 +275,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#a8a8a8"
+  },
+  tagInputContainerStyle: {
+    borderWidth: 1,
+    borderColor: "#aaa",
+    paddingLeft: 5,
+    height: 40,
+    width: 300,
+    justifyContent: "center",
+    alignItems: "stretch",
+    backgroundColor: "#fff"
+  },
+  tagContainerStyle: {
+    minWidth: 200,
+    maxWidth: 300,
+    backgroundColor: "#fff"
+  },
+
+  tagStyles: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+    backgroundColor: "#fff",
+    marginTop: 10,
+    width: 300
   }
 });
 

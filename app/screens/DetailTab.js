@@ -48,6 +48,7 @@ export default class DetailTab extends Component {
 
   componentDidMount() {
     this.getMembers();
+    console.log(this.state.projectMembers);
     this.tags(this.state.project.id);
     User.getUserId().then(id => {
       this.setState({ userId: id });
@@ -386,18 +387,20 @@ export default class DetailTab extends Component {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
-                      Linking.canOpenURL('https://file.ina-app.nl/?id=' + (item.id)).then(
-                        supported => {
-                          if (supported) {
-                            Linking.openURL('https://file.ina-app.nl/?id=' + (item.id));
-                          } else {
-                            console.log(
-                              "Don't know how to open URI: " +
-                                Api.getFileUrl(item.path)
-                            );
-                          }
+                      Linking.canOpenURL(
+                        "https://file.ina-app.nl/?id=" + item.id
+                      ).then(supported => {
+                        if (supported) {
+                          Linking.openURL(
+                            "https://file.ina-app.nl/?id=" + item.id
+                          );
+                        } else {
+                          console.log(
+                            "Don't know how to open URI: " +
+                              Api.getFileUrl(item.path)
+                          );
                         }
-                      )
+                      })
                     }
                     style={{
                       width: "90%",
@@ -412,8 +415,8 @@ export default class DetailTab extends Component {
                       size={48}
                       color={"#4C6873"}
                     />
-                    <View style={{ flexDirection: "column" }}>
-                      <Text>
+                    <View style={{ flexDirection: "column", width: "95%" }}>
+                      <Text numberOfLines={2}>
                         {item.path.split("/")[item.path.split("/").length - 1]}
                       </Text>
                     </View>
@@ -425,13 +428,13 @@ export default class DetailTab extends Component {
 
           {(this.state.project.start_date != null ||
             this.state.project.end_date != null ||
-            this.state.project.location != null) && (
+            this.state.project.location != "") && (
             <View style={styles.separator} />
           )}
 
           {(this.state.project.start_date != null ||
             this.state.project.end_date != null ||
-            this.state.project.location != null) && (
+            this.state.project.location != "") && (
             <View
               style={{
                 flexDirection: "column",
@@ -458,7 +461,7 @@ export default class DetailTab extends Component {
                   Extra informatie
                 </Text>
               </View>
-              {this.state.project.location != null && (
+              {this.state.project.location != "" && (
                 <View
                   style={{
                     paddingHorizontal: 15,
@@ -799,13 +802,10 @@ const styles = StyleSheet.create({
   },
 
   personCard: {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 15,
-    width: Dimensions.get("window").width - 45,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
+    marginLeft: 5,
+    marginRight: 5,
+    height: 35,
+    width: 35
   },
   textStyle: {
     padding: "5%",
@@ -821,8 +821,8 @@ const styles = StyleSheet.create({
   },
   personList: {
     width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "flex-start"
+    paddingLeft: 10,
+    height: 35,
+    justifyContent: "center"
   }
 });

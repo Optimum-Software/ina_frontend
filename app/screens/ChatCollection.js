@@ -140,16 +140,15 @@ export default class ChatCollection extends Component {
                       key={item.uid}
                       title={item.title}
                       titleStyle={styles.chatTitle}
-                      subtitle={"Het laatste chatbericht..."}
-                      subtitleStyle={styles.chatSubTitle}
-                      leftAvatar={() => <CachedImage
-                        source={{
-                          uri: item.photo
-                        }}
-                        resizeMode="cover"
-                        style={{ width: 35, height: 35, borderRadius: 17.5 }}
-                      />}
-
+                      leftAvatar={() => (
+                        <CachedImage
+                          source={{
+                            uri: item.photo
+                          }}
+                          resizeMode="cover"
+                          style={{ width: 35, height: 35, borderRadius: 17.5 }}
+                        />
+                      )}
                       chevron={
                         <Icon
                           name="chevron-right"
@@ -158,12 +157,13 @@ export default class ChatCollection extends Component {
                           color="#4a6572"
                         />
                       }
-                      badge={{
-                        value: 4,
-                        textStyle: { color: "#fff" }
-                      }}
                       onPress={() =>
-                        this.goToChat(item.chatId, item.uid, item.title, item.group)
+                        this.goToChat(
+                          item.chatId,
+                          item.uid,
+                          item.title,
+                          item.group
+                        )
                       }
                     />
                   )}
