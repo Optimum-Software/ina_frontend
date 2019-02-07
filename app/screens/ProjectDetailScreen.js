@@ -344,7 +344,7 @@ export default class ProjectDetail extends Component {
     ) {
       Router.popToTop(this.props.navigation);
     } else {
-      Router.goBack(this.props.navigation);
+      Router.goBack(this.props.navigation, this.props.navigation.getParam("differentStack", false));
     }
   }
 
@@ -427,10 +427,7 @@ export default class ProjectDetail extends Component {
                 leftElement={"arrow-left"}
                 rightElement={["delete", "share-variant"]}
                 onLeftElementPress={() => {
-                  Router.goBack(
-                    this.props.navigation,
-                    this.props.navigation.getParam("differentStack", false)
-                  );
+                  this.goBack()
                 }}
                 onRightElementPress={action => {
                   if (action.action == "share-variant") {
@@ -451,10 +448,7 @@ export default class ProjectDetail extends Component {
                 leftElement={"arrow-left"}
                 rightElement={"share-variant"}
                 onLeftElementPress={() => {
-                  Router.goBack(
-                    this.props.navigation,
-                    this.props.navigation.getParam("differentStack", false)
-                  );
+                  this.goBack()
                 }}
                 onRightElementPress={() => {
                   this.share();

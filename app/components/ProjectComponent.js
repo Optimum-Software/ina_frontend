@@ -26,8 +26,8 @@ export default class ProjectComponent extends PureComponent {
           "ProjectDetailScreen",
           {
             id: this.props.item.id,
-            name: this.props.item.name,
-            desc: this.props.item.desc,
+            name: decodeURIComponent(this.props.item.name),
+            desc: decodeURIComponent(this.props.item.desc),
             start_date: this.props.item.startDate,
             end_date: this.props.item.endDate,
             created_at: this.props.item.createdAt,
@@ -104,7 +104,7 @@ export default class ProjectComponent extends PureComponent {
               style={{ width: "100%", height: "2%" }}
             />
             <Text numberOfLines={2} style={styles.cardTitle}>
-              {this.props.item.name}
+              {decodeURIComponent(this.props.item.name)}
             </Text>
           </View>
         )}
