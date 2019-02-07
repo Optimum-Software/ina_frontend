@@ -68,7 +68,7 @@ export default class Home extends Component {
   componentDidMount() {
     this.onLoad();
     User.getUserId().then(id => {
-      this.setState({ userId: id });
+      this.setState({ userId: id});
     });
     this.props.navigation.addListener("willFocus", this.onLoad);
     OneSignal.addEventListener("opened", this.onOpened);
@@ -140,7 +140,6 @@ export default class Home extends Component {
           event.url.length
         )
       ).then(result => {
-        console.log(result['project'])
         Router.goToDeeplink(
           "ProjectStack",
           "ProjectDetailScreen",
